@@ -40,23 +40,9 @@ const sourceFile = document.querySelector("#sourceFile");
 const metrics = document.querySelector("#metrics");
 const leaderboardTable = document.querySelector("#leaderboardTable");
 const rulesGrid = document.querySelector("#rulesGrid");
-const groupEditors = document.querySelector("#groupEditors");
-const bestThirdEditor = document.querySelector("#bestThirdEditor");
-const futuresEditor = document.querySelector("#futuresEditor");
-const consensusCharts = document.querySelector("#consensusCharts");
 const playerFilter = document.querySelector("#playerFilter");
 
 sourceFile.textContent = rawData.source_file || "interface/data/pool_data.js";
-
-document.querySelector("#resetConsensus").addEventListener("click", () => {
-  scenario = buildConsensusScenario(players);
-  render();
-});
-
-document.querySelector("#clearResults").addEventListener("click", () => {
-  scenario = buildEmptyScenario(players);
-  render();
-});
 
 playerFilter.addEventListener("input", (event) => {
   filterTerm = event.target.value.trim().toLowerCase();
@@ -68,10 +54,6 @@ render();
 function render() {
   renderMetrics();
   renderRules();
-  renderGroupEditors();
-  renderBestThirdEditor();
-  renderFuturesEditor();
-  renderConsensusCharts();
   renderLeaderboard();
 }
 
@@ -258,44 +240,68 @@ function mode(values) {
 
 function renderMetrics() {
   const scored = scoreAllPlayers();
-  const leader = scored[0];
-  const maxPossible = players.length ? Math.max(...scored.map((row) => row.total)) : 0;
+  const places = [
+    ["Leader", scored[0]],
+    ["Runner-up", scored[1]],
+    ["Third place", scored[2]],
+  ];
 
-  metrics.replaceChildren(
-    metric("Players", players.length),
-    metric("Leader", leader ? leader.name : "None"),
-    metric("Top score", formatPoints(maxPossible)),
-    metric("Scored sections", "Groups + futures")
-  );
+  metrics.replaceChildren(...places.map(([label, row]) => podiumMetric(label, row)));
 }
 
-function metric(label, value) {
+function podiumMetric(label, row) {
   const node = document.createElement("article");
-  node.className = "metric";
-  node.innerHTML = `<span>${escapeHtml(label)}</span><strong>${escapeHtml(String(value))}</strong>`;
+  node.className = "metric podium-metric";
+  node.innerHTML = `
+    <span>${escapeHtml(label)}</span>
+    <strong>${escapeHtml(row ? row.name : "None")}</strong>
+    <em>${row ? `${formatPoints(row.total)} pts` : "0 pts"}</em>
+  `;
   return node;
 }
 
 function renderRules() {
-  const rules = [
-    ["Exact group position", GROUP_EXACT_POSITION_POINTS],
-    ["Full group order bonus", GROUP_FULL_ORDER_BONUS],
-    ["Correct best-third team", BEST_THIRD_TEAM_POINTS],
-    ["Champion", FUTURES_POINTS.champion],
-    ["Runner-up", FUTURES_POINTS.runnerUp],
-    ["Reversed final pairing", FUTURES_POINTS.reversedFinalPairing],
-    ["Top scorer", FUTURES_POINTS.topScorer],
-    ["Favorite last round exact/off-by-one", `${FUTURES_POINTS.favoriteExact} / ${FUTURES_POINTS.favoriteOffByOne}`],
-    ["Ecuador last round exact/off-by-one", `${FUTURES_POINTS.ecuadorExact} / ${FUTURES_POINTS.ecuadorOffByOne}`],
-    ["Perfect futures bonus", FUTURES_POINTS.perfectBonus],
+  const sections = [
+    {
+      title: "Group stage",
+      rows: [
+        `Each team in the exact predicted group position earns ${GROUP_EXACT_POSITION_POINTS} points.`,
+        `A completely correct group order earns an extra ${GROUP_FULL_ORDER_BONUS} point bonus.`,
+        `Each correctly selected best third-place qualifier earns ${BEST_THIRD_TEAM_POINTS} points. The order of those best-third picks does not matter.`,
+      ],
+    },
+    {
+      title: "Futures",
+      rows: [
+        `Correct champion: ${FUTURES_POINTS.champion} points.`,
+        `Correct runner-up: ${FUTURES_POINTS.runnerUp} points.`,
+        `If the champion and runner-up are reversed, the entry earns ${FUTURES_POINTS.reversedFinalPairing} points instead of the champion or runner-up points.`,
+        `Correct top scorer: ${FUTURES_POINTS.topScorer} points.`,
+        `Favorite-team last round: ${FUTURES_POINTS.favoriteExact} points for exact, ${FUTURES_POINTS.favoriteOffByOne} points if off by one round.`,
+        `Ecuador last round: ${FUTURES_POINTS.ecuadorExact} points for exact, ${FUTURES_POINTS.ecuadorOffByOne} points if off by one round.`,
+        `Perfect futures card bonus: ${FUTURES_POINTS.perfectBonus} points when champion, runner-up, top scorer, favorite-team round, and Ecuador round are all exact.`,
+      ],
+    },
+    {
+      title: "Current visualization",
+      rows: [
+        "The workbook export does not include official results yet, so this page uses a consensus scenario derived from the submitted picks.",
+        "Knockout scoring exists in the Python scorer, but knockout predictions are not present in pool_data.js, so this page does not include knockout points.",
+      ],
+    },
   ];
 
   rulesGrid.replaceChildren(
-    ...rules.map(([label, points]) => {
-      const row = document.createElement("div");
-      row.className = "rule-row";
-      row.innerHTML = `<span>${escapeHtml(label)}</span><strong>${escapeHtml(points)}</strong>`;
-      return row;
+    ...sections.map((section) => {
+      const article = document.createElement("article");
+      article.className = "rule-section";
+      article.innerHTML = `
+        <h3>${escapeHtml(section.title)}</h3>
+        <ul>
+          ${section.rows.map((row) => `<li>${escapeHtml(row)}</li>`).join("")}
+        </ul>
+      `;
+      return article;
     })
   );
 }

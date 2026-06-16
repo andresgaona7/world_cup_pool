@@ -107,6 +107,7 @@ select {
   display: flex;
   gap: 12px;
   align-items: flex-end;
+  justify-content: flex-end;
   flex-wrap: wrap;
 }
 
@@ -136,7 +137,6 @@ button.secondary,
   display: grid;
   gap: 6px;
   min-width: min(100%, 280px);
-  margin-left: auto;
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;
@@ -184,6 +184,15 @@ select {
   margin-top: 8px;
   font-size: 28px;
   line-height: 1.1;
+}
+
+.podium-metric em {
+  display: block;
+  margin-top: 8px;
+  color: var(--accent);
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 850;
 }
 
 .split {
@@ -273,12 +282,40 @@ td {
   background: #fbf7ed;
 }
 
+.rules-explainer,
 .rules-grid,
 .futures-editor,
 .group-grid,
 .third-grid,
 .charts {
   padding: 16px;
+}
+
+.rules-explainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.rule-section {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 14px;
+}
+
+.rule-section h3 {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
+
+.rule-section ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.45;
 }
 
 .rules-grid {
