@@ -37,7 +37,8 @@ let players = rawData.players.map(normalizePlayer);
 let filterTerm = "";
 let officialScenario = normalizeOfficialScenario(players, officialData);
 let consensusScenario = buildConsensusScenario(players);
-let scenario = buildInitialScenario(players, officialData);
+let selectedScenarioMode = hasOfficialScenarioData(officialScenario) ? "official" : "consensus";
+let scenario = scenarioForMode(selectedScenarioMode);
 let comparisonPlayerIndex = 0;
 
 const sourceFile = document.querySelector("#sourceFile");
@@ -45,6 +46,8 @@ const metrics = document.querySelector("#metrics");
 const leaderboardTable = document.querySelector("#leaderboardTable");
 const rulesGrid = document.querySelector("#rulesGrid");
 const playerFilter = document.querySelector("#playerFilter");
+const scenarioSelect = document.querySelector("#scenarioSelect");
+const leaderboardScenarioStatus = document.querySelector("#leaderboardScenarioStatus");
 const comparisonStatus = document.querySelector("#comparisonStatus");
 const comparisonSummary = document.querySelector("#comparisonSummary");
 const groupComparisonTable = document.querySelector("#groupComparisonTable");
@@ -52,6 +55,17 @@ const bestThirdComparisonTable = document.querySelector("#bestThirdComparisonTab
 const comparisonPlayerSelect = document.querySelector("#comparisonPlayerSelect");
 
 sourceFile.textContent = sourceLabel(rawData, officialData);
+scenarioSelect.value = selectedScenarioMode;
+scenarioSelect.querySelector('option[value="official"]').disabled = !hasOfficialScenarioData(officialScenario);
+
+scenarioSelect.addEventListener("change", (event) => {
+  selectedScenarioMode = event.target.value;
+  scenario = scenarioForMode(selectedScenarioMode);
+  renderMetrics();
+  renderComparison();
+  renderLeaderboard();
+  renderRules();
+});
 
 playerFilter.addEventListener("input", (event) => {
   filterTerm = event.target.value.trim().toLowerCase();
@@ -219,15 +233,19 @@ function buildInitialScenario(sourcePlayers, resultsData) {
 }
 
 function normalizeOfficialScenario(sourcePlayers, resultsData) {
+  const standings = resultsData?.provisionalGroupStandings || {};
   const groupResults = {};
   GROUP_IDS.forEach((groupId) => {
-    groupResults[groupId] = (resultsData?.groupResults?.[groupId] || []).slice(0, 3);
+    const provisionalTeams = normalizeGroupStandingRows(standings[groupId]).slice(0, 3).map((row) => row.team);
+    groupResults[groupId] = provisionalTeams.length
+      ? provisionalTeams
+      : (resultsData?.groupResults?.[groupId] || []).slice(0, 3);
   });
 
   const futures = resultsData?.futures || {};
   return {
     groupResults,
-    bestThirds: (resultsData?.bestThirds || []).filter(Boolean),
+    bestThirds: provisionalBestThirds(standings, resultsData?.bestThirds || []),
     futures: {
       champion: futures.champion || "",
       runnerUp: futures.runnerUp || "",
@@ -238,6 +256,41 @@ function normalizeOfficialScenario(sourcePlayers, resultsData) {
       },
     },
   };
+}
+
+function normalizeGroupStandingRows(rows) {
+  return (rows || [])
+    .filter((row) => row?.team)
+    .map((row) => ({
+      team: row.team,
+      position: Number(row.position) || 999,
+      points: Number(row.points) || 0,
+      goalDifference: Number(row.goalDifference) || 0,
+      goalsFor: Number(row.goalsFor) || 0,
+    }))
+    .sort((a, b) =>
+      a.position - b.position ||
+      b.points - a.points ||
+      b.goalDifference - a.goalDifference ||
+      b.goalsFor - a.goalsFor ||
+      a.team.localeCompare(b.team)
+    );
+}
+
+function provisionalBestThirds(standings, fallbackBestThirds) {
+  const thirdPlaceRows = GROUP_IDS.map((groupId) => normalizeGroupStandingRows(standings?.[groupId])[2])
+    .filter(Boolean)
+    .sort((a, b) =>
+      b.points - a.points ||
+      b.goalDifference - a.goalDifference ||
+      b.goalsFor - a.goalsFor ||
+      a.team.localeCompare(b.team)
+    );
+
+  if (thirdPlaceRows.length) {
+    return thirdPlaceRows.slice(0, 8).map((row) => row.team);
+  }
+  return fallbackBestThirds.filter(Boolean);
 }
 
 function hasOfficialScenarioData(officialScenario) {
@@ -262,6 +315,13 @@ function buildEmptyScenario(sourcePlayers) {
       teamLastRounds: Object.fromEntries(trackedTeams(sourcePlayers).map((team) => [team, ""])),
     },
   };
+}
+
+function scenarioForMode(mode) {
+  if (mode === "official" && hasOfficialScenarioData(officialScenario)) {
+    return officialScenario;
+  }
+  return consensusScenario;
 }
 
 function consensusGroupOrder(sourcePlayers, groupId) {
@@ -367,7 +427,7 @@ function renderRules() {
       title: "Current visualization",
       rows: [
         officialData
-          ? "The page loads official-results data from official_results/data/official_results.js and falls back to the pool consensus when that file has no completed scoring data."
+          ? "The page can score either the official provisional standings from official_results/data/official_results.js or the pool consensus scenario."
           : "The workbook export does not include official results yet, so this page uses a consensus scenario derived from the submitted picks.",
         "Knockout scoring exists in the Python scorer, but knockout predictions are not present in pool_data.js, so this page does not include knockout points.",
       ],
@@ -390,35 +450,37 @@ function renderRules() {
 }
 
 function renderComparison() {
-  const hasOfficialData = hasOfficialScenarioData(officialScenario);
+  const comparisonScenario = scenario;
+  const hasComparisonData = hasScenarioData(comparisonScenario);
   const selectedPlayer = players[comparisonPlayerIndex] || players[0];
-  comparisonStatus.textContent = hasOfficialData ? "Official data loaded" : "Pending results";
-  comparisonStatus.classList.toggle("pending", !hasOfficialData);
+  const resultLabel = `${scenarioLabel(selectedScenarioMode)} result`;
+  comparisonStatus.textContent = scenarioLabel(selectedScenarioMode);
+  comparisonStatus.classList.toggle("pending", !hasComparisonData);
 
-  const groupRows = GROUP_IDS.map((groupId) => groupComparisonRow(groupId, selectedPlayer));
+  const groupRows = GROUP_IDS.map((groupId) => groupComparisonRow(groupId, selectedPlayer, comparisonScenario));
   const completedGroups = groupRows.filter((row) => row.official.length > 0).length;
   const playerExactSlots = groupRows.reduce((total, row) => total + row.playerExactSlots, 0);
   const possibleGroupSlots = groupRows.reduce((total, row) => total + row.official.length, 0);
   const bestThirdMatches = selectedPlayer
-    ? selectedPlayer.bestThirds.filter((pick) => officialScenario.bestThirds.includes(pick.team)).length
+    ? selectedPlayer.bestThirds.filter((pick) => comparisonScenario.bestThirds.includes(pick.team)).length
     : 0;
   const groupPoints = groupRows.reduce((total, row) => total + row.points, 0);
   const bestThirdPoints = bestThirdMatches * BEST_THIRD_TEAM_POINTS;
 
   comparisonSummary.replaceChildren(
-    comparisonMetric("Completed groups", `${completedGroups}/${GROUP_IDS.length}`),
+    comparisonMetric("Groups with standings", `${completedGroups}/${GROUP_IDS.length}`),
     comparisonMetric("Selected player", selectedPlayer?.name || "None"),
     comparisonMetric("First-round score", `${formatPoints(groupPoints + bestThirdPoints)} pts`),
     comparisonMetric("Group exact slots", `${playerExactSlots}/${possibleGroupSlots || 0}`),
-    comparisonMetric("Best-third overlap", `${bestThirdMatches}/${officialScenario.bestThirds.length || 0}`),
-    comparisonMetric("Official source", officialData?.sourceName || "Not loaded")
+    comparisonMetric("Best-third overlap", `${bestThirdMatches}/${comparisonScenario.bestThirds.length || 0}`),
+    comparisonMetric("Scenario source", scenarioSourceLabel(selectedScenarioMode))
   );
 
   groupComparisonTable.innerHTML = `
     <thead>
       <tr>
         <th>Group</th>
-        <th>Official result</th>
+        <th>${escapeHtml(resultLabel)}</th>
         <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
         <th>Exact slots</th>
         <th>Points</th>
@@ -437,12 +499,12 @@ function renderComparison() {
     </tbody>
   `;
 
-  const bestThirdRows = bestThirdComparisonRows(selectedPlayer);
+  const bestThirdRows = bestThirdComparisonRows(selectedPlayer, comparisonScenario);
   bestThirdComparisonTable.innerHTML = `
     <thead>
       <tr>
         <th>Category</th>
-        <th>Official result</th>
+        <th>${escapeHtml(resultLabel)}</th>
         <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
         <th>Result</th>
       </tr>
@@ -477,8 +539,8 @@ function comparisonMetric(label, value) {
   return node;
 }
 
-function groupComparisonRow(groupId, player) {
-  const official = officialScenario.groupResults[groupId] || [];
+function groupComparisonRow(groupId, player, comparisonScenario) {
+  const official = comparisonScenario.groupResults[groupId] || [];
   const prediction = player?.groups[groupId] || [];
   const playerExactSlots = official.reduce(
     (count, team, index) => count + (team && team === prediction[index] ? 1 : 0),
@@ -496,16 +558,16 @@ function groupComparisonRow(groupId, player) {
   };
 }
 
-function bestThirdComparisonRows(player) {
+function bestThirdComparisonRows(player, comparisonScenario) {
   if (!player) {
     return [];
   }
 
-  const bestThirdMatches = player.bestThirds.filter((pick) => officialScenario.bestThirds.includes(pick.team)).length;
+  const bestThirdMatches = player.bestThirds.filter((pick) => comparisonScenario.bestThirds.includes(pick.team)).length;
   return [
     {
       label: "Best thirds",
-      official: officialScenario.bestThirds.join(", "),
+      official: comparisonScenario.bestThirds.join(", "),
       prediction: player.bestThirds.map((pick) => pick.team).join(", "),
       points: bestThirdMatches * BEST_THIRD_TEAM_POINTS,
       status: `${bestThirdMatches} match${bestThirdMatches === 1 ? "" : "es"}`,
@@ -686,6 +748,7 @@ function selectField({ label, value, options, onChange, optionLabel = (option) =
 
 function renderAfterScenarioChange() {
   renderMetrics();
+  renderComparison();
   renderLeaderboard();
 }
 
@@ -735,6 +798,7 @@ function chart(title, rows, maxVotes) {
 
 function renderLeaderboard() {
   document.querySelector(".empty-state")?.remove();
+  leaderboardScenarioStatus.textContent = scenarioLabel(selectedScenarioMode);
   const rows = scoreAllPlayers().filter((row) => {
     if (!filterTerm) {
       return true;
@@ -778,6 +842,28 @@ function renderLeaderboard() {
         .join("")}
     </tbody>
   `;
+}
+
+function hasScenarioData(value) {
+  return (
+    Object.values(value.groupResults).some((teams) => teams.some(Boolean)) ||
+    value.bestThirds.length > 0 ||
+    value.futures.champion ||
+    value.futures.runnerUp ||
+    value.futures.topScorer ||
+    Object.values(value.futures.teamLastRounds).some(Boolean)
+  );
+}
+
+function scenarioLabel(mode) {
+  return mode === "official" ? "Official results" : "Consensus scenario";
+}
+
+function scenarioSourceLabel(mode) {
+  if (mode === "official") {
+    return officialData?.sourceName || "Official results";
+  }
+  return "Pool consensus";
 }
 
 function scoreAllPlayers() {

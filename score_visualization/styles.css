@@ -143,6 +143,10 @@ button.secondary,
   text-transform: uppercase;
 }
 
+.scenario-select {
+  min-width: min(100%, 220px);
+}
+
 input,
 select {
   min-height: 38px;
