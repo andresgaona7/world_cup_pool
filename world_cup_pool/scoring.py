@@ -35,7 +35,8 @@ from .models import (
 )
 
 
-GROUP_EXACT_POSITION_POINTS = 2.0
+GROUP_QUALIFIER_POINTS = 1.0
+GROUP_EXACT_ADVANCING_POSITION_BONUS = 1.0
 GROUP_FULL_ORDER_BONUS = 5.0
 BEST_THIRD_TEAM_POINTS = 3.0
 
@@ -49,13 +50,17 @@ def score_group_predictions(
     """Score group order and best-third predictions.
 
     Group scoring is intentionally simple for v1:
-    - 2 points for each team in the exact group position.
+    - 1 point for each correctly predicted group-stage qualifier.
+    - 1 bonus point when a correctly predicted qualifier also finishes in the
+      exact predicted advancing position.
     - 5 bonus points for a fully correct group order.
     - 3 points for each correctly selected best-third team.
     - Best-third predictions are scored as qualifiers only; order is ignored.
     """
 
     result_by_group = {result.group_id: result for result in results}
+    actual_best_thirds = set(best_third_results)
+    predicted_best_thirds = set(best_third_predictions)
     total = 0.0
 
     for prediction in predictions:
@@ -63,20 +68,39 @@ def score_group_predictions(
         if result is None:
             continue
 
-        exact_positions = sum(
+        predicted_qualifiers = _advancing_teams(
+            prediction.ordered_teams,
+            predicted_best_thirds,
+        )
+        actual_qualifiers = _advancing_teams(result.ordered_teams, actual_best_thirds)
+        qualifier_matches = len(predicted_qualifiers & actual_qualifiers)
+        total += qualifier_matches * GROUP_QUALIFIER_POINTS
+
+        exact_advancing_positions = sum(
             1
             for predicted_team, actual_team in zip(
                 prediction.ordered_teams, result.ordered_teams, strict=False
             )
-            if predicted_team == actual_team
+            if (
+                predicted_team
+                and predicted_team == actual_team
+                and predicted_team in predicted_qualifiers
+                and actual_team in actual_qualifiers
+            )
         )
-        total += exact_positions * GROUP_EXACT_POSITION_POINTS
+        total += exact_advancing_positions * GROUP_EXACT_ADVANCING_POSITION_BONUS
 
         if prediction.ordered_teams == result.ordered_teams:
             total += GROUP_FULL_ORDER_BONUS
 
-    total += len(set(best_third_predictions) & set(best_third_results)) * BEST_THIRD_TEAM_POINTS
+    total += len(predicted_best_thirds & actual_best_thirds) * BEST_THIRD_TEAM_POINTS
     return total
+
+
+def _advancing_teams(ordered_teams: tuple[str, ...], best_thirds: set[str]) -> set[str]:
+    direct_qualifiers = {team for team in ordered_teams[:2] if team}
+    selected_best_thirds = {team for team in ordered_teams if team and team in best_thirds}
+    return direct_qualifiers | selected_best_thirds
 
 
 def score_knockout_prediction(

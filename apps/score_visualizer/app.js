@@ -1,7 +1,8 @@
 const rawData = window.POOL_DATA || { players: [] };
 const officialData = window.OFFICIAL_RESULTS || null;
 
-const GROUP_EXACT_POSITION_POINTS = 2;
+const GROUP_QUALIFIER_POINTS = 1;
+const GROUP_EXACT_ADVANCING_POSITION_BONUS = 1;
 const GROUP_FULL_ORDER_BONUS = 5;
 const BEST_THIRD_TEAM_POINTS = 3;
 
@@ -394,7 +395,9 @@ function renderRules() {
     {
       title: "Group stage",
       rows: [
-        `Each team in the exact predicted group position earns ${GROUP_EXACT_POSITION_POINTS} points.`,
+        `Each correctly predicted group-stage qualifier earns ${GROUP_QUALIFIER_POINTS} point.`,
+        `A correctly predicted qualifier earns ${GROUP_EXACT_ADVANCING_POSITION_BONUS} extra point when it also finishes in the exact predicted advancing position.`,
+        "Third-place teams only count as qualifiers if they are official best thirds.",
         `A completely correct group order earns an extra ${GROUP_FULL_ORDER_BONUS} point bonus.`,
         `Each correctly selected best third-place qualifier earns ${BEST_THIRD_TEAM_POINTS} points. The order of those best-third picks does not matter.`,
       ],
@@ -447,8 +450,9 @@ function renderComparison() {
 
   const groupRows = GROUP_IDS.map((groupId) => groupComparisonRow(groupId, selectedPlayer, comparisonScenario));
   const completedGroups = groupRows.filter((row) => row.official.length > 0).length;
-  const playerExactSlots = groupRows.reduce((total, row) => total + row.playerExactSlots, 0);
-  const possibleGroupSlots = groupRows.reduce((total, row) => total + row.official.length, 0);
+  const qualifierMatches = groupRows.reduce((total, row) => total + row.qualifierMatches, 0);
+  const exactAdvancingPositions = groupRows.reduce((total, row) => total + row.exactAdvancingPositions, 0);
+  const possibleQualifiers = groupRows.reduce((total, row) => total + row.actualQualifiers, 0);
   const bestThirdMatches = selectedPlayer
     ? selectedPlayer.bestThirds.filter((pick) => comparisonScenario.bestThirds.includes(pick.team)).length
     : 0;
@@ -459,7 +463,8 @@ function renderComparison() {
     comparisonMetric("Groups with standings", `${completedGroups}/${GROUP_IDS.length}`),
     comparisonMetric("Selected player", selectedPlayer?.name || "None"),
     comparisonMetric("First-round score", `${formatPoints(groupPoints + bestThirdPoints)} pts`),
-    comparisonMetric("Group exact slots", `${playerExactSlots}/${possibleGroupSlots || 0}`),
+    comparisonMetric("Advancing teams", `${qualifierMatches}/${possibleQualifiers || 0}`),
+    comparisonMetric("Exact advancing slots", `${exactAdvancingPositions}/${possibleQualifiers || 0}`),
     comparisonMetric("Best-third overlap", `${bestThirdMatches}/${comparisonScenario.bestThirds.length || 0}`),
     comparisonMetric("Scenario source", scenarioSourceLabel(selectedScenarioMode))
   );
@@ -470,7 +475,8 @@ function renderComparison() {
         <th>Group</th>
         <th>${escapeHtml(resultLabel)}</th>
         <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
-        <th>Exact slots</th>
+        <th>Advancing teams</th>
+        <th>Exact advancing</th>
         <th>Points</th>
       </tr>
     </thead>
@@ -480,7 +486,8 @@ function renderComparison() {
           <td><strong>Group ${escapeHtml(row.groupId)}</strong></td>
           <td>${teamList(row.official)}</td>
           <td>${teamList(row.prediction)}</td>
-          <td>${row.official.length ? `${row.playerExactSlots}/${row.official.length}` : '<span class="muted">Pending</span>'}</td>
+          <td>${row.official.length ? `${row.qualifierMatches}/${row.actualQualifiers}` : '<span class="muted">Pending</span>'}</td>
+          <td>${row.official.length ? `${row.exactAdvancingPositions}/${row.actualQualifiers}` : '<span class="muted">Pending</span>'}</td>
           <td>${row.official.length ? formatPoints(row.points) : '<span class="muted">Pending</span>'}</td>
         </tr>
       `).join("")}
@@ -537,18 +544,34 @@ function comparisonMetric(label, value) {
 function groupComparisonRow(groupId, player, comparisonScenario) {
   const official = comparisonScenario.groupResults[groupId] || [];
   const prediction = player?.groups[groupId] || [];
-  const playerExactSlots = official.reduce(
-    (count, team, index) => count + (team && team === prediction[index] ? 1 : 0),
+  const predictedQualifiers = groupAdvancingTeams(prediction, playerBestThirdSet(player));
+  const actualQualifiers = groupAdvancingTeams(official, new Set(comparisonScenario.bestThirds));
+  const qualifierMatches = countSetIntersection(predictedQualifiers, actualQualifiers);
+  const exactAdvancingPositions = official.reduce(
+    (count, team, index) =>
+      count + (
+        team &&
+        team === prediction[index] &&
+        predictedQualifiers.has(team) &&
+        actualQualifiers.has(team)
+          ? 1
+          : 0
+      ),
     0
   );
   const fullOrder = official.length > 0 && official.every((team, index) => team && team === prediction[index]);
-  const points = playerExactSlots * GROUP_EXACT_POSITION_POINTS + (fullOrder ? GROUP_FULL_ORDER_BONUS : 0);
+  const points =
+    qualifierMatches * GROUP_QUALIFIER_POINTS +
+    exactAdvancingPositions * GROUP_EXACT_ADVANCING_POSITION_BONUS +
+    (fullOrder ? GROUP_FULL_ORDER_BONUS : 0);
 
   return {
     groupId,
     official,
     prediction,
-    playerExactSlots,
+    actualQualifiers: actualQualifiers.size,
+    qualifierMatches,
+    exactAdvancingPositions,
     points,
   };
 }
@@ -902,18 +925,52 @@ function scoreGroups(player) {
       return total;
     }
 
-    const exact = predicted.reduce(
-      (count, team, index) => count + (team && team === actual[index] ? 1 : 0),
+    const predictedQualifiers = groupAdvancingTeams(predicted, playerBestThirdSet(player));
+    const actualQualifiers = groupAdvancingTeams(actual, new Set(scenario.bestThirds));
+    const qualifierMatches = countSetIntersection(predictedQualifiers, actualQualifiers);
+    const exactAdvancingPositions = predicted.reduce(
+      (count, team, index) =>
+        count + (
+          team &&
+          team === actual[index] &&
+          predictedQualifiers.has(team) &&
+          actualQualifiers.has(team)
+            ? 1
+            : 0
+        ),
       0
     );
     const fullOrder = actual.length > 0 && actual.every((team, index) => team && team === predicted[index]);
-    return total + exact * GROUP_EXACT_POSITION_POINTS + (fullOrder ? GROUP_FULL_ORDER_BONUS : 0);
+    return (
+      total +
+      qualifierMatches * GROUP_QUALIFIER_POINTS +
+      exactAdvancingPositions * GROUP_EXACT_ADVANCING_POSITION_BONUS +
+      (fullOrder ? GROUP_FULL_ORDER_BONUS : 0)
+    );
   }, 0);
 }
 
 function scoreBestThirds(player) {
   const actual = new Set(scenario.bestThirds);
   return player.bestThirds.filter((pick) => actual.has(pick.team)).length * BEST_THIRD_TEAM_POINTS;
+}
+
+function playerBestThirdSet(player) {
+  return new Set((player?.bestThirds || []).map((pick) => pick.team));
+}
+
+function groupAdvancingTeams(orderedTeams, bestThirds) {
+  const directQualifiers = orderedTeams.slice(0, 2).filter(Boolean);
+  return new Set(
+    [
+      ...directQualifiers,
+      ...orderedTeams.filter((team) => team && bestThirds.has(team)),
+    ]
+  );
+}
+
+function countSetIntersection(left, right) {
+  return [...left].filter((value) => right.has(value)).length;
 }
 
 function scoreFutures(player) {

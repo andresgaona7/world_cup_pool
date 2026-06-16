@@ -2,10 +2,36 @@
 
 ## Group Stage
 
-- Exact team in exact group position: 2 points.
+- Correct group-stage qualifier: 1 point for each team correctly predicted to
+  advance from the group.
+- Exact advancing position bonus: 1 additional point when a correctly predicted
+  qualifier also finishes in the exact predicted advancing position.
+- Third-place teams only count as qualifiers if they are one of the official
+  best thirds. A team that finishes third in its group but does not advance
+  earns no qualifier or exact-position points.
 - Full group order exactly correct: 5 point bonus.
 - Correct best-third qualifier: 3 points.
 - Best-third order is ignored.
+
+For group-stage scoring, "advancing position" means first, second, or third
+only when that third-place team is one of the official best-third qualifiers.
+
+This keeps the group-stage balance close to the original rules while removing
+the unwanted reward for non-advancing third-place teams. A perfect group with an
+official best-third qualifier still earns 11 points before best-third picks: 3
+advancing teams x 2 combined qualifier/exact-position points, plus the 5 point
+full-order bonus. A perfect group without an official best-third qualifier earns
+9 points because only the top two teams advanced.
+
+## Balance Target
+
+The first round should reward good early predictions without deciding the pool.
+With 12 groups and 8 best-third qualifiers, the perfect first-round score is
+148 points: 8 best-third groups x 11 points, 4 non-best-third groups x 9 points,
+and 8 best-third picks x 3 points. The previous maximum was 156 points, so the
+only reduction is the 8 points that used to come from exact third-place slots
+for teams that did not advance. Knockout matches and futures still leave enough
+points available for the leaderboard to move through the final match.
 
 ## Knockout Matches
 

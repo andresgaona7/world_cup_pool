@@ -17,7 +17,7 @@ from world_cup_pool import (
 
 
 class LeaderboardTests(unittest.TestCase):
-    def test_group_scoring_counts_positions_full_order_and_best_thirds(self):
+    def test_group_scoring_counts_qualifiers_exact_positions_full_order_and_best_thirds(self):
         predictions = (
             GroupPrediction(group_id="A", ordered_teams=("Ecuador", "Qatar", "Senegal", "Netherlands")),
         )
@@ -32,7 +32,33 @@ class LeaderboardTests(unittest.TestCase):
             best_third_results=("Senegal", "Morocco", "USA"),
         )
 
-        self.assertEqual(points, 19.0)
+        self.assertEqual(points, 17.0)
+
+    def test_group_scoring_gives_partial_credit_for_swapped_qualifiers(self):
+        points = score_group_predictions(
+            predictions=(
+                GroupPrediction(group_id="A", ordered_teams=("Qatar", "Ecuador", "Senegal")),
+            ),
+            results=(
+                GroupResult(group_id="A", ordered_teams=("Ecuador", "Qatar", "Senegal")),
+            ),
+            best_third_predictions=("Senegal",),
+            best_third_results=("Senegal",),
+        )
+
+        self.assertEqual(points, 7.0)
+
+    def test_group_scoring_does_not_score_non_advancing_third_place_slot(self):
+        points = score_group_predictions(
+            predictions=(
+                GroupPrediction(group_id="A", ordered_teams=("Qatar", "Ecuador", "Senegal")),
+            ),
+            results=(
+                GroupResult(group_id="A", ordered_teams=("Ecuador", "Qatar", "Senegal")),
+            ),
+        )
+
+        self.assertEqual(points, 2.0)
 
     def test_best_third_scoring_ignores_order(self):
         points = score_group_predictions(
@@ -118,11 +144,11 @@ class LeaderboardTests(unittest.TestCase):
         leaderboard = compute_leaderboard((chaser, leader), official_results)
 
         self.assertEqual([score.player_name for score in leaderboard], ["Ana", "Ben"])
-        self.assertEqual(leaderboard[0].breakdown.group, 16.0)
+        self.assertEqual(leaderboard[0].breakdown.group, 14.0)
         self.assertEqual(leaderboard[0].breakdown.knockout, 50.0)
         self.assertEqual(leaderboard[0].breakdown.futures, 265.0)
         self.assertEqual(leaderboard[0].breakdown.bonuses, 325.0)
-        self.assertEqual(leaderboard[0].total, 656.0)
+        self.assertEqual(leaderboard[0].total, 654.0)
 
 
 if __name__ == "__main__":
