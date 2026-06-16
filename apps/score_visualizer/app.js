@@ -449,7 +449,6 @@ function renderComparison() {
   comparisonStatus.classList.toggle("pending", !hasComparisonData);
 
   const groupRows = GROUP_IDS.map((groupId) => groupComparisonRow(groupId, selectedPlayer, comparisonScenario));
-  const completedGroups = groupRows.filter((row) => row.official.length > 0).length;
   const qualifierMatches = groupRows.reduce((total, row) => total + row.qualifierMatches, 0);
   const exactAdvancingPositions = groupRows.reduce((total, row) => total + row.exactAdvancingPositions, 0);
   const possibleQualifiers = groupRows.reduce((total, row) => total + row.actualQualifiers, 0);
@@ -457,16 +456,29 @@ function renderComparison() {
     ? selectedPlayer.bestThirds.filter((pick) => comparisonScenario.bestThirds.includes(pick.team)).length
     : 0;
   const groupPoints = groupRows.reduce((total, row) => total + row.points, 0);
+  const groupTotals = groupRows.reduce(
+    (total, row) => ({
+      qualifierPoints: total.qualifierPoints + row.qualifierPoints,
+      exactAdvancingPoints: total.exactAdvancingPoints + row.exactAdvancingPoints,
+      fullOrderPoints: total.fullOrderPoints + row.fullOrderPoints,
+      points: total.points + row.points,
+    }),
+    {
+      qualifierPoints: 0,
+      exactAdvancingPoints: 0,
+      fullOrderPoints: 0,
+      points: 0,
+    }
+  );
   const bestThirdPoints = bestThirdMatches * BEST_THIRD_TEAM_POINTS;
 
   comparisonSummary.replaceChildren(
-    comparisonMetric("Groups with standings", `${completedGroups}/${GROUP_IDS.length}`),
     comparisonMetric("Selected player", selectedPlayer?.name || "None"),
     comparisonMetric("First-round score", `${formatPoints(groupPoints + bestThirdPoints)} pts`),
-    comparisonMetric("Advancing teams", `${qualifierMatches}/${possibleQualifiers || 0}`),
-    comparisonMetric("Exact advancing slots", `${exactAdvancingPositions}/${possibleQualifiers || 0}`),
-    comparisonMetric("Best-third overlap", `${bestThirdMatches}/${comparisonScenario.bestThirds.length || 0}`),
-    comparisonMetric("Scenario source", scenarioSourceLabel(selectedScenarioMode))
+    comparisonMetric("Qualifier points", `${formatPoints(groupTotals.qualifierPoints)} pts (${qualifierMatches}/${possibleQualifiers || 0})`),
+    comparisonMetric("Exact-position bonus", `${formatPoints(groupTotals.exactAdvancingPoints)} pts (${exactAdvancingPositions}/${possibleQualifiers || 0})`),
+    comparisonMetric("Full-order bonus", `${formatPoints(groupTotals.fullOrderPoints)} pts`),
+    comparisonMetric("Best-third overlap", `${bestThirdMatches}/${comparisonScenario.bestThirds.length || 0}`)
   );
 
   groupComparisonTable.innerHTML = `
@@ -475,9 +487,10 @@ function renderComparison() {
         <th>Group</th>
         <th>${escapeHtml(resultLabel)}</th>
         <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
-        <th>Advancing teams</th>
-        <th>Exact advancing</th>
-        <th>Points</th>
+        <th>Qualifier points</th>
+        <th>Exact-position bonus</th>
+        <th>Full-order bonus</th>
+        <th>Total points</th>
       </tr>
     </thead>
     <tbody>
@@ -486,12 +499,22 @@ function renderComparison() {
           <td><strong>Group ${escapeHtml(row.groupId)}</strong></td>
           <td>${teamList(row.official)}</td>
           <td>${teamList(row.prediction)}</td>
-          <td>${row.official.length ? `${row.qualifierMatches}/${row.actualQualifiers}` : '<span class="muted">Pending</span>'}</td>
-          <td>${row.official.length ? `${row.exactAdvancingPositions}/${row.actualQualifiers}` : '<span class="muted">Pending</span>'}</td>
+          <td>${groupRulePoints(row, "qualifierPoints", `${row.qualifierMatches}/${row.actualQualifiers}`)}</td>
+          <td>${groupRulePoints(row, "exactAdvancingPoints", `${row.exactAdvancingPositions}/${row.actualQualifiers}`)}</td>
+          <td>${groupRulePoints(row, "fullOrderPoints", row.fullOrder ? "Yes" : "No")}</td>
           <td>${row.official.length ? formatPoints(row.points) : '<span class="muted">Pending</span>'}</td>
         </tr>
       `).join("")}
     </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3"><strong>Group stage total</strong></td>
+        <td><strong>${formatPoints(groupTotals.qualifierPoints)} pts</strong></td>
+        <td><strong>${formatPoints(groupTotals.exactAdvancingPoints)} pts</strong></td>
+        <td><strong>${formatPoints(groupTotals.fullOrderPoints)} pts</strong></td>
+        <td><strong>${formatPoints(groupTotals.points)} pts</strong></td>
+      </tr>
+    </tfoot>
   `;
 
   const bestThirdRows = bestThirdComparisonRows(selectedPlayer, comparisonScenario);
@@ -560,10 +583,13 @@ function groupComparisonRow(groupId, player, comparisonScenario) {
     0
   );
   const fullOrder = official.length > 0 && official.every((team, index) => team && team === prediction[index]);
+  const qualifierPoints = qualifierMatches * GROUP_QUALIFIER_POINTS;
+  const exactAdvancingPoints = exactAdvancingPositions * GROUP_EXACT_ADVANCING_POSITION_BONUS;
+  const fullOrderPoints = fullOrder ? GROUP_FULL_ORDER_BONUS : 0;
   const points =
-    qualifierMatches * GROUP_QUALIFIER_POINTS +
-    exactAdvancingPositions * GROUP_EXACT_ADVANCING_POSITION_BONUS +
-    (fullOrder ? GROUP_FULL_ORDER_BONUS : 0);
+    qualifierPoints +
+    exactAdvancingPoints +
+    fullOrderPoints;
 
   return {
     groupId,
@@ -572,8 +598,19 @@ function groupComparisonRow(groupId, player, comparisonScenario) {
     actualQualifiers: actualQualifiers.size,
     qualifierMatches,
     exactAdvancingPositions,
+    fullOrder,
+    qualifierPoints,
+    exactAdvancingPoints,
+    fullOrderPoints,
     points,
   };
+}
+
+function groupRulePoints(row, pointKey, context) {
+  if (!row.official.length) {
+    return '<span class="muted">Pending</span>';
+  }
+  return `${escapeHtml(context)} <span class="muted">(${formatPoints(row[pointKey])} pts)</span>`;
 }
 
 function bestThirdComparisonRows(player, comparisonScenario) {
