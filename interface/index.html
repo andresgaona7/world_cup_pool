@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>World Cup Pool Reader</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">World Cup 2026 Pool</p>
+        <h1>Player Predictions</h1>
+      </div>
+      <div class="source" id="sourceFile"></div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar" aria-label="Players">
+        <div class="search-wrap">
+          <input id="playerSearch" type="search" placeholder="Search players" autocomplete="off">
+        </div>
+        <nav id="playerList" class="player-list"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="player-heading">
+          <div>
+            <p class="eyebrow">Selected player</p>
+            <h2 id="playerName"></h2>
+          </div>
+          <div id="sheetName" class="sheet-pill"></div>
+        </div>
+
+        <section class="section">
+          <h3>Futures</h3>
+          <div id="futuresGrid" class="futures-grid"></div>
+        </section>
+
+        <section class="section">
+          <h3>First Round</h3>
+          <div class="table-wrap">
+            <table id="firstRoundTable" class="first-round-table"></table>
+          </div>
+        </section>
+
+        <section class="section">
+          <h3>Best Thirds</h3>
+          <div id="bestThirds" class="best-thirds"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="data/pool_data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -135,5 +135,44 @@ print(leaderboard[0].player_name, leaderboard[0].total)
 ## Run Tests
 
 ```bash
-python3 -m pytest
+python3 -m unittest discover -s tests
 ```
+
+## Test Results
+
+Expected successful output:
+
+```text
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 0.000s
+
+OK
+```
+
+### Visual Score Comparisons
+
+Knockout scoring examples:
+
+| Scenario | Stage | Points |
+| --- | --- | ---: |
+| Winner-only correct | Round of 32 | 4 |
+| Exact score and correct winner | Quarterfinal | 25 |
+| Exact draw score but wrong advancing team | Semifinal | 24 |
+| Correct winner but wrong score | Final | 10 |
+| Wrong winner | Round of 16 | 0 |
+
+Futures scoring examples:
+
+| Scenario | Points |
+| --- | ---: |
+| Perfect futures card | 265 + 75 bonus |
+| Reversed final pairing | 35 |
+| Last-round predictions off by one | 33 |
+
+Leaderboard fixture comparison:
+
+| Player | Group | Knockout | Futures | Bonuses | Total | Result |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| Ana | 16 | 50 | 265 | 325 | 656 | 1st |
+| Ben | 0 | 0 | 35 | 0 | 35 | Behind Ana |

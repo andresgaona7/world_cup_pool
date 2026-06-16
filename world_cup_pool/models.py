@@ -128,3 +128,4 @@ class PlayerScore:
     @property
     def total(self) -> float:
         return self.breakdown.total
+
