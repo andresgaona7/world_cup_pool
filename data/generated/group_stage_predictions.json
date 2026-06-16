@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "source_file": "interface/data/pool_data.js",
-    "workbook_source": "first_stage/Polla_Mundial_2026.xlsx",
+    "source_file": "data/generated/pool_data.js",
+    "workbook_source": "data/raw/Polla_Mundial_2026.xlsx",
     "generated_from": "Polla_Mundial_2026.xlsx",
-    "generated_at": "2026-06-16T08:10:34.763272+00:00",
+    "generated_at": "2026-06-16T19:39:55.252033+00:00",
     "player_count": 11
   },
   "players": [
@@ -16,7 +16,7 @@
           "ordered_teams": [
             "Mexico",
             "South Africa",
-            "Czechia"
+            "Czech Republic"
           ],
           "picks": [
             {
@@ -29,7 +29,7 @@
             },
             {
               "rank": 3,
-              "team": "Czechia"
+              "team": "Czech Republic"
             }
           ]
         },
@@ -80,14 +80,14 @@
         {
           "group_id": "D",
           "ordered_teams": [
-            "Türkiye",
+            "Turkey",
             "United States",
             "Paraguay"
           ],
           "picks": [
             {
               "rank": 1,
-              "team": "Türkiye"
+              "team": "Turkey"
             },
             {
               "rank": 2,
@@ -307,7 +307,7 @@
         },
         {
           "rank": 6,
-          "team": "Czechia"
+          "team": "Czech Republic"
         }
       ]
     },
@@ -320,7 +320,7 @@
           "ordered_teams": [
             "Mexico",
             "South Korea",
-            "Czechia"
+            "Czech Republic"
           ],
           "picks": [
             {
@@ -333,7 +333,7 @@
             },
             {
               "rank": 3,
-              "team": "Czechia"
+              "team": "Czech Republic"
             }
           ]
         },
@@ -385,7 +385,7 @@
           "group_id": "D",
           "ordered_teams": [
             "United States",
-            "Türkiye",
+            "Turkey",
             "Paraguay"
           ],
           "picks": [
@@ -395,7 +395,7 @@
             },
             {
               "rank": 2,
-              "team": "Türkiye"
+              "team": "Turkey"
             },
             {
               "rank": 3,
@@ -583,7 +583,7 @@
       "best_thirds": [
         {
           "rank": 1,
-          "team": "Czechia"
+          "team": "Czech Republic"
         },
         {
           "rank": 4,
@@ -624,7 +624,7 @@
           "ordered_teams": [
             "Mexico",
             "South Korea",
-            "Czechia"
+            "Czech Republic"
           ],
           "picks": [
             {
@@ -637,7 +637,7 @@
             },
             {
               "rank": 3,
-              "team": "Czechia"
+              "team": "Czech Republic"
             }
           ]
         },
@@ -688,14 +688,14 @@
         {
           "group_id": "D",
           "ordered_teams": [
-            "Türkiye",
+            "Turkey",
             "United States",
             "Paraguay"
           ],
           "picks": [
             {
               "rank": 1,
-              "team": "Türkiye"
+              "team": "Turkey"
             },
             {
               "rank": 2,
@@ -887,7 +887,7 @@
       "best_thirds": [
         {
           "rank": 1,
-          "team": "Czechia"
+          "team": "Czech Republic"
         },
         {
           "rank": 4,
@@ -927,7 +927,7 @@
           "group_id": "A",
           "ordered_teams": [
             "Mexico",
-            "Czechia",
+            "Czech Republic",
             "South Korea"
           ],
           "picks": [
@@ -937,7 +937,7 @@
             },
             {
               "rank": 2,
-              "team": "Czechia"
+              "team": "Czech Republic"
             },
             {
               "rank": 3,
@@ -992,14 +992,14 @@
         {
           "group_id": "D",
           "ordered_teams": [
-            "Türkiye",
+            "Turkey",
             "United States",
             "Paraguay"
           ],
           "picks": [
             {
               "rank": 1,
-              "team": "Türkiye"
+              "team": "Turkey"
             },
             {
               "rank": 2,
@@ -1231,7 +1231,7 @@
           "group_id": "A",
           "ordered_teams": [
             "Mexico",
-            "Czechia",
+            "Czech Republic",
             "South Korea"
           ],
           "picks": [
@@ -1241,7 +1241,7 @@
             },
             {
               "rank": 2,
-              "team": "Czechia"
+              "team": "Czech Republic"
             },
             {
               "rank": 3,
@@ -1296,14 +1296,14 @@
         {
           "group_id": "D",
           "ordered_teams": [
-            "Türkiye",
+            "Turkey",
             "Paraguay",
             "United States"
           ],
           "picks": [
             {
               "rank": 1,
-              "team": "Türkiye"
+              "team": "Turkey"
             },
             {
               "rank": 2,
@@ -1602,7 +1602,7 @@
           "ordered_teams": [
             "United States",
             "Paraguay",
-            "Türkiye"
+            "Turkey"
           ],
           "picks": [
             {
@@ -1615,7 +1615,7 @@
             },
             {
               "rank": 3,
-              "team": "Türkiye"
+              "team": "Turkey"
             }
           ]
         },
@@ -1906,7 +1906,7 @@
           "ordered_teams": [
             "United States",
             "Paraguay",
-            "Türkiye"
+            "Turkey"
           ],
           "picks": [
             {
@@ -1919,7 +1919,7 @@
             },
             {
               "rank": 3,
-              "team": "Türkiye"
+              "team": "Turkey"
             }
           ]
         },
@@ -2144,7 +2144,7 @@
           "ordered_teams": [
             "Mexico",
             "South Korea",
-            "Czechia"
+            "Czech Republic"
           ],
           "picks": [
             {
@@ -2157,7 +2157,7 @@
             },
             {
               "rank": 3,
-              "team": "Czechia"
+              "team": "Czech Republic"
             }
           ]
         },
@@ -2448,7 +2448,7 @@
           "ordered_teams": [
             "Mexico",
             "South Korea",
-            "Czechia"
+            "Czech Republic"
           ],
           "picks": [
             {
@@ -2461,7 +2461,7 @@
             },
             {
               "rank": 3,
-              "team": "Czechia"
+              "team": "Czech Republic"
             }
           ]
         },
@@ -2513,7 +2513,7 @@
           "group_id": "D",
           "ordered_teams": [
             "United States",
-            "Türkiye",
+            "Turkey",
             "Paraguay"
           ],
           "picks": [
@@ -2523,7 +2523,7 @@
             },
             {
               "rank": 2,
-              "team": "Türkiye"
+              "team": "Turkey"
             },
             {
               "rank": 3,
@@ -2711,7 +2711,7 @@
       "best_thirds": [
         {
           "rank": 1,
-          "team": "Czechia"
+          "team": "Czech Republic"
         },
         {
           "rank": 4,
@@ -2817,7 +2817,7 @@
           "group_id": "D",
           "ordered_teams": [
             "United States",
-            "Türkiye",
+            "Turkey",
             "Australia"
           ],
           "picks": [
@@ -2827,7 +2827,7 @@
             },
             {
               "rank": 2,
-              "team": "Türkiye"
+              "team": "Turkey"
             },
             {
               "rank": 3,
@@ -3056,7 +3056,7 @@
           "ordered_teams": [
             "Mexico",
             "South Korea",
-            "Czechia"
+            "Czech Republic"
           ],
           "picks": [
             {
@@ -3069,7 +3069,7 @@
             },
             {
               "rank": 3,
-              "team": "Czechia"
+              "team": "Czech Republic"
             }
           ]
         },
@@ -3121,7 +3121,7 @@
           "group_id": "D",
           "ordered_teams": [
             "United States",
-            "Türkiye",
+            "Turkey",
             "Paraguay"
           ],
           "picks": [
@@ -3131,7 +3131,7 @@
             },
             {
               "rank": 2,
-              "team": "Türkiye"
+              "team": "Turkey"
             },
             {
               "rank": 3,
@@ -3319,7 +3319,7 @@
       "best_thirds": [
         {
           "rank": 1,
-          "team": "Czechia"
+          "team": "Czech Republic"
         },
         {
           "rank": 4,

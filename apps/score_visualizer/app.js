@@ -88,7 +88,7 @@ function render() {
 }
 
 function sourceLabel(poolData, resultsData) {
-  const poolSource = poolData.source_file || "interface/data/pool_data.js";
+  const poolSource = poolData.source_file || "data/generated/pool_data.js";
   if (!resultsData) {
     return poolSource;
   }
@@ -427,7 +427,7 @@ function renderRules() {
       title: "Current visualization",
       rows: [
         officialData
-          ? "The page can score either the official provisional standings from official_results/data/official_results.js or the pool consensus scenario."
+          ? "The page can score either the official provisional standings from data/generated/official_results.js or the pool consensus scenario."
           : "The workbook export does not include official results yet, so this page uses a consensus scenario derived from the submitted picks.",
         "Knockout scoring exists in the Python scorer, but knockout predictions are not present in pool_data.js, so this page does not include knockout points.",
       ],

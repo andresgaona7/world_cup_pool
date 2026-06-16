@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "source_file": "interface/data/pool_data.js",
-    "workbook_source": "first_stage/Polla_Mundial_2026.xlsx",
+    "source_file": "data/generated/pool_data.js",
+    "workbook_source": "data/raw/Polla_Mundial_2026.xlsx",
     "generated_from": "Polla_Mundial_2026.xlsx",
-    "generated_at": "2026-06-16T08:10:34.763272+00:00",
+    "generated_at": "2026-06-16T19:39:55.252033+00:00",
     "player_count": 11
   },
   "group_winner_consensus": {
@@ -43,7 +43,7 @@
         "votes": 6
       },
       {
-        "team": "Türkiye",
+        "team": "Turkey",
         "votes": 4
       },
       {
@@ -124,11 +124,19 @@
     "champion": [
       {
         "value": "Spain",
-        "votes": 7
+        "votes": 5
       },
       {
         "value": "Portugal",
-        "votes": 3
+        "votes": 2
+      },
+      {
+        "value": "España",
+        "votes": 2
+      },
+      {
+        "value": "Portugal 🇵🇹",
+        "votes": 1
       },
       {
         "value": "France",
@@ -142,7 +150,7 @@
       },
       {
         "value": "France",
-        "votes": 3
+        "votes": 2
       },
       {
         "value": "Portugal",
@@ -153,7 +161,11 @@
         "votes": 1
       },
       {
-        "value": "Netherlands",
+        "value": "france",
+        "votes": 1
+      },
+      {
+        "value": "Netherlands 🇳🇱",
         "votes": 1
       },
       {
@@ -183,7 +195,7 @@
         "votes": 1
       },
       {
-        "value": "Ecuador",
+        "value": "Ecuador 🇪🇨",
         "votes": 1
       },
       {
@@ -197,15 +209,39 @@
     ],
     "top_scorer": [
       {
-        "value": "Mbappé",
-        "votes": 8
+        "value": "Mbappe",
+        "votes": 3
+      },
+      {
+        "value": "Mikel Oyarzabal",
+        "votes": 1
+      },
+      {
+        "value": "Kylian Mbappe",
+        "votes": 1
+      },
+      {
+        "value": "Harry Keane",
+        "votes": 1
+      },
+      {
+        "value": "mbappe",
+        "votes": 1
+      },
+      {
+        "value": "Kylian Mbappé 🇫🇷",
+        "votes": 1
+      },
+      {
+        "value": "Kylian Mbappé - 7",
+        "votes": 1
       },
       {
         "value": "Oyarzabal",
-        "votes": 2
+        "votes": 1
       },
       {
-        "value": "Kane",
+        "value": "Kylian mbappe",
         "votes": 1
       }
     ],
@@ -254,7 +290,7 @@
       "votes": 5
     },
     {
-      "team": "Czechia",
+      "team": "Czech Republic",
       "votes": 5
     },
     {

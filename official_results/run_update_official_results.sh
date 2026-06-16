@@ -16,8 +16,8 @@ for arg in "$@"; do
 done
 
 if [ "$HAS_TRANSPORT" = true ]; then
-  python3 official_results/update_official_results.py "$@"
+  python3 scripts/update_official_results.py "$@"
 else
-  python3 official_results/update_official_results.py \
+  python3 scripts/update_official_results.py \
     --transport "${OFFICIAL_RESULTS_TRANSPORT:-auto}" "$@"
 fi

@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
 """Build normalized prediction exports and a standalone visualization.
 
-The source file is the browser-ready `interface/data/pool_data.js` export. This
+The source file is the browser-ready `data/generated/pool_data.js` export. This
 script keeps the workbook extraction as the source of truth and only reshapes it
 into easier-to-use group-stage and futures structures.
 """
@@ -15,13 +16,14 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_PATH = ROOT / "interface" / "data" / "pool_data.js"
-OUTPUT_DIR = Path(__file__).resolve().parent
+SOURCE_PATH = ROOT / "data" / "generated" / "pool_data.js"
+GENERATED_DIR = ROOT / "data" / "generated"
+APP_DIR = ROOT / "apps" / "prediction_exports"
 
-GROUP_STAGE_PATH = OUTPUT_DIR / "group_stage_predictions.json"
-FUTURES_PATH = OUTPUT_DIR / "futures_predictions.json"
-SUMMARY_PATH = OUTPUT_DIR / "prediction_summary.json"
-VISUALIZATION_PATH = OUTPUT_DIR / "prediction_visualization.html"
+GROUP_STAGE_PATH = GENERATED_DIR / "group_stage_predictions.json"
+FUTURES_PATH = GENERATED_DIR / "futures_predictions.json"
+SUMMARY_PATH = GENERATED_DIR / "prediction_summary.json"
+VISUALIZATION_PATH = APP_DIR / "index.html"
 
 GROUP_HEADER_PATTERN = re.compile(r"^Group ([A-L])$")
 RANK_PATTERN = re.compile(r"^\d+(?:\.0)?$")
@@ -59,6 +61,8 @@ def main() -> None:
         "best_third_consensus": best_third_consensus(group_stage["players"]),
     }
 
+    GENERATED_DIR.mkdir(parents=True, exist_ok=True)
+    APP_DIR.mkdir(parents=True, exist_ok=True)
     write_json(GROUP_STAGE_PATH, group_stage)
     write_json(FUTURES_PATH, futures)
     write_json(SUMMARY_PATH, summary)

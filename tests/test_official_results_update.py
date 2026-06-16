@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 
-MODULE_PATH = Path(__file__).resolve().parents[1] / "official_results" / "update_official_results.py"
+MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts" / "update_official_results.py"
 SPEC = importlib.util.spec_from_file_location("update_official_results", MODULE_PATH)
 update_official_results = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None

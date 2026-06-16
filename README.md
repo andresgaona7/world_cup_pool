@@ -1,178 +1,78 @@
-# World Cup Pool Scoring Engine
+# World Cup Pool
 
-Framework-free Python scoring engine for a World Cup pool.
+Framework-free Python scoring engine plus static tools for a World Cup 2026
+pool. The repo keeps core scoring logic, raw workbook input, generated browser
+data, helper scripts, and static apps in separate folders.
 
-It supports:
+## Workspace Map
 
-- Group order predictions.
-- Best third-place team predictions. Order does not matter; points are awarded
-  only for choosing teams that actually move into the next phase.
-- Knockout predictions submitted stage by stage.
-- Two knockout prediction modes:
-  - Winner-only.
-  - Regulation-time score plus advancing team.
-- Pre-tournament futures:
-  - Champion.
-  - Runner-up.
-  - Top scorer.
-  - Favorite team last round.
-  - Ecuador last round.
-- Leaderboard scoring with breakdowns.
-
-## Scoring Summary
-
-### Knockout Matches
-
-Base points by round:
-
-| Stage | Base |
-| --- | ---: |
-| Round of 32 | 4 |
-| Round of 16 | 6 |
-| Quarterfinal | 10 |
-| Semifinal | 16 |
-| Third-place match | 14 |
-| Final | 20 |
-
-Winner-only mode:
-
-- Correct advancing team: `1x base`
-- Wrong advancing team: `0`
-
-Score mode:
-
-- Exact regulation score and correct advancing team: `2.5x base`
-- Exact regulation score but wrong advancing team: `1.5x base`
-- Correct advancing team but wrong score: `0.5x base`
-- Wrong advancing team: `0`
-
-### Futures
-
-| Prediction | Points |
-| --- | ---: |
-| Champion | 80 |
-| Runner-up | 50 |
-| Reversed final pairing | 35 |
-| Top scorer | 60 |
-| Favorite team last round exact | 35 |
-| Favorite team last round off by one | 15 |
-| Ecuador last round exact | 40 |
-| Ecuador last round off by one | 18 |
-| Perfect futures card bonus | 75 |
-
-### Bonuses
-
-| Bonus | Points |
-| --- | ---: |
-| Perfect knockout winners | 50 |
-| Perfect knockout scores | 200 |
-| Perfect futures card | 75 |
-
-## Example
-
-```python
-from world_cup_pool import (
-    FuturesPrediction,
-    FuturesResult,
-    KnockoutMatchResult,
-    KnockoutPrediction,
-    OfficialResults,
-    PlayerEntry,
-    PredictionMode,
-    Stage,
-    compute_leaderboard,
-)
-
-results = OfficialResults(
-    knockout_results=(
-        KnockoutMatchResult(
-            match_id="F",
-            stage=Stage.FINAL,
-            home_team="Brazil",
-            away_team="France",
-            home_score=2,
-            away_score=0,
-            advancing_team="Brazil",
-        ),
-    ),
-    futures_result=FuturesResult(
-        champion="Brazil",
-        runner_up="France",
-        top_scorer="Kylian Mbappe",
-        team_last_rounds={
-            "Brazil": Stage.CHAMPION,
-            "France": Stage.RUNNER_UP,
-            "Ecuador": Stage.ROUND_OF_16,
-        },
-    ),
-)
-
-entry = PlayerEntry(
-    player_name="Ana",
-    knockout_predictions=(
-        KnockoutPrediction(
-            match_id="F",
-            mode=PredictionMode.SCORE,
-            predicted_home_score=2,
-            predicted_away_score=0,
-            predicted_advancing_team="Brazil",
-        ),
-    ),
-    futures_prediction=FuturesPrediction(
-        champion="Brazil",
-        runner_up="France",
-        top_scorer="Kylian Mbappe",
-        favorite_team="Ecuador",
-        favorite_team_last_round=Stage.ROUND_OF_16,
-        ecuador_last_round=Stage.ROUND_OF_16,
-    ),
-)
-
-leaderboard = compute_leaderboard((entry,), results)
-print(leaderboard[0].player_name, leaderboard[0].total)
+```text
+world_cup_pool/             Core scoring package and public Python API.
+tests/                      Unit tests for scoring and result parsing.
+data/raw/                   Source workbook and Google Sheets link.
+data/generated/             Committed JS/JSON data consumed by static apps.
+scripts/                    Data builders and official-results updater.
+apps/player_predictions/    Static reader for submitted workbook picks.
+apps/score_visualizer/      Static leaderboard and scenario scorer.
+apps/prediction_exports/    Standalone generated prediction visualization.
+docs/                       Scoring rules and data-flow notes.
 ```
 
-## Run Tests
+## Common Commands
 
 ```bash
+make build-pool-data
+make build-prediction-exports
+make update-official-results
+make test
+```
+
+Equivalent direct commands:
+
+```bash
+python3 scripts/build_pool_data.py
+python3 scripts/build_prediction_exports.py
+python3 scripts/update_official_results.py --transport "${OFFICIAL_RESULTS_TRANSPORT:-auto}"
 python3 -m unittest discover -s tests
 ```
 
-## Test Results
+`make update-official-results` reads `FOOTBALL_DATA_API_KEY` when set. The
+updater also supports `--api-key`, `--input`, `--output`, `--allow-empty`, and
+`--transport`.
 
-Expected successful output:
+## Data Flow
 
-```text
-.............
-----------------------------------------------------------------------
-Ran 13 tests in 0.000s
+The workbook in `data/raw/Polla_Mundial_2026.xlsx` is the source of truth for
+submitted picks. `scripts/build_pool_data.py` converts it into
+`data/generated/pool_data.js`, which is loaded by
+`apps/player_predictions/index.html`.
 
-OK
-```
+`scripts/build_prediction_exports.py` reshapes `pool_data.js` into normalized
+JSON exports and the standalone `apps/prediction_exports/index.html`.
 
-### Visual Score Comparisons
+`scripts/update_official_results.py` fetches Football-Data standings and writes
+`data/generated/official_results.js`, which is loaded by
+`apps/score_visualizer/index.html`.
 
-Knockout scoring examples:
+See `docs/data_flow.md` for the full flow and `docs/scoring_rules.md` for point
+values.
 
-| Scenario | Stage | Points |
-| --- | --- | ---: |
-| Winner-only correct | Round of 32 | 4 |
-| Exact score and correct winner | Quarterfinal | 25 |
-| Exact draw score but wrong advancing team | Semifinal | 24 |
-| Correct winner but wrong score | Final | 10 |
-| Wrong winner | Round of 16 | 0 |
+## Static Apps
 
-Futures scoring examples:
+Open these files directly in a browser:
 
-| Scenario | Points |
-| --- | ---: |
-| Perfect futures card | 265 + 75 bonus |
-| Reversed final pairing | 35 |
-| Last-round predictions off by one | 33 |
+- `apps/player_predictions/index.html`
+- `apps/score_visualizer/index.html`
+- `apps/prediction_exports/index.html`
 
-Leaderboard fixture comparison:
+No package install, dev server, or build step is required as long as generated
+files in `data/generated/` are present.
 
-| Player | Group | Knockout | Futures | Bonuses | Total | Result |
-| --- | ---: | ---: | ---: | ---: | ---: | --- |
-| Ana | 16 | 50 | 265 | 325 | 656 | 1st |
-| Ben | 0 | 0 | 35 | 0 | 35 | Behind Ana |
+## Compatibility
+
+Two old entrypoints are retained temporarily:
+
+- `python3 interface/build_data.py`
+- `official_results/run_update_official_results.sh`
+
+New scripts should use `scripts/` directly.

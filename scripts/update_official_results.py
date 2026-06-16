@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Fetch World Cup 2026 group standings and write browser data."""
 
 from __future__ import annotations
@@ -17,8 +18,8 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT_PATH = ROOT / "official_results" / "data" / "official_results.js"
-RATE_STATE_PATH = ROOT / "official_results" / ".cache" / "football_data_rate_limit.json"
+OUTPUT_PATH = ROOT / "data" / "generated" / "official_results.js"
+RATE_STATE_PATH = ROOT / "data" / ".cache" / "football_data_rate_limit.json"
 SOURCE_URL = "https://api.football-data.org/v4/competitions/WC/standings?season=2026"
 API_KEY_ENV = "FOOTBALL_DATA_API_KEY"
 DEFAULT_API_KEY = "9a022f9d132d4a5d9d01116e0f99ab6f"
