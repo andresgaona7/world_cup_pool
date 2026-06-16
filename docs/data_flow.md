@@ -3,7 +3,7 @@
 The workbook is the source of truth for submitted pool entries:
 
 ```text
-data/raw/Polla_Mundial_2026.xlsx
+data/raw/group_stage_and_future_predictions.xlsx
   -> scripts/build_pool_data.py
   -> data/generated/pool_data.js
   -> apps/player_predictions/index.html

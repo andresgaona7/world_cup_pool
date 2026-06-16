@@ -1,9 +1,9 @@
 {
   "metadata": {
     "source_file": "data/generated/pool_data.js",
-    "workbook_source": "data/raw/Polla_Mundial_2026.xlsx",
-    "generated_from": "Polla_Mundial_2026.xlsx",
-    "generated_at": "2026-06-16T19:39:55.252033+00:00",
+    "workbook_source": "data/raw/group_stage_and_future_predictions.xlsx",
+    "generated_from": "group_stage_and_future_predictions.xlsx",
+    "generated_at": "2026-06-16T19:52:58.846049+00:00",
     "player_count": 11
   },
   "group_winner_consensus": {

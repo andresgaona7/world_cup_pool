@@ -1,6 +1,6 @@
 window.POOL_DATA = {
-  "source_file": "data/raw/Polla_Mundial_2026.xlsx",
-  "generated_from": "Polla_Mundial_2026.xlsx",
+  "source_file": "data/raw/group_stage_and_future_predictions.xlsx",
+  "generated_from": "group_stage_and_future_predictions.xlsx",
   "players": [
     {
       "sheet": "Elwebo + Gemini",

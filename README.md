@@ -42,7 +42,7 @@ updater also supports `--api-key`, `--input`, `--output`, `--allow-empty`, and
 
 ## Data Flow
 
-The workbook in `data/raw/Polla_Mundial_2026.xlsx` is the source of truth for
+The workbook in `data/raw/group_stage_and_future_predictions.xlsx` is the source of truth for
 submitted picks. `scripts/build_pool_data.py` converts it into
 `data/generated/pool_data.js`, which is loaded by
 `apps/player_predictions/index.html`.

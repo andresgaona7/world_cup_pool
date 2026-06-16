@@ -11,7 +11,7 @@ from zipfile import ZipFile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WORKBOOK_PATH = ROOT / "data" / "raw" / "Polla_Mundial_2026.xlsx"
+WORKBOOK_PATH = ROOT / "data" / "raw" / "group_stage_and_future_predictions.xlsx"
 OUTPUT_PATH = ROOT / "data" / "generated" / "pool_data.js"
 
 MAIN_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
