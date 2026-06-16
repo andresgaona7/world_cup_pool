@@ -3,7 +3,7 @@
     "source_file": "interface/data/pool_data.js",
     "workbook_source": "first_stage/Polla_Mundial_2026.xlsx",
     "generated_from": "Polla_Mundial_2026.xlsx",
-    "generated_at": "2026-06-16T07:42:30.054554+00:00",
+    "generated_at": "2026-06-16T08:10:34.763272+00:00",
     "player_count": 11
   },
   "players": [
@@ -15,7 +15,7 @@
       "favorite_team": "Norway",
       "favorite_team_round": "Quarter final",
       "favorite_team_round_key": "quarterfinal",
-      "top_scorer": "Mikel Oyarzabal",
+      "top_scorer": "Oyarzabal",
       "ecuador_round": "Round of 32",
       "ecuador_round_key": "round_of_32"
     },
@@ -27,7 +27,7 @@
       "favorite_team": "Morocco",
       "favorite_team_round": "Quarter final",
       "favorite_team_round_key": "quarterfinal",
-      "top_scorer": "Mbappe",
+      "top_scorer": "Mbappé",
       "ecuador_round": "Round of 16",
       "ecuador_round_key": "round_of_16"
     },
@@ -39,7 +39,7 @@
       "favorite_team": "Argentina",
       "favorite_team_round": "Quarter final",
       "favorite_team_round_key": "quarterfinal",
-      "top_scorer": "Mbappe",
+      "top_scorer": "Mbappé",
       "ecuador_round": "Quarter final",
       "ecuador_round_key": "quarterfinal"
     },
@@ -51,31 +51,31 @@
       "favorite_team": "England",
       "favorite_team_round": "Semi final",
       "favorite_team_round_key": "semifinal",
-      "top_scorer": "Kylian Mbappe",
+      "top_scorer": "Mbappé",
       "ecuador_round": "Quarter final",
       "ecuador_round_key": "quarterfinal"
     },
     {
       "player_name": "Elwebo Lavenganza",
       "sheet": "Elwebo Lavenganza",
-      "champion": "España",
+      "champion": "Spain",
       "runner_up": "Portugal",
       "favorite_team": "Argentina",
       "favorite_team_round": "Quarter final",
       "favorite_team_round_key": "quarterfinal",
-      "top_scorer": "Harry Keane",
+      "top_scorer": "Kane",
       "ecuador_round": "Round of 16",
       "ecuador_round_key": "round_of_16"
     },
     {
       "player_name": "paul",
       "sheet": "paul",
-      "champion": "España",
-      "runner_up": "france",
+      "champion": "Spain",
+      "runner_up": "France",
       "favorite_team": "France",
       "favorite_team_round": "Final",
       "favorite_team_round_key": "final",
-      "top_scorer": "mbappe",
+      "top_scorer": "Mbappé",
       "ecuador_round": "Round of 16",
       "ecuador_round_key": "round_of_16"
     },
@@ -87,19 +87,19 @@
       "favorite_team": "France",
       "favorite_team_round": "Final",
       "favorite_team_round_key": "final",
-      "top_scorer": "Mbappe",
+      "top_scorer": "Mbappé",
       "ecuador_round": "Round of 16",
       "ecuador_round_key": "round_of_16"
     },
     {
       "player_name": "NoDorex (100% sure) 😎",
       "sheet": "NoDorex",
-      "champion": "Portugal 🇵🇹",
-      "runner_up": "Netherlands 🇳🇱",
-      "favorite_team": "Ecuador 🇪🇨",
+      "champion": "Portugal",
+      "runner_up": "Netherlands",
+      "favorite_team": "Ecuador",
       "favorite_team_round": "Semi final",
       "favorite_team_round_key": "semifinal",
-      "top_scorer": "Kylian Mbappé 🇫🇷",
+      "top_scorer": "Mbappé",
       "ecuador_round": "Semi final",
       "ecuador_round_key": "semifinal"
     },
@@ -111,7 +111,7 @@
       "favorite_team": "France",
       "favorite_team_round": "Semi final",
       "favorite_team_round_key": "semifinal",
-      "top_scorer": "Kylian Mbappé - 7",
+      "top_scorer": "Mbappé",
       "ecuador_round": "Round of 16",
       "ecuador_round_key": "round_of_16"
     },
@@ -135,7 +135,7 @@
       "favorite_team": "Brazil",
       "favorite_team_round": "Semi final",
       "favorite_team_round_key": "semifinal",
-      "top_scorer": "Kylian mbappe",
+      "top_scorer": "Mbappé",
       "ecuador_round": "Round of 16",
       "ecuador_round_key": "round_of_16"
     }

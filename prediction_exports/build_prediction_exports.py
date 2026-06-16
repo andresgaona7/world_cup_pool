@@ -445,8 +445,8 @@ def render_visualization(group_stage: dict, futures: dict, summary: dict) -> str
     <section class="panel">
       <div class="panel-head">
         <div>
-          <h2>Player Group Cards</h2>
-          <p>Each card lists group winners and best-third selections.</p>
+          <h2>Stage Predictions</h2>
+          <p>Each card lists group winners, runners-up, and best-third selections.</p>
         </div>
       </div>
       <div class="player-grid" id="playerCards"></div>
@@ -456,13 +456,9 @@ def render_visualization(group_stage: dict, futures: dict, summary: dict) -> str
   <script>
     const data = JSON.parse(document.querySelector("#prediction-data").textContent);
     const playerCount = data.groupStage.players.length;
-    const groupCount = data.groupStage.players[0]?.groups.length || 0;
 
     document.querySelector("#metrics").replaceChildren(
-      metric("Players", playerCount),
-      metric("Groups per player", groupCount),
-      metric("Champion favorite", topValue(data.summary.futures_consensus.champion)),
-      metric("Top scorer favorite", topValue(data.summary.futures_consensus.top_scorer))
+      metric("Players", playerCount)
     );
 
     const futuresLabels = {{
@@ -493,11 +489,6 @@ def render_visualization(group_stage: dict, futures: dict, summary: dict) -> str
       node.className = "metric";
       node.innerHTML = `<span>${{escapeHtml(label)}}</span><strong>${{escapeHtml(String(value))}}</strong>`;
       return node;
-    }}
-
-    function topValue(rows) {{
-      const top = rows?.[0];
-      return top ? `${{top.value}} (${{top.votes}})` : "None";
     }}
 
     function chart(title, rows, maxVotes) {{
@@ -551,20 +542,23 @@ def render_visualization(group_stage: dict, futures: dict, summary: dict) -> str
 
     function renderPlayerCards() {{
       const cards = data.groupStage.players.map(player => {{
-        const futures = data.futures.players.find(item => item.player_name === player.player_name);
         const node = document.createElement("article");
         node.className = "player-card";
-        const groupWinners = player.groups
-          .map(group => `<div class="pick-line"><span class="tag">Group ${{group.group_id}}</span><span>${{escapeHtml(group.ordered_teams[0] || "Blank")}}</span></div>`)
+        const groupPredictions = player.groups
+          .map(group => `
+            <div class="pick-line">
+              <span class="tag">Group ${{group.group_id}}</span>
+              <span>
+                <strong>Winner:</strong> ${{escapeHtml(group.ordered_teams[0] || "Blank")}}<br>
+                <strong>Runner-up:</strong> ${{escapeHtml(group.ordered_teams[1] || "Blank")}}
+              </span>
+            </div>
+          `)
           .join("");
         const bestThirds = player.best_thirds.map(pick => escapeHtml(pick.team)).join(", ");
         node.innerHTML = `
           <h3>${{escapeHtml(player.player_name)}}</h3>
-          <div>
-            <span class="tag blue">Champion</span>
-            <strong>${{escapeHtml(futures?.champion || "Blank")}}</strong>
-          </div>
-          <div class="picks">${{groupWinners}}</div>
+          <div class="picks">${{groupPredictions}}</div>
           <div>
             <span class="tag warn">Best thirds</span>
             <span>${{bestThirds || "Blank"}}</span>

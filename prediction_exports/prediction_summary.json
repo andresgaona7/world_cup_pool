@@ -3,7 +3,7 @@
     "source_file": "interface/data/pool_data.js",
     "workbook_source": "first_stage/Polla_Mundial_2026.xlsx",
     "generated_from": "Polla_Mundial_2026.xlsx",
-    "generated_at": "2026-06-16T07:42:30.054554+00:00",
+    "generated_at": "2026-06-16T08:10:34.763272+00:00",
     "player_count": 11
   },
   "group_winner_consensus": {
@@ -124,19 +124,11 @@
     "champion": [
       {
         "value": "Spain",
-        "votes": 5
+        "votes": 7
       },
       {
         "value": "Portugal",
-        "votes": 2
-      },
-      {
-        "value": "España",
-        "votes": 2
-      },
-      {
-        "value": "Portugal 🇵🇹",
-        "votes": 1
+        "votes": 3
       },
       {
         "value": "France",
@@ -150,7 +142,7 @@
       },
       {
         "value": "France",
-        "votes": 2
+        "votes": 3
       },
       {
         "value": "Portugal",
@@ -161,11 +153,7 @@
         "votes": 1
       },
       {
-        "value": "france",
-        "votes": 1
-      },
-      {
-        "value": "Netherlands 🇳🇱",
+        "value": "Netherlands",
         "votes": 1
       },
       {
@@ -195,7 +183,7 @@
         "votes": 1
       },
       {
-        "value": "Ecuador 🇪🇨",
+        "value": "Ecuador",
         "votes": 1
       },
       {
@@ -209,39 +197,15 @@
     ],
     "top_scorer": [
       {
-        "value": "Mbappe",
-        "votes": 3
-      },
-      {
-        "value": "Mikel Oyarzabal",
-        "votes": 1
-      },
-      {
-        "value": "Kylian Mbappe",
-        "votes": 1
-      },
-      {
-        "value": "Harry Keane",
-        "votes": 1
-      },
-      {
-        "value": "mbappe",
-        "votes": 1
-      },
-      {
-        "value": "Kylian Mbappé 🇫🇷",
-        "votes": 1
-      },
-      {
-        "value": "Kylian Mbappé - 7",
-        "votes": 1
+        "value": "Mbappé",
+        "votes": 8
       },
       {
         "value": "Oyarzabal",
-        "votes": 1
+        "votes": 2
       },
       {
-        "value": "Kylian mbappe",
+        "value": "Kane",
         "votes": 1
       }
     ],

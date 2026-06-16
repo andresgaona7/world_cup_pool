@@ -28,7 +28,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Mikel Oyarzabal"
+          "value": "Oyarzabal"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -338,7 +338,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Mbappe"
+          "value": "Mbappé"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -648,7 +648,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Mbappe"
+          "value": "Mbappé"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -958,7 +958,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Kylian Mbappe"
+          "value": "Mbappé"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -1252,7 +1252,7 @@ window.POOL_DATA = {
         },
         "champion": {
           "label": "Winner team",
-          "value": "España"
+          "value": "Spain"
         },
         "runner_up": {
           "label": "Runner-up",
@@ -1268,7 +1268,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Harry Keane"
+          "value": "Kane"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -1562,11 +1562,11 @@ window.POOL_DATA = {
         },
         "champion": {
           "label": "Winner team",
-          "value": "España"
+          "value": "Spain"
         },
         "runner_up": {
           "label": "Runner-up",
-          "value": "france"
+          "value": "France"
         },
         "favorite_team": {
           "label": "Favorite team",
@@ -1578,7 +1578,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "mbappe"
+          "value": "Mbappé"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -1888,7 +1888,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Mbappe"
+          "value": "Mbappé"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -2182,15 +2182,15 @@ window.POOL_DATA = {
         },
         "champion": {
           "label": "Winner team",
-          "value": "Portugal 🇵🇹"
+          "value": "Portugal"
         },
         "runner_up": {
           "label": "Runner-up",
-          "value": "Netherlands 🇳🇱"
+          "value": "Netherlands"
         },
         "favorite_team": {
           "label": "Favorite team",
-          "value": "Ecuador 🇪🇨"
+          "value": "Ecuador"
         },
         "favorite_team_round": {
           "label": "Favorite team last round",
@@ -2198,7 +2198,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Kylian Mbappé 🇫🇷"
+          "value": "Mbappé"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -2508,7 +2508,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Kylian Mbappé - 7"
+          "value": "Mbappé"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -3128,7 +3128,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Kylian mbappe"
+          "value": "Mbappé"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
