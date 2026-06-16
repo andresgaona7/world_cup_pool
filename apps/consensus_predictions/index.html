@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Cup Pool Consensus Predictions</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --ink: #1d2733;
+      --muted: #667385;
+      --line: #d9dee7;
+      --accent: #12715f;
+      --warn: #a35d00;
+      --blue: #1d5f9f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    .topbar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 22px 28px;
+      background: #14313d;
+      color: #fff;
+      border-bottom: 4px solid var(--accent);
+    }
+    .eyebrow {
+      margin: 0 0 4px;
+      color: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      opacity: 0.72;
+    }
+    h1, h2, h3 { margin: 0; letter-spacing: 0; }
+    h1 {
+      font-size: 28px;
+      line-height: 1.1;
+    }
+    .source {
+      color: #d8e6ea;
+      font-size: 13px;
+      text-align: right;
+    }
+    main {
+      padding: 24px clamp(16px, 4vw, 48px) 44px;
+      display: grid;
+      gap: 24px;
+    }
+    section {
+      display: grid;
+      gap: 14px;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      text-transform: uppercase;
+    }
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .panel-head {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .panel-head p { margin: 4px 0 0; color: var(--muted); }
+    .charts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      padding: 16px;
+    }
+    .chart {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+    .bar-row {
+      display: grid;
+      grid-template-columns: minmax(92px, 150px) 1fr 36px;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+    .bar-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .bar-track {
+      height: 14px;
+      border-radius: 999px;
+      background: #ecf0f5;
+      overflow: hidden;
+    }
+    .bar {
+      height: 100%;
+      min-width: 3px;
+      border-radius: inherit;
+      background: var(--accent);
+    }
+    .chart:nth-child(2n) .bar { background: var(--blue); }
+    .chart:nth-child(3n) .bar { background: var(--warn); }
+    @media (max-width: 720px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 18px;
+      }
+      .source {
+        text-align: left;
+      }
+      .bar-row { grid-template-columns: minmax(82px, 120px) 1fr 28px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">World Cup 2026 Pool</p>
+      <h1>Consensus Predictions</h1>
+    </div>
+    <div class="source">Source: data/generated/pool_data.js</div>
+  </header>
+  <main>
+    <section class="summary-grid" id="metrics"></section>
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Consensus Futures</h2>
+          <p>Most common long-range picks across the pool.</p>
+        </div>
+      </div>
+      <div class="charts" id="futuresCharts"></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Group Winner Consensus</h2>
+          <p>First-place picks by group.</p>
+        </div>
+      </div>
+      <div class="charts" id="groupCharts"></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Best Third Consensus</h2>
+          <p>Most common best-third selections across the pool.</p>
+        </div>
+      </div>
+      <div class="charts" id="bestThirdCharts"></div>
+    </section>
+  </main>
+  <script id="consensus-data" type="application/json">{"consensus": {"metadata": {"source_file": "data/generated/pool_data.js", "workbook_source": "data/raw/group_stage_and_future_predictions.xlsx", "generated_from": "group_stage_and_future_predictions.xlsx", "generated_at": "2026-06-16T20:41:27.149287+00:00", "player_count": 11}, "group_winner_consensus": {"A": [{"team": "Mexico", "votes": 9}, {"team": "South Korea", "votes": 2}], "B": [{"team": "Switzerland", "votes": 8}, {"team": "Canada", "votes": 3}], "C": [{"team": "Brazil", "votes": 8}, {"team": "Morocco", "votes": 3}], "D": [{"team": "United States", "votes": 6}, {"team": "Turkey", "votes": 4}, {"team": "Paraguay", "votes": 1}], "E": [{"team": "Germany", "votes": 8}, {"team": "Ecuador", "votes": 3}], "F": [{"team": "Netherlands", "votes": 10}, {"team": "Japan", "votes": 1}], "G": [{"team": "Belgium", "votes": 10}, {"team": "Iran", "votes": 1}], "H": [{"team": "Spain", "votes": 11}], "I": [{"team": "France", "votes": 11}], "J": [{"team": "Argentina", "votes": 11}], "K": [{"team": "Portugal", "votes": 10}, {"team": "Colombia", "votes": 1}], "L": [{"team": "England", "votes": 10}, {"team": "Croatia", "votes": 1}]}, "futures_consensus": {"champion": [{"value": "Spain", "votes": 7}, {"value": "Portugal", "votes": 3}, {"value": "France", "votes": 1}], "runner_up": [{"value": "Argentina", "votes": 3}, {"value": "France", "votes": 3}, {"value": "Portugal", "votes": 2}, {"value": "Spain", "votes": 1}, {"value": "Netherlands", "votes": 1}, {"value": "England", "votes": 1}], "favorite_team": [{"value": "France", "votes": 3}, {"value": "Argentina", "votes": 2}, {"value": "Norway", "votes": 1}, {"value": "Morocco", "votes": 1}, {"value": "England", "votes": 1}, {"value": "Ecuador", "votes": 1}, {"value": "Spain", "votes": 1}, {"value": "Brazil", "votes": 1}], "top_scorer": [{"value": "Kylian Mbappe", "votes": 8}, {"value": "Mikel Oyarzabal", "votes": 2}, {"value": "Harry Kane", "votes": 1}], "ecuador_round": [{"value": "Round of 16", "votes": 7}, {"value": "Quarter final", "votes": 2}, {"value": "Round of 32", "votes": 1}, {"value": "Semi final", "votes": 1}]}, "best_third_consensus": [{"team": "Sweden", "votes": 8}, {"team": "Scotland", "votes": 7}, {"team": "Bosnia", "votes": 7}, {"team": "Ivory Coast", "votes": 7}, {"team": "Senegal", "votes": 6}, {"team": "Paraguay", "votes": 5}, {"team": "Czech Republic", "votes": 5}, {"team": "Ghana", "votes": 5}, {"team": "Algeria", "votes": 4}, {"team": "Ecuador", "votes": 3}, {"team": "Iran", "votes": 3}, {"team": "DR Congo", "votes": 3}, {"team": "Norway", "votes": 3}, {"team": "South Korea", "votes": 2}, {"team": "Haiti", "votes": 2}, {"team": "Qatar", "votes": 2}, {"team": "Australia", "votes": 2}, {"team": "Uzbekistan", "votes": 1}, {"team": "United States", "votes": 1}, {"team": "Germany", "votes": 1}, {"team": "South Africa", "votes": 1}, {"team": "Saudi Arabia", "votes": 1}, {"team": "Egypt", "votes": 1}, {"team": "England", "votes": 1}, {"team": "Iraq", "votes": 1}, {"team": "Mexico", "votes": 1}, {"team": "Croatia", "votes": 1}, {"team": "Switzerland", "votes": 1}, {"team": "Japan", "votes": 1}, {"team": "Uruguay", "votes": 1}, {"team": "Austria", "votes": 1}]}}</script>
+  <script>
+    const data = JSON.parse(document.querySelector("#consensus-data").textContent);
+    const consensus = data.consensus;
+    const playerCount = consensus.metadata.player_count;
+
+    document.querySelector("#metrics").replaceChildren(
+      metric("Players", playerCount)
+    );
+
+    const futuresLabels = {
+      champion: "Champion",
+      runner_up: "Runner-up",
+      favorite_team: "Favorite team",
+      top_scorer: "Top scorer",
+      ecuador_round: "Ecuador round"
+    };
+
+    document.querySelector("#futuresCharts").replaceChildren(
+      ...Object.entries(consensus.futures_consensus).map(([field, rows]) =>
+        chart(futuresLabels[field] || field, rows.map(row => [row.value || "Blank", row.votes]), playerCount)
+      )
+    );
+
+    document.querySelector("#groupCharts").replaceChildren(
+      ...Object.entries(consensus.group_winner_consensus).map(([groupId, rows]) =>
+        chart(`Group ${groupId}`, rows.map(row => [row.team || "Blank", row.votes]), playerCount)
+      )
+    );
+
+    document.querySelector("#bestThirdCharts").replaceChildren(
+      chart(
+        "Best thirds",
+        consensus.best_third_consensus.map(row => [row.team || "Blank", row.votes]),
+        playerCount
+      )
+    );
+
+    function metric(label, value) {
+      const node = document.createElement("article");
+      node.className = "metric";
+      node.innerHTML = `<span>${escapeHtml(label)}</span><strong>${escapeHtml(String(value))}</strong>`;
+      return node;
+    }
+
+    function chart(title, rows, maxVotes) {
+      const node = document.createElement("article");
+      node.className = "chart";
+      const heading = document.createElement("h3");
+      heading.textContent = title;
+      node.append(heading);
+      rows.forEach(([label, votes]) => {
+        const row = document.createElement("div");
+        row.className = "bar-row";
+        row.innerHTML = `
+          <div class="bar-label" title="${escapeHtml(label)}">${escapeHtml(label)}</div>
+          <div class="bar-track"><div class="bar" style="width: ${Math.max(3, votes / maxVotes * 100)}%"></div></div>
+          <strong>${votes}</strong>
+        `;
+        node.append(row);
+      });
+      return node;
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[character]));
+    }
+  </script>
+</body>
+</html>

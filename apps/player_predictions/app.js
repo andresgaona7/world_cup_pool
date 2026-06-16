@@ -76,12 +76,21 @@ function renderFutures(player) {
 }
 
 function renderFirstRound(player) {
-  const rows = player.first_round_grid.map((gridRow) => {
+  const bestThirdsRowIndex = player.first_round_grid.findIndex((gridRow) =>
+    gridRow.cells.includes("Best 3rd's")
+  );
+  const groupStageRows =
+    bestThirdsRowIndex === -1
+      ? player.first_round_grid
+      : player.first_round_grid.slice(0, bestThirdsRowIndex);
+
+  const rows = groupStageRows.map((gridRow) => {
     const tr = document.createElement("tr");
-    gridRow.cells.forEach((value) => {
+    gridRow.cells.slice(1).forEach((value) => {
       const td = document.createElement("td");
-      td.textContent = value;
-      td.className = cellClass(value);
+      const displayValue = displayCellValue(value);
+      td.textContent = displayValue;
+      td.className = cellClass(displayValue);
       tr.append(td);
     });
     return tr;
@@ -90,20 +99,31 @@ function renderFirstRound(player) {
 }
 
 function renderBestThirds(player) {
-  const items = player.best_thirds.map((pick) => {
-    const pill = document.createElement("div");
-    pill.className = "best-third";
+  const table = document.createElement("table");
+  table.className = "best-thirds-table";
 
-    const rank = document.createElement("span");
-    rank.textContent = `#${pick.rank}`;
+  const tbody = document.createElement("tbody");
+  const teams = player.best_thirds.map((pick) => pick.team || "Blank");
 
-    const team = document.createElement("strong");
-    team.textContent = pick.team || "Blank";
+  for (let index = 0; index < teams.length; index += 4) {
+    const tr = document.createElement("tr");
+    teams.slice(index, index + 4).forEach((team) => {
+      const td = document.createElement("td");
+      td.textContent = team;
+      tr.append(td);
+    });
+    tbody.append(tr);
+  }
 
-    pill.append(rank, team);
-    return pill;
-  });
-  bestThirds.replaceChildren(...items);
+  table.append(tbody);
+  bestThirds.replaceChildren(table);
+}
+
+function displayCellValue(value) {
+  if (/^\d+\.0$/.test(value)) {
+    return value.slice(0, -2);
+  }
+  return value;
 }
 
 function cellClass(value) {

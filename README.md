@@ -14,7 +14,7 @@ data/generated/             Committed JS/JSON data consumed by static apps.
 scripts/                    Data builders and official-results updater.
 apps/player_predictions/    Static reader for submitted workbook picks.
 apps/score_visualizer/      Static leaderboard and scenario scorer.
-apps/prediction_exports/    Standalone generated prediction visualization.
+apps/consensus_predictions/ Standalone generated consensus visualization.
 docs/                       Scoring rules and data-flow notes.
 ```
 
@@ -22,7 +22,7 @@ docs/                       Scoring rules and data-flow notes.
 
 ```bash
 make build-pool-data
-make build-prediction-exports
+make build-consensus-predictions
 make update-official-results
 make test
 ```
@@ -31,7 +31,7 @@ Equivalent direct commands:
 
 ```bash
 python3 scripts/build_pool_data.py
-python3 scripts/build_prediction_exports.py
+python3 scripts/build_consensus_predictions.py
 python3 scripts/update_official_results.py --transport "${OFFICIAL_RESULTS_TRANSPORT:-auto}"
 python3 -m unittest discover -s tests
 ```
@@ -47,8 +47,8 @@ submitted picks. `scripts/build_pool_data.py` converts it into
 `data/generated/pool_data.js`, which is loaded by
 `apps/player_predictions/index.html`.
 
-`scripts/build_prediction_exports.py` reshapes `pool_data.js` into normalized
-JSON exports and the standalone `apps/prediction_exports/index.html`.
+`scripts/build_consensus_predictions.py` reshapes `pool_data.js` into a
+consensus JSON export and the standalone `apps/consensus_predictions/index.html`.
 
 `scripts/update_official_results.py` fetches Football-Data standings and writes
 `data/generated/official_results.js`, which is loaded by
@@ -63,7 +63,7 @@ Open these files directly in a browser:
 
 - `apps/player_predictions/index.html`
 - `apps/score_visualizer/index.html`
-- `apps/prediction_exports/index.html`
+- `apps/consensus_predictions/index.html`
 
 No package install, dev server, or build step is required as long as generated
 files in `data/generated/` are present.

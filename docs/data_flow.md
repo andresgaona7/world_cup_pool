@@ -9,15 +9,13 @@ data/raw/group_stage_and_future_predictions.xlsx
   -> apps/player_predictions/index.html
 ```
 
-Prediction exports are generated from the browser-ready pool data:
+Consensus predictions are generated from the browser-ready pool data:
 
 ```text
 data/generated/pool_data.js
-  -> scripts/build_prediction_exports.py
-  -> data/generated/group_stage_predictions.json
-  -> data/generated/futures_predictions.json
-  -> data/generated/prediction_summary.json
-  -> apps/prediction_exports/index.html
+  -> scripts/build_consensus_predictions.py
+  -> data/generated/consensus_predictions.json
+  -> apps/consensus_predictions/index.html
 ```
 
 Official group-stage results are fetched separately:
