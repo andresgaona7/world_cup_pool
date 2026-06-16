@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>World Cup Pool Score Visualizer</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">World Cup 2026 Pool</p>
+        <h1>Score Scenario Visualizer</h1>
+        <p class="lede">
+          Live leaderboard from submitted first-round and futures picks, scored with the rules in
+          <code>world_cup_pool/</code>.
+        </p>
+      </div>
+      <div class="source-card">
+        <span>Data source</span>
+        <strong id="sourceFile">Loading...</strong>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="toolbar" aria-label="Scenario actions">
+        <button type="button" id="resetConsensus">Use consensus scenario</button>
+        <button type="button" id="clearResults">Clear official results</button>
+        <label class="search">
+          <span>Filter players</span>
+          <input id="playerFilter" type="search" placeholder="Name or sheet" autocomplete="off">
+        </label>
+      </section>
+
+      <section class="metrics" id="metrics"></section>
+
+      <section class="split">
+        <article class="panel leaderboard-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Leaderboard</p>
+              <h2>Scenario Score</h2>
+            </div>
+            <span class="rule-pill">Group + futures scoring</span>
+          </div>
+          <div class="table-wrap">
+            <table id="leaderboardTable"></table>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Rules</p>
+              <h2>Point Weights</h2>
+            </div>
+          </div>
+          <div id="rulesGrid" class="rules-grid"></div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Official scenario</p>
+            <h2>Group Results</h2>
+          </div>
+          <span class="muted">Each exact position is worth points; full group order earns a bonus.</span>
+        </div>
+        <div id="groupEditors" class="group-grid"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Official scenario</p>
+            <h2>Best Thirds</h2>
+          </div>
+          <span class="muted">Order is ignored by the scoring engine.</span>
+        </div>
+        <div id="bestThirdEditor" class="third-grid"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Official scenario</p>
+            <h2>Futures Results</h2>
+          </div>
+          <span class="muted">Favorite-team and Ecuador stages use exact/off-by-one scoring.</span>
+        </div>
+        <div id="futuresEditor" class="futures-editor"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Consensus</p>
+            <h2>Pool Tendencies</h2>
+          </div>
+        </div>
+        <div id="consensusCharts" class="charts"></div>
+      </section>
+    </main>
+
+    <script src="../interface/data/pool_data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
