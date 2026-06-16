@@ -51,7 +51,7 @@ window.POOL_DATA = {
         {
           "row": 12,
           "cells": [
-            "Czech Republic",
+            "Czechia",
             "1.0",
             "Mexico",
             "1.0",
@@ -77,7 +77,7 @@ window.POOL_DATA = {
           "cells": [
             "Scotland",
             "3.0",
-            "Czech Republic",
+            "Czechia",
             "3.0",
             "Bosnia",
             "3.0",
@@ -101,7 +101,7 @@ window.POOL_DATA = {
           "cells": [
             "Ecuador",
             "1.0",
-            "Turkey",
+            "Türkiye",
             "1.0",
             "Germany",
             "1.0",
@@ -271,7 +271,7 @@ window.POOL_DATA = {
             "3.0",
             "Sweden",
             "6.0",
-            "Czech Republic",
+            "Czechia",
             "",
             ""
           ]
@@ -308,7 +308,7 @@ window.POOL_DATA = {
         },
         {
           "rank": "6.0",
-          "team": "Czech Republic"
+          "team": "Czechia"
         }
       ]
     },
@@ -361,7 +361,7 @@ window.POOL_DATA = {
         {
           "row": 12,
           "cells": [
-            "Czech Republic",
+            "Czechia",
             "1.0",
             "Mexico",
             "1.0",
@@ -387,7 +387,7 @@ window.POOL_DATA = {
           "cells": [
             "Scotland",
             "3.0",
-            "Czech Republic",
+            "Czechia",
             "3.0",
             "Bosnia",
             "3.0",
@@ -423,7 +423,7 @@ window.POOL_DATA = {
           "cells": [
             "Sweden",
             "2.0",
-            "Turkey",
+            "Türkiye",
             "2.0",
             "Ecuador",
             "2.0",
@@ -555,7 +555,7 @@ window.POOL_DATA = {
           "cells": [
             "",
             "1.0",
-            "Czech Republic",
+            "Czechia",
             "4.0",
             "Paraguay",
             "7.0",
@@ -590,7 +590,7 @@ window.POOL_DATA = {
       "best_thirds": [
         {
           "rank": "1.0",
-          "team": "Czech Republic"
+          "team": "Czechia"
         },
         {
           "rank": "4.0",
@@ -671,7 +671,7 @@ window.POOL_DATA = {
         {
           "row": 12,
           "cells": [
-            "Czech Republic",
+            "Czechia",
             "1.0",
             "Mexico",
             "1.0",
@@ -697,7 +697,7 @@ window.POOL_DATA = {
           "cells": [
             "Scotland",
             "3.0",
-            "Czech Republic",
+            "Czechia",
             "3.0",
             "Bosnia",
             "3.0",
@@ -721,7 +721,7 @@ window.POOL_DATA = {
           "cells": [
             "Ivory Coast",
             "1.0",
-            "Turkey",
+            "Türkiye",
             "1.0",
             "Germany",
             "1.0",
@@ -865,7 +865,7 @@ window.POOL_DATA = {
           "cells": [
             "",
             "1.0",
-            "Czech Republic",
+            "Czechia",
             "4.0",
             "Sweden",
             "7.0",
@@ -900,7 +900,7 @@ window.POOL_DATA = {
       "best_thirds": [
         {
           "rank": "1.0",
-          "team": "Czech Republic"
+          "team": "Czechia"
         },
         {
           "rank": "4.0",
@@ -995,7 +995,7 @@ window.POOL_DATA = {
           "cells": [
             "Bosnia",
             "2.0",
-            "Czech Republic",
+            "Czechia",
             "2.0",
             "Switzerland",
             "2.0",
@@ -1031,7 +1031,7 @@ window.POOL_DATA = {
           "cells": [
             "Ivory Coast",
             "1.0",
-            "Turkey",
+            "Türkiye",
             "1.0",
             "Ecuador",
             "1.0",
@@ -1305,7 +1305,7 @@ window.POOL_DATA = {
           "cells": [
             "Canada",
             "2.0",
-            "Czech Republic",
+            "Czechia",
             "2.0",
             "Bosnia",
             "2.0",
@@ -1341,7 +1341,7 @@ window.POOL_DATA = {
           "cells": [
             "Ivory Coast",
             "1.0",
-            "Turkey",
+            "Türkiye",
             "1.0",
             "Ecuador",
             "1.0",
@@ -1637,7 +1637,7 @@ window.POOL_DATA = {
         {
           "row": 15,
           "cells": [
-            "Turkey",
+            "Türkiye",
             "Group D",
             "",
             "Group E",
@@ -1675,7 +1675,7 @@ window.POOL_DATA = {
           "cells": [
             "Iran",
             "3.0",
-            "Turkey",
+            "Türkiye",
             "3.0",
             "Germany",
             "3.0",
@@ -1947,7 +1947,7 @@ window.POOL_DATA = {
         {
           "row": 15,
           "cells": [
-            "Turkey",
+            "Türkiye",
             "Group D",
             "",
             "Group E",
@@ -1985,7 +1985,7 @@ window.POOL_DATA = {
           "cells": [
             "Iran",
             "3.0",
-            "Turkey",
+            "Türkiye",
             "3.0",
             "Ecuador",
             "3.0",
@@ -2221,7 +2221,7 @@ window.POOL_DATA = {
         {
           "row": 12,
           "cells": [
-            "Czech Republic",
+            "Czechia",
             "1.0",
             "Mexico",
             "1.0",
@@ -2247,7 +2247,7 @@ window.POOL_DATA = {
           "cells": [
             "Haiti",
             "3.0",
-            "Czech Republic",
+            "Czechia",
             "3.0",
             "Bosnia",
             "3.0",
@@ -2531,7 +2531,7 @@ window.POOL_DATA = {
         {
           "row": 12,
           "cells": [
-            "Czech Republic",
+            "Czechia",
             "1.0",
             "Mexico",
             "1.0",
@@ -2557,7 +2557,7 @@ window.POOL_DATA = {
           "cells": [
             "Scotland",
             "3.0",
-            "Czech Republic",
+            "Czechia",
             "3.0",
             "Bosnia",
             "3.0",
@@ -2593,7 +2593,7 @@ window.POOL_DATA = {
           "cells": [
             "Sweden",
             "2.0",
-            "Turkey",
+            "Türkiye",
             "2.0",
             "Ecuador",
             "2.0",
@@ -2725,7 +2725,7 @@ window.POOL_DATA = {
           "cells": [
             "",
             "1.0",
-            "Czech Republic",
+            "Czechia",
             "4.0",
             "Iran",
             "7.0",
@@ -2760,7 +2760,7 @@ window.POOL_DATA = {
       "best_thirds": [
         {
           "rank": "1.0",
-          "team": "Czech Republic"
+          "team": "Czechia"
         },
         {
           "rank": "4.0",
@@ -2903,7 +2903,7 @@ window.POOL_DATA = {
           "cells": [
             "Japan",
             "2.0",
-            "Turkey",
+            "Türkiye",
             "2.0",
             "Ivory Coast",
             "2.0",
@@ -3151,7 +3151,7 @@ window.POOL_DATA = {
         {
           "row": 12,
           "cells": [
-            "Czech Republic",
+            "Czechia",
             "1.0",
             "Mexico",
             "1.0",
@@ -3177,7 +3177,7 @@ window.POOL_DATA = {
           "cells": [
             "Haiti",
             "3.0",
-            "Czech Republic",
+            "Czechia",
             "3.0",
             "Bosnia",
             "3.0",
@@ -3213,7 +3213,7 @@ window.POOL_DATA = {
           "cells": [
             "Sweden",
             "2.0",
-            "Turkey",
+            "Türkiye",
             "2.0",
             "Ecuador",
             "2.0",
@@ -3345,7 +3345,7 @@ window.POOL_DATA = {
           "cells": [
             "",
             "1.0",
-            "Czech Republic",
+            "Czechia",
             "4.0",
             "Bosnia",
             "7.0",
@@ -3380,7 +3380,7 @@ window.POOL_DATA = {
       "best_thirds": [
         {
           "rank": "1.0",
-          "team": "Czech Republic"
+          "team": "Czechia"
         },
         {
           "rank": "4.0",

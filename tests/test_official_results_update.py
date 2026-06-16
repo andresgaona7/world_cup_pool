@@ -24,6 +24,8 @@ class OfficialResultsUpdateTests(unittest.TestCase):
                         self.row("South Korea", "KOR", 3, 2, 1, 1),
                         self.row("Czechia", "CZE", 0, 1, 2, 0),
                         self.row("Canada", "CAN", 1, 1, 1, 0),
+                        self.row("Turkey", "TUR", 3, 1, 0, 1),
+                        self.row("Netherlands", "NED", 3, 2, 0, 1),
                     ],
                 }
             ]
@@ -37,6 +39,11 @@ class OfficialResultsUpdateTests(unittest.TestCase):
         )
         self.assertEqual([row["position"] for row in grouped["A"]], [1, 2, 3, 4])
         self.assertEqual([row["team"] for row in grouped["B"]], ["Canada"])
+        self.assertEqual([row["team"] for row in grouped["D"]], ["Türkiye"])
+        self.assertEqual(
+            [row["team"] for row in grouped["F"]],
+            ["Netherlands"],
+        )
 
     def row(
         self,

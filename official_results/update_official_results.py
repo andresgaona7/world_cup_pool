@@ -27,7 +27,7 @@ GROUP_TEAMS = {
     "A": ("Mexico", "South Africa", "South Korea", "Czechia"),
     "B": ("Canada", "Bosnia-Herzegovina", "Qatar", "Switzerland"),
     "C": ("Brazil", "Morocco", "Haiti", "Scotland"),
-    "D": ("United States", "Paraguay", "Australia", "Turkey"),
+    "D": ("United States", "Paraguay", "Australia", "Türkiye"),
     "E": ("Germany", "Cura\u00e7ao", "Ivory Coast", "Ecuador"),
     "F": ("Netherlands", "Japan", "Sweden", "Tunisia"),
     "G": ("Belgium", "Egypt", "Iran", "New Zealand"),
@@ -36,6 +36,10 @@ GROUP_TEAMS = {
     "J": ("Argentina", "Algeria", "Austria", "Jordan"),
     "K": ("Portugal", "Congo DR", "Uzbekistan", "Colombia"),
     "L": ("England", "Croatia", "Ghana", "Panama"),
+}
+TEAM_NAME_ALIASES = {
+    "Turkey": "Türkiye",
+    "Tutkey": "Türkiye",
 }
 GROUP_SIZE = 4
 GROUP_STAGE_GAMES = 3
@@ -425,10 +429,10 @@ def extract_group_standings_from_overall(
     if not overall_table:
         return {}
 
-    team_lookup = {
-        ((row.get("team") or {}).get("name") or ""): row
-        for row in overall_table
-    }
+    team_lookup = {}
+    for row in overall_table:
+        team_name = (row.get("team") or {}).get("name") or ""
+        team_lookup[canonical_team_name(team_name)] = row
     grouped_standings = {}
     for group_id, team_names in GROUP_TEAMS.items():
         rows = [
@@ -491,7 +495,9 @@ def normalize_row(row: dict[str, Any]) -> dict[str, Any]:
         goal_difference = goals_for - goals_against
 
     return {
-        "team": team.get("name") or team.get("shortName") or team.get("tla") or "",
+        "team": canonical_team_name(
+            team.get("name") or team.get("shortName") or team.get("tla") or ""
+        ),
         "teamCode": team.get("tla") or "",
         "position": int_value(row.get("position")),
         "played": int_value(row.get("playedGames")),
@@ -503,6 +509,10 @@ def normalize_row(row: dict[str, Any]) -> dict[str, Any]:
         "goalDifference": int_value(goal_difference),
         "points": int_value(row.get("points")),
     }
+
+
+def canonical_team_name(name: str) -> str:
+    return TEAM_NAME_ALIASES.get(name, name)
 
 
 def int_value(value: Any) -> int:

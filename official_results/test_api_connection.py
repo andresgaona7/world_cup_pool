@@ -5,7 +5,7 @@ GROUPS = {
     "A": ["Mexico", "South Africa", "South Korea", "Czechia"],
     "B": ["Canada", "Bosnia-Herzegovina", "Qatar", "Switzerland"],
     "C": ["Brazil", "Morocco", "Haiti", "Scotland"],
-    "D": ["United States", "Paraguay", "Australia", "Turkey"],
+    "D": ["United States", "Paraguay", "Australia", "Türkiye"],
     "E": ["Germany", "Curaçao", "Ivory Coast", "Ecuador"],
     "F": ["Netherlands", "Japan", "Sweden", "Tunisia"],
     "G": ["Belgium", "Egypt", "Iran", "New Zealand"],

@@ -216,7 +216,7 @@ window.OFFICIAL_RESULTS = {
         "points": 3
       },
       {
-        "team": "Turkey",
+        "team": "Türkiye",
         "teamCode": "TUR",
         "position": 3,
         "played": 1,
@@ -1249,7 +1249,7 @@ window.OFFICIAL_RESULTS = {
       "points": 0
     },
     {
-      "team": "Turkey",
+      "team": "Türkiye",
       "teamCode": "TUR",
       "position": 45,
       "played": 1,
