@@ -11,29 +11,17 @@
       <div>
         <p class="eyebrow">World Cup 2026 Pool</p>
         <h1>Score Scenario Visualizer</h1>
-        <p class="lede">
-          Live leaderboard from submitted first-round and futures picks, scored with the rules in
-          <code>world_cup_pool/</code>.
-        </p>
-      </div>
-      <div class="source-card">
-        <span>Data source</span>
-        <strong id="sourceFile">Loading...</strong>
       </div>
     </header>
 
     <main class="page">
-      <section class="toolbar" aria-label="Leaderboard filter">
+      <section class="toolbar" aria-label="Score scenario">
         <label class="field scenario-select">
           <span>Score scenario</span>
           <select id="scenarioSelect">
             <option value="official">Official results</option>
-            <option value="consensus">Consensus scenario</option>
+            <option value="consensus">Consensus results</option>
           </select>
-        </label>
-        <label class="search">
-          <span>Filter leaderboard</span>
-          <input id="playerFilter" type="search" placeholder="Name or sheet" autocomplete="off">
         </label>
       </section>
 
@@ -43,9 +31,9 @@
         <div class="panel-head">
           <div>
             <p class="eyebrow">Leaderboard</p>
-            <h2>Scenario Score</h2>
+            <h2>Score</h2>
           </div>
-          <span class="rule-pill" id="leaderboardScenarioStatus">Consensus scenario</span>
+          <span class="rule-pill" id="leaderboardScenarioStatus">Consensus results</span>
         </div>
         <div class="table-wrap">
           <table id="leaderboardTable"></table>
@@ -58,13 +46,7 @@
             <p class="eyebrow">Official vs Predictions</p>
             <h2>Results Comparison</h2>
           </div>
-          <div class="comparison-controls">
-            <label class="field comparison-select">
-              <span>Compare player</span>
-              <select id="comparisonPlayerSelect"></select>
-            </label>
-            <span class="rule-pill" id="comparisonStatus">Pending results</span>
-          </div>
+          <span class="rule-pill" id="comparisonStatus">Pending results</span>
         </div>
         <div id="comparisonSummary" class="comparison-summary"></div>
         <div class="comparison-content">

@@ -34,27 +34,22 @@ const GROUP_HEADER_PATTERN = /^Group ([A-L])$/;
 const RANK_PATTERN = /^\d+(?:\.0)?$/;
 
 let players = rawData.players.map(normalizePlayer);
-let filterTerm = "";
 let officialScenario = normalizeOfficialScenario(players, officialData);
 let consensusScenario = buildConsensusScenario(players);
 let selectedScenarioMode = hasOfficialScenarioData(officialScenario) ? "official" : "consensus";
 let scenario = scenarioForMode(selectedScenarioMode);
 let comparisonPlayerIndex = 0;
 
-const sourceFile = document.querySelector("#sourceFile");
 const metrics = document.querySelector("#metrics");
 const leaderboardTable = document.querySelector("#leaderboardTable");
 const rulesGrid = document.querySelector("#rulesGrid");
-const playerFilter = document.querySelector("#playerFilter");
 const scenarioSelect = document.querySelector("#scenarioSelect");
 const leaderboardScenarioStatus = document.querySelector("#leaderboardScenarioStatus");
 const comparisonStatus = document.querySelector("#comparisonStatus");
 const comparisonSummary = document.querySelector("#comparisonSummary");
 const groupComparisonTable = document.querySelector("#groupComparisonTable");
 const bestThirdComparisonTable = document.querySelector("#bestThirdComparisonTable");
-const comparisonPlayerSelect = document.querySelector("#comparisonPlayerSelect");
 
-sourceFile.textContent = sourceLabel(rawData, officialData);
 scenarioSelect.value = selectedScenarioMode;
 scenarioSelect.querySelector('option[value="official"]').disabled = !hasOfficialScenarioData(officialScenario);
 
@@ -67,48 +62,41 @@ scenarioSelect.addEventListener("change", (event) => {
   renderRules();
 });
 
-playerFilter.addEventListener("input", (event) => {
-  filterTerm = event.target.value.trim().toLowerCase();
-  renderLeaderboard();
+leaderboardTable.addEventListener("click", (event) => {
+  const row = event.target.closest("tr[data-player-index]");
+  if (!row) {
+    return;
+  }
+  selectComparisonPlayer(Number.parseInt(row.dataset.playerIndex, 10) || 0);
 });
 
-comparisonPlayerSelect.addEventListener("change", (event) => {
-  comparisonPlayerIndex = Number.parseInt(event.target.value, 10) || 0;
-  renderComparison();
+leaderboardTable.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") {
+    return;
+  }
+
+  const row = event.target.closest("tr[data-player-index]");
+  if (!row) {
+    return;
+  }
+
+  event.preventDefault();
+  selectComparisonPlayer(Number.parseInt(row.dataset.playerIndex, 10) || 0);
 });
 
 render();
 
 function render() {
   renderMetrics();
-  renderComparisonPlayerSelect();
   renderComparison();
   renderRules();
   renderLeaderboard();
 }
 
-function sourceLabel(poolData, resultsData) {
-  const poolSource = poolData.source_file || "data/generated/pool_data.js";
-  if (!resultsData) {
-    return poolSource;
-  }
-
-  const generated = resultsData.generatedAt ? `, updated ${formatDate(resultsData.generatedAt)}` : "";
-  return `${poolSource} + ${resultsData.sourceName || "official results"}${generated}`;
-}
-
-function formatDate(value) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-  return date.toLocaleString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+function selectComparisonPlayer(playerIndex) {
+  comparisonPlayerIndex = Math.max(0, Math.min(playerIndex, players.length - 1));
+  renderComparison();
+  renderLeaderboard();
 }
 
 function normalizePlayer(player) {
@@ -427,8 +415,8 @@ function renderRules() {
       title: "Current visualization",
       rows: [
         officialData
-          ? "The page can score either the official provisional standings from data/generated/official_results.js or the pool consensus scenario."
-          : "The workbook export does not include official results yet, so this page uses a consensus scenario derived from the submitted picks.",
+          ? "The page can score either the official provisional standings from data/generated/official_results.js or the pool consensus results."
+          : "The workbook export does not include official results yet, so this page uses consensus results derived from the submitted picks.",
         "Knockout scoring exists in the Python scorer, but knockout predictions are not present in pool_data.js, so this page does not include knockout points.",
       ],
     },
@@ -500,33 +488,40 @@ function renderComparison() {
   `;
 
   const bestThirdRows = bestThirdComparisonRows(selectedPlayer, comparisonScenario);
+  const bestThirdTotals = bestThirdRows.reduce(
+    (total, row) => ({
+      matches: total.matches + (row.match ? 1 : 0),
+      points: total.points + row.points,
+    }),
+    { matches: 0, points: 0 }
+  );
   bestThirdComparisonTable.innerHTML = `
     <thead>
       <tr>
-        <th>Category</th>
-        <th>${escapeHtml(resultLabel)}</th>
+        <th>${escapeHtml(scenarioLabel(selectedScenarioMode))}</th>
         <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
-        <th>Result</th>
+        <th>Overlap result</th>
+        <th>Points</th>
       </tr>
     </thead>
     <tbody>
       ${bestThirdRows.map((row) => `
         <tr>
-          <td><strong>${escapeHtml(row.label)}</strong></td>
-          <td>${comparisonValue(row.official)}</td>
+          <td>${comparisonValue(row.chosenResult)}</td>
           <td>${comparisonValue(row.prediction)}</td>
-          <td>${row.official ? resultBadge(row) : '<span class="muted">Pending</span>'}</td>
+          <td>${row.hasResults ? resultBadge(row) : '<span class="muted">Pending</span>'}</td>
+          <td>${row.hasResults ? formatPoints(row.points) : '<span class="muted">Pending</span>'}</td>
         </tr>
       `).join("")}
     </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2"><strong>Total</strong></td>
+        <td><strong>${bestThirdTotals.matches} match${bestThirdTotals.matches === 1 ? "" : "es"}</strong></td>
+        <td><strong>${formatPoints(bestThirdTotals.points)} pts</strong></td>
+      </tr>
+    </tfoot>
   `;
-}
-
-function renderComparisonPlayerSelect() {
-  comparisonPlayerSelect.replaceChildren(
-    ...players.map((player, index) => new Option(player.name || player.sheet || `Player ${index + 1}`, String(index)))
-  );
-  comparisonPlayerSelect.value = String(comparisonPlayerIndex);
 }
 
 function comparisonMetric(label, value) {
@@ -563,24 +558,36 @@ function bestThirdComparisonRows(player, comparisonScenario) {
     return [];
   }
 
-  const bestThirdMatches = player.bestThirds.filter((pick) => comparisonScenario.bestThirds.includes(pick.team)).length;
-  return [
-    {
-      label: "Best thirds",
-      official: comparisonScenario.bestThirds.join(", "),
-      prediction: player.bestThirds.map((pick) => pick.team).join(", "),
-      points: bestThirdMatches * BEST_THIRD_TEAM_POINTS,
-      status: `${bestThirdMatches} match${bestThirdMatches === 1 ? "" : "es"}`,
-    },
-  ].map((row) => ({
-    ...row,
-    points: row.official ? row.points : 0,
+  const resultBestThirds = comparisonScenario.bestThirds.filter(Boolean);
+  const resultBestThirdSet = new Set(resultBestThirds);
+  const hasResults = resultBestThirds.length > 0;
+  const picks = player.bestThirds.map((pick, index) => ({
+    prediction: pick.team,
+    match: hasResults && resultBestThirdSet.has(pick.team),
+    sortOrder: index,
   }));
+  const matchedResultTeams = new Set(picks.filter((pick) => pick.match).map((pick) => pick.prediction));
+  const unmatchedResultTeams = resultBestThirds.filter((team) => !matchedResultTeams.has(team));
+  let unmatchedResultIndex = 0;
+
+  return picks
+    .sort((a, b) => Number(b.match) - Number(a.match) || a.sortOrder - b.sortOrder)
+    .map((pick) => {
+      const chosenResult = pick.match ? pick.prediction : unmatchedResultTeams[unmatchedResultIndex++] || "";
+      return {
+        prediction: pick.prediction,
+        chosenResult,
+        match: pick.match,
+        hasResults,
+        points: pick.match ? BEST_THIRD_TEAM_POINTS : 0,
+        status: pick.match ? "Match" : "No match",
+      };
+    });
 }
 
 function resultBadge(row) {
-  const tone = row.points > 0 ? "hit" : "miss";
-  return `<span class="result-badge ${tone}">${escapeHtml(row.status)}${row.points ? `, ${formatPoints(row.points)} pts` : ""}</span>`;
+  const tone = row.match ? "hit" : "miss";
+  return `<span class="result-badge ${tone}">${escapeHtml(row.status)}</span>`;
 }
 
 function teamList(teams) {
@@ -799,16 +806,11 @@ function chart(title, rows, maxVotes) {
 function renderLeaderboard() {
   document.querySelector(".empty-state")?.remove();
   leaderboardScenarioStatus.textContent = scenarioLabel(selectedScenarioMode);
-  const rows = scoreAllPlayers().filter((row) => {
-    if (!filterTerm) {
-      return true;
-    }
-    return `${row.name} ${row.sheet}`.toLowerCase().includes(filterTerm);
-  });
+  const rows = scoreAllPlayers();
 
   if (!rows.length) {
     leaderboardTable.innerHTML = "";
-    leaderboardTable.insertAdjacentHTML("afterend", '<div class="empty-state">No players match the current filter.</div>');
+    leaderboardTable.insertAdjacentHTML("afterend", '<div class="empty-state">No players available.</div>');
     return;
   }
 
@@ -828,7 +830,12 @@ function renderLeaderboard() {
       ${rows
         .map(
           (row, index) => `
-            <tr>
+            <tr
+              class="${row.playerIndex === comparisonPlayerIndex ? "is-selected" : ""}"
+              data-player-index="${row.playerIndex}"
+              tabindex="0"
+              aria-selected="${row.playerIndex === comparisonPlayerIndex ? "true" : "false"}"
+            >
               <td class="rank">${index + 1}</td>
               <td><strong>${escapeHtml(row.name)}</strong><br><span class="muted">${escapeHtml(row.sheet)}</span></td>
               <td class="total">${formatPoints(row.total)}</td>
@@ -856,7 +863,7 @@ function hasScenarioData(value) {
 }
 
 function scenarioLabel(mode) {
-  return mode === "official" ? "Official results" : "Consensus scenario";
+  return mode === "official" ? "Official results" : "Consensus results";
 }
 
 function scenarioSourceLabel(mode) {
@@ -868,12 +875,13 @@ function scenarioSourceLabel(mode) {
 
 function scoreAllPlayers() {
   return players
-    .map((player) => {
+    .map((player, playerIndex) => {
       const group = scoreGroups(player);
       const bestThirds = scoreBestThirds(player);
       const futuresScore = scoreFutures(player);
       const total = group + bestThirds + futuresScore.points + futuresScore.bonus;
       return {
+        playerIndex,
         name: player.name,
         sheet: player.sheet,
         group,
