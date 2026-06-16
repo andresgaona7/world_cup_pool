@@ -1,4 +1,5 @@
 const rawData = window.POOL_DATA || { players: [] };
+const officialData = window.OFFICIAL_RESULTS || null;
 
 const GROUP_EXACT_POSITION_POINTS = 2;
 const GROUP_FULL_ORDER_BONUS = 5;
@@ -34,27 +35,66 @@ const RANK_PATTERN = /^\d+(?:\.0)?$/;
 
 let players = rawData.players.map(normalizePlayer);
 let filterTerm = "";
-let scenario = buildConsensusScenario(players);
+let officialScenario = normalizeOfficialScenario(players, officialData);
+let consensusScenario = buildConsensusScenario(players);
+let scenario = buildInitialScenario(players, officialData);
+let comparisonPlayerIndex = 0;
 
 const sourceFile = document.querySelector("#sourceFile");
 const metrics = document.querySelector("#metrics");
 const leaderboardTable = document.querySelector("#leaderboardTable");
 const rulesGrid = document.querySelector("#rulesGrid");
 const playerFilter = document.querySelector("#playerFilter");
+const comparisonStatus = document.querySelector("#comparisonStatus");
+const comparisonSummary = document.querySelector("#comparisonSummary");
+const groupComparisonTable = document.querySelector("#groupComparisonTable");
+const bestThirdComparisonTable = document.querySelector("#bestThirdComparisonTable");
+const comparisonPlayerSelect = document.querySelector("#comparisonPlayerSelect");
 
-sourceFile.textContent = rawData.source_file || "interface/data/pool_data.js";
+sourceFile.textContent = sourceLabel(rawData, officialData);
 
 playerFilter.addEventListener("input", (event) => {
   filterTerm = event.target.value.trim().toLowerCase();
   renderLeaderboard();
 });
 
+comparisonPlayerSelect.addEventListener("change", (event) => {
+  comparisonPlayerIndex = Number.parseInt(event.target.value, 10) || 0;
+  renderComparison();
+});
+
 render();
 
 function render() {
   renderMetrics();
+  renderComparisonPlayerSelect();
+  renderComparison();
   renderRules();
   renderLeaderboard();
+}
+
+function sourceLabel(poolData, resultsData) {
+  const poolSource = poolData.source_file || "interface/data/pool_data.js";
+  if (!resultsData) {
+    return poolSource;
+  }
+
+  const generated = resultsData.generatedAt ? `, updated ${formatDate(resultsData.generatedAt)}` : "";
+  return `${poolSource} + ${resultsData.sourceName || "official results"}${generated}`;
+}
+
+function formatDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+  return date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function normalizePlayer(player) {
@@ -168,6 +208,47 @@ function buildConsensusScenario(sourcePlayers) {
       teamLastRounds,
     },
   };
+}
+
+function buildInitialScenario(sourcePlayers, resultsData) {
+  const initialOfficialScenario = normalizeOfficialScenario(sourcePlayers, resultsData);
+  if (hasOfficialScenarioData(initialOfficialScenario)) {
+    return initialOfficialScenario;
+  }
+  return buildConsensusScenario(sourcePlayers);
+}
+
+function normalizeOfficialScenario(sourcePlayers, resultsData) {
+  const groupResults = {};
+  GROUP_IDS.forEach((groupId) => {
+    groupResults[groupId] = (resultsData?.groupResults?.[groupId] || []).slice(0, 3);
+  });
+
+  const futures = resultsData?.futures || {};
+  return {
+    groupResults,
+    bestThirds: (resultsData?.bestThirds || []).filter(Boolean),
+    futures: {
+      champion: futures.champion || "",
+      runnerUp: futures.runnerUp || "",
+      topScorer: futures.topScorer || "",
+      teamLastRounds: {
+        ...Object.fromEntries(trackedTeams(sourcePlayers).map((team) => [team, ""])),
+        ...(futures.teamLastRounds || {}),
+      },
+    },
+  };
+}
+
+function hasOfficialScenarioData(officialScenario) {
+  return (
+    Object.values(officialScenario.groupResults).some((teams) => teams.some(Boolean)) ||
+    officialScenario.bestThirds.length > 0 ||
+    officialScenario.futures.champion ||
+    officialScenario.futures.runnerUp ||
+    officialScenario.futures.topScorer ||
+    Object.values(officialScenario.futures.teamLastRounds).some(Boolean)
+  );
 }
 
 function buildEmptyScenario(sourcePlayers) {
@@ -285,7 +366,9 @@ function renderRules() {
     {
       title: "Current visualization",
       rows: [
-        "The workbook export does not include official results yet, so this page uses a consensus scenario derived from the submitted picks.",
+        officialData
+          ? "The page loads official-results data from official_results/data/official_results.js and falls back to the pool consensus when that file has no completed scoring data."
+          : "The workbook export does not include official results yet, so this page uses a consensus scenario derived from the submitted picks.",
         "Knockout scoring exists in the Python scorer, but knockout predictions are not present in pool_data.js, so this page does not include knockout points.",
       ],
     },
@@ -304,6 +387,149 @@ function renderRules() {
       return article;
     })
   );
+}
+
+function renderComparison() {
+  const hasOfficialData = hasOfficialScenarioData(officialScenario);
+  const selectedPlayer = players[comparisonPlayerIndex] || players[0];
+  comparisonStatus.textContent = hasOfficialData ? "Official data loaded" : "Pending results";
+  comparisonStatus.classList.toggle("pending", !hasOfficialData);
+
+  const groupRows = GROUP_IDS.map((groupId) => groupComparisonRow(groupId, selectedPlayer));
+  const completedGroups = groupRows.filter((row) => row.official.length > 0).length;
+  const playerExactSlots = groupRows.reduce((total, row) => total + row.playerExactSlots, 0);
+  const possibleGroupSlots = groupRows.reduce((total, row) => total + row.official.length, 0);
+  const bestThirdMatches = selectedPlayer
+    ? selectedPlayer.bestThirds.filter((pick) => officialScenario.bestThirds.includes(pick.team)).length
+    : 0;
+  const groupPoints = groupRows.reduce((total, row) => total + row.points, 0);
+  const bestThirdPoints = bestThirdMatches * BEST_THIRD_TEAM_POINTS;
+
+  comparisonSummary.replaceChildren(
+    comparisonMetric("Completed groups", `${completedGroups}/${GROUP_IDS.length}`),
+    comparisonMetric("Selected player", selectedPlayer?.name || "None"),
+    comparisonMetric("First-round score", `${formatPoints(groupPoints + bestThirdPoints)} pts`),
+    comparisonMetric("Group exact slots", `${playerExactSlots}/${possibleGroupSlots || 0}`),
+    comparisonMetric("Best-third overlap", `${bestThirdMatches}/${officialScenario.bestThirds.length || 0}`),
+    comparisonMetric("Official source", officialData?.sourceName || "Not loaded")
+  );
+
+  groupComparisonTable.innerHTML = `
+    <thead>
+      <tr>
+        <th>Group</th>
+        <th>Official result</th>
+        <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
+        <th>Exact slots</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${groupRows.map((row) => `
+        <tr>
+          <td><strong>Group ${escapeHtml(row.groupId)}</strong></td>
+          <td>${teamList(row.official)}</td>
+          <td>${teamList(row.prediction)}</td>
+          <td>${row.official.length ? `${row.playerExactSlots}/${row.official.length}` : '<span class="muted">Pending</span>'}</td>
+          <td>${row.official.length ? formatPoints(row.points) : '<span class="muted">Pending</span>'}</td>
+        </tr>
+      `).join("")}
+    </tbody>
+  `;
+
+  const bestThirdRows = bestThirdComparisonRows(selectedPlayer);
+  bestThirdComparisonTable.innerHTML = `
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Official result</th>
+        <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${bestThirdRows.map((row) => `
+        <tr>
+          <td><strong>${escapeHtml(row.label)}</strong></td>
+          <td>${comparisonValue(row.official)}</td>
+          <td>${comparisonValue(row.prediction)}</td>
+          <td>${row.official ? resultBadge(row) : '<span class="muted">Pending</span>'}</td>
+        </tr>
+      `).join("")}
+    </tbody>
+  `;
+}
+
+function renderComparisonPlayerSelect() {
+  comparisonPlayerSelect.replaceChildren(
+    ...players.map((player, index) => new Option(player.name || player.sheet || `Player ${index + 1}`, String(index)))
+  );
+  comparisonPlayerSelect.value = String(comparisonPlayerIndex);
+}
+
+function comparisonMetric(label, value) {
+  const node = document.createElement("article");
+  node.className = "comparison-metric";
+  node.innerHTML = `
+    <span>${escapeHtml(label)}</span>
+    <strong>${escapeHtml(value)}</strong>
+  `;
+  return node;
+}
+
+function groupComparisonRow(groupId, player) {
+  const official = officialScenario.groupResults[groupId] || [];
+  const prediction = player?.groups[groupId] || [];
+  const playerExactSlots = official.reduce(
+    (count, team, index) => count + (team && team === prediction[index] ? 1 : 0),
+    0
+  );
+  const fullOrder = official.length > 0 && official.every((team, index) => team && team === prediction[index]);
+  const points = playerExactSlots * GROUP_EXACT_POSITION_POINTS + (fullOrder ? GROUP_FULL_ORDER_BONUS : 0);
+
+  return {
+    groupId,
+    official,
+    prediction,
+    playerExactSlots,
+    points,
+  };
+}
+
+function bestThirdComparisonRows(player) {
+  if (!player) {
+    return [];
+  }
+
+  const bestThirdMatches = player.bestThirds.filter((pick) => officialScenario.bestThirds.includes(pick.team)).length;
+  return [
+    {
+      label: "Best thirds",
+      official: officialScenario.bestThirds.join(", "),
+      prediction: player.bestThirds.map((pick) => pick.team).join(", "),
+      points: bestThirdMatches * BEST_THIRD_TEAM_POINTS,
+      status: `${bestThirdMatches} match${bestThirdMatches === 1 ? "" : "es"}`,
+    },
+  ].map((row) => ({
+    ...row,
+    points: row.official ? row.points : 0,
+  }));
+}
+
+function resultBadge(row) {
+  const tone = row.points > 0 ? "hit" : "miss";
+  return `<span class="result-badge ${tone}">${escapeHtml(row.status)}${row.points ? `, ${formatPoints(row.points)} pts` : ""}</span>`;
+}
+
+function teamList(teams) {
+  if (!teams.length) {
+    return '<span class="muted">Pending</span>';
+  }
+  return `<ol class="team-list">${teams.map((team) => `<li>${escapeHtml(team)}</li>`).join("")}</ol>`;
+}
+
+function comparisonValue(value) {
+  return value ? escapeHtml(value) : '<span class="muted">Pending</span>';
 }
 
 function renderGroupEditors() {

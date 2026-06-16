@@ -284,11 +284,99 @@ td {
 
 .rules-explainer,
 .rules-grid,
+.comparison-summary,
+.comparison-content,
 .futures-editor,
 .group-grid,
 .third-grid,
 .charts {
   padding: 16px;
+}
+
+.comparison-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.comparison-metric {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 12px;
+}
+
+.comparison-metric span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.comparison-metric strong {
+  display: block;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+  font-size: 18px;
+}
+
+.comparison-content {
+  display: grid;
+  gap: 18px;
+}
+
+.comparison-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.comparison-select {
+  min-width: min(100%, 240px);
+}
+
+.comparison-block {
+  min-width: 0;
+}
+
+.comparison-block h3 {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
+
+.comparison-panel .rule-pill.pending {
+  background: var(--gold-soft);
+  color: var(--gold);
+}
+
+.team-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.result-badge.hit {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.result-badge.miss {
+  background: var(--soft);
+  color: var(--muted);
 }
 
 .rules-explainer {
@@ -473,7 +561,8 @@ td {
 
 @media (max-width: 860px) {
   .topbar,
-  .split {
+  .split,
+  .comparison-content {
     grid-template-columns: 1fr;
   }
 

@@ -45,6 +45,37 @@
         </div>
       </section>
 
+      <section class="panel comparison-panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Official vs Predictions</p>
+            <h2>Results Comparison</h2>
+          </div>
+          <div class="comparison-controls">
+            <label class="field comparison-select">
+              <span>Compare player</span>
+              <select id="comparisonPlayerSelect"></select>
+            </label>
+            <span class="rule-pill" id="comparisonStatus">Pending results</span>
+          </div>
+        </div>
+        <div id="comparisonSummary" class="comparison-summary"></div>
+        <div class="comparison-content">
+          <div class="comparison-block">
+            <h3>Group Stage</h3>
+            <div class="table-wrap">
+              <table id="groupComparisonTable"></table>
+            </div>
+          </div>
+          <div class="comparison-block">
+            <h3>Best Thirds</h3>
+            <div class="table-wrap">
+              <table id="bestThirdComparisonTable"></table>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="panel">
         <div class="panel-head">
           <div>
@@ -57,6 +88,7 @@
     </main>
 
     <script src="../interface/data/pool_data.js"></script>
+    <script src="../official_results/data/official_results.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
