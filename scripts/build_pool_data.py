@@ -43,6 +43,20 @@ GRID_COLUMNS = range(2, 9)
 GRID_ROWS = range(11, 31)
 BEST_THIRD_ROWS = range(28, 31)
 BEST_THIRD_PAIRS = ((3, 4), (5, 6), (7, 8))
+COUNTRY_ALIASES = {
+    "bosnia": "Bosnia-Herzegovina",
+    "bosnia and herzegovina": "Bosnia-Herzegovina",
+    "bosnia-herzegovina": "Bosnia-Herzegovina",
+    "congo dr": "Congo DR",
+    "democratic republic of congo": "Congo DR",
+    "democratic republic of the congo": "Congo DR",
+    "dr congo": "Congo DR",
+    "czech republic": "Czechia",
+    "czechia": "Czechia",
+    "turkey": "Türkiye",
+    "turkiye": "Türkiye",
+    "türkiye": "Türkiye",
+}
 
 
 def main() -> None:
@@ -162,12 +176,19 @@ def clean_text(value: object) -> str:
     return text.strip()
 
 
+def normalize_country(value: object) -> str:
+    text = clean_text(value)
+    return COUNTRY_ALIASES.get(text.lower(), text)
+
+
 def extract_futures(cells: dict[tuple[int, int], str], sheet_name: str) -> dict[str, dict[str, str]]:
     futures = {}
     for key, row in FUTURE_ROWS.items():
         value = cells.get((row, 3), "")
         if key == "name" and not value:
             value = sheet_name
+        if key in {"champion", "runner_up", "favorite_team"}:
+            value = normalize_country(value)
         futures[key] = {
             "label": FUTURE_LABELS[key],
             "value": value,
@@ -178,7 +199,7 @@ def extract_futures(cells: dict[tuple[int, int], str], sheet_name: str) -> dict[
 def extract_first_round_grid(cells: dict[tuple[int, int], str]) -> list[dict[str, object]]:
     rows = []
     for row in GRID_ROWS:
-        values = [cells.get((row, column), "") for column in GRID_COLUMNS]
+        values = [normalize_country(cells.get((row, column), "")) for column in GRID_COLUMNS]
         if any(values):
             rows.append({"row": row, "cells": values})
     return rows
@@ -189,7 +210,7 @@ def extract_best_thirds(cells: dict[tuple[int, int], str]) -> list[dict[str, str
     for row in BEST_THIRD_ROWS:
         for rank_column, team_column in BEST_THIRD_PAIRS:
             rank = cells.get((row, rank_column), "")
-            team = cells.get((row, team_column), "")
+            team = normalize_country(cells.get((row, team_column), ""))
             if rank or team:
                 picks.append({"rank": rank, "team": team})
     return picks

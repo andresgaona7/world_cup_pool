@@ -24,11 +24,22 @@ RANK_PATTERN = re.compile(r"^\d+(?:\.0)?$")
 REGIONAL_INDICATOR_PATTERN = re.compile(r"[\U0001F1E6-\U0001F1FF]")
 
 COUNTRY_ALIASES = {
+    "bosnia": "Bosnia-Herzegovina",
+    "bosnia and herzegovina": "Bosnia-Herzegovina",
+    "bosnia-herzegovina": "Bosnia-Herzegovina",
+    "congo dr": "Congo DR",
+    "democratic republic of congo": "Congo DR",
+    "democratic republic of the congo": "Congo DR",
+    "dr congo": "Congo DR",
+    "czech republic": "Czechia",
+    "czechia": "Czechia",
     "ecuador": "Ecuador",
     "espana": "Spain",
     "france": "France",
     "netherlands": "Netherlands",
     "portugal": "Portugal",
+    "turkey": "Türkiye",
+    "turkiye": "Türkiye",
 }
 
 PLAYER_ALIASES = {

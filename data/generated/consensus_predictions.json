@@ -3,7 +3,7 @@
     "source_file": "data/generated/pool_data.js",
     "workbook_source": "data/raw/group_stage_and_future_predictions.xlsx",
     "generated_from": "group_stage_and_future_predictions.xlsx",
-    "generated_at": "2026-06-16T20:41:27.149287+00:00",
+    "generated_at": "2026-06-16T22:08:59.209946+00:00",
     "player_count": 11
   },
   "group_winner_consensus": {
@@ -43,7 +43,7 @@
         "votes": 6
       },
       {
-        "team": "Turkey",
+        "team": "Türkiye",
         "votes": 4
       },
       {
@@ -238,7 +238,7 @@
       "votes": 7
     },
     {
-      "team": "Bosnia",
+      "team": "Bosnia-Herzegovina",
       "votes": 7
     },
     {
@@ -254,7 +254,7 @@
       "votes": 5
     },
     {
-      "team": "Czech Republic",
+      "team": "Czechia",
       "votes": 5
     },
     {
@@ -274,7 +274,7 @@
       "votes": 3
     },
     {
-      "team": "DR Congo",
+      "team": "Congo DR",
       "votes": 3
     },
     {

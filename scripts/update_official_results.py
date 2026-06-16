@@ -39,7 +39,14 @@ GROUP_TEAMS = {
     "L": ("England", "Croatia", "Ghana", "Panama"),
 }
 TEAM_NAME_ALIASES = {
+    "Bosnia": "Bosnia-Herzegovina",
+    "Bosnia and Herzegovina": "Bosnia-Herzegovina",
+    "Democratic Republic of Congo": "Congo DR",
+    "Democratic Republic of the Congo": "Congo DR",
+    "DR Congo": "Congo DR",
+    "Czech Republic": "Czechia",
     "Turkey": "Türkiye",
+    "Turkiye": "Türkiye",
     "Tutkey": "Türkiye",
 }
 GROUP_SIZE = 4

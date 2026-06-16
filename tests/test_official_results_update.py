@@ -11,6 +11,13 @@ SPEC.loader.exec_module(update_official_results)
 
 
 class OfficialResultsUpdateTests(unittest.TestCase):
+    def test_normalize_row_uses_official_congo_dr_name(self):
+        row = update_official_results.normalize_row(
+            self.row("DR Congo", "COD", 0, 0, 0, 0)
+        )
+
+        self.assertEqual(row["team"], "Congo DR")
+
     def test_groups_overall_table_using_known_world_cup_groups(self):
         raw_data = {
             "standings": [
@@ -22,9 +29,10 @@ class OfficialResultsUpdateTests(unittest.TestCase):
                         self.row("Mexico", "MEX", 3, 2, 0, 1),
                         self.row("South Africa", "RSA", 0, 0, 2, 0),
                         self.row("South Korea", "KOR", 3, 2, 1, 1),
-                        self.row("Czechia", "CZE", 0, 1, 2, 0),
+                        self.row("Czech Republic", "CZE", 0, 1, 2, 0),
                         self.row("Canada", "CAN", 1, 1, 1, 0),
-                        self.row("Turkey", "TUR", 3, 1, 0, 1),
+                        self.row("Bosnia and Herzegovina", "BIH", 1, 1, 1, 0),
+                        self.row("Turkiye", "TUR", 3, 1, 0, 1),
                         self.row("Netherlands", "NED", 3, 2, 0, 1),
                     ],
                 }
@@ -38,7 +46,10 @@ class OfficialResultsUpdateTests(unittest.TestCase):
             ["Mexico", "South Korea", "Czechia", "South Africa"],
         )
         self.assertEqual([row["position"] for row in grouped["A"]], [1, 2, 3, 4])
-        self.assertEqual([row["team"] for row in grouped["B"]], ["Canada"])
+        self.assertEqual(
+            [row["team"] for row in grouped["B"]],
+            ["Bosnia-Herzegovina", "Canada"],
+        )
         self.assertEqual([row["team"] for row in grouped["D"]], ["Türkiye"])
         self.assertEqual(
             [row["team"] for row in grouped["F"]],
