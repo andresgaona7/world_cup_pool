@@ -328,9 +328,37 @@ td {
 
 .comparison-summary {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: 12px;
   border-bottom: 1px solid var(--line);
+}
+
+.comparison-summary-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.comparison-equation-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.comparison-equation-row .comparison-metric {
+  flex: 1 0 160px;
+}
+
+.comparison-operator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 22px;
+  color: var(--muted);
+  font-size: 20px;
+  font-weight: 850;
 }
 
 .comparison-metric {

@@ -1,81 +1,102 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>World Cup Pool Score Visualizer</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">World Cup 2026 Pool</p>
-        <h1>Score Scenario Visualizer</h1>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Cup Pool Score Visualizer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">World Cup 2026 Pool</p>
+      <h1>Score Scenario Visualizer</h1>
+    </div>
+    <nav class="site-nav" aria-label="Visualization navigation">
+      <a href="../../index.html">Home</a>
+      <a href="../player_predictions/index.html">Player Picks</a>
+      <a href="../consensus_predictions/index.html">Consensus</a>
+      <a class="active" href="index.html" aria-current="page">Scores</a>
+      <a href="../score_timeline/index.html">Timeline</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="toolbar" aria-label="Score scenario">
+      <label class="field scenario-select">
+        <span>Score scenario</span>
+        <select id="scenarioSelect">
+          <option value="official">Official results</option>
+          <option value="consensus">Consensus results</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="metrics" id="metrics"></section>
+
+    <section class="panel leaderboard-panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Leaderboard</p>
+          <h2>Score</h2>
+        </div>
+        <span class="rule-pill" id="leaderboardScenarioStatus">Consensus results</span>
       </div>
-      <nav class="site-nav" aria-label="Visualization navigation">
-        <a href="../../index.html">Home</a>
-        <a href="../player_predictions/index.html">Player Picks</a>
-        <a href="../consensus_predictions/index.html">Consensus</a>
-        <a class="active" href="index.html" aria-current="page">Scores</a>
-        <a href="../score_timeline/index.html">Timeline</a>
-      </nav>
-    </header>
+      <div class="table-wrap">
+        <table id="leaderboardTable"></table>
+      </div>
+    </section>
 
-    <main class="page">
-      <section class="toolbar" aria-label="Score scenario">
-        <label class="field scenario-select">
-          <span>Score scenario</span>
-          <select id="scenarioSelect">
-            <option value="official">Official results</option>
-            <option value="consensus">Consensus results</option>
-          </select>
-        </label>
-      </section>
-
-      <section class="metrics" id="metrics"></section>
-
-      <section class="panel leaderboard-panel">
-        <div class="panel-head">
-          <div>
-            <p class="eyebrow">Leaderboard</p>
-            <h2>Score</h2>
-          </div>
-          <span class="rule-pill" id="leaderboardScenarioStatus">Consensus results</span>
+    <section class="panel comparison-panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Official vs Predictions</p>
+          <h2>First Round</h2>
         </div>
-        <div class="table-wrap">
-          <table id="leaderboardTable"></table>
-        </div>
-      </section>
-
-      <section class="panel comparison-panel">
-        <div class="panel-head">
-          <div>
-            <p class="eyebrow">Official vs Predictions</p>
-            <h2>Results Comparison</h2>
-          </div>
-          <span class="rule-pill" id="comparisonStatus">Pending results</span>
-        </div>
-        <div id="comparisonSummary" class="comparison-summary"></div>
-        <div class="comparison-content">
-          <div class="comparison-block">
-            <h3>Group Stage</h3>
-            <div class="table-wrap">
-              <table id="groupComparisonTable"></table>
-            </div>
-          </div>
-          <div class="comparison-block">
-            <h3>Best Thirds</h3>
-            <div class="table-wrap">
-              <table id="bestThirdComparisonTable"></table>
-            </div>
+        <span class="rule-pill" id="comparisonStatus">Pending results</span>
+      </div>
+      <div id="comparisonSummary" class="comparison-summary"></div>
+      <div class="comparison-content">
+        <div class="comparison-block">
+          <h3>Group Stage</h3>
+          <div class="table-wrap">
+            <table id="groupComparisonTable"></table>
           </div>
         </div>
-      </section>
+        <div class="comparison-block">
+          <h3>Best Thirds</h3>
+          <div class="table-wrap">
+            <table id="bestThirdComparisonTable"></table>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    </main>
+    <section class="panel futures-comparison-panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Official vs Predictions</p>
+          <h2>Futures Comparison</h2>
+        </div>
+      </div>
+      <div id="futuresSummary" class="comparison-summary"></div>
+      <div class="comparison-content">
+        <div class="comparison-block">
+          <h3>Futures</h3>
+          <div class="table-wrap">
+            <table id="futuresComparisonTable"></table>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <script src="../../data/generated/pool_data.js"></script>
-    <script src="../../data/generated/official_results.js"></script>
-    <script src="app.js"></script>
-  </body>
+  </main>
+
+  <script src="../../data/generated/pool_data.js"></script>
+  <script src="../../data/generated/official_results.js"></script>
+  <script src="app.js"></script>
+</body>
+
 </html>

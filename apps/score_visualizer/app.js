@@ -48,8 +48,10 @@ const scenarioSelect = document.querySelector("#scenarioSelect");
 const leaderboardScenarioStatus = document.querySelector("#leaderboardScenarioStatus");
 const comparisonStatus = document.querySelector("#comparisonStatus");
 const comparisonSummary = document.querySelector("#comparisonSummary");
+const futuresSummary = document.querySelector("#futuresSummary");
 const groupComparisonTable = document.querySelector("#groupComparisonTable");
 const bestThirdComparisonTable = document.querySelector("#bestThirdComparisonTable");
+const futuresComparisonTable = document.querySelector("#futuresComparisonTable");
 
 scenarioSelect.value = selectedScenarioMode;
 scenarioSelect.querySelector('option[value="official"]').disabled = !hasOfficialScenarioData(officialScenario);
@@ -475,14 +477,25 @@ function renderComparison() {
     }
   );
   const bestThirdPoints = bestThirdMatches * BEST_THIRD_TEAM_POINTS;
+  const futuresScore = selectedPlayer ? scoreFutures(selectedPlayer) : { points: 0, bonus: 0 };
+  const futuresPoints = futuresScore.points + futuresScore.bonus;
 
   comparisonSummary.replaceChildren(
-    comparisonMetric("Selected player", selectedPlayer?.name || "None"),
-    comparisonMetric("First-round score", `${formatPoints(groupPoints + bestThirdPoints)} pts`),
-    comparisonMetric("Qualifier points", `${formatPoints(groupTotals.qualifierPoints)} pts (${qualifierMatches}/${possibleQualifiers || 0})`),
-    comparisonMetric("Exact-position bonus", `${formatPoints(groupTotals.exactAdvancingPoints)} pts (${exactAdvancingPositions}/${possibleQualifiers || 0})`),
-    comparisonMetric("Full-order bonus", `${formatPoints(groupTotals.fullOrderPoints)} pts`),
-    comparisonMetric("Best-third overlap", `${bestThirdMatches}/${comparisonScenario.bestThirds.length || 0}`)
+    comparisonMetricRow(
+      comparisonMetric("Selected player", selectedPlayer?.name || "None"),
+      comparisonMetric("First-round score", `${formatPoints(groupPoints + bestThirdPoints)} pts`)
+    ),
+    comparisonEquationRow(
+      comparisonMetric("Qualifier points", `${formatPoints(groupTotals.qualifierPoints)} pts (${qualifierMatches}/${possibleQualifiers || 0})`),
+      comparisonOperator("+"),
+      comparisonMetric("Exact-position bonus", `${formatPoints(groupTotals.exactAdvancingPoints)} pts (${exactAdvancingPositions}/${possibleQualifiers || 0})`),
+      comparisonOperator("+"),
+      comparisonMetric("Full-order bonus", `${formatPoints(groupTotals.fullOrderPoints)} pts`),
+      comparisonOperator("+"),
+      comparisonMetric("Best-third overlap", `${formatPoints(bestThirdPoints)} pts (${bestThirdMatches}/${comparisonScenario.bestThirds.length || 0})`),
+      comparisonOperator("="),
+      comparisonMetric("First-round score", `${formatPoints(groupPoints + bestThirdPoints)} pts`)
+    )
   );
 
   groupComparisonTable.innerHTML = `
@@ -556,6 +569,49 @@ function renderComparison() {
       </tr>
     </tfoot>
   `;
+
+  const futuresRows = futuresComparisonRows(selectedPlayer, comparisonScenario);
+  const futuresTotals = futuresRows.reduce(
+    (total, row) => ({
+      points: total.points + row.points,
+      bonus: total.bonus + row.bonus,
+    }),
+    { points: 0, bonus: 0 }
+  );
+  futuresSummary.replaceChildren(
+    comparisonMetricRow(
+      comparisonMetric("Selected player", selectedPlayer?.name || "None"),
+      comparisonMetric("Futures score", `${formatPoints(futuresPoints)} pts`)
+    )
+  );
+  futuresComparisonTable.innerHTML = `
+    <thead>
+      <tr>
+        <th>Rule</th>
+        <th>${escapeHtml(scenarioLabel(selectedScenarioMode))}</th>
+        <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
+        <th>Result</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${futuresRows.map((row) => `
+        <tr>
+          <td><strong>${escapeHtml(row.label)}</strong></td>
+          <td>${comparisonValue(row.actual)}</td>
+          <td>${comparisonValue(row.prediction)}</td>
+          <td>${row.hasResult ? resultBadge(row) : '<span class="muted">Pending</span>'}</td>
+          <td>${row.hasResult ? formatPoints(row.points + row.bonus) : '<span class="muted">Pending</span>'}</td>
+        </tr>
+      `).join("")}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4"><strong>Futures total</strong></td>
+        <td><strong>${formatPoints(futuresTotals.points + futuresTotals.bonus)} pts</strong></td>
+      </tr>
+    </tfoot>
+  `;
 }
 
 function comparisonMetric(label, value) {
@@ -565,6 +621,27 @@ function comparisonMetric(label, value) {
     <span>${escapeHtml(label)}</span>
     <strong>${escapeHtml(value)}</strong>
   `;
+  return node;
+}
+
+function comparisonMetricRow(...metrics) {
+  const node = document.createElement("div");
+  node.className = "comparison-summary-row";
+  node.append(...metrics);
+  return node;
+}
+
+function comparisonEquationRow(...items) {
+  const node = document.createElement("div");
+  node.className = "comparison-equation-row";
+  node.append(...items);
+  return node;
+}
+
+function comparisonOperator(value) {
+  const node = document.createElement("span");
+  node.className = "comparison-operator";
+  node.textContent = value;
   return node;
 }
 
@@ -647,6 +724,136 @@ function bestThirdComparisonRows(player, comparisonScenario) {
         status: pick.match ? "Match" : "No match",
       };
     });
+}
+
+function futuresComparisonRows(player, comparisonScenario) {
+  if (!player) {
+    return [];
+  }
+
+  const prediction = player.futures;
+  const actual = comparisonScenario.futures;
+  const championCorrect = Boolean(actual.champion) && prediction.champion === actual.champion;
+  const runnerUpCorrect = Boolean(actual.runnerUp) && prediction.runnerUp === actual.runnerUp;
+  const topScorerCorrect = Boolean(actual.topScorer) && prediction.topScorer === actual.topScorer;
+  const reversedFinalPairing =
+    !championCorrect &&
+    !runnerUpCorrect &&
+    actual.champion &&
+    actual.runnerUp &&
+    prediction.champion === actual.runnerUp &&
+    prediction.runnerUp === actual.champion;
+  const favoriteActualStage = actual.teamLastRounds[prediction.favoriteTeam];
+  const favoritePoints = lastRoundPoints(prediction.favoriteRound, favoriteActualStage, {
+    exact: FUTURES_POINTS.favoriteExact,
+    offByOne: FUTURES_POINTS.favoriteOffByOne,
+  });
+  const ecuadorActualStage = actual.teamLastRounds.Ecuador;
+  const ecuadorPoints = lastRoundPoints(prediction.ecuadorRound, ecuadorActualStage, {
+    exact: FUTURES_POINTS.ecuadorExact,
+    offByOne: FUTURES_POINTS.ecuadorOffByOne,
+  });
+  const perfectBonus =
+    championCorrect &&
+    runnerUpCorrect &&
+    topScorerCorrect &&
+    prediction.favoriteRound === favoriteActualStage &&
+    prediction.ecuadorRound === ecuadorActualStage;
+
+  return [
+    {
+      label: "Champion",
+      actual: actual.champion,
+      prediction: prediction.champion,
+      hasResult: Boolean(actual.champion),
+      match: championCorrect,
+      points: championCorrect ? FUTURES_POINTS.champion : 0,
+      bonus: 0,
+      status: championCorrect ? "Match" : "No match",
+    },
+    {
+      label: "Runner-up",
+      actual: actual.runnerUp,
+      prediction: prediction.runnerUp,
+      hasResult: Boolean(actual.runnerUp),
+      match: runnerUpCorrect,
+      points: runnerUpCorrect ? FUTURES_POINTS.runnerUp : 0,
+      bonus: 0,
+      status: runnerUpCorrect ? "Match" : "No match",
+    },
+    {
+      label: "Reversed final pair",
+      actual: actual.champion && actual.runnerUp ? `${actual.champion} / ${actual.runnerUp}` : "",
+      prediction: prediction.champion && prediction.runnerUp ? `${prediction.champion} / ${prediction.runnerUp}` : "",
+      hasResult: Boolean(actual.champion && actual.runnerUp),
+      match: Boolean(reversedFinalPairing),
+      points: reversedFinalPairing ? FUTURES_POINTS.reversedFinalPairing : 0,
+      bonus: 0,
+      status: reversedFinalPairing ? "Match" : "No match",
+    },
+    {
+      label: "Top scorer",
+      actual: actual.topScorer,
+      prediction: prediction.topScorer,
+      hasResult: Boolean(actual.topScorer),
+      match: topScorerCorrect,
+      points: topScorerCorrect ? FUTURES_POINTS.topScorer : 0,
+      bonus: 0,
+      status: topScorerCorrect ? "Match" : "No match",
+    },
+    {
+      label: "Favorite-team round",
+      actual: favoriteActualStage ? `${prediction.favoriteTeam}: ${stageLabel(favoriteActualStage)}` : "",
+      prediction: prediction.favoriteTeam && prediction.favoriteRound ? `${prediction.favoriteTeam}: ${stageLabel(prediction.favoriteRound)}` : "",
+      hasResult: Boolean(favoriteActualStage),
+      match: favoritePoints > 0,
+      points: favoritePoints,
+      bonus: 0,
+      status: roundMatchStatus(prediction.favoriteRound, favoriteActualStage),
+    },
+    {
+      label: "Ecuador round",
+      actual: ecuadorActualStage ? stageLabel(ecuadorActualStage) : "",
+      prediction: prediction.ecuadorRound ? stageLabel(prediction.ecuadorRound) : "",
+      hasResult: Boolean(ecuadorActualStage),
+      match: ecuadorPoints > 0,
+      points: ecuadorPoints,
+      bonus: 0,
+      status: roundMatchStatus(prediction.ecuadorRound, ecuadorActualStage),
+    },
+    {
+      label: "Perfect futures card bonus",
+      actual: "All futures exact",
+      prediction: "All futures exact",
+      hasResult: hasFuturesComparisonData(actual),
+      match: perfectBonus,
+      points: 0,
+      bonus: perfectBonus ? FUTURES_POINTS.perfectBonus : 0,
+      status: perfectBonus ? "Match" : "No match",
+    },
+  ];
+}
+
+function roundMatchStatus(predicted, actual) {
+  if (!predicted || !actual || !(predicted in STAGE_ORDER) || !(actual in STAGE_ORDER)) {
+    return "No match";
+  }
+  if (STAGE_ORDER[predicted] === STAGE_ORDER[actual]) {
+    return "Exact";
+  }
+  if (Math.abs(STAGE_ORDER[predicted] - STAGE_ORDER[actual]) === 1) {
+    return "Off by one";
+  }
+  return "No match";
+}
+
+function hasFuturesComparisonData(actual) {
+  return Boolean(
+    actual.champion ||
+    actual.runnerUp ||
+    actual.topScorer ||
+    Object.values(actual.teamLastRounds).some(Boolean)
+  );
 }
 
 function resultBadge(row) {
@@ -884,10 +1091,8 @@ function renderLeaderboard() {
         <th class="rank">#</th>
         <th>Player</th>
         <th>Total</th>
-        <th>Groups</th>
-        <th>Best 3rds</th>
+        <th>First-round score</th>
         <th>Futures</th>
-        <th>Bonus</th>
       </tr>
     </thead>
     <tbody>
@@ -903,10 +1108,8 @@ function renderLeaderboard() {
               <td class="rank">${index + 1}</td>
               <td><strong>${escapeHtml(row.name)}</strong><br><span class="muted">${escapeHtml(row.sheet)}</span></td>
               <td class="total">${formatPoints(row.total)}</td>
-              <td>${formatPoints(row.group)}</td>
-              <td>${formatPoints(row.bestThirds)}</td>
+              <td>${formatPoints(row.firstRound)}</td>
               <td>${formatPoints(row.futures)}</td>
-              <td>${formatPoints(row.bonus)}</td>
             </tr>
           `
         )
@@ -943,13 +1146,15 @@ function scoreAllPlayers() {
       const group = scoreGroups(player);
       const bestThirds = scoreBestThirds(player);
       const futuresScore = scoreFutures(player);
-      const total = group + bestThirds + futuresScore.points + futuresScore.bonus;
+      const firstRound = group + bestThirds;
+      const total = firstRound + futuresScore.points + futuresScore.bonus;
       return {
         playerIndex,
         name: player.name,
         sheet: player.sheet,
         group,
         bestThirds,
+        firstRound,
         futures: futuresScore.points,
         bonus: futuresScore.bonus,
         total,

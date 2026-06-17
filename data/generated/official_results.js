@@ -1,7 +1,7 @@
 window.OFFICIAL_RESULTS = {
   "sourceName": "Football-Data.org",
   "sourceUrl": "https://api.football-data.org/v4/competitions/WC/standings?season=2026",
-  "generatedAt": "2026-06-17T06:16:18+00:00",
+  "generatedAt": "2026-06-17T07:55:43+00:00",
   "lastCompletedMatchDate": "",
   "matches": [],
   "groupResults": {
@@ -24,7 +24,14 @@ window.OFFICIAL_RESULTS = {
     "runnerUp": "",
     "topScorer": "Lionel Messi",
     "teamLastRounds": {
-      "Ecuador": "group_stage"
+      "France": "group_stage",
+      "Argentina": "group_stage",
+      "Norway": "group_stage",
+      "Morocco": "group_stage",
+      "England": "group_stage",
+      "Ecuador": "group_stage",
+      "Spain": "group_stage",
+      "Brazil": "group_stage"
     }
   },
   "provisionalGroupStandings": {
@@ -761,7 +768,14 @@ window.OFFICIAL_RESULTS = {
           "runnerUp": "",
           "topScorer": "Lionel Messi",
           "teamLastRounds": {
-            "Ecuador": "group_stage"
+            "France": "group_stage",
+            "Argentina": "group_stage",
+            "Norway": "group_stage",
+            "Morocco": "group_stage",
+            "England": "group_stage",
+            "Ecuador": "group_stage",
+            "Spain": "group_stage",
+            "Brazil": "group_stage"
           }
         }
       },

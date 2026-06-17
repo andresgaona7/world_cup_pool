@@ -3,6 +3,13 @@
   "runnerUp": "",
   "topScorer": "Lionel Messi",
   "teamLastRounds": {
-    "Ecuador": "group_stage"
+    "France": "group_stage",
+    "Argentina": "group_stage",
+    "Norway": "group_stage",
+    "Morocco": "group_stage",
+    "England": "group_stage",
+    "Ecuador": "group_stage",
+    "Spain": "group_stage",
+    "Brazil": "group_stage"
   }
 }

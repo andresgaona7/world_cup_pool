@@ -29,6 +29,8 @@ make build-pool-data
 make build-consensus-predictions
 make update-official-results
 make apply-manual-futures
+CHECKPOINT=group_md1 make create-official-checkpoint
+make rebuild-official-checkpoints
 make build-site
 make test
 ```
@@ -40,6 +42,8 @@ python3 scripts/build_pool_data.py
 python3 scripts/build_consensus_predictions.py
 python3 scripts/update_official_results.py --transport "${OFFICIAL_RESULTS_TRANSPORT:-auto}"
 python3 scripts/apply_manual_futures.py
+python3 scripts/create_official_checkpoint.py group_md1
+python3 scripts/create_official_checkpoint.py --rebuild-only
 make build-site
 python3 -m unittest discover -s tests
 ```
@@ -70,6 +74,24 @@ After editing champion, runner-up, top scorer, or team last-round values, run
 `data/generated/official_results.js`. Valid `teamLastRounds` values are
 `group_stage`, `round_of_32`, `round_of_16`, `quarterfinal`, `semifinal`,
 `third_place_match`, `runner_up`, and `champion`.
+
+Official score-timeline checkpoints are stored in
+`data/checkpoints/official_results/`. After `data/generated/official_results.js`
+reflects the current official results, create a checkpoint with:
+
+```bash
+CHECKPOINT=group_md1 make create-official-checkpoint
+```
+
+Supported checkpoint keys are `group_md1`, `group_md2`, `group_md3`,
+`round_of_32`, `round_of_16`, `quarterfinal`, `semifinal`,
+`third_place_match`, `final`, and `futures`. To rebuild
+`OFFICIAL_RESULTS.timelineCheckpoints` from the committed checkpoint JSON files
+without creating a new checkpoint, run:
+
+```bash
+make rebuild-official-checkpoints
+```
 
 See `docs/data_flow.md` for the full flow and `docs/scoring_rules.md` for point
 values.
@@ -120,6 +142,7 @@ make build-pool-data
 make build-consensus-predictions
 make update-official-results
 make apply-manual-futures
+CHECKPOINT=group_md1 make create-official-checkpoint
 make test
 make build-site
 git add data/generated data/manual/official_futures.json data/manual/knockout_predictions.js index.html styles.css apps .github/workflows/pages.yml Makefile .gitignore README.md
