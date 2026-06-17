@@ -18,6 +18,7 @@ apps/player_predictions/    Static reader for submitted workbook picks.
 apps/score_visualizer/      Static leaderboard and scenario scorer.
 apps/score_timeline/        Static score-over-time graph.
 apps/consensus_predictions/ Standalone generated consensus visualization.
+public/                     Ignored GitHub Pages artifact from `make build-site`.
 docs/                       Scoring rules and data-flow notes.
 ```
 
@@ -28,6 +29,7 @@ make build-pool-data
 make build-consensus-predictions
 make update-official-results
 make apply-manual-futures
+make build-site
 make test
 ```
 
@@ -38,6 +40,7 @@ python3 scripts/build_pool_data.py
 python3 scripts/build_consensus_predictions.py
 python3 scripts/update_official_results.py --transport "${OFFICIAL_RESULTS_TRANSPORT:-auto}"
 python3 scripts/apply_manual_futures.py
+make build-site
 python3 -m unittest discover -s tests
 ```
 
@@ -93,15 +96,19 @@ https://<github-user>.github.io/world_cup_pool/
 ```
 
 The repo deploys as a static site through `.github/workflows/pages.yml`. GitHub
-Pages should be configured to use GitHub Actions as the source. The workflow
-uploads the repository contents directly, so files under `apps/` and
-`data/generated/` are served without a build step. `.nojekyll` is included so
+Pages should be configured to use GitHub Actions as the source. Only the `dev`
+branch can publish: pushes to `dev` deploy automatically, and manual workflow
+runs are ignored unless they run from `dev`. The workflow runs `make build-site`
+and uploads the generated `public/` directory, so source-only files such as
+`scripts/`, `tests/`, `world_cup_pool/`, `data/raw/`, and `.agents/` are not
+part of the public Pages artifact. `.nojekyll` is copied into `public/` so
 GitHub Pages serves static paths as-is.
 
 Local preview:
 
 ```bash
-python3 -m http.server 8000
+make build-site
+python3 -m http.server 8000 --directory public
 ```
 
 Then open `http://localhost:8000/`.
@@ -114,9 +121,10 @@ make build-consensus-predictions
 make update-official-results
 make apply-manual-futures
 make test
-git add data/generated index.html styles.css .github/workflows/pages.yml .nojekyll README.md
-git commit -m "Add static GitHub Pages dashboard"
-git push
+make build-site
+git add data/generated data/manual/official_futures.json data/manual/knockout_predictions.js index.html styles.css apps .github/workflows/pages.yml Makefile .gitignore README.md
+git commit -m "Update public pool dashboard"
+git push origin dev
 ```
 
 `make update-official-results` needs internet access because it fetches
