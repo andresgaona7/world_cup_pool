@@ -129,6 +129,29 @@ body {
   font-weight: 800;
 }
 
+.chart-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.range-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.range-control input {
+  width: 150px;
+  accent-color: var(--accent);
+}
+
 .chart-wrap {
   position: relative;
   min-height: 460px;
@@ -156,6 +179,10 @@ body {
   fill: var(--muted);
   font-size: 12px;
   font-weight: 750;
+}
+
+.pending-label {
+  fill: #9aa6b4;
 }
 
 .player-line {
@@ -261,6 +288,20 @@ th {
 
   .chart-wrap {
     min-height: 380px;
+  }
+
+  .chart-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .range-control {
+    width: 100%;
+  }
+
+  .range-control input {
+    flex: 1;
+    min-width: 0;
   }
 
   th,

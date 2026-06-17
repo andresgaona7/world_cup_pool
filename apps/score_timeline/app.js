@@ -40,6 +40,18 @@ const STAGES = [
 ];
 
 const STAGE_ORDER = Object.fromEntries(STAGES.map(([key], index) => [key, index]));
+const PLANNED_TIMELINE_CHECKPOINTS = [
+  { key: "group_md1", label: "After group matchday 1", shortLabel: "Group MD1", stage: "group_stage" },
+  { key: "group_md2", label: "After group matchday 2", shortLabel: "Group MD2", stage: "group_stage" },
+  { key: "group_md3", label: "After group matchday 3", shortLabel: "Group MD3", stage: "group_stage" },
+  { key: "round_of_32", label: "Round of 32", shortLabel: "R32", stage: "round_of_32" },
+  { key: "round_of_16", label: "Round of 16", shortLabel: "R16", stage: "round_of_16" },
+  { key: "quarterfinal", label: "Quarterfinal", shortLabel: "QF", stage: "quarterfinal" },
+  { key: "semifinal", label: "Semifinal", shortLabel: "SF", stage: "semifinal" },
+  { key: "third_place_match", label: "Third-place match", shortLabel: "3rd", stage: "third_place_match" },
+  { key: "final", label: "Final", shortLabel: "Final", stage: "final" },
+  { key: "futures", label: "Futures results", shortLabel: "Futures", stage: "futures", includeFutures: true },
+];
 const GROUP_IDS = "ABCDEFGHIJKL".split("");
 const GROUP_HEADER_PATTERN = /^Group ([A-L])$/;
 const RANK_PATTERN = /^\d+(?:\.0)?$/;
@@ -65,13 +77,22 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 const players = rawData.players.map(normalizePlayer);
 const knockoutPredictionsByPlayer = normalizeKnockoutPredictions(knockoutData);
 const checkpoints = buildTimelineCheckpoints(players, officialData);
-let selectedCheckpointIndex = Math.max(0, checkpoints.length - 1);
+let selectedCheckpointIndex = latestAvailableCheckpointIndex(checkpoints);
 
 const metrics = document.querySelector("#metrics");
 const checkpointStatus = document.querySelector("#checkpointStatus");
 const timelineChart = document.querySelector("#timelineChart");
 const timelineTooltip = document.querySelector("#timelineTooltip");
 const leaderboardTable = document.querySelector("#leaderboardTable");
+const chartWidthControl = document.querySelector("#chartWidthControl");
+const chartPanel = document.querySelector("#chartPanel");
+const leaderboardPanel = document.querySelector("#leaderboardPanel");
+let chartWidthScale = Number(chartWidthControl?.value || 100) / 100;
+
+chartWidthControl?.addEventListener("input", () => {
+  chartWidthScale = Number(chartWidthControl.value) / 100;
+  render();
+});
 
 render();
 
@@ -85,10 +106,10 @@ function render() {
   const selectedCheckpoint = checkpoints[selectedCheckpointIndex];
   const selectedRows = scoreAllPlayersForCheckpoint(players, selectedCheckpoint);
 
-  checkpointStatus.textContent = selectedCheckpoint.label;
+  checkpointStatus.textContent = checkpointStatusLabel(selectedCheckpoint);
   renderMetrics(series, selectedRows);
-  renderChart(series, checkpoints);
   renderLeaderboard(selectedRows, selectedCheckpoint, series);
+  renderChart(series, checkpoints);
 }
 
 function renderEmptyState() {
@@ -199,47 +220,113 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
   const startCheckpoint = {
     key: "start",
     label: "Start",
+    shortLabel: "Start",
     stage: "group_stage",
     completedAt: "",
+    isAvailable: true,
     scenario: emptyScenario(sourcePlayers),
     officialMatches: [],
   };
   const declared = (resultsData?.timelineCheckpoints || [])
     .map((checkpoint) => normalizeTimelineCheckpoint(sourcePlayers, checkpoint))
-    .filter((checkpoint) => checkpoint && hasScenarioData(checkpoint.scenario));
+    .filter(Boolean);
 
   if (declared.length) {
-    return [startCheckpoint, ...declared];
+    return [startCheckpoint, ...mergePlannedCheckpoints(sourcePlayers, declared)];
   }
 
   const fallbackScenario = normalizeOfficialScenario(sourcePlayers, resultsData);
-  if (!hasScenarioData(fallbackScenario)) {
-    return [startCheckpoint];
-  }
-
   const matchday = currentGroupMatchday(resultsData?.provisionalGroupStandings || {});
-  return [
-    startCheckpoint,
-    {
+  const fallbackCheckpoints = [];
+  const fallbackCheckpoint = hasNonFuturesScenarioData(fallbackScenario)
+    ? {
       key: matchday ? `group_md${matchday}` : "current_official",
       label: matchday ? `After group matchday ${matchday}` : "Current official standings",
+      shortLabel: matchday ? `Group MD${matchday}` : "Current",
       stage: "group_stage",
       completedAt: resultsData?.lastCompletedMatchDate || resultsData?.generatedAt || "",
+      isAvailable: true,
       scenario: fallbackScenario,
       officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
-    },
+    }
+    : null;
+  if (fallbackCheckpoint) {
+    fallbackCheckpoints.push(fallbackCheckpoint);
+  }
+  if (hasFuturesData(fallbackScenario)) {
+    fallbackCheckpoints.push({
+      key: "futures",
+      label: "Futures results",
+      shortLabel: "Futures",
+      stage: "futures",
+      completedAt: resultsData?.lastCompletedMatchDate || resultsData?.generatedAt || "",
+      includeFutures: true,
+      isAvailable: true,
+      scenario: fallbackScenario,
+      officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
+    });
+  }
+
+  return [
+    startCheckpoint,
+    ...mergePlannedCheckpoints(sourcePlayers, fallbackCheckpoints),
   ];
 }
 
 function normalizeTimelineCheckpoint(sourcePlayers, checkpoint) {
   const scenario = normalizeCheckpointScenario(sourcePlayers, checkpoint?.scenario || checkpoint);
+  const officialMatches = normalizeKnockoutResults(checkpoint.officialMatches || checkpoint.matches || []);
+  const stage = normalizeStage(checkpoint.stage || checkpoint.key || "group_stage");
+  const includeFutures = Boolean(checkpoint.includeFutures || checkpoint.key === "futures" || stage === "futures");
   return {
     key: checkpoint.key || checkpoint.id || checkpoint.label || "",
     label: checkpoint.label || checkpoint.name || checkpoint.key || "Checkpoint",
-    stage: normalizeStage(checkpoint.stage || "group_stage"),
+    shortLabel: checkpoint.shortLabel || "",
+    stage,
     completedAt: checkpoint.completedAt || checkpoint.date || "",
+    includeFutures,
+    isAvailable: includeFutures
+      ? hasFuturesData(scenario)
+      : hasNonFuturesScenarioData(scenario) || officialMatches.length > 0,
     scenario,
-    officialMatches: normalizeKnockoutResults(checkpoint.officialMatches || checkpoint.matches || []),
+    officialMatches,
+  };
+}
+
+function mergePlannedCheckpoints(sourcePlayers, availableCheckpoints) {
+  const availableByKey = new Map(
+    availableCheckpoints
+      .filter((checkpoint) => checkpoint.key)
+      .map((checkpoint) => [checkpoint.key, checkpoint])
+  );
+  const planned = PLANNED_TIMELINE_CHECKPOINTS.map((checkpoint) => {
+    const available = availableByKey.get(checkpoint.key);
+    return {
+      ...emptyTimelineCheckpoint(sourcePlayers, checkpoint),
+      ...(available || {}),
+      key: checkpoint.key,
+      label: available?.label || checkpoint.label,
+      shortLabel: available?.shortLabel || checkpoint.shortLabel,
+      stage: checkpoint.stage,
+      includeFutures: Boolean(checkpoint.includeFutures || available?.includeFutures),
+    };
+  });
+  const plannedKeys = new Set(PLANNED_TIMELINE_CHECKPOINTS.map((checkpoint) => checkpoint.key));
+  const extras = availableCheckpoints.filter((checkpoint) => checkpoint.key && !plannedKeys.has(checkpoint.key));
+  return [...planned, ...extras];
+}
+
+function emptyTimelineCheckpoint(sourcePlayers, checkpoint) {
+  return {
+    key: checkpoint.key,
+    label: checkpoint.label,
+    shortLabel: checkpoint.shortLabel || checkpoint.label,
+    stage: checkpoint.stage,
+    completedAt: "",
+    includeFutures: Boolean(checkpoint.includeFutures),
+    isAvailable: false,
+    scenario: emptyScenario(sourcePlayers),
+    officialMatches: [],
   };
 }
 
@@ -354,7 +441,7 @@ function normalizeKnockoutResults(matches) {
   return (matches || [])
     .map((match) => ({
       matchId: match.matchId || match.id || "",
-      stage: normalizeStage(match.stage || ""),
+      stage: normalizeKnockoutStage(match.stage || ""),
       homeTeam: match.homeTeam || match.home || "",
       awayTeam: match.awayTeam || match.away || "",
       homeScore: numberOrNull(match.homeScore),
@@ -372,6 +459,22 @@ function normalizeKnockoutResults(matches) {
     );
 }
 
+function normalizeKnockoutStage(stage) {
+  const text = String(stage || "").trim().toLowerCase();
+  const map = {
+    "round of 32": "round_of_32",
+    "round of 16": "round_of_16",
+    "quarter final": "quarterfinal",
+    quarterfinal: "quarterfinal",
+    "semi final": "semifinal",
+    semifinal: "semifinal",
+    "third-place match": "third_place_match",
+    "third place match": "third_place_match",
+    final: "final",
+  };
+  return map[text] || text.replace(/\s+/g, "_");
+}
+
 function numberOrNull(value) {
   if (value === null || value === undefined || value === "") {
     return null;
@@ -381,9 +484,18 @@ function numberOrNull(value) {
 }
 
 function hasScenarioData(value) {
+  return hasNonFuturesScenarioData(value) || hasFuturesData(value);
+}
+
+function hasNonFuturesScenarioData(value) {
   return (
     Object.values(value.groupResults).some((teams) => teams.some(Boolean)) ||
-    value.bestThirds.length > 0 ||
+    value.bestThirds.length > 0
+  );
+}
+
+function hasFuturesData(value) {
+  return (
     value.futures.champion ||
     value.futures.runnerUp ||
     value.futures.topScorer ||
@@ -406,37 +518,53 @@ function unique(values) {
 
 function buildTimelineSeries(sourcePlayers, sourceCheckpoints) {
   const checkpointScores = sourceCheckpoints.map((checkpoint) =>
-    scoreAllPlayersForCheckpoint(sourcePlayers, checkpoint)
+    checkpoint.isAvailable ? scoreAllPlayersForCheckpoint(sourcePlayers, checkpoint) : []
   );
 
   return sourcePlayers.map((player, playerIndex) => {
     const points = checkpointScores.map((rows, checkpointIndex) => {
       const row = rows.find((item) => item.playerIndex === playerIndex);
+      if (!sourceCheckpoints[checkpointIndex].isAvailable) {
+        return {
+          checkpointIndex,
+          rank: null,
+          playerIndex,
+          name: player.name,
+          sheet: player.sheet,
+          isAvailable: false,
+          total: null,
+        };
+      }
       return {
         checkpointIndex,
         rank: row ? rows.indexOf(row) + 1 : null,
+        isAvailable: true,
         ...row,
       };
     });
 
+    const availablePoints = points.filter((point) => point.isAvailable);
     return {
       player,
       playerIndex,
       emoji: emojiForPlayer(player),
       color: COLORS[playerIndex % COLORS.length],
       points,
-      latest: points[points.length - 1],
+      latest: availablePoints[availablePoints.length - 1],
     };
   });
 }
 
 function scoreAllPlayersForCheckpoint(sourcePlayers, checkpoint) {
+  if (!checkpoint?.isAvailable) {
+    return [];
+  }
   return sourcePlayers
     .map((player, playerIndex) => {
       const group = scoreGroups(player, checkpoint.scenario);
       const bestThirds = scoreBestThirds(player, checkpoint.scenario);
       const knockout = scoreKnockout(player, checkpoint.officialMatches || []);
-      const futuresScore = scoreFutures(player, checkpoint.scenario);
+      const futuresScore = checkpoint.includeFutures ? scoreFutures(player, checkpoint.scenario) : { points: 0, bonus: 0 };
       const total = group + bestThirds + knockout.points + knockout.bonus + futuresScore.points + futuresScore.bonus;
       return {
         playerIndex,
@@ -620,11 +748,11 @@ function renderMetrics(series, selectedRows) {
   const leader = selectedRows[0];
   const finalScores = series.map((row) => row.latest?.total || 0);
   const maxScore = Math.max(...finalScores, 0);
-  const checkpointsCount = checkpoints.length;
+  const availableCheckpointsCount = checkpoints.filter((checkpoint) => checkpoint.isAvailable).length;
 
   metrics.replaceChildren(
     metric("Leader", leader ? leader.name : "None", leader ? `${formatPoints(leader.total)} pts` : "0 pts"),
-    metric("Checkpoints", String(checkpointsCount), checkpoints[selectedCheckpointIndex]?.label || "None"),
+    metric("Checkpoints", `${availableCheckpointsCount} / ${checkpoints.length}`, "Available / planned"),
     metric("Highest score", `${formatPoints(maxScore)} pts`, "Latest checkpoint")
   );
 }
@@ -641,8 +769,9 @@ function metric(label, value, detail) {
 }
 
 function renderChart(series, sourceCheckpoints) {
-  const width = Math.max(760, sourceCheckpoints.length * 170 + 120);
-  const height = 420;
+  const baseWidth = Math.max(760, sourceCheckpoints.length * 170 + 120);
+  const width = Math.round(baseWidth * chartWidthScale);
+  const height = timelineChartHeight();
   const padding = { top: 26, right: 34, bottom: 78, left: 58 };
   const plotWidth = width - padding.left - padding.right;
   const plotHeight = height - padding.top - padding.bottom;
@@ -650,6 +779,8 @@ function renderChart(series, sourceCheckpoints) {
   const yMax = Math.max(10, Math.ceil(maxScore / 10) * 10);
   const xFor = (index) => padding.left + (sourceCheckpoints.length === 1 ? plotWidth / 2 : (index / (sourceCheckpoints.length - 1)) * plotWidth);
   const yFor = (score) => padding.top + plotHeight - (score / yMax) * plotHeight;
+
+  timelineChart.style.width = `${width}px`;
 
   const svg = svgElement("svg", { viewBox: `0 0 ${width} ${height}`, role: "img", "aria-label": "Score timeline chart" });
 
@@ -674,22 +805,33 @@ function renderChart(series, sourceCheckpoints) {
 
   sourceCheckpoints.forEach((checkpoint, index) => {
     const x = xFor(index);
+    const labelClass = checkpoint.isAvailable ? "axis-label" : "axis-label pending-label";
     svg.append(
       svgElement("line", { class: "grid-line", x1: x, y1: padding.top, x2: x, y2: padding.top + plotHeight }),
-      svgText(checkpoint.label, x, padding.top + plotHeight + 28, "axis-label", "middle")
+      svgText(checkpoint.shortLabel || checkpoint.label, x, padding.top + plotHeight + 28, labelClass, "middle")
     );
   });
 
   series.forEach((row) => {
     const path = row.points.map((point, index) => {
-      const command = index === 0 ? "M" : "L";
+      if (!point.isAvailable) {
+        return "";
+      }
+      const previousPoint = row.points[index - 1];
+      const command = previousPoint?.isAvailable ? "L" : "M";
       return `${command} ${xFor(index)} ${yFor(point.total || 0)}`;
-    }).join(" ");
+    }).filter(Boolean).join(" ");
+    if (!path) {
+      return;
+    }
     svg.append(svgElement("path", { class: "player-line", d: path, stroke: row.color }));
   });
 
   series.forEach((row) => {
     row.points.forEach((point, index) => {
+      if (!point.isAvailable) {
+        return;
+      }
       const x = xFor(index);
       const y = yFor(point.total || 0);
       const group = svgElement("g", {
@@ -722,9 +864,43 @@ function renderChart(series, sourceCheckpoints) {
   timelineChart.replaceChildren(svg);
 }
 
+function timelineChartHeight() {
+  const minimumHeight = 420;
+  if (!leaderboardPanel || !chartPanel) {
+    return minimumHeight;
+  }
+
+  const leaderboardHeight = leaderboardPanel.getBoundingClientRect().height;
+  const chartHeadHeight = chartPanel.querySelector?.(".panel-head")?.getBoundingClientRect().height || 0;
+  const chartWrap = chartPanel.querySelector?.(".chart-wrap");
+  const chartWrapStyles = chartWrap && typeof window.getComputedStyle === "function"
+    ? window.getComputedStyle(chartWrap)
+    : null;
+  const verticalPadding = chartWrapStyles
+    ? (Number.parseFloat(chartWrapStyles.paddingTop) || 0) + (Number.parseFloat(chartWrapStyles.paddingBottom) || 0)
+    : 32;
+
+  if (!Number.isFinite(leaderboardHeight) || leaderboardHeight <= 0) {
+    return minimumHeight;
+  }
+  return Math.max(minimumHeight, Math.round(leaderboardHeight - chartHeadHeight - verticalPadding));
+}
+
 function selectCheckpoint(index) {
   selectedCheckpointIndex = Math.max(0, Math.min(index, checkpoints.length - 1));
   render();
+}
+
+function latestAvailableCheckpointIndex(sourceCheckpoints) {
+  const latestIndex = sourceCheckpoints.map((checkpoint) => checkpoint.isAvailable).lastIndexOf(true);
+  return Math.max(0, latestIndex);
+}
+
+function checkpointStatusLabel(checkpoint) {
+  if (!checkpoint) {
+    return "Pending results";
+  }
+  return checkpoint.isAvailable ? checkpoint.label : `${checkpoint.label}: pending`;
 }
 
 function showTooltip(event, row, point, checkpoint) {

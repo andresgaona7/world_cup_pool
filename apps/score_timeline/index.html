@@ -17,13 +17,19 @@
     <main class="page">
       <section class="metrics" id="metrics" aria-label="Timeline summary"></section>
 
-      <section class="panel chart-panel">
+      <section class="panel chart-panel" id="chartPanel">
         <div class="panel-head">
           <div>
             <p class="eyebrow">Official Checkpoints</p>
             <h2>Scores Over Time</h2>
           </div>
-          <span class="rule-pill" id="checkpointStatus">Pending results</span>
+          <div class="chart-actions">
+            <label class="range-control" for="chartWidthControl">
+              <span>Width</span>
+              <input id="chartWidthControl" type="range" min="85" max="180" value="100" step="5">
+            </label>
+            <span class="rule-pill" id="checkpointStatus">Pending results</span>
+          </div>
         </div>
         <div class="chart-wrap">
           <div id="timelineChart" class="timeline-chart" aria-live="polite"></div>
@@ -31,7 +37,7 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel" id="leaderboardPanel">
         <div class="panel-head">
           <div>
             <p class="eyebrow">Checkpoint Detail</p>
