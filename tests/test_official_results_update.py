@@ -1,4 +1,6 @@
 import importlib.util
+import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -55,6 +57,66 @@ class OfficialResultsUpdateTests(unittest.TestCase):
             [row["team"] for row in grouped["F"]],
             ["Netherlands"],
         )
+
+    def test_group_sort_uses_fifa_ranking_before_team_name(self):
+        raw_data = {
+            "standings": [
+                {
+                    "stage": "GROUP_STAGE",
+                    "type": "TOTAL",
+                    "group": None,
+                    "table": [
+                        self.row("Canada", "CAN", 1, 1, 1, 0),
+                        self.row("Bosnia and Herzegovina", "BIH", 1, 1, 1, 0),
+                    ],
+                }
+            ]
+        }
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rankings_path = Path(temp_dir) / "fifa_rankings.json"
+            rankings_path.write_text(
+                json.dumps(
+                    {
+                        "rankings": {
+                            "Canada": 30,
+                            "Bosnia-Herzegovina": 75,
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            original_rankings_path = update_official_results.FIFA_RANKINGS_PATH
+            update_official_results.FIFA_RANKINGS_PATH = rankings_path
+            try:
+                grouped = update_official_results.extract_group_standings(raw_data)
+            finally:
+                update_official_results.FIFA_RANKINGS_PATH = original_rankings_path
+
+        self.assertEqual(
+            [row["team"] for row in grouped["B"]],
+            ["Canada", "Bosnia-Herzegovina"],
+        )
+
+    def test_load_fifa_rankings_ignores_blank_values_and_aliases_names(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rankings_path = Path(temp_dir) / "fifa_rankings.json"
+            rankings_path.write_text(
+                json.dumps(
+                    {
+                        "rankings": {
+                            "Turkiye": 25,
+                            "Mexico": None,
+                            "Canada": "",
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            rankings = update_official_results.load_fifa_rankings(rankings_path)
+
+        self.assertEqual(rankings, {"Türkiye": 25})
 
     def test_timeline_checkpoint_uses_current_group_matchday(self):
         group_standings = {

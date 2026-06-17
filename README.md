@@ -10,6 +10,7 @@ data, helper scripts, and static apps in separate folders.
 world_cup_pool/             Core scoring package and public Python API.
 tests/                      Unit tests for scoring and result parsing.
 data/raw/                   Source workbook and Google Sheets link.
+data/manual/                Manual reference data used by generated results.
 data/generated/             Committed JS/JSON data consumed by static apps.
 scripts/                    Data builders and official-results updater.
 apps/player_predictions/    Static reader for submitted workbook picks.
@@ -54,6 +55,8 @@ consensus JSON export and the standalone `apps/consensus_predictions/index.html`
 `scripts/update_official_results.py` fetches Football-Data standings and writes
 `data/generated/official_results.js`, which is loaded by
 `apps/score_visualizer/index.html` and `apps/score_timeline/index.html`.
+When standings need the final FIFA ranking tie-breaker, the updater reads
+manual rankings from `data/manual/fifa_rankings.json`.
 
 See `docs/data_flow.md` for the full flow and `docs/scoring_rules.md` for point
 values.

@@ -20,6 +20,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_PATH = ROOT / "data" / "generated" / "official_results.js"
 RATE_STATE_PATH = ROOT / "data" / ".cache" / "football_data_rate_limit.json"
+FIFA_RANKINGS_PATH = ROOT / "data" / "manual" / "fifa_rankings.json"
 SOURCE_URL = "https://api.football-data.org/v4/competitions/WC/standings?season=2026"
 API_KEY_ENV = "FOOTBALL_DATA_API_KEY"
 DEFAULT_API_KEY = "9a022f9d132d4a5d9d01116e0f99ab6f"
@@ -486,14 +487,48 @@ def find_overall_group_stage_table(raw_data: dict[str, Any]) -> list[dict[str, A
     return []
 
 
-def group_sort_key(row: dict[str, Any]) -> tuple[int, int, int, int, str]:
+def group_sort_key(row: dict[str, Any]) -> tuple[int, int, int, int, int, str]:
     return (
         -row["points"],
         -row["goalDifference"],
         -row["goalsFor"],
-        -row["won"],
-        row["team"],
+        fifa_ranking(row["team"]),
+        # -row["won"],
+        # row["team"],
     )
+
+
+def fifa_ranking(team_name: str) -> int:
+    return load_fifa_rankings(FIFA_RANKINGS_PATH).get(canonical_team_name(team_name), 9999)
+
+
+def load_fifa_rankings(path: Path | None = None) -> dict[str, int]:
+    if path is None:
+        path = FIFA_RANKINGS_PATH
+    if not path.exists():
+        return {}
+
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    rankings = payload.get("rankings", payload)
+    if not isinstance(rankings, dict):
+        raise ValueError(f"Invalid FIFA rankings file: {display_path(path)}")
+
+    normalized_rankings = {}
+    for team_name, value in rankings.items():
+        if value in (None, ""):
+            continue
+        try:
+            ranking = int(value)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"Invalid FIFA ranking for {team_name!r} in {display_path(path)}"
+            ) from exc
+        if ranking <= 0:
+            raise ValueError(
+                f"Invalid FIFA ranking for {team_name!r} in {display_path(path)}"
+            )
+        normalized_rankings[canonical_team_name(str(team_name))] = ranking
+    return normalized_rankings
 
 
 def parse_group_id(value: str) -> str:
