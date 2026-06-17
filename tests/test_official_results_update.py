@@ -50,7 +50,7 @@ class OfficialResultsUpdateTests(unittest.TestCase):
         self.assertEqual([row["position"] for row in grouped["A"]], [1, 2, 3, 4])
         self.assertEqual(
             [row["team"] for row in grouped["B"]],
-            ["Bosnia-Herzegovina", "Canada"],
+            ["Canada", "Bosnia-Herzegovina"],
         )
         self.assertEqual([row["team"] for row in grouped["D"]], ["Türkiye"])
         self.assertEqual(

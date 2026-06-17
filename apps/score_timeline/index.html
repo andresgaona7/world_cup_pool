@@ -1,65 +1,68 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>World Cup Pool Score Timeline</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">World Cup 2026 Pool</p>
-        <h1>Score Timeline</h1>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Cup Pool Score Timeline</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">World Cup 2026 Pool</p>
+      <h1>Official Results</h1>
+    </div>
+    <nav class="site-nav" aria-label="Visualization navigation">
+      <a href="../../index.html">Home</a>
+      <a href="../player_predictions/index.html">Player Picks</a>
+      <a href="../consensus_predictions/index.html">Consensus</a>
+      <a href="../score_visualizer/index.html">Scores</a>
+      <a class="active" href="index.html" aria-current="page">Official results</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="metrics" id="metrics" aria-label="Timeline summary"></section>
+
+    <section class="panel chart-panel" id="chartPanel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Official Checkpoints</p>
+          <h2>Scores Over Time</h2>
+        </div>
+        <div class="chart-actions">
+          <label class="range-control" for="chartWidthControl">
+            <span>Width</span>
+            <input id="chartWidthControl" type="range" min="85" max="180" value="100" step="5">
+          </label>
+          <span class="rule-pill" id="checkpointStatus">Pending results</span>
+        </div>
       </div>
-      <nav class="site-nav" aria-label="Visualization navigation">
-        <a href="../../index.html">Home</a>
-        <a href="../player_predictions/index.html">Player Picks</a>
-        <a href="../consensus_predictions/index.html">Consensus</a>
-        <a href="../score_visualizer/index.html">Scores</a>
-        <a class="active" href="index.html" aria-current="page">Timeline</a>
-      </nav>
-    </header>
+      <div class="chart-wrap">
+        <div id="timelineChart" class="timeline-chart" aria-live="polite"></div>
+        <div id="timelineTooltip" class="tooltip" hidden></div>
+      </div>
+    </section>
 
-    <main class="page">
-      <section class="metrics" id="metrics" aria-label="Timeline summary"></section>
+    <section class="panel" id="leaderboardPanel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Checkpoint Detail</p>
+          <h2>Leaderboard and Legend</h2>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="leaderboardTable"></table>
+      </div>
+    </section>
+  </main>
 
-      <section class="panel chart-panel" id="chartPanel">
-        <div class="panel-head">
-          <div>
-            <p class="eyebrow">Official Checkpoints</p>
-            <h2>Scores Over Time</h2>
-          </div>
-          <div class="chart-actions">
-            <label class="range-control" for="chartWidthControl">
-              <span>Width</span>
-              <input id="chartWidthControl" type="range" min="85" max="180" value="100" step="5">
-            </label>
-            <span class="rule-pill" id="checkpointStatus">Pending results</span>
-          </div>
-        </div>
-        <div class="chart-wrap">
-          <div id="timelineChart" class="timeline-chart" aria-live="polite"></div>
-          <div id="timelineTooltip" class="tooltip" hidden></div>
-        </div>
-      </section>
+  <script src="../../data/generated/pool_data.js"></script>
+  <script src="../../data/generated/official_results.js"></script>
+  <script src="../../data/manual/knockout_predictions.js"></script>
+  <script src="app.js"></script>
+</body>
 
-      <section class="panel" id="leaderboardPanel">
-        <div class="panel-head">
-          <div>
-            <p class="eyebrow">Checkpoint Detail</p>
-            <h2>Leaderboard and Legend</h2>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table id="leaderboardTable"></table>
-        </div>
-      </section>
-    </main>
-
-    <script src="../../data/generated/pool_data.js"></script>
-    <script src="../../data/generated/official_results.js"></script>
-    <script src="../../data/manual/knockout_predictions.js"></script>
-    <script src="app.js"></script>
-  </body>
 </html>

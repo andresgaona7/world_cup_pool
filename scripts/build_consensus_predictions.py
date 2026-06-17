@@ -421,7 +421,7 @@ def render_visualization(consensus: dict) -> str:
         <a href="../player_predictions/index.html">Player Picks</a>
         <a class="active" href="index.html" aria-current="page">Consensus</a>
         <a href="../score_visualizer/index.html">Scores</a>
-        <a href="../score_timeline/index.html">Timeline</a>
+        <a href="../score_timeline/index.html">Official results</a>
       </nav>
     </div>
   </header>
