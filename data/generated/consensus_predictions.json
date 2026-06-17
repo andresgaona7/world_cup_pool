@@ -3,7 +3,7 @@
     "source_file": "data/generated/pool_data.js",
     "workbook_source": "data/raw/group_stage_and_future_predictions.xlsx",
     "generated_from": "group_stage_and_future_predictions.xlsx",
-    "generated_at": "2026-06-16T22:08:59.209946+00:00",
+    "generated_at": "2026-06-17T07:20:31.497854+00:00",
     "player_count": 11
   },
   "group_winner_consensus": {
@@ -113,6 +113,322 @@
       {
         "team": "England",
         "votes": 10
+      },
+      {
+        "team": "Croatia",
+        "votes": 1
+      }
+    ]
+  },
+  "group_runner_up_consensus": {
+    "A": [
+      {
+        "team": "South Korea",
+        "votes": 5
+      },
+      {
+        "team": "South Africa",
+        "votes": 3
+      },
+      {
+        "team": "Czechia",
+        "votes": 2
+      },
+      {
+        "team": "Mexico",
+        "votes": 1
+      }
+    ],
+    "B": [
+      {
+        "team": "Canada",
+        "votes": 7
+      },
+      {
+        "team": "Switzerland",
+        "votes": 2
+      },
+      {
+        "team": "Bosnia-Herzegovina",
+        "votes": 2
+      }
+    ],
+    "C": [
+      {
+        "team": "Morocco",
+        "votes": 8
+      },
+      {
+        "team": "Brazil",
+        "votes": 3
+      }
+    ],
+    "D": [
+      {
+        "team": "United States",
+        "votes": 4
+      },
+      {
+        "team": "Türkiye",
+        "votes": 4
+      },
+      {
+        "team": "Paraguay",
+        "votes": 3
+      }
+    ],
+    "E": [
+      {
+        "team": "Ecuador",
+        "votes": 5
+      },
+      {
+        "team": "Ivory Coast",
+        "votes": 4
+      },
+      {
+        "team": "Germany",
+        "votes": 2
+      }
+    ],
+    "F": [
+      {
+        "team": "Japan",
+        "votes": 8
+      },
+      {
+        "team": "Sweden",
+        "votes": 2
+      },
+      {
+        "team": "Netherlands",
+        "votes": 1
+      }
+    ],
+    "G": [
+      {
+        "team": "Egypt",
+        "votes": 9
+      },
+      {
+        "team": "Iran",
+        "votes": 1
+      },
+      {
+        "team": "Belgium",
+        "votes": 1
+      }
+    ],
+    "H": [
+      {
+        "team": "Uruguay",
+        "votes": 10
+      },
+      {
+        "team": "Saudi Arabia",
+        "votes": 1
+      }
+    ],
+    "I": [
+      {
+        "team": "Norway",
+        "votes": 7
+      },
+      {
+        "team": "Senegal",
+        "votes": 4
+      }
+    ],
+    "J": [
+      {
+        "team": "Austria",
+        "votes": 8
+      },
+      {
+        "team": "Algeria",
+        "votes": 3
+      }
+    ],
+    "K": [
+      {
+        "team": "Colombia",
+        "votes": 10
+      },
+      {
+        "team": "Portugal",
+        "votes": 1
+      }
+    ],
+    "L": [
+      {
+        "team": "Croatia",
+        "votes": 9
+      },
+      {
+        "team": "Ghana",
+        "votes": 2
+      }
+    ]
+  },
+  "group_third_place_consensus": {
+    "A": [
+      {
+        "team": "Czechia",
+        "votes": 6
+      },
+      {
+        "team": "South Korea",
+        "votes": 3
+      },
+      {
+        "team": "South Africa",
+        "votes": 1
+      },
+      {
+        "team": "Mexico",
+        "votes": 1
+      }
+    ],
+    "B": [
+      {
+        "team": "Bosnia-Herzegovina",
+        "votes": 7
+      },
+      {
+        "team": "Qatar",
+        "votes": 2
+      },
+      {
+        "team": "Canada",
+        "votes": 1
+      },
+      {
+        "team": "Switzerland",
+        "votes": 1
+      }
+    ],
+    "C": [
+      {
+        "team": "Scotland",
+        "votes": 8
+      },
+      {
+        "team": "Haiti",
+        "votes": 3
+      }
+    ],
+    "D": [
+      {
+        "team": "Paraguay",
+        "votes": 6
+      },
+      {
+        "team": "Türkiye",
+        "votes": 2
+      },
+      {
+        "team": "Australia",
+        "votes": 2
+      },
+      {
+        "team": "United States",
+        "votes": 1
+      }
+    ],
+    "E": [
+      {
+        "team": "Ivory Coast",
+        "votes": 7
+      },
+      {
+        "team": "Ecuador",
+        "votes": 3
+      },
+      {
+        "team": "Germany",
+        "votes": 1
+      }
+    ],
+    "F": [
+      {
+        "team": "Sweden",
+        "votes": 9
+      },
+      {
+        "team": "Japan",
+        "votes": 2
+      }
+    ],
+    "G": [
+      {
+        "team": "Iran",
+        "votes": 9
+      },
+      {
+        "team": "Egypt",
+        "votes": 2
+      }
+    ],
+    "H": [
+      {
+        "team": "Saudi Arabia",
+        "votes": 9
+      },
+      {
+        "team": "Uruguay",
+        "votes": 1
+      },
+      {
+        "team": "Cape Verde",
+        "votes": 1
+      }
+    ],
+    "I": [
+      {
+        "team": "Senegal",
+        "votes": 7
+      },
+      {
+        "team": "Norway",
+        "votes": 3
+      },
+      {
+        "team": "Iraq",
+        "votes": 1
+      }
+    ],
+    "J": [
+      {
+        "team": "Algeria",
+        "votes": 7
+      },
+      {
+        "team": "Austria",
+        "votes": 3
+      },
+      {
+        "team": "Jordan",
+        "votes": 1
+      }
+    ],
+    "K": [
+      {
+        "team": "Congo DR",
+        "votes": 8
+      },
+      {
+        "team": "Uzbekistan",
+        "votes": 3
+      }
+    ],
+    "L": [
+      {
+        "team": "Ghana",
+        "votes": 9
+      },
+      {
+        "team": "England",
+        "votes": 1
       },
       {
         "team": "Croatia",

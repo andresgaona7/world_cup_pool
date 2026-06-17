@@ -59,7 +59,9 @@ def main() -> None:
     futures = [futures_entry(player) for player in pool_data["players"]]
     consensus = {
         "metadata": metadata(pool_data, generated_at),
-        "group_winner_consensus": group_winner_consensus(group_stage),
+        "group_winner_consensus": group_position_consensus(group_stage, 0),
+        "group_runner_up_consensus": group_position_consensus(group_stage, 1),
+        "group_third_place_consensus": group_position_consensus(group_stage, 2),
         "futures_consensus": futures_consensus(futures),
         "best_third_consensus": best_third_consensus(group_stage),
     }
@@ -179,12 +181,12 @@ def normalization_key(name: str) -> str:
     return ascii_name.lower()
 
 
-def group_winner_consensus(players: list[dict]) -> dict:
+def group_position_consensus(players: list[dict], position: int) -> dict:
     counters: dict[str, Counter] = defaultdict(Counter)
     for player in players:
         for group in player["groups"]:
-            if group["ordered_teams"]:
-                counters[group["group_id"]][group["ordered_teams"][0]] += 1
+            if len(group["ordered_teams"]) > position:
+                counters[group["group_id"]][group["ordered_teams"][position]] += 1
     return {
         group_id: [
             {"team": team, "votes": votes}
@@ -441,7 +443,25 @@ def render_visualization(consensus: dict) -> str:
           <p>First-place picks by group.</p>
         </div>
       </div>
-      <div class="charts" id="groupCharts"></div>
+      <div class="charts" id="groupWinnerCharts"></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Group Runner-up Consensus</h2>
+          <p>Second-place picks by group.</p>
+        </div>
+      </div>
+      <div class="charts" id="groupRunnerUpCharts"></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Group Third-place Consensus</h2>
+          <p>Third-place picks by group.</p>
+        </div>
+      </div>
+      <div class="charts" id="groupThirdPlaceCharts"></div>
     </section>
     <section class="panel">
       <div class="panel-head">
@@ -477,8 +497,20 @@ def render_visualization(consensus: dict) -> str:
       )
     );
 
-    document.querySelector("#groupCharts").replaceChildren(
+    document.querySelector("#groupWinnerCharts").replaceChildren(
       ...Object.entries(consensus.group_winner_consensus).map(([groupId, rows]) =>
+        chart(`Group ${{groupId}}`, rows.map(row => [row.team || "Blank", row.votes]), playerCount)
+      )
+    );
+
+    document.querySelector("#groupRunnerUpCharts").replaceChildren(
+      ...Object.entries(consensus.group_runner_up_consensus).map(([groupId, rows]) =>
+        chart(`Group ${{groupId}}`, rows.map(row => [row.team || "Blank", row.votes]), playerCount)
+      )
+    );
+
+    document.querySelector("#groupThirdPlaceCharts").replaceChildren(
+      ...Object.entries(consensus.group_third_place_consensus).map(([groupId, rows]) =>
         chart(`Group ${{groupId}}`, rows.map(row => [row.team || "Blank", row.votes]), playerCount)
       )
     );
