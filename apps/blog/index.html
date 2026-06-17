@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Cup Pool Blog</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #121212;
+      --muted: #5f5f5f;
+      --paper: #fff7bc;
+      --hot: #ff37a6;
+      --lime: #a7ff3f;
+      --cyan: #2fd7ff;
+      --line: #111;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+        linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+        #f2f2f2;
+      background-size: 32px 32px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-start;
+      padding: 24px;
+      border-bottom: 4px solid var(--line);
+      background: var(--lime);
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      line-height: 0.9;
+      text-transform: uppercase;
+      text-shadow: 4px 4px 0 var(--hot);
+    }
+
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      max-width: 680px;
+    }
+
+    .site-nav a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 0.86rem;
+      font-weight: 900;
+      padding: 10px 12px;
+      border: 3px solid var(--line);
+      background: #fff;
+      box-shadow: 4px 4px 0 var(--line);
+      transform: rotate(-1deg);
+    }
+
+    .site-nav a:nth-child(even) {
+      transform: rotate(1deg);
+      background: var(--cyan);
+    }
+
+    .site-nav a:hover,
+    .site-nav a:focus,
+    .site-nav a.active {
+      background: var(--hot);
+      color: #fff;
+      outline: none;
+    }
+
+    main {
+      width: min(980px, calc(100% - 32px));
+      margin: 28px auto 48px;
+    }
+
+    .intro {
+      border: 4px solid var(--line);
+      background: #fff;
+      padding: 18px;
+      box-shadow: 8px 8px 0 var(--line);
+    }
+
+    .intro h2 {
+      margin: 0 0 8px;
+      font-size: clamp(1.7rem, 4vw, 3rem);
+      text-transform: uppercase;
+    }
+
+    .intro p {
+      margin: 0;
+      max-width: 68ch;
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .comment-stack {
+      display: grid;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .comment-card {
+      position: relative;
+      padding: 18px;
+      border: 4px solid var(--line);
+      background: var(--paper);
+      box-shadow: 8px 8px 0 var(--line);
+    }
+
+    .comment-card:nth-child(2n) {
+      background: #dff9ff;
+      transform: rotate(0.5deg);
+    }
+
+    .comment-card:nth-child(3n) {
+      background: #ffd6ef;
+      transform: rotate(-0.5deg);
+    }
+
+    .comment-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .comment-card h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.4rem, 3vw, 2.3rem);
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .comment-card p {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .manual-note {
+      margin-top: 24px;
+      padding: 12px 14px;
+      border: 3px dashed var(--line);
+      background: #fff;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        display: block;
+      }
+
+      .site-nav {
+        justify-content: flex-start;
+        margin-top: 18px;
+      }
+
+      .site-nav a {
+        flex: 1 1 130px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">World Cup 2026 Pool</p>
+      <h1>Blog</h1>
+    </div>
+    <nav class="site-nav" aria-label="Visualization navigation">
+      <a href="../../index.html">Home</a>
+      <a href="../player_predictions/index.html">Player Picks</a>
+      <a href="../consensus_predictions/index.html">Consensus</a>
+      <a href="../score_visualizer/index.html">Scores</a>
+      <a href="../score_timeline/index.html">Official results</a>
+      <a class="active" href="index.html" aria-current="page">Blog</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="blogTitle">
+      <h2 id="blogTitle">Important Journalism</h2>
+      <p>Manual comments go here. Accuracy is optional. Confidence is mandatory.</p>
+    </section>
+
+    <section class="comment-stack" aria-label="Blog comments">
+      <!-- Copy one of these article blocks to add a new manual entry. -->
+      <article class="comment-card">
+        <div class="comment-meta">
+          <span>June 17, 2026</span>
+          <span>To: Elwebo Lavenganza</span>
+        </div>
+        <h2>Pool Desk</h2>
+        <p>Ñaño, this was not a prediction, this was a denuncia contra el sentido común. Zero best-third hits. Cero. Ni
+          por error. You looked at the bracket and said, “¿Y si mejor hago una sopa?” The score is so low it needs a
+          visa to enter the leaderboard. Tremendo papelón, mi llave.</p>
+      </article>
+
+      <article class="comment-card">
+        <div class="comment-meta">
+          <span>June 17, 2026</span>
+          <span>To: Paul</span>
+        </div>
+        <h2>Anonymous Analyst</h2>
+        <p>Paul's picks have big “tranqui, yo sí sé” energy, followed immediately by disaster. South Korea first, Mexico
+          second, South Africa third. Chuta, pana, that's not analysis, that's playing FIFA with the controller
+          unplugged. One best-third hit is the only thing preventing this from being declared patrimonio nacional del
+          sufrimiento.</p>
+      </article>
+
+      <article class="comment-card">
+        <div class="comment-meta">
+          <span>June 17, 2026</span>
+          <span>To: NoDorex (100% sure) 😎</span>
+        </div>
+        <h2>Official Nonsense</h2>
+        <p>“100% sure” is doing Olympic-level comedy here. Eleven rare picks, zero best-thirds, and enough wrong
+          confidence to power Guayaquil in apagón. Paraguay first, Japan first, Croatia first, Ghana second. Mi loco,
+          this was not a pool entry, this was a crime scene with emojis.</p>
+      </article>
+    </section>
+
+    <!-- <div class="manual-note">Edit this file directly: add, remove, or rewrite comment cards in plain HTML.</div> -->
+  </main>
+</body>
+
+</html>

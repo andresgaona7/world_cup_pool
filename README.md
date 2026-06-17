@@ -18,6 +18,7 @@ apps/player_predictions/    Static reader for submitted workbook picks.
 apps/score_visualizer/      Static leaderboard and scenario scorer.
 apps/score_timeline/        Static score-over-time graph.
 apps/consensus_predictions/ Standalone generated consensus visualization.
+apps/blog/                  Manual comment entries.
 public/                     Ignored GitHub Pages artifact from `make build-site`.
 docs/                       Scoring rules and data-flow notes.
 ```
@@ -99,12 +100,13 @@ values.
 ## Static Apps
 
 Open `index.html` directly in a browser for the pool dashboard. The dashboard
-links to the four static apps below, and each app can also be opened directly:
+links to the static apps below, and each app can also be opened directly:
 
 - `apps/player_predictions/index.html`
 - `apps/score_visualizer/index.html`
 - `apps/score_timeline/index.html`
 - `apps/consensus_predictions/index.html`
+- `apps/blog/index.html`
 
 No package install, dev server, or build step is required as long as generated
 files in `data/generated/` are present.
