@@ -94,6 +94,19 @@ def main() -> None:
         "provisionalGroupStandings": {
             group_id: group_standings.get(group_id, []) for group_id in GROUP_IDS
         },
+        "timelineCheckpoints": timeline_checkpoints(
+            group_standings,
+            completed_groups,
+            {
+                "champion": "",
+                "runnerUp": "",
+                "topScorer": "",
+                "teamLastRounds": eliminated_group_stage_teams(
+                    group_standings,
+                    completed_groups,
+                ),
+            },
+        ),
         "overallStandings": overall_standings,
     }
 
@@ -544,6 +557,82 @@ def best_thirds(completed_groups: dict[str, list[dict[str, Any]]]) -> list[str]:
         return []
 
     thirds = [rows[2] for rows in completed_groups.values() if len(rows) >= 3]
+    return [
+        row["team"]
+        for row in sorted(
+            thirds,
+            key=lambda row: (
+                -row["points"],
+                -row["goalDifference"],
+                -row["goalsFor"],
+                row["team"],
+            ),
+        )[:8]
+    ]
+
+
+def timeline_checkpoints(
+    group_standings: dict[str, list[dict[str, Any]]],
+    completed_groups: dict[str, list[dict[str, Any]]],
+    futures: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Build browser-ready score timeline checkpoints from available results."""
+
+    matchday = current_group_matchday(group_standings)
+    if matchday is None:
+        return []
+
+    return [
+        {
+            "key": f"group_md{matchday}",
+            "label": f"After group matchday {matchday}",
+            "stage": "group_stage",
+            "completedAt": "",
+            "scenario": {
+                "groupResults": provisional_group_results(group_standings),
+                "bestThirds": provisional_best_thirds(
+                    group_standings,
+                    best_thirds(completed_groups),
+                ),
+                "futures": futures,
+            },
+            "officialMatches": [],
+        }
+    ]
+
+
+def current_group_matchday(group_standings: dict[str, list[dict[str, Any]]]) -> int | None:
+    played_values = [
+        row["played"]
+        for rows in group_standings.values()
+        for row in rows[:GROUP_SIZE]
+        if row["played"] > 0
+    ]
+    if not played_values:
+        return None
+    return max(1, min(GROUP_STAGE_GAMES, min(played_values)))
+
+
+def provisional_group_results(
+    group_standings: dict[str, list[dict[str, Any]]]
+) -> dict[str, list[str]]:
+    return {
+        group_id: [row["team"] for row in group_standings.get(group_id, [])[:3]]
+        for group_id in GROUP_IDS
+    }
+
+
+def provisional_best_thirds(
+    group_standings: dict[str, list[dict[str, Any]]],
+    fallback_best_thirds: list[str],
+) -> list[str]:
+    thirds = [
+        rows[2]
+        for rows in group_standings.values()
+        if len(rows) >= 3 and rows[2]["team"]
+    ]
+    if not thirds:
+        return fallback_best_thirds
     return [
         row["team"]
         for row in sorted(

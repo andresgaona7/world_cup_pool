@@ -25,6 +25,7 @@ Football-Data.org standings API
   -> scripts/update_official_results.py
   -> data/generated/official_results.js
   -> apps/score_visualizer/index.html
+  -> apps/score_timeline/index.html
 ```
 
 The static apps intentionally load committed generated files directly, so they

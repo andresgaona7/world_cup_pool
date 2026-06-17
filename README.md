@@ -14,6 +14,7 @@ data/generated/             Committed JS/JSON data consumed by static apps.
 scripts/                    Data builders and official-results updater.
 apps/player_predictions/    Static reader for submitted workbook picks.
 apps/score_visualizer/      Static leaderboard and scenario scorer.
+apps/score_timeline/        Static score-over-time graph.
 apps/consensus_predictions/ Standalone generated consensus visualization.
 docs/                       Scoring rules and data-flow notes.
 ```
@@ -52,7 +53,7 @@ consensus JSON export and the standalone `apps/consensus_predictions/index.html`
 
 `scripts/update_official_results.py` fetches Football-Data standings and writes
 `data/generated/official_results.js`, which is loaded by
-`apps/score_visualizer/index.html`.
+`apps/score_visualizer/index.html` and `apps/score_timeline/index.html`.
 
 See `docs/data_flow.md` for the full flow and `docs/scoring_rules.md` for point
 values.
@@ -63,6 +64,7 @@ Open these files directly in a browser:
 
 - `apps/player_predictions/index.html`
 - `apps/score_visualizer/index.html`
+- `apps/score_timeline/index.html`
 - `apps/consensus_predictions/index.html`
 
 No package install, dev server, or build step is required as long as generated

@@ -56,6 +56,39 @@ class OfficialResultsUpdateTests(unittest.TestCase):
             ["Netherlands"],
         )
 
+    def test_timeline_checkpoint_uses_current_group_matchday(self):
+        group_standings = {
+            "A": [
+                update_official_results.normalize_row(self.row("Mexico", "MEX", 3, 2, 0, 1)),
+                update_official_results.normalize_row(self.row("South Korea", "KOR", 3, 2, 1, 1)),
+                update_official_results.normalize_row(self.row("Czech Republic", "CZE", 0, 1, 2, 0)),
+                update_official_results.normalize_row(self.row("South Africa", "RSA", 0, 0, 2, 0)),
+            ],
+        }
+
+        checkpoints = update_official_results.timeline_checkpoints(
+            group_standings,
+            {},
+            {
+                "champion": "",
+                "runnerUp": "",
+                "topScorer": "",
+                "teamLastRounds": {},
+            },
+        )
+
+        self.assertEqual(len(checkpoints), 1)
+        self.assertEqual(checkpoints[0]["key"], "group_md1")
+        self.assertEqual(checkpoints[0]["label"], "After group matchday 1")
+        self.assertEqual(
+            checkpoints[0]["scenario"]["groupResults"]["A"],
+            ["Mexico", "South Korea", "Czechia"],
+        )
+        self.assertEqual(
+            checkpoints[0]["scenario"]["bestThirds"],
+            ["Czechia"],
+        )
+
     def row(
         self,
         name,

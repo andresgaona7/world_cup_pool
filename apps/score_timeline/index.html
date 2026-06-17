@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>World Cup Pool Score Timeline</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">World Cup 2026 Pool</p>
+        <h1>Score Timeline</h1>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="metrics" id="metrics" aria-label="Timeline summary"></section>
+
+      <section class="panel chart-panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Official Checkpoints</p>
+            <h2>Scores Over Time</h2>
+          </div>
+          <span class="rule-pill" id="checkpointStatus">Pending results</span>
+        </div>
+        <div class="chart-wrap">
+          <div id="timelineChart" class="timeline-chart" aria-live="polite"></div>
+          <div id="timelineTooltip" class="tooltip" hidden></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Checkpoint Detail</p>
+            <h2>Leaderboard and Legend</h2>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="leaderboardTable"></table>
+        </div>
+      </section>
+    </main>
+
+    <script src="../../data/generated/pool_data.js"></script>
+    <script src="../../data/generated/official_results.js"></script>
+    <script src="../../data/manual/knockout_predictions.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
