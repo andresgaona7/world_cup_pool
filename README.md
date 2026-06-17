@@ -67,12 +67,3 @@ Open these files directly in a browser:
 
 No package install, dev server, or build step is required as long as generated
 files in `data/generated/` are present.
-
-## Compatibility
-
-Two old entrypoints are retained temporarily:
-
-- `python3 interface/build_data.py`
-- `official_results/run_update_official_results.sh`
-
-New scripts should use `scripts/` directly.
