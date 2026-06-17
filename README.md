@@ -27,6 +27,7 @@ docs/                       Scoring rules and data-flow notes.
 make build-pool-data
 make build-consensus-predictions
 make update-official-results
+make apply-manual-futures
 make test
 ```
 
@@ -36,6 +37,7 @@ Equivalent direct commands:
 python3 scripts/build_pool_data.py
 python3 scripts/build_consensus_predictions.py
 python3 scripts/update_official_results.py --transport "${OFFICIAL_RESULTS_TRANSPORT:-auto}"
+python3 scripts/apply_manual_futures.py
 python3 -m unittest discover -s tests
 ```
 
@@ -58,6 +60,13 @@ consensus JSON export and the standalone `apps/consensus_predictions/index.html`
 `apps/score_visualizer/index.html` and `apps/score_timeline/index.html`.
 When standings need the final FIFA ranking tie-breaker, the updater reads
 manual rankings from `data/manual/fifa_rankings.json`.
+
+Official futures are entered manually in `data/manual/official_futures.json`.
+After editing champion, runner-up, top scorer, or team last-round values, run
+`python3 scripts/apply_manual_futures.py` to merge those values into
+`data/generated/official_results.js`. Valid `teamLastRounds` values are
+`group_stage`, `round_of_32`, `round_of_16`, `quarterfinal`, `semifinal`,
+`third_place_match`, `runner_up`, and `champion`.
 
 See `docs/data_flow.md` for the full flow and `docs/scoring_rules.md` for point
 values.
@@ -103,6 +112,7 @@ Typical update flow:
 make build-pool-data
 make build-consensus-predictions
 make update-official-results
+make apply-manual-futures
 make test
 git add data/generated index.html styles.css .github/workflows/pages.yml .nojekyll README.md
 git commit -m "Add static GitHub Pages dashboard"

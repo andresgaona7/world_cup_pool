@@ -1,4 +1,4 @@
-.PHONY: build-pool-data build-consensus-predictions update-official-results create-official-checkpoint rebuild-official-checkpoints test
+.PHONY: build-pool-data build-consensus-predictions update-official-results apply-manual-futures create-official-checkpoint rebuild-official-checkpoints test
 
 build-pool-data:
 	python3 scripts/build_pool_data.py
@@ -8,6 +8,9 @@ build-consensus-predictions:
 
 update-official-results:
 	python3 scripts/update_official_results.py --transport "$${OFFICIAL_RESULTS_TRANSPORT:-auto}"
+
+apply-manual-futures:
+	python3 scripts/apply_manual_futures.py
 
 create-official-checkpoint:
 	python3 scripts/create_official_checkpoint.py "$${CHECKPOINT:?Set CHECKPOINT=group_md1}"
