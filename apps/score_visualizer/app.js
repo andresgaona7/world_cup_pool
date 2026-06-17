@@ -391,6 +391,10 @@ function podiumMetric(label, row) {
 }
 
 function renderRules() {
+  if (!rulesGrid) {
+    return;
+  }
+
   const sections = [
     {
       title: "Group stage",

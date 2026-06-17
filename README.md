@@ -13,6 +13,7 @@ data/raw/                   Source workbook and Google Sheets link.
 data/manual/                Manual reference data used by generated results.
 data/generated/             Committed JS/JSON data consumed by static apps.
 scripts/                    Data builders and official-results updater.
+index.html                  Public dashboard for GitHub Pages.
 apps/player_predictions/    Static reader for submitted workbook picks.
 apps/score_visualizer/      Static leaderboard and scenario scorer.
 apps/score_timeline/        Static score-over-time graph.
@@ -63,7 +64,8 @@ values.
 
 ## Static Apps
 
-Open these files directly in a browser:
+Open `index.html` directly in a browser for the pool dashboard. The dashboard
+links to the four static apps below, and each app can also be opened directly:
 
 - `apps/player_predictions/index.html`
 - `apps/score_visualizer/index.html`
@@ -72,3 +74,41 @@ Open these files directly in a browser:
 
 No package install, dev server, or build step is required as long as generated
 files in `data/generated/` are present.
+
+## GitHub Pages
+
+The public project-site URL follows this pattern:
+
+```text
+https://<github-user>.github.io/world_cup_pool/
+```
+
+The repo deploys as a static site through `.github/workflows/pages.yml`. GitHub
+Pages should be configured to use GitHub Actions as the source. The workflow
+uploads the repository contents directly, so files under `apps/` and
+`data/generated/` are served without a build step. `.nojekyll` is included so
+GitHub Pages serves static paths as-is.
+
+Local preview:
+
+```bash
+python3 -m http.server 8000
+```
+
+Then open `http://localhost:8000/`.
+
+Typical update flow:
+
+```bash
+make build-pool-data
+make build-consensus-predictions
+make update-official-results
+make test
+git add data/generated index.html styles.css .github/workflows/pages.yml .nojekyll README.md
+git commit -m "Add static GitHub Pages dashboard"
+git push
+```
+
+`make update-official-results` needs internet access because it fetches
+Football-Data standings. The other static website files and tests can be worked
+on locally without an internet connection.

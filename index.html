@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Cup Pool Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">World Cup 2026 Pool</p>
+      <h1>Dashboard</h1>
+    </div>
+    <div class="header-status" id="headerStatus">Loading generated data</div>
+  </header>
+
+  <main class="page">
+    <section class="panel chart-panel" id="chartPanel" aria-labelledby="timelineTitle">
+      <div class="panel-head">
+        <div>
+          <!-- <p class="eyebrow">Score Timeline</p> -->
+          <h2 id="timelineTitle">Score Timeline</h2>
+        </div>
+        <span class="rule-pill support-only" id="checkpointStatus">Pending results</span>
+        <label class="support-only" for="chartWidthControl">
+          <input id="chartWidthControl" type="range" min="85" max="180" value="100" step="5">
+        </label>
+      </div>
+      <div class="chart-wrap">
+        <div id="timelineChart" class="timeline-chart" aria-live="polite"></div>
+        <div id="timelineTooltip" class="tooltip" hidden></div>
+      </div>
+    </section>
+
+    <section class="app-grid" aria-label="Pool visualizations">
+      <a class="app-link" href="apps/player_predictions/index.html">
+        <!-- <span class="app-kicker">Submitted picks</span> -->
+        <strong>Player Predictions</strong>
+        <span>Browse each player's group-stage, best-third, and futures picks.</span>
+      </a>
+
+      <a class="app-link" href="apps/consensus_predictions/index.html">
+        <!-- <span class="app-kicker">Pool tendency</span> -->
+        <strong>Consensus Predictions</strong>
+        <span>See the most common picks across champions, groups, and best thirds.</span>
+      </a>
+
+      <a class="app-link primary-link" href="apps/score_visualizer/index.html">
+        <!-- <span class="app-kicker">Scoreboard</span> -->
+        <strong>Score Visualizer</strong>
+        <span>Leaderboard, score scenario selector, and official-vs-prediction comparison.</span>
+      </a>
+
+      <a class="app-link" href="apps/score_timeline/index.html">
+        <!-- <span class="app-kicker">Progression</span> -->
+        <strong>Score Timeline</strong>
+        <span>Track leaderboard movement across official-results checkpoints.</span>
+      </a>
+    </section>
+
+    <section class="panel rules-panel" aria-labelledby="rulesTitle">
+      <div class="panel-head">
+        <div>
+          <!-- <p class="eyebrow">Rules</p> -->
+          <h2 id="rulesTitle">Rules</h2>
+        </div>
+      </div>
+      <div class="rules-explainer">
+        <article class="rule-section">
+          <h3>Group stage</h3>
+          <ul>
+            <li>Each correctly predicted group-stage qualifier earns 1 point.</li>
+            <li>A correctly predicted qualifier earns 1 extra point when it also finishes in the exact predicted
+              advancing position.</li>
+            <li>Third-place teams only count as qualifiers if they are official best thirds.</li>
+            <li>A completely correct group order earns an extra 5 point bonus.</li>
+            <li>Each correctly selected best third-place qualifier earns 3 points. The order of those best-third picks
+              does not matter.</li>
+          </ul>
+        </article>
+
+        <article class="rule-section">
+          <h3>Knockout matches</h3>
+          <ul>
+            <li>Base values by round: Round of 32 = 4, Round of 16 = 6, quarterfinal = 10, semifinal = 16, third-place
+              match = 14, final = 20.</li>
+            <li>Winner-only mode: a correct advancing team earns 1x the round base value; a wrong advancing team earns
+              0.</li>
+            <li>Score mode: exact regulation score and correct advancing team earns 2.5x base.</li>
+            <li>Exact regulation score with the wrong advancing team earns 1.5x base.</li>
+            <li>Correct advancing team with the wrong score earns 0.5x base.</li>
+            <li>Perfect knockout winners bonus: 50 points.</li>
+            <li>Perfect knockout scores bonus: 200 points.</li>
+          </ul>
+        </article>
+
+        <article class="rule-section">
+          <h3>Futures</h3>
+          <ul>
+            <li>Correct champion: 80 points.</li>
+            <li>Correct runner-up: 50 points.</li>
+            <li>If the champion and runner-up are reversed, the entry earns 35 points instead of the champion or
+              runner-up points.</li>
+            <li>Correct top scorer: 60 points.</li>
+            <li>Favorite-team last round: 35 points for exact, 15 points if off by one round.</li>
+            <li>Ecuador last round: 40 points for exact, 18 points if off by one round.</li>
+            <li>Perfect futures card bonus: 75 points when champion, runner-up, top scorer, favorite-team round, and
+              Ecuador round are all exact.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="support-only" aria-hidden="true">
+      <div id="metrics"></div>
+      <section id="leaderboardPanel">
+        <table id="leaderboardTable"></table>
+      </section>
+    </section>
+
+  </main>
+
+  <script src="data/generated/pool_data.js"></script>
+  <script src="data/generated/official_results.js"></script>
+  <script src="data/manual/knockout_predictions.js"></script>
+  <script src="apps/score_timeline/app.js"></script>
+  <script>
+    const officialResults = window.OFFICIAL_RESULTS || {};
+    const latestUpdate = formatDate(officialResults.generatedAt);
+
+    document.querySelector("#headerStatus").textContent =
+      `Latest update: ${latestUpdate}`;
+
+    function formatDate(value) {
+      if (!value) {
+        return "Unavailable";
+      }
+
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) {
+        return value;
+      }
+
+      return new Intl.DateTimeFormat(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZoneName: "short"
+      }).format(date);
+    }
+  </script>
+</body>
+
+</html>
