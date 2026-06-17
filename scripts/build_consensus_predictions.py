@@ -221,7 +221,6 @@ def write_json(path: Path, payload: dict) -> None:
 
 def render_visualization(consensus: dict) -> str:
     data_script = json.dumps({"consensus": consensus}, ensure_ascii=False)
-    source_file = consensus["metadata"]["source_file"]
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -271,10 +270,40 @@ def render_visualization(consensus: dict) -> str:
       font-size: 28px;
       line-height: 1.1;
     }}
-    .source {{
-      color: #d8e6ea;
+    .header-tools {{
+      display: grid;
+      justify-items: end;
+      gap: 10px;
+    }}
+    .site-nav {{
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 6px;
+    }}
+    .site-nav a {{
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 6px;
+      padding: 6px 10px;
+      color: #e7f0f3;
       font-size: 13px;
-      text-align: right;
+      font-weight: 750;
+      line-height: 1;
+      text-decoration: none;
+    }}
+    .site-nav a:hover,
+    .site-nav a:focus {{
+      border-color: #ffffff;
+      color: #ffffff;
+      outline: none;
+    }}
+    .site-nav a.active {{
+      border-color: #ffffff;
+      background: #ffffff;
+      color: #14313d;
     }}
     main {{
       padding: 24px clamp(16px, 4vw, 48px) 44px;
@@ -368,8 +397,11 @@ def render_visualization(consensus: dict) -> str:
         flex-direction: column;
         padding: 18px;
       }}
-      .source {{
-        text-align: left;
+      .header-tools {{
+        justify-items: start;
+      }}
+      .site-nav {{
+        justify-content: flex-start;
       }}
       .bar-row {{ grid-template-columns: minmax(82px, 120px) 1fr 28px; }}
     }}
@@ -381,7 +413,15 @@ def render_visualization(consensus: dict) -> str:
       <p class="eyebrow">World Cup 2026 Pool</p>
       <h1>Consensus Predictions</h1>
     </div>
-    <div class="source">Source: {source_file}</div>
+    <div class="header-tools">
+      <nav class="site-nav" aria-label="Visualization navigation">
+        <a href="../../index.html">Home</a>
+        <a href="../player_predictions/index.html">Player Picks</a>
+        <a class="active" href="index.html" aria-current="page">Consensus</a>
+        <a href="../score_visualizer/index.html">Scores</a>
+        <a href="../score_timeline/index.html">Timeline</a>
+      </nav>
+    </div>
   </header>
   <main>
     <section class="summary-grid" id="metrics"></section>

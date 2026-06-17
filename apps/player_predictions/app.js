@@ -3,7 +3,6 @@ const data = window.POOL_DATA || { players: [] };
 let selectedIndex = 0;
 let searchTerm = "";
 
-const sourceFile = document.querySelector("#sourceFile");
 const playerSearch = document.querySelector("#playerSearch");
 const playerList = document.querySelector("#playerList");
 const playerName = document.querySelector("#playerName");
@@ -11,8 +10,6 @@ const sheetName = document.querySelector("#sheetName");
 const futuresGrid = document.querySelector("#futuresGrid");
 const firstRoundTable = document.querySelector("#firstRoundTable");
 const bestThirds = document.querySelector("#bestThirds");
-
-sourceFile.textContent = `Source: ${data.source_file || "workbook"}`;
 
 playerSearch.addEventListener("input", (event) => {
   searchTerm = event.target.value.trim().toLowerCase();
