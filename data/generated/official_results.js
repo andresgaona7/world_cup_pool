@@ -1300,5 +1300,95 @@ window.OFFICIAL_RESULTS = {
       "goalDifference": -6,
       "points": 0
     }
+  ],
+  "timelineCheckpoints": [
+    {
+      "key": "group_md1",
+      "label": "After group matchday 1",
+      "shortLabel": "Group MD1",
+      "stage": "group_stage",
+      "completedAt": "2026-06-16T22:28:21+00:00",
+      "scenario": {
+        "groupResults": {
+          "A": [
+            "Mexico",
+            "South Korea",
+            "Czechia"
+          ],
+          "B": [
+            "Bosnia-Herzegovina",
+            "Canada",
+            "Qatar"
+          ],
+          "C": [
+            "Scotland",
+            "Brazil",
+            "Morocco"
+          ],
+          "D": [
+            "United States",
+            "Australia",
+            "Türkiye"
+          ],
+          "E": [
+            "Germany",
+            "Ivory Coast",
+            "Ecuador"
+          ],
+          "F": [
+            "Sweden",
+            "Japan",
+            "Netherlands"
+          ],
+          "G": [
+            "Iran",
+            "New Zealand",
+            "Belgium"
+          ],
+          "H": [
+            "Saudi Arabia",
+            "Uruguay",
+            "Cape Verde Islands"
+          ],
+          "I": [
+            "France",
+            "Iraq",
+            "Norway"
+          ],
+          "J": [
+            "Algeria",
+            "Argentina",
+            "Austria"
+          ],
+          "K": [
+            "Colombia",
+            "Congo DR",
+            "Portugal"
+          ],
+          "L": [
+            "Croatia",
+            "England",
+            "Ghana"
+          ]
+        },
+        "bestThirds": [
+          "Netherlands",
+          "Belgium",
+          "Morocco",
+          "Qatar",
+          "Cape Verde Islands",
+          "Austria",
+          "Ghana",
+          "Norway"
+        ],
+        "futures": {
+          "champion": "",
+          "runnerUp": "",
+          "topScorer": "",
+          "teamLastRounds": {}
+        }
+      },
+      "officialMatches": []
+    }
   ]
 };
