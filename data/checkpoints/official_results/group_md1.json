@@ -3,7 +3,7 @@
   "label": "After group matchday 1",
   "shortLabel": "Group MD1",
   "stage": "group_stage",
-  "completedAt": "2026-06-17T03:17:27+00:00",
+  "completedAt": "2026-06-17T08:16:47+00:00",
   "scenario": {
     "groupResults": {
       "A": [
@@ -73,15 +73,24 @@
       "Morocco",
       "Qatar",
       "Spain",
-      "Jordan",
       "Panama",
-      "Uzbekistan"
+      "Uzbekistan",
+      "Czechia"
     ],
     "futures": {
       "champion": "",
       "runnerUp": "",
-      "topScorer": "",
-      "teamLastRounds": {}
+      "topScorer": "Lionel Messi",
+      "teamLastRounds": {
+        "France": "group_stage",
+        "Argentina": "group_stage",
+        "Norway": "group_stage",
+        "Morocco": "group_stage",
+        "England": "group_stage",
+        "Ecuador": "group_stage",
+        "Spain": "group_stage",
+        "Brazil": "group_stage"
+      }
     }
   },
   "officialMatches": []

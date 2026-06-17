@@ -1,7 +1,7 @@
 window.OFFICIAL_RESULTS = {
   "sourceName": "Football-Data.org",
   "sourceUrl": "https://api.football-data.org/v4/competitions/WC/standings?season=2026",
-  "generatedAt": "2026-06-17T07:55:43+00:00",
+  "generatedAt": "2026-06-17T08:16:47+00:00",
   "lastCompletedMatchDate": "",
   "matches": [],
   "groupResults": {
@@ -688,8 +688,9 @@ window.OFFICIAL_RESULTS = {
     {
       "key": "group_md1",
       "label": "After group matchday 1",
+      "shortLabel": "Group MD1",
       "stage": "group_stage",
-      "completedAt": "",
+      "completedAt": "2026-06-17T08:16:47+00:00",
       "scenario": {
         "groupResults": {
           "A": [
