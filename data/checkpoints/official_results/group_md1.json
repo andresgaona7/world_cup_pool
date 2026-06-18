@@ -3,7 +3,7 @@
   "label": "After group matchday 1",
   "shortLabel": "Group MD1",
   "stage": "group_stage",
-  "completedAt": "2026-06-17T08:16:47+00:00",
+  "completedAt": "2026-06-18T05:07:00+00:00",
   "scenario": {
     "groupResults": {
       "A": [
@@ -57,25 +57,25 @@
         "Jordan"
       ],
       "K": [
-        "Portugal",
         "Colombia",
-        "Uzbekistan"
+        "Portugal",
+        "Congo DR"
       ],
       "L": [
         "England",
-        "Croatia",
+        "Ghana",
         "Panama"
       ]
     },
     "bestThirds": [
       "Japan",
       "Belgium",
+      "Congo DR",
       "Morocco",
       "Qatar",
       "Spain",
-      "Panama",
-      "Uzbekistan",
-      "Czechia"
+      "Czechia",
+      "Ecuador"
     ],
     "futures": {
       "champion": "",
