@@ -2,17 +2,35 @@ const data = window.POOL_DATA || { players: [] };
 
 let selectedIndex = 0;
 
+const loadStatus = document.querySelector("#loadStatus");
 const playerSelect = document.querySelector("#playerSelect");
 const playerName = document.querySelector("#playerName");
 const sheetName = document.querySelector("#sheetName");
 const futuresGrid = document.querySelector("#futuresGrid");
 const firstRoundTable = document.querySelector("#firstRoundTable");
 const bestThirds = document.querySelector("#bestThirds");
+const sections = document.querySelectorAll(".section");
 
 playerSelect.addEventListener("change", (event) => {
   selectedIndex = Number(event.target.value) || 0;
   render();
 });
+
+function showStatus(message, isError = false) {
+  loadStatus.hidden = false;
+  loadStatus.textContent = message;
+  loadStatus.classList.toggle("is-error", isError);
+}
+
+function hideStatus() {
+  loadStatus.hidden = true;
+}
+
+function setSectionsHidden(hidden) {
+  sections.forEach((section) => {
+    section.hidden = hidden;
+  });
+}
 
 function populatePlayerSelect() {
   playerSelect.replaceChildren(
@@ -30,22 +48,33 @@ function render() {
   if (!player) {
     playerName.textContent = "No players found";
     sheetName.textContent = "";
+    playerSelect.disabled = true;
     futuresGrid.replaceChildren();
     firstRoundTable.replaceChildren();
     bestThirds.replaceChildren();
+    setSectionsHidden(true);
+    showStatus(
+      window.POOL_DATA_LOAD_ERROR
+        ? "Player prediction data failed to load. Confirm data/generated/pool_data.js is included in the GitHub Pages artifact."
+        : "No player prediction data was found.",
+      true
+    );
     return;
   }
 
+  playerSelect.disabled = false;
   playerSelect.value = String(selectedIndex);
   playerName.textContent = player.name;
   sheetName.textContent = `Sheet: ${player.sheet}`;
+  setSectionsHidden(false);
+  hideStatus();
   renderFutures(player);
   renderFirstRound(player);
   renderBestThirds(player);
 }
 
 function renderFutures(player) {
-  const entries = Object.entries(player.futures).filter(([key]) => key !== "name");
+  const entries = Object.entries(player.futures || {}).filter(([key]) => key !== "name");
   futuresGrid.replaceChildren(
     ...entries.map(([, item]) => {
       const card = document.createElement("article");
@@ -66,17 +95,18 @@ function renderFutures(player) {
 }
 
 function renderFirstRound(player) {
-  const bestThirdsRowIndex = player.first_round_grid.findIndex((gridRow) =>
+  const firstRoundGrid = player.first_round_grid || [];
+  const bestThirdsRowIndex = firstRoundGrid.findIndex((gridRow) =>
     gridRow.cells.includes("Best 3rd's")
   );
   const groupStageRows =
     bestThirdsRowIndex === -1
-      ? player.first_round_grid
-      : player.first_round_grid.slice(0, bestThirdsRowIndex);
+      ? firstRoundGrid
+      : firstRoundGrid.slice(0, bestThirdsRowIndex);
 
   const rows = groupStageRows.map((gridRow) => {
     const tr = document.createElement("tr");
-    gridRow.cells.slice(1).forEach((value) => {
+    (gridRow.cells || []).slice(1).forEach((value) => {
       const td = document.createElement("td");
       const displayValue = displayCellValue(value);
       td.textContent = displayValue;
@@ -93,7 +123,7 @@ function renderBestThirds(player) {
   table.className = "best-thirds-table";
 
   const tbody = document.createElement("tbody");
-  const teams = player.best_thirds.map((pick) => pick.team || "Blank");
+  const teams = (player.best_thirds || []).map((pick) => pick.team || "Blank");
 
   for (let index = 0; index < teams.length; index += 4) {
     const tr = document.createElement("tr");

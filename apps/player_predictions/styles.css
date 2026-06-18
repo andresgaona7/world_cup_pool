@@ -117,6 +117,22 @@ h3 {
   padding: 24px;
 }
 
+.load-status {
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.load-status.is-error {
+  border-color: #d7a1a1;
+  background: #fff4f4;
+  color: #8a2e2e;
+}
+
 .player-heading,
 .section {
   background: var(--panel);

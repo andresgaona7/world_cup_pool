@@ -26,6 +26,8 @@
 
     <main class="layout">
       <section class="content" aria-live="polite">
+        <div id="loadStatus" class="load-status" role="status">Loading player predictions...</div>
+
         <div class="player-heading">
           <div>
             <p class="eyebrow">Selected player</p>
@@ -59,7 +61,7 @@
       </section>
     </main>
 
-    <script src="../../data/generated/pool_data.js"></script>
+    <script src="../../data/generated/pool_data.js" onerror="window.POOL_DATA_LOAD_ERROR = true"></script>
     <script src="app.js"></script>
   </body>
 </html>
