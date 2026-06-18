@@ -1,37 +1,26 @@
 const data = window.POOL_DATA || { players: [] };
 
 let selectedIndex = 0;
-let searchTerm = "";
 
-const playerSearch = document.querySelector("#playerSearch");
-const playerList = document.querySelector("#playerList");
+const playerSelect = document.querySelector("#playerSelect");
 const playerName = document.querySelector("#playerName");
 const sheetName = document.querySelector("#sheetName");
 const futuresGrid = document.querySelector("#futuresGrid");
 const firstRoundTable = document.querySelector("#firstRoundTable");
 const bestThirds = document.querySelector("#bestThirds");
 
-playerSearch.addEventListener("input", (event) => {
-  searchTerm = event.target.value.trim().toLowerCase();
-  renderPlayerList();
+playerSelect.addEventListener("change", (event) => {
+  selectedIndex = Number(event.target.value) || 0;
+  render();
 });
 
-function renderPlayerList() {
-  const matches = data.players
-    .map((player, index) => ({ player, index }))
-    .filter(({ player }) => player.name.toLowerCase().includes(searchTerm));
-
-  playerList.replaceChildren(
-    ...matches.map(({ player, index }) => {
-      const button = document.createElement("button");
-      button.className = `player-button${index === selectedIndex ? " active" : ""}`;
-      button.type = "button";
-      button.textContent = player.name;
-      button.addEventListener("click", () => {
-        selectedIndex = index;
-        render();
-      });
-      return button;
+function populatePlayerSelect() {
+  playerSelect.replaceChildren(
+    ...data.players.map((player, index) => {
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = player.name;
+      return option;
     })
   );
 }
@@ -40,15 +29,19 @@ function render() {
   const player = data.players[selectedIndex];
   if (!player) {
     playerName.textContent = "No players found";
+    sheetName.textContent = "";
+    futuresGrid.replaceChildren();
+    firstRoundTable.replaceChildren();
+    bestThirds.replaceChildren();
     return;
   }
 
+  playerSelect.value = String(selectedIndex);
   playerName.textContent = player.name;
   sheetName.textContent = `Sheet: ${player.sheet}`;
   renderFutures(player);
   renderFirstRound(player);
   renderBestThirds(player);
-  renderPlayerList();
 }
 
 function renderFutures(player) {
@@ -136,4 +129,5 @@ function cellClass(value) {
   return "";
 }
 
+populatePlayerSelect();
 render();

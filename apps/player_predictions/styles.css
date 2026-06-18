@@ -109,62 +109,7 @@ h3 {
 }
 
 .layout {
-  display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
   min-height: calc(100vh - 91px);
-}
-
-.sidebar {
-  background: #ffffff;
-  border-right: 1px solid var(--line);
-  padding: 18px;
-}
-
-.search-wrap {
-  position: sticky;
-  top: 0;
-  padding-bottom: 14px;
-  background: #ffffff;
-}
-
-input[type="search"] {
-  width: 100%;
-  min-height: 40px;
-  padding: 9px 11px;
-  color: var(--ink);
-  background: #f8fafb;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  font: inherit;
-}
-
-.player-list {
-  display: grid;
-  gap: 7px;
-}
-
-.player-button {
-  width: 100%;
-  min-height: 42px;
-  padding: 9px 10px;
-  color: var(--ink);
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  text-align: left;
-  font: inherit;
-  cursor: pointer;
-}
-
-.player-button:hover,
-.player-button:focus {
-  background: #f0f5f6;
-  outline: none;
-}
-
-.player-button.active {
-  color: #ffffff;
-  background: var(--accent-strong);
 }
 
 .content {
@@ -185,6 +130,37 @@ input[type="search"] {
   justify-content: space-between;
   gap: 16px;
   padding: 20px;
+}
+
+.player-heading-tools {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.player-select-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.player-select-control select {
+  min-width: 220px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: none;
 }
 
 .sheet-pill {
@@ -322,25 +298,28 @@ table {
     justify-content: flex-start;
   }
 
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .player-list {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
-
   .content {
     padding: 16px;
   }
 
   .player-heading {
     flex-direction: column;
+  }
+
+  .player-heading-tools,
+  .player-select-control {
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .player-select-control {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .player-select-control select {
+    width: 100%;
+    min-width: 0;
   }
 
   .sheet-pill {

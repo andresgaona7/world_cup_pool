@@ -25,20 +25,19 @@
     </header>
 
     <main class="layout">
-      <aside class="sidebar" aria-label="Players">
-        <div class="search-wrap">
-          <input id="playerSearch" type="search" placeholder="Search players" autocomplete="off">
-        </div>
-        <nav id="playerList" class="player-list"></nav>
-      </aside>
-
       <section class="content" aria-live="polite">
         <div class="player-heading">
           <div>
             <p class="eyebrow">Selected player</p>
             <h2 id="playerName"></h2>
           </div>
-          <div id="sheetName" class="sheet-pill"></div>
+          <div class="player-heading-tools">
+            <label class="player-select-control" for="playerSelect">
+              <span>Player</span>
+              <select id="playerSelect"></select>
+            </label>
+            <div id="sheetName" class="sheet-pill"></div>
+          </div>
         </div>
 
         <section class="section">
