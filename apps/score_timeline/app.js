@@ -87,13 +87,22 @@ const leaderboardTable = document.querySelector("#leaderboardTable");
 const chartWidthControl = document.querySelector("#chartWidthControl");
 const chartPanel = document.querySelector("#chartPanel");
 const leaderboardPanel = document.querySelector("#leaderboardPanel");
+const playerFocusSelect = document.querySelector("#playerFocusSelect");
+const selectedPlayerDetail = document.querySelector("#selectedPlayerDetail");
 let chartWidthScale = Number(chartWidthControl?.value || 100) / 100;
+let selectedPlayerIndex = playerFocusSelect?.value ? Number(playerFocusSelect.value) : null;
 
 chartWidthControl?.addEventListener("input", () => {
   chartWidthScale = Number(chartWidthControl.value) / 100;
   render();
 });
 
+playerFocusSelect?.addEventListener("change", () => {
+  selectedPlayerIndex = playerFocusSelect.value === "" ? null : Number(playerFocusSelect.value);
+  render();
+});
+
+populatePlayerFocusSelect();
 render();
 
 function render() {
@@ -110,6 +119,7 @@ function render() {
   renderMetrics(series, selectedRows);
   renderLeaderboard(selectedRows, selectedCheckpoint, series);
   renderChart(series, checkpoints);
+  renderSelectedPlayerDetail(series, selectedCheckpoint);
 }
 
 function renderEmptyState() {
@@ -117,6 +127,9 @@ function renderEmptyState() {
   checkpointStatus.textContent = "Pending results";
   timelineChart.innerHTML = '<div class="empty-state">No official checkpoints are available yet.</div>';
   leaderboardTable.innerHTML = "";
+  if (selectedPlayerDetail) {
+    selectedPlayerDetail.innerHTML = '<div class="empty-state">Select a player to pin their score details.</div>';
+  }
 }
 
 function normalizePlayer(player) {
@@ -768,6 +781,49 @@ function metric(label, value, detail) {
   return node;
 }
 
+function populatePlayerFocusSelect() {
+  if (!playerFocusSelect) {
+    return;
+  }
+
+  const options = players.map((player, index) => {
+    const option = document.createElement("option");
+    option.value = String(index);
+    option.textContent = `${emojiForPlayer(player)} ${player.name}`;
+    return option;
+  });
+
+  playerFocusSelect.replaceChildren(playerFocusSelect.options[0], ...options);
+}
+
+function renderSelectedPlayerDetail(series, checkpoint) {
+  if (!selectedPlayerDetail) {
+    return;
+  }
+
+  if (selectedPlayerIndex === null || Number.isNaN(selectedPlayerIndex)) {
+    selectedPlayerDetail.innerHTML = '<div class="empty-state">Select a player to pin their score details.</div>';
+    return;
+  }
+
+  const row = series.find((item) => item.playerIndex === selectedPlayerIndex);
+  const point = row?.points[selectedCheckpointIndex];
+  if (!row || !point?.isAvailable) {
+    selectedPlayerDetail.innerHTML = `
+      <div class="detail-kicker">Selected player</div>
+      <h3>No score available</h3>
+      <div class="muted">${escapeHtml(checkpoint?.label || "Selected checkpoint")} is pending.</div>
+    `;
+    return;
+  }
+
+  selectedPlayerDetail.innerHTML = `
+    <div class="detail-kicker">Selected player</div>
+    <h3><span>${escapeHtml(row.emoji)}</span> ${escapeHtml(row.player.name)}</h3>
+    ${scoreDetailHtml(point, checkpoint)}
+  `;
+}
+
 function renderChart(series, sourceCheckpoints) {
   const baseWidth = Math.max(760, sourceCheckpoints.length * 170 + 120);
   const width = Math.round(baseWidth * chartWidthScale);
@@ -813,6 +869,8 @@ function renderChart(series, sourceCheckpoints) {
   });
 
   series.forEach((row) => {
+    const isSelected = row.playerIndex === selectedPlayerIndex;
+    const isDimmed = selectedPlayerIndex !== null && !isSelected;
     const path = row.points.map((point, index) => {
       if (!point.isAvailable) {
         return "";
@@ -824,10 +882,16 @@ function renderChart(series, sourceCheckpoints) {
     if (!path) {
       return;
     }
-    svg.append(svgElement("path", { class: "player-line", d: path, stroke: row.color }));
+    svg.append(svgElement("path", {
+      class: ["player-line", isSelected ? "is-selected" : "", isDimmed ? "is-dimmed" : ""].filter(Boolean).join(" "),
+      d: path,
+      stroke: row.color,
+    }));
   });
 
   series.forEach((row) => {
+    const isSelected = row.playerIndex === selectedPlayerIndex;
+    const isDimmed = selectedPlayerIndex !== null && !isSelected;
     row.points.forEach((point, index) => {
       if (!point.isAvailable) {
         return;
@@ -835,15 +899,15 @@ function renderChart(series, sourceCheckpoints) {
       const x = xFor(index);
       const y = yFor(point.total || 0);
       const group = svgElement("g", {
-        class: "player-point",
+        class: ["player-point", isSelected ? "is-selected" : "", isDimmed ? "is-dimmed" : ""].filter(Boolean).join(" "),
         tabindex: "0",
         "data-player-index": row.playerIndex,
         "data-checkpoint-index": index,
         "aria-label": `${row.player.name}, ${sourceCheckpoints[index].label}, ${formatPoints(point.total || 0)} points`,
       });
       group.append(
-        svgElement("circle", { cx: x, cy: y, r: 13, stroke: row.color }),
-        svgText(row.emoji, x, y + 1, "", "middle")
+        svgElement("circle", { cx: x, cy: y, r: isSelected ? 18 : 13, stroke: row.color }),
+        svgText(row.emoji, x, y + 1, isSelected ? "selected-player-icon" : "", "middle")
       );
       group.addEventListener("mouseenter", (event) => showTooltip(event, row, point, sourceCheckpoints[index]));
       group.addEventListener("mousemove", (event) => positionTooltip(event));
@@ -907,12 +971,18 @@ function showTooltip(event, row, point, checkpoint) {
   timelineTooltip.hidden = false;
   timelineTooltip.innerHTML = `
     <strong>${escapeHtml(row.emoji)} ${escapeHtml(row.player.name)}</strong>
+    ${scoreDetailHtml(point, checkpoint)}
+  `;
+  positionTooltip(event);
+}
+
+function scoreDetailHtml(point, checkpoint) {
+  return `
     <div>${escapeHtml(checkpoint.label)}</div>
     <div>Rank: ${point.rank || "-"}</div>
     <div>Total: ${formatPoints(point.total || 0)} pts</div>
     <div class="muted">Groups ${formatPoints(point.group || 0)} · Best 3rds ${formatPoints(point.bestThirds || 0)} · Knockout ${formatPoints(point.knockout || 0)} · Futures ${formatPoints(point.futures || 0)} · Bonus ${formatPoints(point.bonus || 0)}</div>
   `;
-  positionTooltip(event);
 }
 
 function positionTooltip(event) {
