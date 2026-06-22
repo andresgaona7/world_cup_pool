@@ -1,0 +1,97 @@
+{
+  "key": "group_md2",
+  "label": "After group matchday 2",
+  "shortLabel": "Group MD2",
+  "stage": "group_stage",
+  "completedAt": "2026-06-22T03:19:43+00:00",
+  "scenario": {
+    "groupResults": {
+      "A": [
+        "Mexico",
+        "South Korea",
+        "Czechia"
+      ],
+      "B": [
+        "Canada",
+        "Switzerland",
+        "Bosnia-Herzegovina"
+      ],
+      "C": [
+        "Brazil",
+        "Morocco",
+        "Scotland"
+      ],
+      "D": [
+        "United States",
+        "Australia",
+        "Paraguay"
+      ],
+      "E": [
+        "Germany",
+        "Ivory Coast",
+        "Ecuador"
+      ],
+      "F": [
+        "Netherlands",
+        "Japan",
+        "Sweden"
+      ],
+      "G": [
+        "Egypt",
+        "Iran",
+        "Belgium"
+      ],
+      "H": [
+        "Spain",
+        "Uruguay",
+        "Cape Verde Islands"
+      ],
+      "I": [
+        "Norway",
+        "France",
+        "Senegal"
+      ],
+      "J": [
+        "Argentina",
+        "Austria",
+        "Jordan"
+      ],
+      "K": [
+        "Colombia",
+        "Portugal",
+        "Congo DR"
+      ],
+      "L": [
+        "England",
+        "Ghana",
+        "Panama"
+      ]
+    },
+    "bestThirds": [
+      "Sweden",
+      "Scotland",
+      "Paraguay",
+      "Cape Verde Islands",
+      "Belgium",
+      "Congo DR",
+      "Czechia",
+      "Ecuador"
+    ],
+    "futures": {
+      "champion": "",
+      "runnerUp": "",
+      "topScorer": "Lionel Messi",
+      "teamLastRounds": {
+        "France": "group_stage",
+        "Argentina": "group_stage",
+        "Norway": "group_stage",
+        "Morocco": "group_stage",
+        "England": "group_stage",
+        "Ecuador": "group_stage",
+        "Spain": "group_stage",
+        "Brazil": "group_stage"
+      }
+    }
+  },
+  "officialMatches": []
+}
