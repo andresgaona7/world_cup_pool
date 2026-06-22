@@ -17,8 +17,6 @@
           <a href="../../index.html">Home</a>
           <a href="../rules/index.html">Rules</a>
           <a class="active" href="index.html" aria-current="page">Player Picks</a>
-          <a href="../knockout_predictions/index.html">Knockout</a>
-          <a href="../consensus_predictions/index.html">Consensus</a>
           <a href="../score_visualizer/index.html">Scores</a>
           <a href="../third_places/index.html">Third places</a>
           <a href="../score_timeline/index.html">Official results</a>
@@ -31,17 +29,20 @@
       <section class="content" aria-live="polite">
         <div id="loadStatus" class="load-status" role="status">Loading player predictions...</div>
 
-        <div class="player-heading">
-          <div>
-            <p class="eyebrow">Selected player</p>
-            <h2 id="playerName"></h2>
-          </div>
+        <div class="player-selector-panel">
           <div class="player-heading-tools">
             <label class="player-select-control" for="playerSelect">
               <span>Player</span>
               <select id="playerSelect"></select>
             </label>
             <div id="sheetName" class="sheet-pill"></div>
+          </div>
+        </div>
+
+        <div class="player-heading">
+          <div>
+            <p class="eyebrow">Selected player</p>
+            <h2 id="playerName"></h2>
           </div>
         </div>
 
