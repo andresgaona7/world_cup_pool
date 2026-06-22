@@ -46,6 +46,15 @@ const KNOCKOUT_PERFECT_SCORE_BONUS_POINTS = {
   quarterfinal: 75,
   semifinal: 120,
 };
+const KNOCKOUT_STAGE_LABELS = {
+  round_of_32: "Round of 32",
+  round_of_16: "Round of 16",
+  quarterfinal: "Quarterfinals",
+  semifinal: "Semifinals",
+  third_place_match: "Third-place match",
+  final: "Final",
+};
+const LEADERBOARD_KNOCKOUT_STAGES = Object.keys(KNOCKOUT_BASE_POINTS);
 
 const STAGES = [
   ["group_stage", "Group stage"],
@@ -70,6 +79,7 @@ const PLANNED_TIMELINE_CHECKPOINTS = [
   { key: "third_place_match", label: "Third-place match", shortLabel: "3rd", stage: "third_place_match" },
   { key: "final", label: "Final", shortLabel: "Final", stage: "final" },
   { key: "futures", label: "Futures results", shortLabel: "Futures", stage: "futures", includeFutures: true },
+  { key: "bonuses", label: "Bonuses", shortLabel: "Bonus", stage: "bonuses", includeFutures: true, includeBonuses: true },
 ];
 const GROUP_IDS = "ABCDEFGHIJKL".split("");
 const GROUP_HEADER_PATTERN = /^Group ([A-L])$/;
@@ -136,7 +146,7 @@ function render() {
 
   checkpointStatus.textContent = checkpointStatusLabel(selectedCheckpoint);
   renderMetrics(series, selectedRows);
-  renderLeaderboard(selectedRows, selectedCheckpoint, series);
+  renderLeaderboard(selectedRows, series);
   renderChart(series, checkpoints);
   renderSelectedPlayerDetail(series, selectedCheckpoint);
 }
@@ -264,7 +274,7 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
     .filter(Boolean);
 
   if (declared.length) {
-    return [startCheckpoint, ...mergePlannedCheckpoints(sourcePlayers, declared)];
+    return [startCheckpoint, ...mergePlannedCheckpoints(sourcePlayers, addBonusCheckpoint(declared))];
   }
 
   const fallbackScenario = normalizeOfficialScenario(sourcePlayers, resultsData);
@@ -297,6 +307,18 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
       scenario: fallbackScenario,
       officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
     });
+    fallbackCheckpoints.push({
+      key: "bonuses",
+      label: "Bonuses",
+      shortLabel: "Bonus",
+      stage: "bonuses",
+      completedAt: resultsData?.lastCompletedMatchDate || resultsData?.generatedAt || "",
+      includeFutures: true,
+      includeBonuses: true,
+      isAvailable: true,
+      scenario: fallbackScenario,
+      officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
+    });
   }
 
   return [
@@ -310,14 +332,17 @@ function normalizeTimelineCheckpoint(sourcePlayers, checkpoint) {
   const officialMatches = normalizeKnockoutResults(checkpoint.officialMatches || checkpoint.matches || []);
   const stage = normalizeStage(checkpoint.stage || checkpoint.key || "group_stage");
   const includeFutures = Boolean(checkpoint.includeFutures || checkpoint.key === "futures" || stage === "futures");
+  const includeBonuses = Boolean(checkpoint.includeBonuses || checkpoint.key === "bonuses" || stage === "bonuses");
+  const includesFutures = includeFutures || includeBonuses;
   return {
     key: checkpoint.key || checkpoint.id || checkpoint.label || "",
     label: checkpoint.label || checkpoint.name || checkpoint.key || "Checkpoint",
     shortLabel: checkpoint.shortLabel || "",
     stage,
     completedAt: checkpoint.completedAt || checkpoint.date || "",
-    includeFutures,
-    isAvailable: includeFutures
+    includeFutures: includesFutures,
+    includeBonuses,
+    isAvailable: includesFutures
       ? hasFuturesData(scenario)
       : hasNonFuturesScenarioData(scenario) || officialMatches.length > 0,
     scenario,
@@ -341,11 +366,36 @@ function mergePlannedCheckpoints(sourcePlayers, availableCheckpoints) {
       shortLabel: available?.shortLabel || checkpoint.shortLabel,
       stage: checkpoint.stage,
       includeFutures: Boolean(checkpoint.includeFutures || available?.includeFutures),
+      includeBonuses: Boolean(checkpoint.includeBonuses || available?.includeBonuses),
     };
   });
   const plannedKeys = new Set(PLANNED_TIMELINE_CHECKPOINTS.map((checkpoint) => checkpoint.key));
   const extras = availableCheckpoints.filter((checkpoint) => checkpoint.key && !plannedKeys.has(checkpoint.key));
   return [...planned, ...extras];
+}
+
+function addBonusCheckpoint(availableCheckpoints) {
+  if (availableCheckpoints.some((checkpoint) => checkpoint.key === "bonuses" || checkpoint.includeBonuses)) {
+    return availableCheckpoints;
+  }
+  const futuresCheckpoint = availableCheckpoints.find(
+    (checkpoint) => checkpoint.key === "futures" || checkpoint.includeFutures
+  );
+  if (!futuresCheckpoint) {
+    return availableCheckpoints;
+  }
+  return [
+    ...availableCheckpoints,
+    {
+      ...futuresCheckpoint,
+      key: "bonuses",
+      label: "Bonuses",
+      shortLabel: "Bonus",
+      stage: "bonuses",
+      includeFutures: true,
+      includeBonuses: true,
+    },
+  ];
 }
 
 function emptyTimelineCheckpoint(sourcePlayers, checkpoint) {
@@ -356,6 +406,7 @@ function emptyTimelineCheckpoint(sourcePlayers, checkpoint) {
     stage: checkpoint.stage,
     completedAt: "",
     includeFutures: Boolean(checkpoint.includeFutures),
+    includeBonuses: Boolean(checkpoint.includeBonuses),
     isAvailable: false,
     scenario: emptyScenario(sourcePlayers),
     officialMatches: [],
@@ -639,17 +690,30 @@ function scoreAllPlayersForCheckpoint(sourcePlayers, checkpoint) {
       const group = scoreGroups(player, checkpoint.scenario);
       const bestThirds = scoreBestThirds(player, checkpoint.scenario);
       const knockout = scoreKnockout(player, checkpoint.officialMatches || []);
+      const knockoutStages = Object.fromEntries(
+        LEADERBOARD_KNOCKOUT_STAGES.map((stage) => {
+          const stageScore = scoreKnockoutStage(player, stage, checkpoint.officialMatches || []);
+          return [stage, stageScore.points];
+        })
+      );
       const futuresScore = checkpoint.includeFutures ? scoreFutures(player, checkpoint.scenario) : { points: 0, bonus: 0 };
-      const total = group + bestThirds + knockout.points + knockout.bonus + futuresScore.points + futuresScore.bonus;
+      const firstRound = group + bestThirds;
+      const bonus = knockout.bonus + futuresScore.bonus;
+      const includedBonus = checkpoint.includeBonuses ? bonus : 0;
+      const total = firstRound + knockout.points + futuresScore.points + includedBonus;
       return {
         playerIndex,
         name: player.name,
         sheet: player.sheet,
         group,
         bestThirds,
+        firstRound,
         knockout: knockout.points,
+        knockoutStages,
         futures: futuresScore.points,
-        bonus: knockout.bonus + futuresScore.bonus,
+        bonus,
+        includedBonus,
+        displayedTotal: firstRound + knockout.points,
         total,
       };
     })
@@ -857,16 +921,22 @@ function lastRoundPoints(predicted, actual, pointValues) {
 }
 
 function renderMetrics(series, selectedRows) {
-  const leader = selectedRows[0];
-  const finalScores = series.map((row) => row.latest?.total || 0);
-  const maxScore = Math.max(...finalScores, 0);
+  const displayRows = leaderboardDisplayRows(selectedRows);
+  const leader = displayRows[0];
+  const runnerUp = displayRows[1];
+  const thirdPlace = displayRows[2];
   const availableCheckpointsCount = checkpoints.filter((checkpoint) => checkpoint.isAvailable).length;
 
   metrics.replaceChildren(
-    metric("Leader", leader ? leader.name : "None", leader ? `${formatPoints(leader.total)} pts` : "0 pts"),
-    metric("Checkpoints", `${availableCheckpointsCount} / ${checkpoints.length}`, "Available / planned"),
-    metric("Highest score", `${formatPoints(maxScore)} pts`, "Latest checkpoint")
+    rankMetric("Leader", leader),
+    rankMetric("Runner-up", runnerUp),
+    rankMetric("Third place", thirdPlace),
+    metric("Checkpoints", `${availableCheckpointsCount} / ${checkpoints.length}`, "Available / planned")
   );
+}
+
+function rankMetric(label, row) {
+  return metric(label, row ? row.name : "None", row ? `${formatPoints(row.displayedTotal)} pts` : "0 pts");
 }
 
 function metric(label, value, detail) {
@@ -1013,12 +1083,17 @@ function renderChart(series, sourceCheckpoints) {
         tabindex: "0",
         "data-player-index": row.playerIndex,
         "data-checkpoint-index": index,
-        "aria-label": `${row.player.name}, ${sourceCheckpoints[index].label}, ${formatPoints(point.total || 0)} points`,
+        "aria-label": `${row.player.name}, ${sourceCheckpoints[index].label}, ${formatPoints(point.total || 0)} points${point.includedBonus ? `, ${formatPoints(point.includedBonus)} bonus points` : ""}`,
       });
       group.append(
         svgElement("circle", { cx: x, cy: y, r: isSelected ? 18 : 13, stroke: row.color }),
         svgText(row.emoji, x, y + 1, isSelected ? "selected-player-icon" : "", "middle")
       );
+      if (point.includedBonus > 0) {
+        group.append(
+          svgText(`+${formatPoints(point.includedBonus)} bonus`, x, y - (isSelected ? 24 : 19), "bonus-label", "middle")
+        );
+      }
       group.addEventListener("mouseenter", (event) => showTooltip(event, row, point, sourceCheckpoints[index]));
       group.addEventListener("mousemove", (event) => positionTooltip(event));
       group.addEventListener("mouseleave", hideTooltip);
@@ -1086,7 +1161,7 @@ function showTooltip(event, row, point, checkpoint) {
   timelineTooltip.hidden = false;
   timelineTooltip.innerHTML = `
     <strong>${escapeHtml(row.emoji)} ${escapeHtml(row.player.name)}</strong>
-    ${scoreDetailHtml(point, checkpoint)}
+    ${scoreDetailHtml(point, checkpoint, { showBreakdown: false })}
   `;
   positionTooltip(event);
 }
@@ -1125,7 +1200,7 @@ function scoreDetailHtml(point, checkpoint, options = {}) {
     <div>Rank: ${point.rank || "-"}</div>
     <div>Total: ${formatPoints(point.total || 0)} pts</div>
     ${options.afterTotalHtml || ""}
-    ${options.showBreakdown === false ? "" : `<div class="muted">Groups ${formatPoints(point.group || 0)} · Best 3rds ${formatPoints(point.bestThirds || 0)} · Knockout ${formatPoints(point.knockout || 0)} · Futures ${formatPoints(point.futures || 0)} · Bonus ${formatPoints(point.bonus || 0)}</div>`}
+    ${options.showBreakdown === false ? "" : `<div class="muted">Groups ${formatPoints(point.group || 0)} · Best 3rds ${formatPoints(point.bestThirds || 0)} · Knockout ${formatPoints(point.knockout || 0)} · Futures ${formatPoints(point.futures || 0)} · Bonus ${formatPoints(point.includedBonus || 0)}</div>`}
   `;
 }
 
@@ -1143,39 +1218,45 @@ function hideTooltip() {
   timelineTooltip.hidden = true;
 }
 
-function renderLeaderboard(rows, checkpoint, series) {
+function renderLeaderboard(rows, series) {
   const seriesByPlayerIndex = new Map(series.map((row) => [row.playerIndex, row]));
+  const displayRows = leaderboardDisplayRows(rows);
   leaderboardTable.innerHTML = `
     <thead>
       <tr>
         <th class="rank">#</th>
-        <th>Emoji</th>
         <th>Player</th>
         <th>Total</th>
-        <th>Groups</th>
-        <th>Best 3rds</th>
-        <th>Knockout</th>
+        <th>Group Stage</th>
+        ${LEADERBOARD_KNOCKOUT_STAGES.map((stage) => `<th>${escapeHtml(knockoutStageLabel(stage))}</th>`).join("")}
         <th>Futures</th>
         <th>Bonus</th>
       </tr>
     </thead>
     <tbody>
-      ${rows.map((row, index) => `
+      ${displayRows.map((row, index) => `
         <tr>
           <td class="rank">${index + 1}</td>
-          <td class="emoji-cell" style="border-left-color: ${escapeHtml(seriesByPlayerIndex.get(row.playerIndex)?.color || "transparent")}">${escapeHtml(seriesByPlayerIndex.get(row.playerIndex)?.emoji || "")}</td>
-          <td><strong>${escapeHtml(row.name)}</strong><br><span class="muted">${escapeHtml(row.sheet)}</span></td>
-          <td class="total">${formatPoints(row.total)}</td>
-          <td>${formatPoints(row.group)}</td>
-          <td>${formatPoints(row.bestThirds)}</td>
-          <td>${formatPoints(row.knockout)}</td>
+          <td class="player-cell" style="border-left-color: ${escapeHtml(seriesByPlayerIndex.get(row.playerIndex)?.color || "transparent")}"><strong class="player-name">${escapeHtml(row.name)}</strong><br><span class="muted">${escapeHtml(row.sheet)}</span></td>
+          <td class="total">${formatPoints(row.displayedTotal)}</td>
+          <td>${formatPoints(row.firstRound)}</td>
+          ${LEADERBOARD_KNOCKOUT_STAGES.map((stage) => `<td>${formatPoints(row.knockoutStages[stage] || 0)}</td>`).join("")}
           <td>${formatPoints(row.futures)}</td>
           <td>${formatPoints(row.bonus)}</td>
         </tr>
       `).join("")}
     </tbody>
-    <caption class="muted">Scores at ${escapeHtml(checkpoint.label)}</caption>
   `;
+}
+
+function leaderboardDisplayRows(rows) {
+  return [...rows].sort(
+    (a, b) => b.displayedTotal - a.displayedTotal || a.name.localeCompare(b.name)
+  );
+}
+
+function knockoutStageLabel(stageKey) {
+  return KNOCKOUT_STAGE_LABELS[stageKey] || stageKey;
 }
 
 function emojiForPlayer(player) {
