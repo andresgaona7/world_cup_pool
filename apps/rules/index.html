@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Cup Pool Rules</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">World Cup 2026 Pool</p>
+      <h1>Rules</h1>
+    </div>
+    <div class="header-tools">
+      <nav class="site-nav" aria-label="Visualization navigation">
+        <a href="../../index.html">Home</a>
+        <a class="active" href="index.html" aria-current="page">Rules</a>
+        <a href="../player_predictions/index.html">Player Picks</a>
+        <a href="../knockout_predictions/index.html">Knockout</a>
+        <a href="../consensus_predictions/index.html">Consensus</a>
+        <a href="../score_visualizer/index.html">Scores</a>
+        <a href="../third_places/index.html">Third places</a>
+        <a href="../score_timeline/index.html">Official results</a>
+        <a href="../blog/index.html">Blog</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page rules-page">
+    <section class="panel rules-panel" aria-labelledby="rulesTitle">
+      <div class="panel-head">
+        <div>
+          <h2 id="rulesTitle">Scoring Rules</h2>
+        </div>
+      </div>
+      <div class="rules-explainer">
+        <article class="rule-section">
+          <h3>Group Stage</h3>
+          <ul>
+            <li>Each correctly predicted group-stage qualifier earns 1 point.</li>
+            <li>A correctly predicted qualifier earns 1 extra point when it also finishes in the exact predicted
+              advancing position.</li>
+            <li>Third-place teams only count as qualifiers if they are official best thirds.</li>
+            <li>A completely correct group order earns an extra 5 point bonus.</li>
+            <li>Each correctly selected best third-place qualifier earns 3 points. Best-third order is ignored.</li>
+          </ul>
+        </article>
+
+        <article class="rule-section">
+          <h3>Balance Target</h3>
+          <ul>
+            <li>A perfect group with an official best-third qualifier earns 11 points before best-third picks.</li>
+            <li>A perfect group without an official best-third qualifier earns 9 points because only the top two teams
+              advanced.</li>
+            <li>The perfect first-round score is 148 points: 8 best-third groups x 11, 4 non-best-third groups x 9, and
+              8 best-third picks x 3.</li>
+          </ul>
+        </article>
+
+        <article class="rule-section">
+          <h3>Knockout Matches</h3>
+          <ul>
+            <li>Base values by round: Round of 32 = 4, Round of 16 = 6, quarterfinal = 10, semifinal = 16, third-place
+              match = 14, final = 20.</li>
+            <li>Winner-only mode: a correct advancing team earns 1x the round base value; a wrong advancing team earns
+              0.</li>
+            <li>Score mode: exact regulation score and correct advancing team earns 2.5x base.</li>
+            <li>Score mode: exact regulation score with the wrong advancing team earns 1.5x base.</li>
+            <li>Score mode: correct advancing team with the wrong score earns 0.5x base.</li>
+          </ul>
+        </article>
+
+        <article class="rule-section">
+          <h3>Futures</h3>
+          <ul>
+            <li>Correct champion: 80 points.</li>
+            <li>Correct runner-up: 50 points.</li>
+            <li>If the champion and runner-up are reversed, the entry earns 35 points instead of the champion or
+              runner-up points.</li>
+            <li>Correct top scorer: 60 points.</li>
+            <li>Favorite-team last round: 35 points for exact, 15 points if off by one round.</li>
+            <li>Ecuador last round: 40 points for exact, 18 points if off by one round.</li>
+          </ul>
+        </article>
+
+        <article class="rule-section">
+          <h3>Bonuses</h3>
+          <ul>
+            <li>Perfect knockout winners bonus: 50 points.</li>
+            <li>Perfect knockout scores bonus: 200 points.</li>
+            <li>Perfect futures card bonus: 75 points when champion, runner-up, top scorer, favorite-team round, and
+              Ecuador round are all exact.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+
+</html>

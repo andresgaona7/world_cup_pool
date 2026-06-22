@@ -387,6 +387,15 @@ body {
   line-height: 1.45;
 }
 
+.rules-page .rules-explainer {
+  grid-template-columns: 1fr;
+  max-width: 920px;
+}
+
+.rules-page .rule-section {
+  padding: 18px;
+}
+
 @media (max-width: 900px) {
   .timeline-focus-layout {
     grid-template-columns: 1fr;
