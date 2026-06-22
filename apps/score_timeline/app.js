@@ -407,37 +407,80 @@ function emptyScenario(sourcePlayers) {
 function normalizeGroupStandingRows(rows) {
   return (rows || [])
     .filter((row) => row?.team)
-    .map((row) => ({
+    .map((row, index) => ({
+      ...row,
+      sourceIndex: index,
       team: row.team,
-      position: Number(row.position) || 999,
-      played: Number(row.played) || 0,
-      points: Number(row.points) || 0,
-      goalDifference: Number(row.goalDifference) || 0,
-      goalsFor: Number(row.goalsFor) || 0,
+      position: numberValue(row.position, index + 1),
+      played: numberValue(row.played, 0),
+      points: numberValue(row.points, 0),
+      goalDifference: numberValue(row.goalDifference, 0),
+      goalsFor: numberValue(row.goalsFor, 0),
+      fairPlayPoints: fairPlayPoints(row),
+      lotsOrder: lotsOrder(row),
     }))
     .sort((a, b) =>
       a.position - b.position ||
       b.points - a.points ||
       b.goalDifference - a.goalDifference ||
       b.goalsFor - a.goalsFor ||
-      a.team.localeCompare(b.team)
+      a.sourceIndex - b.sourceIndex
     );
 }
 
 function provisionalBestThirds(standings, fallbackBestThirds) {
-  const thirdPlaceRows = GROUP_IDS.map((groupId) => normalizeGroupStandingRows(standings?.[groupId])[2])
+  const thirdPlaceRows = GROUP_IDS.map((groupId, groupIndex) => {
+    const row = normalizeGroupStandingRows(standings?.[groupId])[2];
+    return row ? { ...row, groupIndex } : null;
+  })
     .filter(Boolean)
-    .sort((a, b) =>
-      b.points - a.points ||
-      b.goalDifference - a.goalDifference ||
-      b.goalsFor - a.goalsFor ||
-      a.team.localeCompare(b.team)
-    );
+    .sort(compareThirdPlaces);
 
   if (thirdPlaceRows.length) {
     return thirdPlaceRows.slice(0, 8).map((row) => row.team);
   }
   return fallbackBestThirds.filter(Boolean);
+}
+
+function compareThirdPlaces(left, right) {
+  return (
+    right.points - left.points ||
+    right.goalDifference - left.goalDifference ||
+    right.goalsFor - left.goalsFor ||
+    right.fairPlayPoints - left.fairPlayPoints ||
+    compareLots(left, right) ||
+    left.groupIndex - right.groupIndex
+  );
+}
+
+function compareLots(left, right) {
+  if (left.lotsOrder === null || right.lotsOrder === null) {
+    return 0;
+  }
+  return left.lotsOrder - right.lotsOrder;
+}
+
+function fairPlayPoints(row) {
+  if (Number.isFinite(Number(row.fairPlayPoints))) {
+    return Number(row.fairPlayPoints);
+  }
+
+  return (
+    -1 * numberValue(row.yellowCards, 0) +
+    -3 * numberValue(row.indirectRedCards ?? row.secondYellowRedCards ?? row.secondYellowCards, 0) +
+    -4 * numberValue(row.directRedCards ?? row.redCards, 0) +
+    -5 * numberValue(row.yellowDirectRedCards ?? row.yellowRedCards, 0)
+  );
+}
+
+function lotsOrder(row) {
+  const value = row.lotsOrder ?? row.lotOrder ?? row.drawingLotsOrder ?? row.lotsRank ?? row.lotRank;
+  return Number.isFinite(Number(value)) ? Number(value) : null;
+}
+
+function numberValue(value, fallback) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
 }
 
 function currentGroupMatchday(standings) {

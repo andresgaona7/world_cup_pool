@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import re
 from pathlib import Path
@@ -261,23 +262,14 @@ def update_scenario_best_thirds(
 
 def ranked_best_thirds(standings: dict[str, Any]) -> list[str]:
     thirds = []
-    for group_id in GROUP_IDS:
+    for group_index, group_id in enumerate(GROUP_IDS):
         rows = normalize_group_rows(standings.get(group_id, []))
         if len(rows) >= 3:
-            thirds.append(rows[2])
+            thirds.append({**rows[2], "_groupIndex": group_index})
 
     return [
         row["team"]
-        for row in sorted(
-            thirds,
-            key=lambda row: (
-                -int_value(row.get("points")),
-                -int_value(row.get("goalDifference")),
-                -int_value(row.get("goalsFor")),
-                -fair_play_points(row),
-                row.get("team", ""),
-            ),
-        )[:8]
+        for row in sorted(thirds, key=functools.cmp_to_key(compare_third_places))[:8]
     ]
 
 
@@ -305,6 +297,33 @@ def fair_play_points(row: dict[str, Any]) -> int:
         -4 * int_value(row.get("directRedCards"))
         -5 * int_value(row.get("yellowDirectRedCards"))
     )
+
+
+def compare_third_places(left: dict[str, Any], right: dict[str, Any]) -> int:
+    return (
+        int_value(right.get("points")) - int_value(left.get("points"))
+        or int_value(right.get("goalDifference")) - int_value(left.get("goalDifference"))
+        or int_value(right.get("goalsFor")) - int_value(left.get("goalsFor"))
+        or fair_play_points(right) - fair_play_points(left)
+        or compare_lots(left, right)
+        or int_value(left.get("_groupIndex")) - int_value(right.get("_groupIndex"))
+    )
+
+
+def compare_lots(left: dict[str, Any], right: dict[str, Any]) -> int:
+    left_lots = lots_order(left)
+    right_lots = lots_order(right)
+    if left_lots is None or right_lots is None:
+        return 0
+    return left_lots - right_lots
+
+
+def lots_order(row: dict[str, Any]) -> int | None:
+    for key in ("lotsOrder", "lotOrder", "drawingLotsOrder", "lotsRank", "lotRank"):
+        value = row.get(key)
+        if value not in (None, ""):
+            return int_value(value)
+    return None
 
 
 def write_official_results(path: Path, official_results: dict[str, Any]) -> None:
