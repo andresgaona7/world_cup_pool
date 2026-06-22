@@ -120,8 +120,31 @@
 
     .comment-stack {
       display: grid;
-      gap: 18px;
+      gap: 28px;
       margin-top: 28px;
+    }
+
+    .comment-day {
+      display: grid;
+      gap: 18px;
+    }
+
+    .comment-day-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border: 4px solid var(--line);
+      background: #fff;
+      box-shadow: 8px 8px 0 var(--line);
+    }
+
+    .comment-day-header h2 {
+      margin: 0;
+      font-size: clamp(1.3rem, 3vw, 2.2rem);
+      line-height: 1;
+      text-transform: uppercase;
     }
 
     .comment-card {
@@ -132,12 +155,12 @@
       box-shadow: 8px 8px 0 var(--line);
     }
 
-    .comment-card:nth-child(2n) {
+    .comment-card:nth-of-type(2n) {
       background: #dff9ff;
       transform: rotate(0.5deg);
     }
 
-    .comment-card:nth-child(3n) {
+    .comment-card:nth-of-type(3n) {
       background: #ffd6ef;
       transform: rotate(-0.5deg);
     }
@@ -145,12 +168,33 @@
     .comment-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
       color: var(--muted);
       font-size: 0.82rem;
       font-weight: 900;
       text-transform: uppercase;
+    }
+
+    .comment-date,
+    .competition-moment {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 8px;
+      border: 3px solid var(--line);
+      color: var(--ink);
+      background: #fff;
+      box-shadow: 3px 3px 0 var(--line);
+    }
+
+    .competition-moment {
+      background: var(--cyan);
+    }
+
+    .comment-author {
+      color: var(--muted);
     }
 
     .comment-card h2 {
@@ -219,53 +263,60 @@
     </section>
 
     <section class="comment-stack" aria-label="Blog comments">
-      <!-- Copy one of these article blocks to add a new manual entry. -->
-      <article class="comment-card">
-        <div class="comment-meta">
-          <span>June 18, 2026</span>
-          <span>Pool Desk</span>
-        </div>
-        <!-- <h2>Pool Desk</h2> -->
-        <p>Elwebo Lavenganza, the revenge tour is currently stuck in customs. One best-third hit is doing all the cardio
-          here while the rest of the picks are sitting in a plastic chair outside the tienda. Türkiye over the U.S.,
-          Ecuador over Germany, Belgium over Iran. Chuta, mi llave, that's not forecasting, that's arguing with the
-          standings like they owe you money.</p>
-      </article>
+      <!-- Add new date groups at the top so the newest comments appear first. -->
+      <section class="comment-day" aria-labelledby="comments-2026-06-18">
+        <header class="comment-day-header">
+          <time class="comment-date" datetime="2026-06-18">June 18, 2026</time>
+          <span class="competition-moment">Group MD1</span>
+          <!-- <h2 id="comments-2026-06-18">June 18 comments</h2> -->
+        </header>
 
-      <article class="comment-card">
-        <div class="comment-meta">
-          <span>June 18, 2026</span>
-          <span>Anonymous Analyst</span>
-        </div>
-        <!-- <h2></h2> -->
-        <p>Paul's picks have big “tranqui, yo sí sé” energy, followed immediately by disaster. South Korea first, Mexico
-          second, South Africa third. Chuta, pana, that's not analysis, that's playing FIFA with the controller
-          unplugged. One best-third hit is the only thing preventing this from being declared patrimonio nacional del
-          sufrimiento.</p>
-      </article>
+        <article class="comment-card">
+          <div class="comment-meta">
+            <span class="comment-author">Pool Desk</span>
+          </div>
+          <!-- <h2>Pool Desk</h2> -->
+          <p>Elwebo Lavenganza, the revenge tour is currently stuck in customs. One best-third hit is doing all the
+            cardio
+            here while the rest of the picks are sitting in a plastic chair outside the tienda. Türkiye over the U.S.,
+            Ecuador over Germany, Belgium over Iran. Chuta, mi llave, that's not forecasting, that's arguing with the
+            standings like they owe you money.</p>
+        </article>
 
-      <article class="comment-card">
-        <div class="comment-meta">
-          <span>June 18, 2026</span>
-          <span>Official Nonsense</span>
-        </div>
-        <h2></h2>
-        <p>“100% sure” 😎 is aging like milk in Quito traffic. Japan first, Iran first, Croatia first, Paraguay first,
-          and one best-third hit. One. The confidence is wearing sunglasses indoors while the score quietly asks to be
-          left out of the group chat. Pana, this wasn't a prediction sheet, it was a TED Talk on overcommitment.</p>
-      </article>
+        <article class="comment-card">
+          <div class="comment-meta">
+            <span class="comment-author">Anonymous Analyst</span>
+          </div>
+          <!-- <h2></h2> -->
+          <p>Paul's picks have big “tranqui, yo sí sé” energy, followed immediately by disaster. South Korea first,
+            Mexico
+            second, South Africa third. Chuta, pana, that's not analysis, that's playing FIFA with the controller
+            unplugged. One best-third hit is the only thing preventing this from being declared patrimonio nacional del
+            sufrimiento.</p>
+        </article>
 
-      <article class="comment-card">
-        <div class="comment-meta">
-          <span>June 18, 2026</span>
-          <span>Bini Yunior</span>
-        </div>
-        <h2></h2>
-        <p>Juan, mi pana, 28 points is not a score, it's a cry for help with spreadsheet formatting. Zero best-third
-          hits.
-          Cero. You picked eight teams and the tournament said, “interesante, pero no.” Canada over Switzerland, Ecuador
-          over Germany, Portugal over Colombia. This was not a bracket, this was Google Maps with no signal</p>
-      </article>
+        <article class="comment-card">
+          <div class="comment-meta">
+            <span class="comment-author">Official Nonsense</span>
+          </div>
+          <h2></h2>
+          <p>“100% sure” 😎 is aging like milk in Quito traffic. Japan first, Iran first, Croatia first, Paraguay first,
+            and one best-third hit. One. The confidence is wearing sunglasses indoors while the score quietly asks to be
+            left out of the group chat. Pana, this wasn't a prediction sheet, it was a TED Talk on overcommitment.</p>
+        </article>
+
+        <article class="comment-card">
+          <div class="comment-meta">
+            <span class="comment-author">Bini Yunior</span>
+          </div>
+          <h2></h2>
+          <p>Juan, mi pana, 28 points is not a score, it's a cry for help with spreadsheet formatting. Zero best-third
+            hits.
+            Cero. You picked eight teams and the tournament said, “interesante, pero no.” Canada over Switzerland,
+            Ecuador
+            over Germany, Portugal over Colombia. This was not a bracket, this was Google Maps with no signal</p>
+        </article>
+      </section>
     </section>
 
     <!-- <div class="manual-note">Edit this file directly: add, remove, or rewrite comment cards in plain HTML.</div> -->
