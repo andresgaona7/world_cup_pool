@@ -469,7 +469,7 @@ function renderRules() {
         officialData
           ? "The page can score either the official provisional standings from data/generated/official_results.js or the pool consensus results."
           : "The workbook export does not include official results yet, so this page uses consensus results derived from the submitted picks.",
-        "Knockout scoring exists in the Python scorer, but knockout predictions are not present in pool_data.js, so this page does not include knockout points.",
+        "Knockout scoring exists in the Python scorer, but this page does not include knockout points yet. Knockout picks are generated separately from the knockout workbook.",
       ],
     },
   ];

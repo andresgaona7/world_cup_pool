@@ -28,6 +28,7 @@ docs/                       Scoring rules and data-flow notes.
 
 ```bash
 make build-pool-data
+make build-knockout-predictions
 make build-consensus-predictions
 make update-official-results
 make apply-manual-futures
@@ -41,6 +42,7 @@ Equivalent direct commands:
 
 ```bash
 python3 scripts/build_pool_data.py
+python3 scripts/build_knockout_predictions.py
 python3 scripts/build_consensus_predictions.py
 python3 scripts/update_official_results.py --transport "${OFFICIAL_RESULTS_TRANSPORT:-auto}"
 python3 scripts/apply_manual_futures.py
@@ -60,6 +62,17 @@ The workbook in `data/raw/group_stage_and_future_predictions.xlsx` is the source
 submitted picks. `scripts/build_pool_data.py` converts it into
 `data/generated/pool_data.js`, which is loaded by
 `apps/player_predictions/index.html`.
+
+The knockout workbooks in `data/raw/knockout_predictions/` are the source of
+truth for knockout picks once those files exist. There is one workbook per
+stage: `round_of_32.xlsx`, `round_of_16.xlsx`, `quarterfinals.xlsx`,
+`semifinals.xlsx`, and `final.xlsx`. `scripts/build_knockout_predictions.py`
+merges them into `data/generated/knockout_predictions.js`, which is loaded by
+the dashboard and score timeline. Until the workbooks are available, the
+builder writes a valid empty prediction artifact. The expected match counts are
+16, 8, 4, 2, and 1, for 31 predicted matches total. Each player sheet needs a
+`Winner` or `Advancing team` column; `Mode`, `Home Score`, `Away Score`, and
+`Match` columns are optional.
 
 `scripts/build_consensus_predictions.py` reshapes `pool_data.js` into a
 consensus JSON export and the standalone `apps/consensus_predictions/index.html`.
@@ -165,13 +178,14 @@ Typical update flow:
 
 ```bash
 make build-pool-data
+make build-knockout-predictions
 make build-consensus-predictions
 make update-official-results
 make apply-manual-futures
 CHECKPOINT=group_md1 make create-official-checkpoint
 make test
 make build-site
-git add data/generated data/manual/official_futures.json data/manual/knockout_predictions.js index.html styles.css apps docs .github/workflows/pages.yml Makefile .gitignore README.md
+git add data/generated data/manual/official_futures.json index.html styles.css apps docs scripts .github/workflows/pages.yml Makefile .gitignore README.md
 git commit -m "Update public pool dashboard"
 git push origin dev
 ```

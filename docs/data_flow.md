@@ -9,6 +9,40 @@ data/raw/group_stage_and_future_predictions.xlsx
   -> apps/player_predictions/index.html
 ```
 
+Knockout predictions follow the same raw-workbook to generated-browser-data
+pattern. Each knockout round is submitted as a separate workbook. Those source
+workbooks are not available yet, so the builder currently writes an empty
+artifact that keeps the static apps loadable:
+
+```text
+data/raw/knockout_predictions/round_of_32.xlsx
+data/raw/knockout_predictions/round_of_16.xlsx
+data/raw/knockout_predictions/quarterfinals.xlsx
+data/raw/knockout_predictions/semifinals.xlsx
+data/raw/knockout_predictions/final.xlsx
+  -> scripts/build_knockout_predictions.py
+  -> data/generated/knockout_predictions.js
+  -> index.html
+  -> apps/score_timeline/index.html
+```
+
+Expected knockout workbook layout:
+
+| Section heading | Matches |
+| --- | ---: |
+| Round of 32 | 16 |
+| Round of 16 | 8 |
+| Quarterfinals | 4 |
+| Semifinals | 2 |
+| Final | 1 |
+
+Each stage workbook should contain one sheet per player, with one row per
+match. A stage heading inside the sheet is optional because the stage is already
+known from the workbook filename. Within each sheet, use a header row with
+`Winner` or `Advancing team`, optional `Mode`, optional `Home Score`, and
+optional `Away Score`. A `Match` column is optional; when it is omitted, match
+IDs are assigned from the official bracket order for that workbook's stage.
+
 Consensus predictions are generated from the browser-ready pool data:
 
 ```text

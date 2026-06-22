@@ -1,7 +1,10 @@
-.PHONY: build-pool-data build-consensus-predictions update-official-results apply-manual-futures create-official-checkpoint rebuild-official-checkpoints build-site test
+.PHONY: build-pool-data build-knockout-predictions build-consensus-predictions update-official-results apply-manual-futures create-official-checkpoint rebuild-official-checkpoints build-site test
 
 build-pool-data:
 	python3 scripts/build_pool_data.py
+
+build-knockout-predictions:
+	python3 scripts/build_knockout_predictions.py
 
 build-consensus-predictions:
 	python3 scripts/build_consensus_predictions.py
@@ -20,11 +23,10 @@ rebuild-official-checkpoints:
 
 build-site:
 	rm -rf public
-	mkdir -p public/data/generated public/data/manual
+	mkdir -p public/data/generated
 	cp index.html styles.css .nojekyll public/
 	cp -R apps public/
-	cp data/generated/consensus_predictions.json data/generated/official_results.js data/generated/pool_data.js public/data/generated/
-	cp data/manual/knockout_predictions.js public/data/manual/
+	cp data/generated/consensus_predictions.json data/generated/knockout_predictions.js data/generated/official_results.js data/generated/pool_data.js public/data/generated/
 
 test:
 	python3 -m unittest discover -s tests

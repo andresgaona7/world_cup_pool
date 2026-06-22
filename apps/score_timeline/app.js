@@ -223,7 +223,7 @@ function normalizeKnockoutPredictions(data) {
     }
     predictions.set(
       playerName,
-      (player.matches || []).filter((match) => match?.matchId)
+      (player.matches || player.predictions || []).filter((match) => match?.matchId)
     );
   });
   return predictions;

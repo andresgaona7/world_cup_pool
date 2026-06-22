@@ -1,4 +1,13 @@
 const data = window.POOL_DATA || { players: [] };
+const knockoutData = window.KNOCKOUT_PREDICTIONS || { stages: [], players: [] };
+
+const KNOCKOUT_STAGE_ORDER = [
+  "round_of_32",
+  "round_of_16",
+  "quarterfinal",
+  "semifinal",
+  "final",
+];
 
 let selectedIndex = 0;
 
@@ -9,6 +18,13 @@ const sheetName = document.querySelector("#sheetName");
 const futuresGrid = document.querySelector("#futuresGrid");
 const firstRoundTable = document.querySelector("#firstRoundTable");
 const bestThirds = document.querySelector("#bestThirds");
+const knockoutStageTargets = {
+  round_of_32: document.querySelector("#knockoutRoundOf32"),
+  round_of_16: document.querySelector("#knockoutRoundOf16"),
+  quarterfinal: document.querySelector("#knockoutQuarterfinal"),
+  semifinal: document.querySelector("#knockoutSemifinal"),
+  final: document.querySelector("#knockoutFinal"),
+};
 const sections = document.querySelectorAll(".section");
 
 playerSelect.addEventListener("change", (event) => {
@@ -52,6 +68,7 @@ function render() {
     futuresGrid.replaceChildren();
     firstRoundTable.replaceChildren();
     bestThirds.replaceChildren();
+    clearKnockoutStages();
     setSectionsHidden(true);
     showStatus(
       window.POOL_DATA_LOAD_ERROR
@@ -71,6 +88,7 @@ function render() {
   renderFutures(player);
   renderFirstRound(player);
   renderBestThirds(player);
+  renderKnockoutPredictions(player);
 }
 
 function renderFutures(player) {
@@ -137,6 +155,125 @@ function renderBestThirds(player) {
 
   table.append(tbody);
   bestThirds.replaceChildren(table);
+}
+
+function renderKnockoutPredictions(player) {
+  const knockoutPlayer = findKnockoutPlayer(player.name);
+  const matches = knockoutPlayer?.matches || [];
+  const stages = knockoutStages();
+
+  if (window.KNOCKOUT_DATA_LOAD_ERROR) {
+    renderKnockoutError();
+    return;
+  }
+
+  stages.forEach((stage) => {
+    const target = knockoutStageTargets[stage.stage];
+    if (!target) {
+      return;
+    }
+    target.replaceChildren(...knockoutStageContent(stage, matches));
+  });
+}
+
+function knockoutStageContent(stage, matches) {
+  const stageMatches = matches.filter((match) => match.stage === stage.stage);
+
+  const count = document.createElement("span");
+  count.className = "knockout-stage-count";
+  count.textContent = `${stageMatches.length}/${stage.expectedMatchCount || stageMatches.length} picks`;
+
+  if (!stageMatches.length) {
+    const message = document.createElement("p");
+    message.className = "empty-note";
+    message.textContent = "No picks recorded.";
+    return [count, message];
+  }
+
+  const wrap = document.createElement("div");
+  wrap.className = "knockout-table-wrap";
+
+  const table = document.createElement("table");
+  table.className = "knockout-table";
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th scope="col">Match</th>
+        <th scope="col">Pick</th>
+        <th scope="col">Score</th>
+        <th scope="col">Mode</th>
+      </tr>
+    </thead>
+  `;
+
+  const tbody = document.createElement("tbody");
+  tbody.replaceChildren(
+    ...stageMatches.map((match) => {
+      const tr = document.createElement("tr");
+      [
+        `Match ${match.matchId}`,
+        match.predictedAdvancingTeam || "Blank",
+        scoreText(match),
+        modeText(match.mode),
+      ].forEach((value) => {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.append(td);
+      });
+      return tr;
+    })
+  );
+  table.append(tbody);
+  wrap.append(table);
+  return [count, wrap];
+}
+
+function renderKnockoutError() {
+  Object.values(knockoutStageTargets).forEach((target) => {
+    const message = document.createElement("p");
+    message.className = "empty-note";
+    message.textContent =
+      "Knockout prediction data failed to load. Confirm data/generated/knockout_predictions.js is included in the GitHub Pages artifact.";
+    target.replaceChildren(message);
+  });
+}
+
+function clearKnockoutStages() {
+  Object.values(knockoutStageTargets).forEach((target) => {
+    target.replaceChildren();
+  });
+}
+
+function knockoutStages() {
+  const byKey = new Map(
+    (knockoutData.stages || []).map((stage) => [stage.stage, stage])
+  );
+  return KNOCKOUT_STAGE_ORDER.map((stage) => byKey.get(stage)).filter(Boolean);
+}
+
+function findKnockoutPlayer(name) {
+  const normalizedName = normalizeName(name);
+  return (knockoutData.players || []).find(
+    (player) => normalizeName(player.name) === normalizedName
+  );
+}
+
+function normalizeName(name) {
+  return String(name || "").trim().toLowerCase();
+}
+
+function scoreText(match) {
+  if (match.homeScore === undefined && match.awayScore === undefined) {
+    return "Blank";
+  }
+  return `${match.homeScore ?? "-"}-${match.awayScore ?? "-"}`;
+}
+
+function modeText(mode) {
+  if (mode === "score") {
+    return "Score";
+  }
+  return "Winner only";
 }
 
 function displayCellValue(value) {
