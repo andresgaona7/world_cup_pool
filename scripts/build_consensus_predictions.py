@@ -424,6 +424,7 @@ def render_visualization(consensus: dict) -> str:
         <a href="../third_places/index.html">Third places</a>
         <a href="../score_timeline/index.html">Official results</a>
         <a href="../blog/index.html">Blog</a>
+        <a href="../legacy/index.html">Legacy</a>
       </nav>
     </div>
   </header>

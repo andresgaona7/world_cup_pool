@@ -74,8 +74,14 @@ Score mode:
 
 ## Bonuses
 
-| Bonus | Points |
-| --- | ---: |
-| Perfect knockout winners | 50 |
-| Perfect knockout scores | 200 |
-| Perfect futures card | 75 |
+| Bonus | Round of 32 | Round of 16 | Quarterfinal | Semifinal |
+| --- | ---: | ---: | ---: | ---: |
+| Perfect knockout winners | 10 | 15 | 25 | 40 |
+| Perfect knockout scores | 30 | 45 | 75 | 120 |
+
+Perfect knockout bonuses are calculated separately once each eligible knockout
+stage is complete: Round of 32, Round of 16, Quarterfinal, and Semifinal. The
+Third-place match and Final do not award perfect knockout winner or perfect
+knockout score bonuses.
+
+Perfect futures card bonus: 75 points.

@@ -28,6 +28,25 @@ const KNOCKOUT_BASE_POINTS = {
   final: 20,
 };
 const KNOCKOUT_STAGE_ORDER = Object.fromEntries(Object.keys(KNOCKOUT_BASE_POINTS).map((stage, index) => [stage, index]));
+const KNOCKOUT_PERFECT_BONUS_STAGES = new Set(["round_of_32", "round_of_16", "quarterfinal", "semifinal"]);
+const KNOCKOUT_STAGE_MATCH_COUNTS = {
+  round_of_32: 16,
+  round_of_16: 8,
+  quarterfinal: 4,
+  semifinal: 2,
+};
+const KNOCKOUT_PERFECT_WINNER_BONUS_POINTS = {
+  round_of_32: 10,
+  round_of_16: 15,
+  quarterfinal: 25,
+  semifinal: 40,
+};
+const KNOCKOUT_PERFECT_SCORE_BONUS_POINTS = {
+  round_of_32: 30,
+  round_of_16: 45,
+  quarterfinal: 75,
+  semifinal: 120,
+};
 const KNOCKOUT_STAGE_LABELS = {
   round_of_32: "Round of 32",
   round_of_16: "Round of 16",
@@ -36,9 +55,7 @@ const KNOCKOUT_STAGE_LABELS = {
   third_place_match: "Third-place match",
   final: "Final",
 };
-
-const PERFECT_KNOCKOUT_WINNERS_BONUS = 50;
-const PERFECT_KNOCKOUT_SCORES_BONUS = 200;
+const LEADERBOARD_KNOCKOUT_STAGES = Object.keys(KNOCKOUT_BASE_POINTS);
 
 const STAGES = [
   ["group_stage", "Group stage"],
@@ -583,7 +600,7 @@ function renderComparison() {
       comparisonOperator("+"),
       comparisonMetric("Best-third overlap", `${formatPoints(bestThirdPoints)} pts (${bestThirdMatches}/${comparisonScenario.bestThirds.length || 0})`),
       comparisonOperator("="),
-      comparisonMetric("First-round score", `${formatPoints(groupPoints + bestThirdPoints)} pts`)
+      comparisonMetric("Group Stage", `${formatPoints(groupPoints + bestThirdPoints)} pts`)
     )
   );
 
@@ -731,10 +748,19 @@ function renderKnockoutComparison() {
 
 function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
   const stageRows = rows.filter((row) => row.stage === stage);
-  const stageTotal = stageRows.reduce((total, row) => total + row.points, 0);
+  const stageScore = scoreKnockoutStage(selectedPlayer, stage);
+  const stageTotal = stageScore.points + stageScore.bonus;
   const hasStageResults = stageRows.length > 0;
   const basePoints = KNOCKOUT_BASE_POINTS[stage] || 0;
-  const earnedMultiplier = basePoints ? stageTotal / basePoints : 0;
+  const earnedMultiplier = basePoints ? stageScore.points / basePoints : 0;
+  const bonusEquation = KNOCKOUT_PERFECT_BONUS_STAGES.has(stage)
+    ? `
+          <span class="comparison-operator">+</span>
+          ${comparisonMetricHtml("Perfect winners bonus", `${formatPoints(stageScore.perfectWinnersBonus)} pts`)}
+          <span class="comparison-operator">+</span>
+          ${comparisonMetricHtml("Perfect scores bonus", `${formatPoints(stageScore.perfectScoresBonus)} pts`)}
+      `
+    : "";
 
   return `
     <section class="panel knockout-stage-panel">
@@ -749,6 +775,7 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
           ${comparisonMetricHtml("Base points", `${formatPoints(basePoints)} pts`)}
           <span class="comparison-operator">x</span>
           ${comparisonMetricHtml("Earned multiplier", `${formatMultiplier(earnedMultiplier)}x`)}
+          ${bonusEquation}
           <span class="comparison-operator">=</span>
           ${comparisonMetricHtml("Knockout score", `${formatPoints(stageTotal)} pts`)}
         </div>
@@ -1326,8 +1353,8 @@ function renderLeaderboard() {
         <th class="rank">#</th>
         <th>Player</th>
         <th>Total</th>
-        <th>First-round score</th>
-        <th>Knockouts</th>
+        <th>Group Stage</th>
+        ${LEADERBOARD_KNOCKOUT_STAGES.map((stage) => `<th>${escapeHtml(knockoutStageLabel(stage))}</th>`).join("")}
         <th>Futures</th>
       </tr>
     </thead>
@@ -1342,10 +1369,10 @@ function renderLeaderboard() {
               aria-selected="${row.playerIndex === comparisonPlayerIndex ? "true" : "false"}"
             >
               <td class="rank">${index + 1}</td>
-              <td><strong>${escapeHtml(row.name)}</strong><br><span class="muted">${escapeHtml(row.sheet)}</span></td>
+              <td class="player-cell"><strong class="player-name">${escapeHtml(row.name)}</strong><br><span class="muted">${escapeHtml(row.sheet)}</span></td>
               <td class="total">${formatPoints(row.total)}</td>
               <td>${formatPoints(row.firstRound)}</td>
-              <td>${formatPoints(row.knockout)}</td>
+              ${LEADERBOARD_KNOCKOUT_STAGES.map((stage) => `<td>${formatPoints(row.knockoutStages[stage] || 0)}</td>`).join("")}
               <td>${formatPoints(row.futures)}</td>
             </tr>
           `
@@ -1372,6 +1399,12 @@ function scoreAllPlayers() {
       const group = scoreGroups(player);
       const bestThirds = scoreBestThirds(player);
       const knockoutScore = scoreKnockout(player);
+      const knockoutStages = Object.fromEntries(
+        LEADERBOARD_KNOCKOUT_STAGES.map((stage) => {
+          const stageScore = scoreKnockoutStage(player, stage);
+          return [stage, stageScore.points + stageScore.bonus];
+        })
+      );
       const futuresScore = scoreFutures(player);
       const firstRound = group + bestThirds;
       const total = firstRound + knockoutScore.points + knockoutScore.bonus + futuresScore.points + futuresScore.bonus;
@@ -1383,6 +1416,7 @@ function scoreAllPlayers() {
         bestThirds,
         firstRound,
         knockout: knockoutScore.points + knockoutScore.bonus,
+        knockoutStages,
         futures: futuresScore.points,
         bonus: knockoutScore.bonus + futuresScore.bonus,
         total,
@@ -1430,13 +1464,30 @@ function scoreBestThirds(player) {
 }
 
 function scoreKnockout(player) {
+  const stageScores = Object.keys(KNOCKOUT_BASE_POINTS).map((stage) => scoreKnockoutStage(player, stage));
+  const points = stageScores.reduce((total, stageScore) => total + stageScore.points, 0);
+  const perfectWinnersBonus = stageScores.reduce((total, stageScore) => total + stageScore.perfectWinnersBonus, 0);
+  const perfectScoresBonus = stageScores.reduce((total, stageScore) => total + stageScore.perfectScoresBonus, 0);
+  return {
+    points,
+    bonus: perfectWinnersBonus + perfectScoresBonus,
+    perfectWinnersBonus,
+    perfectScoresBonus,
+  };
+}
+
+function scoreKnockoutStage(player, stage) {
   const predictions = knockoutPredictionsByPlayer.get(player?.name || "") || [];
   const predictionByMatch = new Map(predictions.map((prediction) => [prediction.matchId, prediction]));
+  const stageMatches = officialKnockoutMatches.filter((match) => match.stage === stage);
   let points = 0;
-  let perfectWinnersPossible = officialKnockoutMatches.length > 0;
-  let perfectScoresPossible = officialKnockoutMatches.length > 0;
+  const completeBonusStage =
+    KNOCKOUT_PERFECT_BONUS_STAGES.has(stage) &&
+    stageMatches.length === KNOCKOUT_STAGE_MATCH_COUNTS[stage];
+  let perfectWinnersPossible = completeBonusStage;
+  let perfectScoresPossible = completeBonusStage;
 
-  officialKnockoutMatches.forEach((result) => {
+  stageMatches.forEach((result) => {
     const prediction = predictionByMatch.get(result.matchId);
     if (!prediction) {
       perfectWinnersPossible = false;
@@ -1460,8 +1511,8 @@ function scoreKnockout(player) {
     }
   });
 
-  const perfectWinnersBonus = perfectWinnersPossible ? PERFECT_KNOCKOUT_WINNERS_BONUS : 0;
-  const perfectScoresBonus = perfectScoresPossible ? PERFECT_KNOCKOUT_SCORES_BONUS : 0;
+  const perfectWinnersBonus = perfectWinnersPossible ? KNOCKOUT_PERFECT_WINNER_BONUS_POINTS[stage] : 0;
+  const perfectScoresBonus = perfectScoresPossible ? KNOCKOUT_PERFECT_SCORE_BONUS_POINTS[stage] : 0;
   return {
     points,
     bonus: perfectWinnersBonus + perfectScoresBonus,

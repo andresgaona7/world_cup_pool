@@ -27,6 +27,25 @@ const KNOCKOUT_BASE_POINTS = {
   third_place_match: 14,
   final: 20,
 };
+const KNOCKOUT_PERFECT_BONUS_STAGES = new Set(["round_of_32", "round_of_16", "quarterfinal", "semifinal"]);
+const KNOCKOUT_STAGE_MATCH_COUNTS = {
+  round_of_32: 16,
+  round_of_16: 8,
+  quarterfinal: 4,
+  semifinal: 2,
+};
+const KNOCKOUT_PERFECT_WINNER_BONUS_POINTS = {
+  round_of_32: 10,
+  round_of_16: 15,
+  quarterfinal: 25,
+  semifinal: 40,
+};
+const KNOCKOUT_PERFECT_SCORE_BONUS_POINTS = {
+  round_of_32: 30,
+  round_of_16: 45,
+  quarterfinal: 75,
+  semifinal: 120,
+};
 
 const STAGES = [
   ["group_stage", "Group stage"],
@@ -676,20 +695,57 @@ function scoreBestThirds(player, scenario) {
 }
 
 function scoreKnockout(player, officialMatches) {
+  const resultMatches = officialMatches.filter((match) => match.stage in KNOCKOUT_BASE_POINTS);
+  const stageScores = Object.keys(KNOCKOUT_BASE_POINTS).map((stage) =>
+    scoreKnockoutStage(player, stage, resultMatches)
+  );
+  const points = stageScores.reduce((total, stageScore) => total + stageScore.points, 0);
+  const bonus = stageScores.reduce((total, stageScore) => total + stageScore.bonus, 0);
+
+  return { points, bonus };
+}
+
+function scoreKnockoutStage(player, stage, officialMatches) {
   const predictions = knockoutPredictionsByPlayer.get(player.name) || [];
   const predictionByMatch = new Map(predictions.map((prediction) => [prediction.matchId, prediction]));
-  const resultMatches = officialMatches.filter((match) => match.stage in KNOCKOUT_BASE_POINTS);
+  const stageMatches = officialMatches.filter((match) => match.stage === stage);
   let points = 0;
+  const completeBonusStage =
+    KNOCKOUT_PERFECT_BONUS_STAGES.has(stage) &&
+    stageMatches.length === KNOCKOUT_STAGE_MATCH_COUNTS[stage];
+  let perfectWinnersPossible = completeBonusStage;
+  let perfectScoresPossible = completeBonusStage;
 
-  resultMatches.forEach((result) => {
+  stageMatches.forEach((result) => {
     const prediction = predictionByMatch.get(result.matchId);
     if (!prediction) {
+      perfectWinnersPossible = false;
+      perfectScoresPossible = false;
       return;
     }
+
     points += scoreKnockoutMatch(prediction, result);
+
+    const predictedAdvancingTeam = prediction.winner || prediction.advancingTeam || prediction.predictedAdvancingTeam || "";
+    if (predictedAdvancingTeam !== result.advancingTeam) {
+      perfectWinnersPossible = false;
+    }
+
+    const exactScore =
+      numberOrNull(prediction.homeScore) === result.homeScore &&
+      numberOrNull(prediction.awayScore) === result.awayScore &&
+      predictedAdvancingTeam === result.advancingTeam;
+    if (!exactScore) {
+      perfectScoresPossible = false;
+    }
   });
 
-  return { points, bonus: 0 };
+  const perfectWinnersBonus = perfectWinnersPossible ? KNOCKOUT_PERFECT_WINNER_BONUS_POINTS[stage] : 0;
+  const perfectScoresBonus = perfectScoresPossible ? KNOCKOUT_PERFECT_SCORE_BONUS_POINTS[stage] : 0;
+  return {
+    points,
+    bonus: perfectWinnersBonus + perfectScoresBonus,
+  };
 }
 
 function scoreKnockoutMatch(prediction, result) {

@@ -340,6 +340,14 @@ td {
   font-weight: 800;
 }
 
+.player-cell {
+  white-space: nowrap;
+}
+
+.player-name {
+  white-space: nowrap;
+}
+
 .total {
   font-weight: 850;
   color: var(--accent);

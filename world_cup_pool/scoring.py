@@ -11,9 +11,11 @@ from .constants import (
     FAVORITE_LAST_ROUND_EXACT_POINTS,
     FAVORITE_LAST_ROUND_OFF_BY_ONE_POINTS,
     KNOCKOUT_BASE_POINTS,
+    KNOCKOUT_PERFECT_BONUS_STAGES,
+    KNOCKOUT_PERFECT_SCORE_BONUS_POINTS,
+    KNOCKOUT_PERFECT_WINNER_BONUS_POINTS,
+    KNOCKOUT_STAGE_MATCH_COUNTS,
     PERFECT_FUTURES_BONUS,
-    PERFECT_KNOCKOUT_SCORES_BONUS,
-    PERFECT_KNOCKOUT_WINNERS_BONUS,
     REVERSED_FINAL_PAIRING_POINTS,
     RUNNER_UP_POINTS,
     STAGE_ORDER,
@@ -146,39 +148,50 @@ def score_knockout_predictions(
     total = 0.0
     details: dict[str, float] = {}
 
-    perfect_winners_possible = bool(result_by_match)
-    perfect_scores_possible = bool(result_by_match)
-
     for match_id, result in result_by_match.items():
         prediction = prediction_by_match.get(match_id)
         if prediction is None:
-            perfect_winners_possible = False
-            perfect_scores_possible = False
             continue
 
         points = score_knockout_prediction(prediction, result)
         details[f"knockout:{match_id}"] = points
         total += points
 
-        if prediction.predicted_advancing_team != result.advancing_team:
-            perfect_winners_possible = False
+    bonuses = 0.0
+    for stage in KNOCKOUT_PERFECT_BONUS_STAGES:
+        stage_results = tuple(result for result in result_by_match.values() if result.stage == stage)
+        if len(stage_results) != KNOCKOUT_STAGE_MATCH_COUNTS[stage]:
+            continue
 
-        exact_score = (
-            prediction.mode == PredictionMode.SCORE
+        stage_predictions = [
+            prediction_by_match.get(result.match_id) for result in stage_results
+        ]
+        perfect_winners = all(
+            prediction is not None
+            and prediction.predicted_advancing_team == result.advancing_team
+            for prediction, result in zip(stage_predictions, stage_results, strict=True)
+        )
+        perfect_scores = all(
+            prediction is not None
+            and prediction.mode == PredictionMode.SCORE
             and prediction.predicted_home_score == result.home_score
             and prediction.predicted_away_score == result.away_score
             and prediction.predicted_advancing_team == result.advancing_team
+            for prediction, result in zip(stage_predictions, stage_results, strict=True)
         )
-        if not exact_score:
-            perfect_scores_possible = False
 
-    bonuses = 0.0
-    if perfect_winners_possible:
-        bonuses += PERFECT_KNOCKOUT_WINNERS_BONUS
-        details["bonus:perfect_knockout_winners"] = PERFECT_KNOCKOUT_WINNERS_BONUS
-    if perfect_scores_possible:
-        bonuses += PERFECT_KNOCKOUT_SCORES_BONUS
-        details["bonus:perfect_knockout_scores"] = PERFECT_KNOCKOUT_SCORES_BONUS
+        if perfect_winners:
+            winners_bonus = KNOCKOUT_PERFECT_WINNER_BONUS_POINTS[stage]
+            bonuses += winners_bonus
+            details[f"bonus:perfect_knockout_winners:{stage.value}"] = (
+                winners_bonus
+            )
+        if perfect_scores:
+            scores_bonus = KNOCKOUT_PERFECT_SCORE_BONUS_POINTS[stage]
+            bonuses += scores_bonus
+            details[f"bonus:perfect_knockout_scores:{stage.value}"] = (
+                scores_bonus
+            )
 
     return total, bonuses, details
 

@@ -147,8 +147,8 @@ class LeaderboardTests(unittest.TestCase):
         self.assertEqual(leaderboard[0].breakdown.group, 14.0)
         self.assertEqual(leaderboard[0].breakdown.knockout, 50.0)
         self.assertEqual(leaderboard[0].breakdown.futures, 265.0)
-        self.assertEqual(leaderboard[0].breakdown.bonuses, 325.0)
-        self.assertEqual(leaderboard[0].total, 654.0)
+        self.assertEqual(leaderboard[0].breakdown.bonuses, 75.0)
+        self.assertEqual(leaderboard[0].total, 404.0)
 
 
 if __name__ == "__main__":

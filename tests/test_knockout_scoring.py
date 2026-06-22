@@ -126,11 +126,88 @@ class KnockoutScoringTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "require both home and away scores"):
             score_knockout_prediction(prediction, result)
 
-    def test_perfect_knockout_winner_and_score_bonuses(self):
+    def test_perfect_knockout_winner_and_score_bonuses_apply_per_eligible_stage(self):
         results = (
             KnockoutMatchResult(
-                match_id="F",
-                stage=Stage.FINAL,
+                match_id="QF-1",
+                stage=Stage.QUARTERFINAL,
+                home_team="Brazil",
+                away_team="France",
+                home_score=2,
+                away_score=0,
+                advancing_team="Brazil",
+            ),
+            KnockoutMatchResult(
+                match_id="QF-2",
+                stage=Stage.QUARTERFINAL,
+                home_team="Argentina",
+                away_team="Spain",
+                home_score=1,
+                away_score=0,
+                advancing_team="Argentina",
+            ),
+            KnockoutMatchResult(
+                match_id="QF-3",
+                stage=Stage.QUARTERFINAL,
+                home_team="Germany",
+                away_team="England",
+                home_score=0,
+                away_score=0,
+                advancing_team="England",
+            ),
+            KnockoutMatchResult(
+                match_id="QF-4",
+                stage=Stage.QUARTERFINAL,
+                home_team="Japan",
+                away_team="Mexico",
+                home_score=3,
+                away_score=2,
+                advancing_team="Japan",
+            ),
+        )
+        predictions = (
+            KnockoutPrediction(
+                match_id="QF-1",
+                mode=PredictionMode.SCORE,
+                predicted_home_score=2,
+                predicted_away_score=0,
+                predicted_advancing_team="Brazil",
+            ),
+            KnockoutPrediction(
+                match_id="QF-2",
+                mode=PredictionMode.SCORE,
+                predicted_home_score=1,
+                predicted_away_score=0,
+                predicted_advancing_team="Argentina",
+            ),
+            KnockoutPrediction(
+                match_id="QF-3",
+                mode=PredictionMode.SCORE,
+                predicted_home_score=0,
+                predicted_away_score=0,
+                predicted_advancing_team="England",
+            ),
+            KnockoutPrediction(
+                match_id="QF-4",
+                mode=PredictionMode.SCORE,
+                predicted_home_score=3,
+                predicted_away_score=2,
+                predicted_advancing_team="Japan",
+            ),
+        )
+
+        points, bonuses, details = score_knockout_predictions(predictions, results)
+
+        self.assertEqual(points, 100.0)
+        self.assertEqual(bonuses, 100.0)
+        self.assertEqual(details["bonus:perfect_knockout_winners:quarterfinal"], 25.0)
+        self.assertEqual(details["bonus:perfect_knockout_scores:quarterfinal"], 75.0)
+
+    def test_perfect_knockout_stage_bonus_waits_for_complete_stage(self):
+        results = (
+            KnockoutMatchResult(
+                match_id="QF-1",
+                stage=Stage.QUARTERFINAL,
                 home_team="Brazil",
                 away_team="France",
                 home_score=2,
@@ -140,7 +217,7 @@ class KnockoutScoringTests(unittest.TestCase):
         )
         predictions = (
             KnockoutPrediction(
-                match_id="F",
+                match_id="QF-1",
                 mode=PredictionMode.SCORE,
                 predicted_home_score=2,
                 predicted_away_score=0,
@@ -150,10 +227,57 @@ class KnockoutScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_knockout_predictions(predictions, results)
 
-        self.assertEqual(points, 50.0)
-        self.assertEqual(bonuses, 250.0)
-        self.assertEqual(details["bonus:perfect_knockout_winners"], 50.0)
-        self.assertEqual(details["bonus:perfect_knockout_scores"], 200.0)
+        self.assertEqual(points, 25.0)
+        self.assertEqual(bonuses, 0.0)
+        self.assertNotIn("bonus:perfect_knockout_winners:quarterfinal", details)
+        self.assertNotIn("bonus:perfect_knockout_scores:quarterfinal", details)
+
+    def test_perfect_knockout_bonuses_exclude_final_and_third_place_match(self):
+        results = (
+            KnockoutMatchResult(
+                match_id="3P",
+                stage=Stage.THIRD_PLACE_MATCH,
+                home_team="Brazil",
+                away_team="France",
+                home_score=2,
+                away_score=0,
+                advancing_team="Brazil",
+            ),
+            KnockoutMatchResult(
+                match_id="F",
+                stage=Stage.FINAL,
+                home_team="Argentina",
+                away_team="Spain",
+                home_score=1,
+                away_score=0,
+                advancing_team="Argentina",
+            ),
+        )
+        predictions = (
+            KnockoutPrediction(
+                match_id="3P",
+                mode=PredictionMode.SCORE,
+                predicted_home_score=2,
+                predicted_away_score=0,
+                predicted_advancing_team="Brazil",
+            ),
+            KnockoutPrediction(
+                match_id="F",
+                mode=PredictionMode.SCORE,
+                predicted_home_score=1,
+                predicted_away_score=0,
+                predicted_advancing_team="Argentina",
+            ),
+        )
+
+        points, bonuses, details = score_knockout_predictions(predictions, results)
+
+        self.assertEqual(points, 85.0)
+        self.assertEqual(bonuses, 0.0)
+        self.assertNotIn("bonus:perfect_knockout_winners:third_place_match", details)
+        self.assertNotIn("bonus:perfect_knockout_scores:third_place_match", details)
+        self.assertNotIn("bonus:perfect_knockout_winners:final", details)
+        self.assertNotIn("bonus:perfect_knockout_scores:final", details)
 
 
 if __name__ == "__main__":
