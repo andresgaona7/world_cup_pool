@@ -118,6 +118,48 @@ class ApplyManualFuturesTests(unittest.TestCase):
         )
         self.assertEqual(apply_manual_futures.fair_play_points(fair_play["Türkiye"]), -5)
 
+    def test_group_order_override_updates_results_and_best_thirds(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manual_path, official_path = self.write_fixture(temp_dir)
+            fair_play_path = Path(temp_dir) / "official_fair_play.json"
+            fair_play_path.write_text(
+                json.dumps(
+                    {
+                        "teams": {},
+                        "groupOrder": {
+                            "A": ["Mexico", "Czechia", "South Korea"],
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            apply_manual_futures.apply_manual_futures(
+                manual_futures_path=manual_path,
+                manual_fair_play_path=fair_play_path,
+                official_results_path=official_path,
+            )
+
+            official_results = apply_manual_futures.read_official_results(official_path)
+
+        self.assertEqual(
+            [row["team"] for row in official_results["provisionalGroupStandings"]["A"]],
+            ["Mexico", "Czechia", "South Korea"],
+        )
+        self.assertEqual(
+            [row["position"] for row in official_results["provisionalGroupStandings"]["A"]],
+            [1, 2, 3],
+        )
+        self.assertEqual(
+            official_results["groupResults"]["A"],
+            ["Mexico", "Czechia", "South Korea"],
+        )
+        self.assertEqual(
+            official_results["timelineCheckpoints"][0]["scenario"]["groupResults"]["A"],
+            ["Mexico", "Czechia", "South Korea"],
+        )
+        self.assertEqual(official_results["bestThirds"], ["South Korea", "Qatar"])
+
     def write_fixture(self, temp_dir):
         temp_path = Path(temp_dir)
         manual_path = temp_path / "official_futures.json"

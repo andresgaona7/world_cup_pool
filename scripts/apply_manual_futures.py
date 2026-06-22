@@ -4,11 +4,15 @@
 from __future__ import annotations
 
 import argparse
-import functools
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPT_DIR))
+import official_rankings
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -107,7 +111,7 @@ def apply_manual_futures(
     verbose: bool = False,
 ) -> None:
     manual_futures = read_manual_futures(manual_futures_path)
-    manual_fair_play = read_manual_fair_play(manual_fair_play_path)
+    manual_adjustments = official_rankings.read_manual_adjustments(manual_fair_play_path)
     official_results = read_official_results(official_results_path)
     current_futures = normalize_futures(official_results.get("futures"))
 
@@ -120,7 +124,10 @@ def apply_manual_futures(
         },
     }
     official_results["futures"] = merged_futures
-    apply_manual_fair_play(official_results, manual_fair_play)
+    official_rankings.apply_manual_adjustments(official_results, manual_adjustments)
+    has_group_order_overrides = bool(manual_adjustments.get("groupOrder"))
+    if has_group_order_overrides:
+        update_group_results(official_results)
     update_best_thirds(official_results)
 
     for checkpoint in official_results.get("timelineCheckpoints", []):
@@ -130,6 +137,8 @@ def apply_manual_futures(
         if not isinstance(scenario, dict):
             continue
         scenario["futures"] = merged_futures
+        if has_group_order_overrides:
+            update_scenario_group_results(scenario, official_results)
         update_scenario_best_thirds(scenario, official_results)
 
     write_official_results(official_results_path, official_results)
@@ -182,59 +191,24 @@ def read_official_results(path: Path) -> dict[str, Any]:
 
 
 def read_manual_fair_play(path: Path) -> dict[str, dict[str, int]]:
-    if not path.exists():
-        return {}
-
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
-        raise ValueError(f"{display_path(path)} must contain a JSON object")
-
-    teams = payload.get("teams", payload)
-    if not isinstance(teams, dict):
-        raise ValueError(f"{display_path(path)} must contain a teams object")
-
-    manual_fair_play = {}
-    for team_name, values in teams.items():
-        if not isinstance(team_name, str) or not team_name.strip():
-            continue
-        if not isinstance(values, dict):
-            raise ValueError(f"fair-play data for {team_name!r} must be an object")
-
-        normalized_values = {}
-        for key in FAIR_PLAY_KEYS:
-            if key in values and values[key] not in (None, ""):
-                normalized_values[key] = int_value(values[key])
-        if normalized_values:
-            manual_fair_play[canonical_team_name(team_name.strip())] = normalized_values
-
-    return manual_fair_play
+    return official_rankings.read_manual_adjustments(path)["teams"]
 
 
 def apply_manual_fair_play(
     official_results: dict[str, Any],
     manual_fair_play: dict[str, dict[str, int]],
 ) -> None:
-    if not manual_fair_play:
-        return
-
-    standings = official_results.get("provisionalGroupStandings", {})
-    if isinstance(standings, dict):
-        for rows in standings.values():
-            if isinstance(rows, list):
-                apply_manual_fair_play_to_rows(rows, manual_fair_play)
-
-    overall_standings = official_results.get("overallStandings", [])
-    if isinstance(overall_standings, list):
-        apply_manual_fair_play_to_rows(overall_standings, manual_fair_play)
+    official_rankings.apply_manual_adjustments(
+        official_results,
+        {"teams": manual_fair_play, "groupOrder": {}},
+    )
 
 
 def apply_manual_fair_play_to_rows(
     rows: list[dict[str, Any]],
     manual_fair_play: dict[str, dict[str, int]],
 ) -> None:
-    for row in rows:
-        if isinstance(row, dict):
-            row.update(manual_fair_play.get(row.get("team", ""), {}))
+    official_rankings.apply_manual_team_values_to_rows(rows, manual_fair_play)
 
 
 def update_best_thirds(official_results: dict[str, Any]) -> None:
@@ -245,6 +219,35 @@ def update_best_thirds(official_results: dict[str, Any]) -> None:
     best_thirds = ranked_best_thirds(standings)
     if best_thirds:
         official_results["bestThirds"] = best_thirds
+
+
+def update_group_results(official_results: dict[str, Any]) -> None:
+    standings = official_results.get("provisionalGroupStandings", {})
+    if not isinstance(standings, dict):
+        return
+
+    official_results["groupResults"] = group_results_from_standings(standings)
+
+
+def update_scenario_group_results(
+    scenario: dict[str, Any],
+    official_results: dict[str, Any],
+) -> None:
+    standings = official_results.get("provisionalGroupStandings", {})
+    if not isinstance(standings, dict):
+        return
+
+    scenario["groupResults"] = group_results_from_standings(standings)
+
+
+def group_results_from_standings(standings: dict[str, Any]) -> dict[str, list[str]]:
+    return {
+        group_id: [
+            row["team"]
+            for row in official_rankings.normalize_group_rows(standings.get(group_id, []))[:3]
+        ]
+        for group_id in GROUP_IDS
+    }
 
 
 def update_scenario_best_thirds(
@@ -261,69 +264,27 @@ def update_scenario_best_thirds(
 
 
 def ranked_best_thirds(standings: dict[str, Any]) -> list[str]:
-    thirds = []
-    for group_index, group_id in enumerate(GROUP_IDS):
-        rows = normalize_group_rows(standings.get(group_id, []))
-        if len(rows) >= 3:
-            thirds.append({**rows[2], "_groupIndex": group_index})
-
-    return [
-        row["team"]
-        for row in sorted(thirds, key=functools.cmp_to_key(compare_third_places))[:8]
-    ]
+    return official_rankings.ranked_best_thirds(standings)
 
 
 def normalize_group_rows(rows: Any) -> list[dict[str, Any]]:
-    if not isinstance(rows, list):
-        return []
-    return sorted(
-        [row for row in rows if isinstance(row, dict) and row.get("team")],
-        key=lambda row: (
-            int_value(row.get("position")) or 999,
-            -int_value(row.get("points")),
-            -int_value(row.get("goalDifference")),
-            -int_value(row.get("goalsFor")),
-            row.get("team", ""),
-        ),
-    )
+    return official_rankings.normalize_group_rows(rows)
 
 
 def fair_play_points(row: dict[str, Any]) -> int:
-    if "fairPlayPoints" in row:
-        return int_value(row.get("fairPlayPoints"))
-    return (
-        -1 * int_value(row.get("yellowCards"))
-        -3 * int_value(row.get("indirectRedCards"))
-        -4 * int_value(row.get("directRedCards"))
-        -5 * int_value(row.get("yellowDirectRedCards"))
-    )
+    return official_rankings.fair_play_points(row)
 
 
 def compare_third_places(left: dict[str, Any], right: dict[str, Any]) -> int:
-    return (
-        int_value(right.get("points")) - int_value(left.get("points"))
-        or int_value(right.get("goalDifference")) - int_value(left.get("goalDifference"))
-        or int_value(right.get("goalsFor")) - int_value(left.get("goalsFor"))
-        or fair_play_points(right) - fair_play_points(left)
-        or compare_lots(left, right)
-        or int_value(left.get("_groupIndex")) - int_value(right.get("_groupIndex"))
-    )
+    return official_rankings.compare_third_places(left, right)
 
 
 def compare_lots(left: dict[str, Any], right: dict[str, Any]) -> int:
-    left_lots = lots_order(left)
-    right_lots = lots_order(right)
-    if left_lots is None or right_lots is None:
-        return 0
-    return left_lots - right_lots
+    return official_rankings.compare_lots(left, right)
 
 
 def lots_order(row: dict[str, Any]) -> int | None:
-    for key in ("lotsOrder", "lotOrder", "drawingLotsOrder", "lotsRank", "lotRank"):
-        value = row.get(key)
-        if value not in (None, ""):
-            return int_value(value)
-    return None
+    return official_rankings.lots_order(row)
 
 
 def write_official_results(path: Path, official_results: dict[str, Any]) -> None:

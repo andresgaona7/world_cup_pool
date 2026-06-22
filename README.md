@@ -69,13 +69,27 @@ consensus JSON export and the standalone `apps/consensus_predictions/index.html`
 When standings need the final FIFA ranking tie-breaker, the updater reads
 manual rankings from `data/manual/fifa_rankings.json`.
 
-Official fair-play tiebreakers are entered manually in
-`data/manual/official_fair_play.json` because the Football-Data standings
-endpoint does not include card data. `make update-official-results` merges those
-values into `data/generated/official_results.js`. Use team names as keys under
-`teams`, and either enter `fairPlayPoints` directly or card counts such as
-`yellowCards`, `indirectRedCards`, `directRedCards`, and
-`yellowDirectRedCards`.
+Official fair-play tiebreakers and unresolved group-order corrections are
+entered manually in `data/manual/official_fair_play.json` because the
+Football-Data standings endpoint does not include card data or enough
+head-to-head detail to fully resolve every Article 13 tie. `make
+update-official-results` merges those values into
+`data/generated/official_results.js`. Use team names as keys under `teams`, and
+either enter `fairPlayPoints` directly or card counts such as `yellowCards`,
+`indirectRedCards`, `directRedCards`, and `yellowDirectRedCards`. If FIFA's
+head-to-head/lots procedure changes a tied group order, add the official order
+under `groupOrder`, for example:
+
+```json
+{
+  "teams": {
+    "Example Team": {"fairPlayPoints": -3}
+  },
+  "groupOrder": {
+    "A": ["Mexico", "Czechia", "South Korea", "South Africa"]
+  }
+}
+```
 
 Official futures are entered manually in `data/manual/official_futures.json`.
 After editing champion, runner-up, top scorer, or team last-round values, run

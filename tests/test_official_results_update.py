@@ -118,6 +118,70 @@ class OfficialResultsUpdateTests(unittest.TestCase):
 
         self.assertEqual(rankings, {"Türkiye": 25})
 
+    def test_best_thirds_uses_fair_play_and_lots_after_goals_scored(self):
+        completed_groups = {}
+        for index, group_id in enumerate(update_official_results.GROUP_IDS):
+            third_row = self.official_row(
+                f"Third {group_id}",
+                points=1,
+                goal_difference=-index - 1,
+                goals_for=0,
+            )
+            completed_groups[group_id] = [
+                self.official_row(f"Winner {group_id}", 9, 5, 6),
+                self.official_row(f"Runner {group_id}", 6, 2, 4),
+                third_row,
+                self.official_row(f"Fourth {group_id}", 0, -7, 0),
+            ]
+
+        completed_groups["A"][2].update(
+            {
+                "team": "Fair Play Loser",
+                "points": 3,
+                "goalDifference": 0,
+                "goalsFor": 2,
+                "fairPlayPoints": -5,
+            }
+        )
+        completed_groups["B"][2].update(
+            {
+                "team": "Fair Play Winner",
+                "points": 3,
+                "goalDifference": 0,
+                "goalsFor": 2,
+                "fairPlayPoints": -1,
+            }
+        )
+        completed_groups["C"][2].update(
+            {
+                "team": "Lots Winner",
+                "points": 3,
+                "goalDifference": 0,
+                "goalsFor": 1,
+                "fairPlayPoints": -2,
+                "lotsOrder": 1,
+            }
+        )
+        completed_groups["D"][2].update(
+            {
+                "team": "Lots Loser",
+                "points": 3,
+                "goalDifference": 0,
+                "goalsFor": 1,
+                "fairPlayPoints": -2,
+                "lotsOrder": 2,
+            }
+        )
+
+        best_thirds = update_official_results.best_thirds(completed_groups)
+
+        self.assertEqual(best_thirds[:4], [
+            "Fair Play Winner",
+            "Fair Play Loser",
+            "Lots Winner",
+            "Lots Loser",
+        ])
+
     def test_timeline_checkpoint_uses_current_group_matchday(self):
         group_standings = {
             "A": [
@@ -169,6 +233,21 @@ class OfficialResultsUpdateTests(unittest.TestCase):
             "goalsFor": goals_for,
             "goalsAgainst": goals_against,
             "goalDifference": goals_for - goals_against,
+            "points": points,
+        }
+
+    def official_row(self, team, points, goal_difference, goals_for):
+        return {
+            "team": team,
+            "teamCode": team[:3].upper(),
+            "position": 1,
+            "played": 3,
+            "won": 0,
+            "drawn": 0,
+            "lost": 0,
+            "goalsFor": goals_for,
+            "goalsAgainst": goals_for - goal_difference,
+            "goalDifference": goal_difference,
             "points": points,
         }
 

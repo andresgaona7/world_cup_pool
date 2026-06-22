@@ -16,11 +16,16 @@ from os import environ
 from pathlib import Path
 from typing import Any
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPT_DIR))
+import official_rankings
+
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_PATH = ROOT / "data" / "generated" / "official_results.js"
 RATE_STATE_PATH = ROOT / "data" / ".cache" / "football_data_rate_limit.json"
 FIFA_RANKINGS_PATH = ROOT / "data" / "manual" / "fifa_rankings.json"
+MANUAL_ADJUSTMENTS_PATH = ROOT / "data" / "manual" / "official_fair_play.json"
 SOURCE_URL = "https://api.football-data.org/v4/competitions/WC/standings?season=2026"
 API_KEY_ENV = "FOOTBALL_DATA_API_KEY"
 DEFAULT_API_KEY = "9a022f9d132d4a5d9d01116e0f99ab6f"
@@ -69,6 +74,14 @@ def main() -> None:
     raw_data = read_source(args)
     group_standings = extract_group_standings(raw_data)
     overall_standings = extract_overall_standings(raw_data)
+    manual_adjustments = official_rankings.read_manual_adjustments(args.manual_adjustments)
+    official_rankings.apply_manual_adjustments(
+        {
+            "provisionalGroupStandings": group_standings,
+            "overallStandings": overall_standings,
+        },
+        manual_adjustments,
+    )
     completed_groups = {
         group_id: rows[:3]
         for group_id, rows in group_standings.items()
@@ -177,6 +190,15 @@ def parse_args() -> argparse.Namespace:
         help=(
             "HTTP client to use. auto prefers requests when installed, then curl, "
             "then urllib."
+        ),
+    )
+    parser.add_argument(
+        "--manual-adjustments",
+        type=Path,
+        default=MANUAL_ADJUSTMENTS_PATH,
+        help=(
+            "Manual fair-play and group-order adjustments. "
+            f"Defaults to {MANUAL_ADJUSTMENTS_PATH.relative_to(ROOT)}."
         ),
     )
     return parser.parse_args()
@@ -488,14 +510,7 @@ def find_overall_group_stage_table(raw_data: dict[str, Any]) -> list[dict[str, A
 
 
 def group_sort_key(row: dict[str, Any]) -> tuple[int, int, int, int, int, str]:
-    return (
-        -row["points"],
-        -row["goalDifference"],
-        -row["goalsFor"],
-        fifa_ranking(row["team"]),
-        # -row["won"],
-        # row["team"],
-    )
+    return official_rankings.group_sort_key(row, fifa_ranking)
 
 
 def fifa_ranking(team_name: str) -> int:
@@ -591,19 +606,7 @@ def best_thirds(completed_groups: dict[str, list[dict[str, Any]]]) -> list[str]:
     if len(completed_groups) != len(GROUP_IDS):
         return []
 
-    thirds = [rows[2] for rows in completed_groups.values() if len(rows) >= 3]
-    return [
-        row["team"]
-        for row in sorted(
-            thirds,
-            key=lambda row: (
-                -row["points"],
-                -row["goalDifference"],
-                -row["goalsFor"],
-                row["team"],
-            ),
-        )[:8]
-    ]
+    return official_rankings.ranked_best_thirds(completed_groups)
 
 
 def timeline_checkpoints(
@@ -668,18 +671,7 @@ def provisional_best_thirds(
     ]
     if not thirds:
         return fallback_best_thirds
-    return [
-        row["team"]
-        for row in sorted(
-            thirds,
-            key=lambda row: (
-                -row["points"],
-                -row["goalDifference"],
-                -row["goalsFor"],
-                row["team"],
-            ),
-        )[:8]
-    ]
+    return official_rankings.ranked_best_thirds(group_standings)
 
 
 def eliminated_group_stage_teams(

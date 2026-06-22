@@ -764,12 +764,12 @@ window.OFFICIAL_RESULTS = {
           ]
         },
         "bestThirds": [
-          "Japan",
+          "Sweden",
+          "Scotland",
+          "Paraguay",
+          "Cape Verde Islands",
           "Belgium",
           "Congo DR",
-          "Morocco",
-          "Qatar",
-          "Spain",
           "Czechia",
           "Ecuador"
         ],
