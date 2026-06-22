@@ -147,6 +147,10 @@ body {
   flex-wrap: wrap;
 }
 
+.selector-body {
+  padding: 16px;
+}
+
 .player-select-control {
   display: inline-flex;
   align-items: center;
@@ -174,6 +178,10 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
   align-items: stretch;
+}
+
+.home-timeline-layout {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .chart-wrap {
@@ -282,6 +290,11 @@ body {
   line-height: 1.45;
 }
 
+.selected-player-panel .selected-player-detail {
+  border-left: 0;
+  min-height: 96px;
+}
+
 .selected-player-detail h3 {
   display: flex;
   align-items: center;
@@ -297,6 +310,35 @@ body {
 
 .selected-player-detail .muted {
   color: var(--muted);
+}
+
+.checkpoint-history {
+  display: grid;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.checkpoint-history-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(80px, auto) minmax(72px, auto);
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.checkpoint-history-row strong {
+  color: var(--ink);
+}
+
+.checkpoint-history-row.is-pending {
+  grid-template-columns: minmax(100px, 1fr) minmax(72px, auto);
+  background: var(--soft);
 }
 
 .detail-kicker {
@@ -448,5 +490,9 @@ body {
   .player-select-control select {
     width: 100%;
     min-width: 0;
+  }
+
+  .checkpoint-history-row {
+    grid-template-columns: 1fr 1fr;
   }
 }

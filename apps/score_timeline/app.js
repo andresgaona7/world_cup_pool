@@ -863,7 +863,13 @@ function renderSelectedPlayerDetail(series, checkpoint) {
   selectedPlayerDetail.innerHTML = `
     <div class="detail-kicker">Selected player</div>
     <h3><span>${escapeHtml(row.emoji)}</span> ${escapeHtml(row.player.name)}</h3>
-    ${scoreDetailHtml(point, checkpoint)}
+    ${scoreDetailHtml(point, checkpoint, {
+      afterTotalHtml: selectedPlayerDetail.closest(".selected-player-panel")
+        ? checkpointHistoryHtml(row)
+        : "",
+      showBreakdown: !selectedPlayerDetail.closest(".selected-player-panel"),
+      showCheckpointLabel: !selectedPlayerDetail.closest(".selected-player-panel"),
+    })}
   `;
 }
 
@@ -911,7 +917,12 @@ function renderChart(series, sourceCheckpoints) {
     );
   });
 
-  series.forEach((row) => {
+  const selectedSeries = series.filter((row) => row.playerIndex === selectedPlayerIndex);
+  const baseSeries = selectedPlayerIndex === null
+    ? series
+    : series.filter((row) => row.playerIndex !== selectedPlayerIndex);
+
+  const drawLine = (row) => {
     const isSelected = row.playerIndex === selectedPlayerIndex;
     const isDimmed = selectedPlayerIndex !== null && !isSelected;
     const path = row.points.map((point, index) => {
@@ -930,9 +941,9 @@ function renderChart(series, sourceCheckpoints) {
       d: path,
       stroke: row.color,
     }));
-  });
+  };
 
-  series.forEach((row) => {
+  const drawPoints = (row) => {
     const isSelected = row.playerIndex === selectedPlayerIndex;
     const isDimmed = selectedPlayerIndex !== null && !isSelected;
     row.points.forEach((point, index) => {
@@ -966,7 +977,12 @@ function renderChart(series, sourceCheckpoints) {
       });
       svg.append(group);
     });
-  });
+  };
+
+  baseSeries.forEach(drawLine);
+  baseSeries.forEach(drawPoints);
+  selectedSeries.forEach(drawLine);
+  selectedSeries.forEach(drawPoints);
 
   timelineChart.replaceChildren(svg);
 }
@@ -1019,12 +1035,41 @@ function showTooltip(event, row, point, checkpoint) {
   positionTooltip(event);
 }
 
-function scoreDetailHtml(point, checkpoint) {
+function checkpointHistoryHtml(row) {
+  const items = checkpoints.map((checkpoint, index) => {
+    const point = row.points[index];
+    if (!checkpoint.isAvailable || !point?.isAvailable) {
+      return `
+        <div class="checkpoint-history-row is-pending">
+          <span>${escapeHtml(checkpoint.shortLabel || checkpoint.label)}</span>
+          <strong>Pending</strong>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="checkpoint-history-row">
+        <span>${escapeHtml(checkpoint.shortLabel || checkpoint.label)}</span>
+        <strong>${formatPoints(point.total || 0)} pts</strong>
+        <span>Rank ${point.rank || "-"}</span>
+      </div>
+    `;
+  }).join("");
+
   return `
-    <div>${escapeHtml(checkpoint.label)}</div>
+    <div class="checkpoint-history" aria-label="Selected player score by checkpoint">
+      ${items}
+    </div>
+  `;
+}
+
+function scoreDetailHtml(point, checkpoint, options = {}) {
+  return `
+    ${options.showCheckpointLabel === false ? "" : `<div>${escapeHtml(checkpoint.label)}</div>`}
     <div>Rank: ${point.rank || "-"}</div>
     <div>Total: ${formatPoints(point.total || 0)} pts</div>
-    <div class="muted">Groups ${formatPoints(point.group || 0)} · Best 3rds ${formatPoints(point.bestThirds || 0)} · Knockout ${formatPoints(point.knockout || 0)} · Futures ${formatPoints(point.futures || 0)} · Bonus ${formatPoints(point.bonus || 0)}</div>
+    ${options.afterTotalHtml || ""}
+    ${options.showBreakdown === false ? "" : `<div class="muted">Groups ${formatPoints(point.group || 0)} · Best 3rds ${formatPoints(point.bestThirds || 0)} · Knockout ${formatPoints(point.knockout || 0)} · Futures ${formatPoints(point.futures || 0)} · Bonus ${formatPoints(point.bonus || 0)}</div>`}
   `;
 }
 

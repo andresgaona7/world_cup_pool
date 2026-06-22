@@ -28,139 +28,53 @@
   </header>
 
   <main class="page">
-    <div class="page-status" id="headerStatus">Loading generated data</div>
+    <section class="panel selector-panel" aria-labelledby="selectorTitle">
+      <div class="panel-head">
+        <div>
+          <h2 id="selectorTitle">Player Selector</h2>
+        </div>
+      </div>
+      <div class="selector-body">
+        <label class="player-select-control" for="playerFocusSelect">
+          <span>Player</span>
+          <select id="playerFocusSelect">
+            <option value="">All players</option>
+          </select>
+        </label>
+      </div>
+    </section>
 
     <section class="panel chart-panel" id="chartPanel" aria-labelledby="timelineTitle">
       <div class="panel-head">
         <div>
-          <!-- <p class="eyebrow">Score Timeline</p> -->
           <h2 id="timelineTitle">Score Timeline</h2>
         </div>
-        <div class="timeline-tools">
-          <label class="player-select-control" for="playerFocusSelect">
-            <span>Player</span>
-            <select id="playerFocusSelect">
-              <option value="">All players</option>
-            </select>
-          </label>
-          <span class="rule-pill support-only" id="checkpointStatus">Pending results</span>
-          <label class="support-only" for="chartWidthControl">
-            <input id="chartWidthControl" type="range" min="85" max="180" value="100" step="5">
-          </label>
-        </div>
       </div>
-      <div class="timeline-focus-layout">
+      <div class="timeline-focus-layout home-timeline-layout">
         <div class="chart-wrap">
           <div id="timelineChart" class="timeline-chart" aria-live="polite"></div>
           <div id="timelineTooltip" class="tooltip" hidden></div>
         </div>
-        <aside class="selected-player-detail" id="selectedPlayerDetail" aria-live="polite">
-          <div class="empty-state">Select a player to pin their score details.</div>
-        </aside>
       </div>
     </section>
 
-    <section class="app-grid" aria-label="Pool visualizations">
-      <a class="app-link" href="apps/player_predictions/index.html">
-        <!-- <span class="app-kicker">Submitted picks</span> -->
-        <strong>Player Predictions</strong>
-        <span>Browse each player's group-stage, best-third, and futures picks.</span>
-      </a>
-
-      <a class="app-link" href="apps/rules/index.html">
-        <strong>Rules</strong>
-        <span>Review the group-stage, knockout, futures, and bonus scoring rules.</span>
-      </a>
-
-      <a class="app-link" href="apps/consensus_predictions/index.html">
-        <!-- <span class="app-kicker">Pool tendency</span> -->
-        <strong>Consensus Predictions</strong>
-        <span>See the most common picks across champions, groups, and best thirds.</span>
-      </a>
-
-      <a class="app-link" href="apps/knockout_predictions/index.html">
-        <strong>Knockout Predictions</strong>
-        <span>Fill the round-by-round bracket template for knockout scoring.</span>
-      </a>
-
-      <a class="app-link primary-link" href="apps/score_visualizer/index.html">
-        <!-- <span class="app-kicker">Scoreboard</span> -->
-        <strong>Score Visualizer</strong>
-        <span>Leaderboard, score scenario selector, and official-vs-prediction comparison.</span>
-      </a>
-
-      <a class="app-link" href="apps/score_timeline/index.html">
-        <!-- <span class="app-kicker">Progression</span> -->
-        <strong>Official Results</strong>
-        <span>Track leaderboard movement across official-results checkpoints.</span>
-      </a>
-
-      <a class="app-link" href="apps/third_places/index.html">
-        <strong>Third-Place Ranking</strong>
-        <span>Rank every group third-place team using the official best-thirds criteria.</span>
-      </a>
-
-      <a class="app-link" href="apps/blog/index.html">
-        <strong>Blog</strong>
-        <span>Manual comments, regrettable opinions, and pool drama in one dumb place.</span>
-      </a>
-    </section>
-
-    <section class="panel rules-panel" aria-labelledby="rulesTitle">
+    <section class="panel selected-player-panel" aria-labelledby="selectedPlayerTitle">
       <div class="panel-head">
         <div>
-          <!-- <p class="eyebrow">Rules</p> -->
-          <h2 id="rulesTitle">Rules</h2>
+          <h2 id="selectedPlayerTitle">Player Score</h2>
         </div>
       </div>
-      <div class="rules-explainer">
-        <article class="rule-section">
-          <h3>Group stage</h3>
-          <ul>
-            <li>Each correctly predicted group-stage qualifier earns 1 point.</li>
-            <li>A correctly predicted qualifier earns 1 extra point when it also finishes in the exact predicted
-              advancing position.</li>
-            <li>Third-place teams only count as qualifiers if they are official best thirds.</li>
-            <li>A completely correct group order earns an extra 5 point bonus.</li>
-            <li>Each correctly selected best third-place qualifier earns 3 points. The order of those best-third picks
-              does not matter.</li>
-          </ul>
-        </article>
-
-        <article class="rule-section">
-          <h3>Knockout matches</h3>
-          <ul>
-            <li>Base values by round: Round of 32 = 4, Round of 16 = 6, quarterfinal = 10, semifinal = 16, third-place
-              match = 14, final = 20.</li>
-            <li>Winner-only mode: a correct advancing team earns 1x the round base value; a wrong advancing team earns
-              0.</li>
-            <li>Score mode: exact regulation score and correct advancing team earns 2.5x base.</li>
-            <li>Exact regulation score with the wrong advancing team earns 1.5x base.</li>
-            <li>Correct advancing team with the wrong score earns 0.5x base.</li>
-            <li>Perfect knockout winners bonus: 50 points.</li>
-            <li>Perfect knockout scores bonus: 200 points.</li>
-          </ul>
-        </article>
-
-        <article class="rule-section">
-          <h3>Futures</h3>
-          <ul>
-            <li>Correct champion: 80 points.</li>
-            <li>Correct runner-up: 50 points.</li>
-            <li>If the champion and runner-up are reversed, the entry earns 35 points instead of the champion or
-              runner-up points.</li>
-            <li>Correct top scorer: 60 points.</li>
-            <li>Favorite-team last round: 35 points for exact, 15 points if off by one round.</li>
-            <li>Ecuador last round: 40 points for exact, 18 points if off by one round.</li>
-            <li>Perfect futures card bonus: 75 points when champion, runner-up, top scorer, favorite-team round, and
-              Ecuador round are all exact.</li>
-          </ul>
-        </article>
-      </div>
+      <aside class="selected-player-detail" id="selectedPlayerDetail" aria-live="polite">
+        <div class="empty-state">Select a player to pin their score details.</div>
+      </aside>
     </section>
 
     <section class="support-only" aria-hidden="true">
       <div id="metrics"></div>
+      <span id="checkpointStatus">Pending results</span>
+      <label for="chartWidthControl">
+        <input id="chartWidthControl" type="range" min="85" max="180" value="100" step="5">
+      </label>
       <section id="leaderboardPanel">
         <table id="leaderboardTable"></table>
       </section>
@@ -172,33 +86,6 @@
   <script src="data/generated/official_results.js"></script>
   <script src="data/generated/knockout_predictions.js"></script>
   <script src="apps/score_timeline/app.js"></script>
-  <script>
-    const officialResults = window.OFFICIAL_RESULTS || {};
-    const latestUpdate = formatDate(officialResults.generatedAt);
-
-    document.querySelector("#headerStatus").textContent =
-      `Latest update: ${latestUpdate}`;
-
-    function formatDate(value) {
-      if (!value) {
-        return "Unavailable";
-      }
-
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) {
-        return value;
-      }
-
-      return new Intl.DateTimeFormat(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZoneName: "short"
-      }).format(date);
-    }
-  </script>
 </body>
 
 </html>
