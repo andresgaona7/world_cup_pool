@@ -69,10 +69,15 @@ consensus JSON export and the standalone `apps/consensus_predictions/index.html`
 When standings need the final FIFA ranking tie-breaker, the updater reads
 manual rankings from `data/manual/fifa_rankings.json`.
 
-Official futures are entered manually in `data/manual/official_futures.json`.
-After editing champion, runner-up, top scorer, or team last-round values, run
-`python3 scripts/apply_manual_futures.py` to merge those values into
-`data/generated/official_results.js`. Valid `teamLastRounds` values are
+Manual official data lives in `data/manual/`. Official futures are entered in
+`data/manual/official_futures.json`, and official fair-play tiebreakers are
+entered in `data/manual/official_fair_play.json` because the Football-Data
+standings endpoint does not include card data. After editing either file, run
+`python3 scripts/apply_manual_futures.py` to merge those manual values into
+`data/generated/official_results.js`. Fair-play entries use team names as keys
+under `teams`, with either `fairPlayPoints` directly or card counts such as
+`yellowCards`, `indirectRedCards`, `directRedCards`, and
+`yellowDirectRedCards`. Valid `teamLastRounds` values are
 `group_stage`, `round_of_32`, `round_of_16`, `quarterfinal`, `semifinal`,
 `third_place_match`, `runner_up`, and `champion`.
 

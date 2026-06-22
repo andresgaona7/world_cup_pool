@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Cup Pool Third Places</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">World Cup 2026 Pool</p>
+      <h1>Third-Place Ranking</h1>
+    </div>
+    <nav class="site-nav" aria-label="Visualization navigation">
+      <a href="../../index.html">Home</a>
+      <a href="../player_predictions/index.html">Player Picks</a>
+      <a href="../consensus_predictions/index.html">Consensus</a>
+      <a href="../score_visualizer/index.html">Scores</a>
+      <a class="active" href="index.html" aria-current="page">Third places</a>
+      <a href="../score_timeline/index.html">Official results</a>
+      <a href="../blog/index.html">Blog</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="metrics" id="metrics" aria-label="Third-place ranking summary"></section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Official Results</p>
+          <h2>Best Third-Place Table</h2>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="thirdPlaceTable"></table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Tie Breakers</p>
+          <h2>Ranking Rules</h2>
+        </div>
+      </div>
+      <div class="rules-grid">
+        <article class="rule-section">
+          <h3>Order</h3>
+          <ol>
+            <li>Most points in the group stage.</li>
+            <li>Superior goal difference in the group stage.</li>
+            <li>Most goals scored in the group stage.</li>
+            <li>Best disciplinary record.</li>
+            <li>Drawing of lots by FIFA.</li>
+          </ol>
+        </article>
+        <article class="rule-section">
+          <h3>Fair Play</h3>
+          <ul>
+            <li>Yellow card: -1</li>
+            <li>Indirect red card: -3</li>
+            <li>Direct red card: -4</li>
+            <li>Yellow card plus direct red card: -5</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../data/generated/official_results.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

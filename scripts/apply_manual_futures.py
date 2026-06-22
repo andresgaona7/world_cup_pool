@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply manually entered official futures to generated official results."""
+"""Apply manually entered official data to generated official results."""
 
 from __future__ import annotations
 
@@ -12,12 +12,32 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANUAL_FUTURES_PATH = ROOT / "data" / "manual" / "official_futures.json"
+DEFAULT_MANUAL_FAIR_PLAY_PATH = ROOT / "data" / "manual" / "official_fair_play.json"
 DEFAULT_OFFICIAL_RESULTS_PATH = ROOT / "data" / "generated" / "official_results.js"
 OFFICIAL_RESULTS_RE = re.compile(
     r"^\s*window\.OFFICIAL_RESULTS\s*=\s*(?P<payload>\{.*\})\s*;\s*$",
     re.DOTALL,
 )
 FUTURES_KEYS = ("champion", "runnerUp", "topScorer")
+GROUP_IDS = tuple("ABCDEFGHIJKL")
+FAIR_PLAY_KEYS = (
+    "fairPlayPoints",
+    "yellowCards",
+    "indirectRedCards",
+    "directRedCards",
+    "yellowDirectRedCards",
+)
+TEAM_NAME_ALIASES = {
+    "Bosnia": "Bosnia-Herzegovina",
+    "Bosnia and Herzegovina": "Bosnia-Herzegovina",
+    "Democratic Republic of Congo": "Congo DR",
+    "Democratic Republic of the Congo": "Congo DR",
+    "DR Congo": "Congo DR",
+    "Czech Republic": "Czechia",
+    "Turkey": "Türkiye",
+    "Turkiye": "Türkiye",
+    "Tutkey": "Türkiye",
+}
 ROUND_KEYS = {
     "",
     "group_stage",
@@ -35,6 +55,7 @@ def main() -> None:
     args = parse_args()
     apply_manual_futures(
         manual_futures_path=args.manual_futures,
+        manual_fair_play_path=args.manual_fair_play,
         official_results_path=args.official_results,
         verbose=True,
     )
@@ -43,8 +64,8 @@ def main() -> None:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Merge manually entered official futures from "
-            "data/manual/official_futures.json into data/generated/official_results.js."
+            "Merge manually entered official futures and fair-play data into "
+            "data/generated/official_results.js."
         )
     )
     parser.add_argument(
@@ -54,6 +75,15 @@ def parse_args() -> argparse.Namespace:
         help=(
             "Path to the manual futures JSON file. "
             f"Defaults to {DEFAULT_MANUAL_FUTURES_PATH.relative_to(ROOT)}."
+        ),
+    )
+    parser.add_argument(
+        "--manual-fair-play",
+        type=Path,
+        default=DEFAULT_MANUAL_FAIR_PLAY_PATH,
+        help=(
+            "Path to the manual fair-play JSON file. "
+            f"Defaults to {DEFAULT_MANUAL_FAIR_PLAY_PATH.relative_to(ROOT)}."
         ),
     )
     parser.add_argument(
@@ -71,10 +101,12 @@ def parse_args() -> argparse.Namespace:
 def apply_manual_futures(
     *,
     manual_futures_path: Path,
+    manual_fair_play_path: Path = DEFAULT_MANUAL_FAIR_PLAY_PATH,
     official_results_path: Path,
     verbose: bool = False,
 ) -> None:
     manual_futures = read_manual_futures(manual_futures_path)
+    manual_fair_play = read_manual_fair_play(manual_fair_play_path)
     official_results = read_official_results(official_results_path)
     current_futures = normalize_futures(official_results.get("futures"))
 
@@ -87,6 +119,8 @@ def apply_manual_futures(
         },
     }
     official_results["futures"] = merged_futures
+    apply_manual_fair_play(official_results, manual_fair_play)
+    update_best_thirds(official_results)
 
     for checkpoint in official_results.get("timelineCheckpoints", []):
         if not isinstance(checkpoint, dict):
@@ -95,11 +129,13 @@ def apply_manual_futures(
         if not isinstance(scenario, dict):
             continue
         scenario["futures"] = merged_futures
+        update_scenario_best_thirds(scenario, official_results)
 
     write_official_results(official_results_path, official_results)
     if verbose:
         print(
-            f"Applied {display_path(manual_futures_path)} to "
+            f"Applied {display_path(manual_futures_path)} and "
+            f"{display_path(manual_fair_play_path)} to "
             f"{display_path(official_results_path)}"
         )
 
@@ -144,6 +180,133 @@ def read_official_results(path: Path) -> dict[str, Any]:
     return payload
 
 
+def read_manual_fair_play(path: Path) -> dict[str, dict[str, int]]:
+    if not path.exists():
+        return {}
+
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"{display_path(path)} must contain a JSON object")
+
+    teams = payload.get("teams", payload)
+    if not isinstance(teams, dict):
+        raise ValueError(f"{display_path(path)} must contain a teams object")
+
+    manual_fair_play = {}
+    for team_name, values in teams.items():
+        if not isinstance(team_name, str) or not team_name.strip():
+            continue
+        if not isinstance(values, dict):
+            raise ValueError(f"fair-play data for {team_name!r} must be an object")
+
+        normalized_values = {}
+        for key in FAIR_PLAY_KEYS:
+            if key in values and values[key] not in (None, ""):
+                normalized_values[key] = int_value(values[key])
+        if normalized_values:
+            manual_fair_play[canonical_team_name(team_name.strip())] = normalized_values
+
+    return manual_fair_play
+
+
+def apply_manual_fair_play(
+    official_results: dict[str, Any],
+    manual_fair_play: dict[str, dict[str, int]],
+) -> None:
+    if not manual_fair_play:
+        return
+
+    standings = official_results.get("provisionalGroupStandings", {})
+    if isinstance(standings, dict):
+        for rows in standings.values():
+            if isinstance(rows, list):
+                apply_manual_fair_play_to_rows(rows, manual_fair_play)
+
+    overall_standings = official_results.get("overallStandings", [])
+    if isinstance(overall_standings, list):
+        apply_manual_fair_play_to_rows(overall_standings, manual_fair_play)
+
+
+def apply_manual_fair_play_to_rows(
+    rows: list[dict[str, Any]],
+    manual_fair_play: dict[str, dict[str, int]],
+) -> None:
+    for row in rows:
+        if isinstance(row, dict):
+            row.update(manual_fair_play.get(row.get("team", ""), {}))
+
+
+def update_best_thirds(official_results: dict[str, Any]) -> None:
+    standings = official_results.get("provisionalGroupStandings", {})
+    if not isinstance(standings, dict):
+        return
+
+    best_thirds = ranked_best_thirds(standings)
+    if best_thirds:
+        official_results["bestThirds"] = best_thirds
+
+
+def update_scenario_best_thirds(
+    scenario: dict[str, Any],
+    official_results: dict[str, Any],
+) -> None:
+    standings = official_results.get("provisionalGroupStandings", {})
+    if not isinstance(standings, dict):
+        return
+
+    best_thirds = ranked_best_thirds(standings)
+    if best_thirds:
+        scenario["bestThirds"] = best_thirds
+
+
+def ranked_best_thirds(standings: dict[str, Any]) -> list[str]:
+    thirds = []
+    for group_id in GROUP_IDS:
+        rows = normalize_group_rows(standings.get(group_id, []))
+        if len(rows) >= 3:
+            thirds.append(rows[2])
+
+    return [
+        row["team"]
+        for row in sorted(
+            thirds,
+            key=lambda row: (
+                -int_value(row.get("points")),
+                -int_value(row.get("goalDifference")),
+                -int_value(row.get("goalsFor")),
+                -fair_play_points(row),
+                row.get("team", ""),
+            ),
+        )[:8]
+    ]
+
+
+def normalize_group_rows(rows: Any) -> list[dict[str, Any]]:
+    if not isinstance(rows, list):
+        return []
+    return sorted(
+        [row for row in rows if isinstance(row, dict) and row.get("team")],
+        key=lambda row: (
+            int_value(row.get("position")) or 999,
+            -int_value(row.get("points")),
+            -int_value(row.get("goalDifference")),
+            -int_value(row.get("goalsFor")),
+            row.get("team", ""),
+        ),
+    )
+
+
+def fair_play_points(row: dict[str, Any]) -> int:
+    if "fairPlayPoints" in row:
+        return int_value(row.get("fairPlayPoints"))
+    return (
+        -1 * int_value(row.get("yellowCards"))
+        -3 * int_value(row.get("indirectRedCards"))
+        -4 * int_value(row.get("directRedCards"))
+        -5 * int_value(row.get("yellowDirectRedCards"))
+    )
+
+
 def write_official_results(path: Path, official_results: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = json.dumps(official_results, ensure_ascii=False, indent=2)
@@ -185,6 +348,19 @@ def normalize_round(value: Any, team: str) -> str:
 def string_value(source: dict[str, Any], key: str) -> str:
     value = source.get(key, "")
     return value.strip() if isinstance(value, str) else ""
+
+
+def canonical_team_name(name: str) -> str:
+    return TEAM_NAME_ALIASES.get(name, name)
+
+
+def int_value(value: Any) -> int:
+    if value in (None, ""):
+        return 0
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
 
 
 def display_path(path: Path) -> str:
