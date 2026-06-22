@@ -29,15 +29,22 @@
       <section class="content" aria-live="polite">
         <div id="loadStatus" class="load-status" role="status">Loading player predictions...</div>
 
-        <div class="player-selector-panel">
-          <div class="player-heading-tools">
+        <section class="player-selector-panel selector-panel" aria-labelledby="selectorTitle">
+          <div class="panel-head">
+            <div>
+              <h2 id="selectorTitle">Player Selector</h2>
+            </div>
+          </div>
+          <div class="selector-body player-heading-tools">
             <label class="player-select-control" for="playerSelect">
               <span>Player</span>
-              <select id="playerSelect"></select>
+              <select id="playerSelect">
+                <option value="0">Loading players...</option>
+              </select>
             </label>
             <div id="sheetName" class="sheet-pill"></div>
           </div>
-        </div>
+        </section>
 
         <div class="player-heading">
           <div>

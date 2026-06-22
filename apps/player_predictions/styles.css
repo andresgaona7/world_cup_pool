@@ -141,13 +141,32 @@ h3 {
   border-radius: 8px;
 }
 
+.player-selector-panel {
+  overflow: hidden;
+}
+
 .player-heading {
   margin-top: 12px;
   padding: 20px;
 }
 
-.player-selector-panel {
-  padding: 16px 20px;
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.panel-head h2 {
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.selector-body {
+  padding: 16px;
 }
 
 .player-heading-tools {
@@ -169,6 +188,7 @@ h3 {
 }
 
 .player-select-control select {
+  width: auto;
   min-width: 220px;
   border: 1px solid var(--line);
   border-radius: 6px;

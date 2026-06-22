@@ -215,7 +215,6 @@ tbody tr.is-outside td:first-child {
 
 .rules-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
   padding: 16px;
 }
@@ -233,13 +232,18 @@ tbody tr.is-outside td:first-child {
 }
 
 .rule-section ol,
-.rule-section ul {
+.rule-section ul,
+.rule-section p {
   display: grid;
   gap: 8px;
   margin: 0;
-  padding-left: 18px;
   color: var(--muted);
   line-height: 1.45;
+}
+
+.rule-section ol,
+.rule-section ul {
+  padding-left: 18px;
 }
 
 @media (max-width: 760px) {

@@ -1,5 +1,6 @@
 const rawData = window.POOL_DATA || { players: [] };
 const officialData = window.OFFICIAL_RESULTS || null;
+const knockoutData = window.KNOCKOUT_PREDICTIONS || { players: [] };
 
 const GROUP_QUALIFIER_POINTS = 1;
 const GROUP_EXACT_ADVANCING_POSITION_BONUS = 1;
@@ -18,6 +19,27 @@ const FUTURES_POINTS = {
   perfectBonus: 75,
 };
 
+const KNOCKOUT_BASE_POINTS = {
+  round_of_32: 4,
+  round_of_16: 6,
+  quarterfinal: 10,
+  semifinal: 16,
+  third_place_match: 14,
+  final: 20,
+};
+const KNOCKOUT_STAGE_ORDER = Object.fromEntries(Object.keys(KNOCKOUT_BASE_POINTS).map((stage, index) => [stage, index]));
+const KNOCKOUT_STAGE_LABELS = {
+  round_of_32: "Round of 32",
+  round_of_16: "Round of 16",
+  quarterfinal: "Quarterfinals",
+  semifinal: "Semifinals",
+  third_place_match: "Third-place match",
+  final: "Final",
+};
+
+const PERFECT_KNOCKOUT_WINNERS_BONUS = 50;
+const PERFECT_KNOCKOUT_SCORES_BONUS = 200;
+
 const STAGES = [
   ["group_stage", "Group stage"],
   ["round_of_32", "Round of 32"],
@@ -34,35 +56,27 @@ const GROUP_IDS = "ABCDEFGHIJKL".split("");
 const GROUP_HEADER_PATTERN = /^Group ([A-L])$/;
 const RANK_PATTERN = /^\d+(?:\.0)?$/;
 
-let players = rawData.players.map(normalizePlayer);
-let officialScenario = normalizeOfficialScenario(players, officialData);
-let consensusScenario = buildConsensusScenario(players);
-let selectedScenarioMode = hasOfficialScenarioData(officialScenario) ? "official" : "consensus";
-let scenario = scenarioForMode(selectedScenarioMode);
+const players = rawData.players.map(normalizePlayer);
+const knockoutPredictionsByPlayer = normalizeKnockoutPredictions(knockoutData);
+const officialScenario = normalizeOfficialScenario(players, officialData);
+const scenario = officialScenario;
+const officialKnockoutMatches = latestOfficialKnockoutMatches(officialData);
 let comparisonPlayerIndex = 0;
 
-const metrics = document.querySelector("#metrics");
 const leaderboardTable = document.querySelector("#leaderboardTable");
 const rulesGrid = document.querySelector("#rulesGrid");
-const scenarioSelect = document.querySelector("#scenarioSelect");
+const playerSelect = document.querySelector("#playerSelect");
 const leaderboardScenarioStatus = document.querySelector("#leaderboardScenarioStatus");
 const comparisonStatus = document.querySelector("#comparisonStatus");
 const comparisonSummary = document.querySelector("#comparisonSummary");
 const futuresSummary = document.querySelector("#futuresSummary");
 const groupComparisonTable = document.querySelector("#groupComparisonTable");
 const bestThirdComparisonTable = document.querySelector("#bestThirdComparisonTable");
+const knockoutStagePanels = document.querySelector("#knockoutStagePanels");
 const futuresComparisonTable = document.querySelector("#futuresComparisonTable");
 
-scenarioSelect.value = selectedScenarioMode;
-scenarioSelect.querySelector('option[value="official"]').disabled = !hasOfficialScenarioData(officialScenario);
-
-scenarioSelect.addEventListener("change", (event) => {
-  selectedScenarioMode = event.target.value;
-  scenario = scenarioForMode(selectedScenarioMode);
-  renderMetrics();
-  renderComparison();
-  renderLeaderboard();
-  renderRules();
+playerSelect?.addEventListener("change", (event) => {
+  selectComparisonPlayer(Number.parseInt(event.target.value, 10) || 0);
 });
 
 leaderboardTable.addEventListener("click", (event) => {
@@ -87,18 +101,23 @@ leaderboardTable.addEventListener("keydown", (event) => {
   selectComparisonPlayer(Number.parseInt(row.dataset.playerIndex, 10) || 0);
 });
 
+populatePlayerSelect();
 render();
 
 function render() {
-  renderMetrics();
   renderComparison();
+  renderKnockoutComparison();
   renderRules();
   renderLeaderboard();
 }
 
 function selectComparisonPlayer(playerIndex) {
   comparisonPlayerIndex = Math.max(0, Math.min(playerIndex, players.length - 1));
+  if (playerSelect) {
+    playerSelect.value = String(comparisonPlayerIndex);
+  }
   renderComparison();
+  renderKnockoutComparison();
   renderLeaderboard();
 }
 
@@ -120,6 +139,82 @@ function normalizePlayer(player) {
       ecuadorRound: normalizeStage(value(futures, "ecuador_round")),
     },
   };
+}
+
+function normalizeKnockoutPredictions(sourceData) {
+  return new Map(
+    (sourceData?.players || []).map((player) => [
+      player.name || player.sheet || "",
+      (player.matches || []).map(normalizeKnockoutPrediction).filter((match) => match.matchId),
+    ])
+  );
+}
+
+function normalizeKnockoutPrediction(match) {
+  const homeScore = numberOrNull(match.homeScore);
+  const awayScore = numberOrNull(match.awayScore);
+  return {
+    matchId: String(match.matchId || match.id || ""),
+    stage: normalizeKnockoutStage(match.stage || ""),
+    homeTeam: match.homeTeam || match.home || "",
+    awayTeam: match.awayTeam || match.away || "",
+    homeScore,
+    awayScore,
+    winner: match.winner || match.advancingTeam || match.predictedAdvancingTeam || "",
+    mode: homeScore === null || awayScore === null ? "winner" : "score",
+  };
+}
+
+function latestOfficialKnockoutMatches(resultsData) {
+  const matchesById = new Map();
+  [
+    ...(resultsData?.officialMatches || []),
+    ...(resultsData?.timelineCheckpoints || []).flatMap((checkpoint) => checkpoint.officialMatches || []),
+  ]
+    .map(normalizeOfficialKnockoutMatch)
+    .filter((match) =>
+      match.matchId &&
+      match.stage in KNOCKOUT_BASE_POINTS &&
+      match.homeTeam &&
+      match.awayTeam &&
+      match.homeScore !== null &&
+      match.awayScore !== null &&
+      match.advancingTeam
+    )
+    .forEach((match) => matchesById.set(match.matchId, match));
+
+  return [...matchesById.values()].sort((a, b) => {
+    const stageDiff = (KNOCKOUT_STAGE_ORDER[a.stage] || 0) - (KNOCKOUT_STAGE_ORDER[b.stage] || 0);
+    return stageDiff || Number(a.matchId) - Number(b.matchId);
+  });
+}
+
+function normalizeOfficialKnockoutMatch(match) {
+  return {
+    matchId: String(match.matchId || match.id || ""),
+    stage: normalizeKnockoutStage(match.stage || ""),
+    homeTeam: match.homeTeam || match.home || "",
+    awayTeam: match.awayTeam || match.away || "",
+    homeScore: numberOrNull(match.homeScore),
+    awayScore: numberOrNull(match.awayScore),
+    advancingTeam: match.advancingTeam || match.winner || "",
+  };
+}
+
+function normalizeKnockoutStage(stage) {
+  const text = String(stage || "").trim().toLowerCase();
+  const map = {
+    "round of 32": "round_of_32",
+    "round of 16": "round_of_16",
+    "quarter final": "quarterfinal",
+    quarterfinal: "quarterfinal",
+    "semi final": "semifinal",
+    semifinal: "semifinal",
+    "third-place match": "third_place_match",
+    "third place match": "third_place_match",
+    final: "final",
+  };
+  return map[text] || text.replace(/\s+/g, "_");
 }
 
 function extractGroups(grid) {
@@ -213,14 +308,6 @@ function buildConsensusScenario(sourcePlayers) {
       teamLastRounds,
     },
   };
-}
-
-function buildInitialScenario(sourcePlayers, resultsData) {
-  const initialOfficialScenario = normalizeOfficialScenario(sourcePlayers, resultsData);
-  if (hasOfficialScenarioData(initialOfficialScenario)) {
-    return initialOfficialScenario;
-  }
-  return buildConsensusScenario(sourcePlayers);
 }
 
 function normalizeOfficialScenario(sourcePlayers, resultsData) {
@@ -327,35 +414,9 @@ function numberValue(value, fallback) {
   return Number.isFinite(number) ? number : fallback;
 }
 
-function hasOfficialScenarioData(officialScenario) {
-  return (
-    Object.values(officialScenario.groupResults).some((teams) => teams.some(Boolean)) ||
-    officialScenario.bestThirds.length > 0 ||
-    officialScenario.futures.champion ||
-    officialScenario.futures.runnerUp ||
-    officialScenario.futures.topScorer ||
-    Object.values(officialScenario.futures.teamLastRounds).some(Boolean)
-  );
-}
-
-function buildEmptyScenario(sourcePlayers) {
-  return {
-    groupResults: Object.fromEntries(GROUP_IDS.map((groupId) => [groupId, ["", "", ""]])),
-    bestThirds: [],
-    futures: {
-      champion: "",
-      runnerUp: "",
-      topScorer: "",
-      teamLastRounds: Object.fromEntries(trackedTeams(sourcePlayers).map((team) => [team, ""])),
-    },
-  };
-}
-
-function scenarioForMode(mode) {
-  if (mode === "official" && hasOfficialScenarioData(officialScenario)) {
-    return officialScenario;
-  }
-  return consensusScenario;
+function numberOrNull(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
 }
 
 function consensusGroupOrder(sourcePlayers, groupId) {
@@ -413,26 +474,15 @@ function mode(values) {
   return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || "";
 }
 
-function renderMetrics() {
-  const scored = scoreAllPlayers();
-  const places = [
-    ["Leader", scored[0]],
-    ["Runner-up", scored[1]],
-    ["Third place", scored[2]],
-  ];
+function populatePlayerSelect() {
+  if (!playerSelect) {
+    return;
+  }
 
-  metrics.replaceChildren(...places.map(([label, row]) => podiumMetric(label, row)));
-}
-
-function podiumMetric(label, row) {
-  const node = document.createElement("article");
-  node.className = "metric podium-metric";
-  node.innerHTML = `
-    <span>${escapeHtml(label)}</span>
-    <strong>${escapeHtml(row ? row.name : "None")}</strong>
-    <em>${row ? `${formatPoints(row.total)} pts` : "0 pts"}</em>
-  `;
-  return node;
+  playerSelect.replaceChildren(
+    ...players.map((player, index) => new Option(player.name, String(index)))
+  );
+  playerSelect.value = String(comparisonPlayerIndex);
 }
 
 function renderRules() {
@@ -467,9 +517,9 @@ function renderRules() {
       title: "Current visualization",
       rows: [
         officialData
-          ? "The page can score either the official provisional standings from data/generated/official_results.js or the pool consensus results."
-          : "The workbook export does not include official results yet, so this page uses consensus results derived from the submitted picks.",
-        "Knockout scoring exists in the Python scorer, but this page does not include knockout points yet. Knockout picks are generated separately from the knockout workbook.",
+          ? "The page scores against official provisional standings from data/generated/official_results.js."
+          : "The workbook export does not include official results yet, so official-result rows remain pending.",
+        "Knockout points are shown when official knockout matches exist in data/generated/official_results.js and predictions exist in data/generated/knockout_predictions.js.",
       ],
     },
   ];
@@ -493,8 +543,8 @@ function renderComparison() {
   const comparisonScenario = scenario;
   const hasComparisonData = hasScenarioData(comparisonScenario);
   const selectedPlayer = players[comparisonPlayerIndex] || players[0];
-  const resultLabel = `${scenarioLabel(selectedScenarioMode)} result`;
-  comparisonStatus.textContent = scenarioLabel(selectedScenarioMode);
+  const resultLabel = "Official result";
+  comparisonStatus.textContent = "Official results";
   comparisonStatus.classList.toggle("pending", !hasComparisonData);
 
   const groupRows = GROUP_IDS.map((groupId) => groupComparisonRow(groupId, selectedPlayer, comparisonScenario));
@@ -524,10 +574,6 @@ function renderComparison() {
   const futuresPoints = futuresScore.points + futuresScore.bonus;
 
   comparisonSummary.replaceChildren(
-    comparisonMetricRow(
-      comparisonMetric("Selected player", selectedPlayer?.name || "None"),
-      comparisonMetric("First-round score", `${formatPoints(groupPoints + bestThirdPoints)} pts`)
-    ),
     comparisonEquationRow(
       comparisonMetric("Qualifier points", `${formatPoints(groupTotals.qualifierPoints)} pts (${qualifierMatches}/${possibleQualifiers || 0})`),
       comparisonOperator("+"),
@@ -588,7 +634,7 @@ function renderComparison() {
   bestThirdComparisonTable.innerHTML = `
     <thead>
       <tr>
-        <th>${escapeHtml(scenarioLabel(selectedScenarioMode))}</th>
+        <th>Official results</th>
         <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
         <th>Overlap result</th>
         <th>Points</th>
@@ -622,8 +668,21 @@ function renderComparison() {
     { points: 0, bonus: 0 }
   );
   futuresSummary.replaceChildren(
-    comparisonMetricRow(
-      comparisonMetric("Selected player", selectedPlayer?.name || "None"),
+    comparisonEquationRow(
+      comparisonMetric("Champion", `${formatPoints(futuresRulePoints(futuresRows, "Champion"))} pts`),
+      comparisonOperator("+"),
+      comparisonMetric("Runner-up", `${formatPoints(futuresRulePoints(futuresRows, "Runner-up"))} pts`),
+      comparisonOperator("+"),
+      comparisonMetric("Reversed final pair", `${formatPoints(futuresRulePoints(futuresRows, "Reversed final pair"))} pts`),
+      comparisonOperator("+"),
+      comparisonMetric("Top scorer", `${formatPoints(futuresRulePoints(futuresRows, "Top scorer"))} pts`),
+      comparisonOperator("+"),
+      comparisonMetric("Favorite-team round", `${formatPoints(futuresRulePoints(futuresRows, "Favorite-team round"))} pts`),
+      comparisonOperator("+"),
+      comparisonMetric("Ecuador round", `${formatPoints(futuresRulePoints(futuresRows, "Ecuador round"))} pts`),
+      comparisonOperator("+"),
+      comparisonMetric("Perfect futures bonus", `${formatPoints(futuresRulePoints(futuresRows, "Perfect futures card bonus"))} pts`),
+      comparisonOperator("="),
       comparisonMetric("Futures score", `${formatPoints(futuresPoints)} pts`)
     )
   );
@@ -631,7 +690,7 @@ function renderComparison() {
     <thead>
       <tr>
         <th>Rule</th>
-        <th>${escapeHtml(scenarioLabel(selectedScenarioMode))}</th>
+        <th>Official results</th>
         <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
         <th>Result</th>
         <th>Points</th>
@@ -657,6 +716,79 @@ function renderComparison() {
   `;
 }
 
+function renderKnockoutComparison() {
+  if (!knockoutStagePanels) {
+    return;
+  }
+
+  const selectedPlayer = players[comparisonPlayerIndex] || players[0];
+  const rows = knockoutComparisonRows(selectedPlayer);
+
+  knockoutStagePanels.innerHTML = Object.keys(KNOCKOUT_BASE_POINTS)
+    .map((stage) => knockoutStagePanelHtml(stage, rows, selectedPlayer))
+    .join("");
+}
+
+function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
+  const stageRows = rows.filter((row) => row.stage === stage);
+  const stageTotal = stageRows.reduce((total, row) => total + row.points, 0);
+  const hasStageResults = stageRows.length > 0;
+  const basePoints = KNOCKOUT_BASE_POINTS[stage] || 0;
+  const earnedMultiplier = basePoints ? stageTotal / basePoints : 0;
+
+  return `
+    <section class="panel knockout-stage-panel">
+      <div class="panel-head">
+        <div>
+          <h2>${escapeHtml(knockoutStageLabel(stage))}</h2>
+        </div>
+        <span class="rule-pill ${hasStageResults ? "" : "pending"}">${hasStageResults ? "Official results" : "Pending results"}</span>
+      </div>
+      <div class="comparison-summary">
+        <div class="comparison-equation-row">
+          ${comparisonMetricHtml("Base points", `${formatPoints(basePoints)} pts`)}
+          <span class="comparison-operator">x</span>
+          ${comparisonMetricHtml("Earned multiplier", `${formatMultiplier(earnedMultiplier)}x`)}
+          <span class="comparison-operator">=</span>
+          ${comparisonMetricHtml("Knockout score", `${formatPoints(stageTotal)} pts`)}
+        </div>
+      </div>
+      <div class="comparison-content">
+        <div class="comparison-block">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Match</th>
+                  <th>Official result</th>
+                  <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
+                  <th>Result</th>
+                  <th>Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${stageRows.length ? stageRows.map((row) => `
+                  <tr>
+                    <td>${escapeHtml(row.matchLabel)}</td>
+                    <td>${escapeHtml(row.officialLabel)}</td>
+                    <td>${row.predictionLabel ? escapeHtml(row.predictionLabel) : '<span class="muted">Pending</span>'}</td>
+                    <td>${resultBadge(row)}</td>
+                    <td>${formatPoints(row.points)}</td>
+                  </tr>
+                `).join("") : `
+                  <tr>
+                    <td colspan="5"><span class="muted">No official ${escapeHtml(knockoutStageLabel(stage).toLowerCase())} results are available yet.</span></td>
+                  </tr>
+                `}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
 function comparisonMetric(label, value) {
   const node = document.createElement("article");
   node.className = "comparison-metric";
@@ -665,6 +797,20 @@ function comparisonMetric(label, value) {
     <strong>${escapeHtml(value)}</strong>
   `;
   return node;
+}
+
+function comparisonMetricHtml(label, value) {
+  return `
+    <article class="comparison-metric">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(value)}</strong>
+    </article>
+  `;
+}
+
+function futuresRulePoints(rows, label) {
+  const row = rows.find((item) => item.label === label);
+  return row ? row.points + row.bonus : 0;
 }
 
 function comparisonMetricRow(...metrics) {
@@ -767,6 +913,52 @@ function bestThirdComparisonRows(player, comparisonScenario) {
         status: pick.match ? "Match" : "No match",
       };
     });
+}
+
+function knockoutComparisonRows(player) {
+  if (!player) {
+    return [];
+  }
+
+  const predictions = knockoutPredictionsByPlayer.get(player.name) || [];
+  const predictionByMatch = new Map(predictions.map((prediction) => [prediction.matchId, prediction]));
+
+  return officialKnockoutMatches.map((result) => {
+    const prediction = predictionByMatch.get(result.matchId);
+    const points = prediction ? scoreKnockoutMatch(prediction, result) : 0;
+    const match = points > 0;
+    return {
+      stage: result.stage,
+      matchLabel: `${result.homeTeam} vs ${result.awayTeam}`,
+      officialLabel: `${result.homeTeam} ${result.homeScore}-${result.awayScore} ${result.awayTeam}; ${result.advancingTeam} advanced`,
+      predictionLabel: prediction ? knockoutPredictionLabel(prediction, result) : "",
+      match,
+      points,
+      status: prediction ? knockoutMatchStatus(prediction, result, points) : "No prediction",
+    };
+  });
+}
+
+function knockoutPredictionLabel(prediction, result) {
+  const score = prediction.homeScore !== null && prediction.awayScore !== null
+    ? `${result.homeTeam} ${prediction.homeScore}-${prediction.awayScore} ${result.awayTeam}; `
+    : "";
+  return `${score}${prediction.winner || "No winner"} advanced`;
+}
+
+function knockoutMatchStatus(prediction, result, points) {
+  const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
+  const correctWinner = prediction.winner && prediction.winner === result.advancingTeam;
+  if (exactScore && correctWinner) {
+    return "Exact";
+  }
+  if (exactScore) {
+    return "Exact score";
+  }
+  if (correctWinner) {
+    return "Winner";
+  }
+  return points > 0 ? "Partial" : "No match";
 }
 
 function futuresComparisonRows(player, comparisonScenario) {
@@ -1068,8 +1260,8 @@ function selectField({ label, value, options, onChange, optionLabel = (option) =
 }
 
 function renderAfterScenarioChange() {
-  renderMetrics();
   renderComparison();
+  renderKnockoutComparison();
   renderLeaderboard();
 }
 
@@ -1119,7 +1311,7 @@ function chart(title, rows, maxVotes) {
 
 function renderLeaderboard() {
   document.querySelector(".empty-state")?.remove();
-  leaderboardScenarioStatus.textContent = scenarioLabel(selectedScenarioMode);
+  leaderboardScenarioStatus.textContent = "Official results";
   const rows = scoreAllPlayers();
 
   if (!rows.length) {
@@ -1135,6 +1327,7 @@ function renderLeaderboard() {
         <th>Player</th>
         <th>Total</th>
         <th>First-round score</th>
+        <th>Knockouts</th>
         <th>Futures</th>
       </tr>
     </thead>
@@ -1152,6 +1345,7 @@ function renderLeaderboard() {
               <td><strong>${escapeHtml(row.name)}</strong><br><span class="muted">${escapeHtml(row.sheet)}</span></td>
               <td class="total">${formatPoints(row.total)}</td>
               <td>${formatPoints(row.firstRound)}</td>
+              <td>${formatPoints(row.knockout)}</td>
               <td>${formatPoints(row.futures)}</td>
             </tr>
           `
@@ -1172,25 +1366,15 @@ function hasScenarioData(value) {
   );
 }
 
-function scenarioLabel(mode) {
-  return mode === "official" ? "Official results" : "Consensus results";
-}
-
-function scenarioSourceLabel(mode) {
-  if (mode === "official") {
-    return officialData?.sourceName || "Official results";
-  }
-  return "Pool consensus";
-}
-
 function scoreAllPlayers() {
   return players
     .map((player, playerIndex) => {
       const group = scoreGroups(player);
       const bestThirds = scoreBestThirds(player);
+      const knockoutScore = scoreKnockout(player);
       const futuresScore = scoreFutures(player);
       const firstRound = group + bestThirds;
-      const total = firstRound + futuresScore.points + futuresScore.bonus;
+      const total = firstRound + knockoutScore.points + knockoutScore.bonus + futuresScore.points + futuresScore.bonus;
       return {
         playerIndex,
         name: player.name,
@@ -1198,8 +1382,9 @@ function scoreAllPlayers() {
         group,
         bestThirds,
         firstRound,
+        knockout: knockoutScore.points + knockoutScore.bonus,
         futures: futuresScore.points,
-        bonus: futuresScore.bonus,
+        bonus: knockoutScore.bonus + futuresScore.bonus,
         total,
       };
     })
@@ -1242,6 +1427,68 @@ function scoreGroups(player) {
 function scoreBestThirds(player) {
   const actual = new Set(scenario.bestThirds);
   return player.bestThirds.filter((pick) => actual.has(pick.team)).length * BEST_THIRD_TEAM_POINTS;
+}
+
+function scoreKnockout(player) {
+  const predictions = knockoutPredictionsByPlayer.get(player?.name || "") || [];
+  const predictionByMatch = new Map(predictions.map((prediction) => [prediction.matchId, prediction]));
+  let points = 0;
+  let perfectWinnersPossible = officialKnockoutMatches.length > 0;
+  let perfectScoresPossible = officialKnockoutMatches.length > 0;
+
+  officialKnockoutMatches.forEach((result) => {
+    const prediction = predictionByMatch.get(result.matchId);
+    if (!prediction) {
+      perfectWinnersPossible = false;
+      perfectScoresPossible = false;
+      return;
+    }
+
+    points += scoreKnockoutMatch(prediction, result);
+
+    if (prediction.winner !== result.advancingTeam) {
+      perfectWinnersPossible = false;
+    }
+
+    const exactScore =
+      prediction.mode === "score" &&
+      prediction.homeScore === result.homeScore &&
+      prediction.awayScore === result.awayScore &&
+      prediction.winner === result.advancingTeam;
+    if (!exactScore) {
+      perfectScoresPossible = false;
+    }
+  });
+
+  const perfectWinnersBonus = perfectWinnersPossible ? PERFECT_KNOCKOUT_WINNERS_BONUS : 0;
+  const perfectScoresBonus = perfectScoresPossible ? PERFECT_KNOCKOUT_SCORES_BONUS : 0;
+  return {
+    points,
+    bonus: perfectWinnersBonus + perfectScoresBonus,
+    perfectWinnersBonus,
+    perfectScoresBonus,
+  };
+}
+
+function scoreKnockoutMatch(prediction, result) {
+  const basePoints = KNOCKOUT_BASE_POINTS[result.stage] || 0;
+  const correctAdvancingTeam = prediction.winner && prediction.winner === result.advancingTeam;
+
+  if (prediction.mode === "winner") {
+    return correctAdvancingTeam ? basePoints : 0;
+  }
+
+  const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
+  if (exactScore && correctAdvancingTeam) {
+    return basePoints * 2.5;
+  }
+  if (exactScore) {
+    return basePoints * 1.5;
+  }
+  if (correctAdvancingTeam) {
+    return basePoints * 0.5;
+  }
+  return 0;
 }
 
 function playerBestThirdSet(player) {
@@ -1333,11 +1580,22 @@ function lastRoundPoints(predicted, actual, pointValues) {
 }
 
 function stageLabel(stageKey) {
+  if (stageKey in KNOCKOUT_STAGE_LABELS) {
+    return knockoutStageLabel(stageKey);
+  }
   return STAGES.find(([key]) => key === stageKey)?.[1] || stageKey;
+}
+
+function knockoutStageLabel(stageKey) {
+  return KNOCKOUT_STAGE_LABELS[stageKey] || stageKey;
 }
 
 function formatPoints(value) {
   return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
+function formatMultiplier(value) {
+  return Number.isInteger(value) ? String(value) : value.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
 }
 
 function escapeHtml(value) {

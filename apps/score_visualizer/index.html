@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>World Cup Pool Score Visualizer</title>
+  <title>World Cup Pool Scores</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -12,7 +12,7 @@
   <header class="topbar">
     <div>
       <p class="eyebrow">World Cup 2026 Pool</p>
-      <h1>Score Scenario Visualizer</h1>
+      <h1>Score Visualizer</h1>
     </div>
     <nav class="site-nav" aria-label="Visualization navigation">
       <a href="../../index.html">Home</a>
@@ -26,17 +26,7 @@
   </header>
 
   <main class="page">
-    <section class="toolbar" aria-label="Score scenario">
-      <label class="field scenario-select">
-        <span>Score scenario</span>
-        <select id="scenarioSelect">
-          <option value="official">Official results</option>
-          <option value="consensus">Consensus results</option>
-        </select>
-      </label>
-    </section>
 
-    <section class="metrics" id="metrics"></section>
 
     <section class="panel leaderboard-panel">
       <div class="panel-head">
@@ -44,21 +34,37 @@
           <p class="eyebrow">Leaderboard</p>
           <h2>Score</h2>
         </div>
-        <span class="rule-pill" id="leaderboardScenarioStatus">Consensus results</span>
+        <span class="rule-pill" id="leaderboardScenarioStatus">Official results</span>
       </div>
       <div class="leaderboard-warning" role="note" aria-label="Timeline scoring notice">
         <span class="warning-mark" aria-hidden="true">!</span>
-        <p>This page includes the Futures Scores in the leaderboard, but they are not added in the official results yet.</p>
+        <p>This page includes the Futures Scores in the leaderboard, but they are not added in the official results yet.
+        </p>
       </div>
       <div class="table-wrap">
         <table id="leaderboardTable"></table>
       </div>
     </section>
 
+    <section class="panel selector-panel" aria-labelledby="selectorTitle">
+      <div class="panel-head">
+        <div>
+          <h2 id="selectorTitle">Player Selector</h2>
+        </div>
+      </div>
+      <div class="selector-body">
+        <label class="player-select-control" for="playerSelect">
+          <span>Player</span>
+          <select id="playerSelect">
+            <option value="0">Loading players...</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
     <section class="panel comparison-panel">
       <div class="panel-head">
         <div>
-          <p class="eyebrow">Official vs Predictions</p>
           <h2>First Round</h2>
         </div>
         <span class="rule-pill" id="comparisonStatus">Pending results</span>
@@ -80,10 +86,11 @@
       </div>
     </section>
 
+    <div id="knockoutStagePanels" class="knockout-stage-panels"></div>
+
     <section class="panel futures-comparison-panel">
       <div class="panel-head">
         <div>
-          <p class="eyebrow">Official vs Predictions</p>
           <h2>Futures Comparison</h2>
         </div>
       </div>
@@ -102,6 +109,7 @@
 
   <script src="../../data/generated/pool_data.js"></script>
   <script src="../../data/generated/official_results.js"></script>
+  <script src="../../data/generated/knockout_predictions.js"></script>
   <script src="app.js"></script>
 </body>
 
