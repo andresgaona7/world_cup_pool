@@ -15,6 +15,7 @@ data/generated/             Committed JS/JSON data consumed by static apps.
 scripts/                    Data builders and official-results updater.
 index.html                  Public dashboard for GitHub Pages.
 apps/player_predictions/    Static reader for submitted workbook picks.
+apps/knockout_predictions/  Static knockout bracket prediction template.
 apps/score_visualizer/      Static leaderboard and scenario scorer.
 apps/score_timeline/        Static score-over-time graph.
 apps/consensus_predictions/ Standalone generated consensus visualization.
@@ -125,6 +126,7 @@ Open `index.html` directly in a browser for the pool dashboard. The dashboard
 links to the static apps below, and each app can also be opened directly:
 
 - `apps/player_predictions/index.html`
+- `apps/knockout_predictions/index.html`
 - `apps/score_visualizer/index.html`
 - `apps/score_timeline/index.html`
 - `apps/consensus_predictions/index.html`
@@ -169,7 +171,7 @@ make apply-manual-futures
 CHECKPOINT=group_md1 make create-official-checkpoint
 make test
 make build-site
-git add data/generated data/manual/official_futures.json data/manual/knockout_predictions.js index.html styles.css apps .github/workflows/pages.yml Makefile .gitignore README.md
+git add data/generated data/manual/official_futures.json data/manual/knockout_predictions.js index.html styles.css apps docs .github/workflows/pages.yml Makefile .gitignore README.md
 git commit -m "Update public pool dashboard"
 git push origin dev
 ```

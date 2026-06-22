@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Cup Pool Knockout Predictions</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">World Cup 2026 Pool</p>
+      <h1>Knockout Predictions</h1>
+    </div>
+    <nav class="site-nav" aria-label="Visualization navigation">
+      <a href="../../index.html">Home</a>
+      <a href="../player_predictions/index.html">Player Picks</a>
+      <a class="active" href="index.html" aria-current="page">Knockout</a>
+      <a href="../consensus_predictions/index.html">Consensus</a>
+      <a href="../score_visualizer/index.html">Scores</a>
+      <a href="../third_places/index.html">Third places</a>
+      <a href="../score_timeline/index.html">Official results</a>
+      <a href="../blog/index.html">Blog</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="summary-grid" aria-label="Knockout prediction scoring">
+      <article class="summary-card">
+        <p class="eyebrow">Winner-only mode</p>
+        <strong>Correct advancing team</strong>
+        <span>Scores 1x the round base value.</span>
+      </article>
+      <article class="summary-card">
+        <p class="eyebrow">Score mode</p>
+        <strong>Exact score plus winner</strong>
+        <span>Scores 2.5x the round base value.</span>
+      </article>
+      <article class="summary-card">
+        <p class="eyebrow">Bonuses</p>
+        <strong>Perfect knockout card</strong>
+        <span>50 for all winners, 200 for all scores.</span>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Bracket Template</p>
+          <h2>Prediction Sheet</h2>
+        </div>
+        <a class="source-link" href="https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage">Bracket source</a>
+      </div>
+      <div id="bracket" class="bracket" aria-live="polite"></div>
+    </section>
+
+    <section class="panel rules-panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Point Values</p>
+          <h2>Knockout Scoring</h2>
+        </div>
+      </div>
+      <div class="rules-grid">
+        <article class="rule-section">
+          <h3>Base by round</h3>
+          <table class="rules-table">
+            <tbody id="basePointsTable"></tbody>
+          </table>
+        </article>
+        <article class="rule-section">
+          <h3>Score mode</h3>
+          <ul>
+            <li>Exact regulation score and correct advancing team: 2.5x base.</li>
+            <li>Exact regulation score but wrong advancing team: 1.5x base.</li>
+            <li>Correct advancing team but wrong score: 0.5x base.</li>
+            <li>Wrong advancing team: 0.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
