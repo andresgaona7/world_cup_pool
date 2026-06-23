@@ -33,14 +33,19 @@ select {
 }
 
 .topbar {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
+  display: grid;
+  gap: 16px;
   padding: 22px 28px;
   background: #14313d;
   color: #fff;
   border-bottom: 4px solid var(--accent);
+}
+
+.title-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
 }
 
 .topbar h1,
@@ -70,9 +75,10 @@ select {
 
 .site-nav {
   display: flex;
-  justify-content: flex-end;
   flex-wrap: wrap;
   gap: 6px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
 }
 
 .site-nav a {
@@ -675,15 +681,9 @@ td {
 }
 
 @media (max-width: 860px) {
-  .topbar,
   .split,
   .comparison-content {
     grid-template-columns: 1fr;
-  }
-
-  .topbar {
-    display: grid;
-    align-items: start;
   }
 
   .site-nav {

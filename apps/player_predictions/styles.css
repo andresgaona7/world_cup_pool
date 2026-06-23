@@ -25,14 +25,19 @@ body {
 }
 
 .topbar {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
+  display: grid;
+  gap: 16px;
   padding: 22px 28px;
   background: #14313d;
   color: #fff;
   border-bottom: 4px solid var(--accent);
+}
+
+.title-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
 }
 
 .eyebrow {
@@ -68,17 +73,12 @@ h3 {
   border-bottom: 1px solid var(--line);
 }
 
-.header-tools {
-  display: grid;
-  justify-items: end;
-  gap: 10px;
-}
-
 .site-nav {
   display: flex;
-  justify-content: flex-end;
   flex-wrap: wrap;
   gap: 6px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
 }
 
 .site-nav a {
@@ -385,13 +385,11 @@ table {
 
 @media (max-width: 840px) {
   .topbar {
-    align-items: flex-start;
-    flex-direction: column;
     padding: 18px;
   }
 
-  .header-tools {
-    justify-items: start;
+  .title-row {
+    align-items: flex-start;
   }
 
   .site-nav {

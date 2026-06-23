@@ -250,14 +250,18 @@ def render_visualization(consensus: dict) -> str:
       color: var(--ink);
     }}
     .topbar {{
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 24px;
+      display: grid;
+      gap: 16px;
       padding: 22px 28px;
       background: #14313d;
       color: #fff;
       border-bottom: 4px solid var(--accent);
+    }}
+    .title-row {{
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
     }}
     .eyebrow {{
       margin: 0 0 4px;
@@ -273,16 +277,12 @@ def render_visualization(consensus: dict) -> str:
       font-size: 28px;
       line-height: 1.1;
     }}
-    .header-tools {{
-      display: grid;
-      justify-items: end;
-      gap: 10px;
-    }}
     .site-nav {{
       display: flex;
-      justify-content: flex-end;
       flex-wrap: wrap;
       gap: 6px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
     }}
     .site-nav a {{
       display: inline-flex;
@@ -416,12 +416,10 @@ def render_visualization(consensus: dict) -> str:
     .chart:nth-child(3n) .bar {{ background: var(--warn); }}
     @media (max-width: 720px) {{
       .topbar {{
-        align-items: flex-start;
-        flex-direction: column;
         padding: 18px;
       }}
-      .header-tools {{
-        justify-items: start;
+      .title-row {{
+        align-items: flex-start;
       }}
       .site-nav {{
         justify-content: flex-start;
@@ -455,23 +453,23 @@ def render_visualization(consensus: dict) -> str:
 </head>
 <body>
   <header class="topbar">
-    <div>
-      <p class="eyebrow">World Cup 2026 Pool</p>
-      <h1>Consensus Predictions</h1>
-    </div>
-    <div class="header-tools">
-      <nav class="site-nav" aria-label="Visualization navigation">
-        <a href="../../index.html">Home</a>
-        <a href="../rules/index.html">Rules</a>
-        <a href="../player_predictions/index.html">Player Picks</a>
-        <a href="../score_visualizer/index.html">Scores</a>
-        <a href="../third_places/index.html">Third places</a>
-        <a href="../score_timeline/index.html">Official results</a>
-        <a href="../blog/index.html">Blog</a>
-        <a href="../legacy/index.html">Legacy</a>
-      </nav>
+    <div class="title-row">
+      <div>
+        <p class="eyebrow">World Cup 2026 Pool</p>
+        <h1>Consensus Predictions</h1>
+      </div>
       <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false"><span data-theme-toggle-label>Dark mode</span></button>
     </div>
+    <nav class="site-nav" aria-label="Visualization navigation">
+      <a href="../../index.html">Home</a>
+      <a href="../rules/index.html">Rules</a>
+      <a href="../player_predictions/index.html">Player Picks</a>
+      <a href="../score_visualizer/index.html">Scores</a>
+      <a href="../third_places/index.html">Third places</a>
+      <a href="../score_timeline/index.html">Official results</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../legacy/index.html">Legacy</a>
+    </nav>
   </header>
   <main>
     <section class="summary-grid" id="metrics"></section>
