@@ -14,8 +14,8 @@ const FUTURES_POINTS = {
   topScorer: 60,
   favoriteExact: 35,
   favoriteOffByOne: 5,
-  ecuadorExact: 40,
-  ecuadorOffByOne: 18,
+  ecuadorExact: 42,
+  ecuadorOffByOne: 6,
   perfectBonus: 75,
 };
 
