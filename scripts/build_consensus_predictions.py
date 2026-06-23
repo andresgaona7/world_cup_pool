@@ -229,6 +229,7 @@ def render_visualization(consensus: dict) -> str:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>World Cup Pool Consensus Predictions</title>
+  <script src="../../theme.js"></script>
   <style>
     :root {{
       color-scheme: light;
@@ -306,6 +307,26 @@ def render_visualization(consensus: dict) -> str:
       border-color: #ffffff;
       background: #ffffff;
       color: #14313d;
+    }}
+    .theme-toggle {{
+      min-height: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 6px;
+      padding: 6px 10px;
+      background: transparent;
+      color: #e7f0f3;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 750;
+      line-height: 1;
+      white-space: nowrap;
+    }}
+    .theme-toggle:hover,
+    .theme-toggle:focus {{
+      border-color: #ffffff;
+      color: #ffffff;
+      outline: none;
     }}
     main {{
       padding: 24px clamp(16px, 4vw, 48px) 44px;
@@ -407,6 +428,29 @@ def render_visualization(consensus: dict) -> str:
       }}
       .bar-row {{ grid-template-columns: minmax(82px, 120px) 1fr 28px; }}
     }}
+    :root[data-theme="dark"] {{
+      color-scheme: dark;
+      --bg: #0d141c;
+      --panel: #131d28;
+      --ink: #edf4f8;
+      --muted: #a9b8c7;
+      --line: #2b3a49;
+      --accent: #35c5a6;
+      --warn: #f2c76b;
+      --blue: #7eb6f6;
+    }}
+    :root[data-theme="dark"] .topbar {{
+      background: #0f2732;
+    }}
+    :root[data-theme="dark"] .site-nav a.active,
+    :root[data-theme="dark"] .theme-toggle[aria-pressed="true"] {{
+      border-color: #e7f0f3;
+      background: #e7f0f3;
+      color: #0f2732;
+    }}
+    :root[data-theme="dark"] .bar-track {{
+      background: #1c2a37;
+    }}
   </style>
 </head>
 <body>
@@ -426,6 +470,7 @@ def render_visualization(consensus: dict) -> str:
         <a href="../blog/index.html">Blog</a>
         <a href="../legacy/index.html">Legacy</a>
       </nav>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false"><span data-theme-toggle-label>Dark mode</span></button>
     </div>
   </header>
   <main>

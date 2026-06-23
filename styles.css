@@ -496,3 +496,90 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d141c;
+  --surface: #131d28;
+  --ink: #edf4f8;
+  --muted: #a9b8c7;
+  --line: #2b3a49;
+  --soft: #1c2a37;
+  --accent: #35c5a6;
+  --accent-strong: #77dfc8;
+  --accent-soft: #173c36;
+  --blue: #7eb6f6;
+  --blue-soft: #172f4b;
+  --gold: #f2c76b;
+  --gold-soft: #3d3020;
+}
+
+.theme-toggle {
+  min-height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 6px;
+  padding: 6px 10px;
+  background: transparent;
+  color: #e7f0f3;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus {
+  border-color: #ffffff;
+  color: #ffffff;
+  outline: none;
+}
+
+:root[data-theme="dark"] .site-header {
+  background: #0f2732;
+}
+
+:root[data-theme="dark"] .site-nav a.active,
+:root[data-theme="dark"] .theme-toggle[aria-pressed="true"] {
+  border-color: #e7f0f3;
+  background: #e7f0f3;
+  color: #0f2732;
+}
+
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] .tooltip,
+:root[data-theme="dark"] .empty-state,
+:root[data-theme="dark"] .selected-player-detail,
+:root[data-theme="dark"] .checkpoint-history-row,
+:root[data-theme="dark"] .rule-section,
+:root[data-theme="dark"] .score-card,
+:root[data-theme="dark"] .scenario-card,
+:root[data-theme="dark"] .app-card {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .primary-link {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, #152331 0%, #173c36 100%);
+}
+
+:root[data-theme="dark"] .latest-update-card {
+  border-color: var(--line);
+  background: linear-gradient(135deg, #152331 0%, #183b36 100%);
+}
+
+:root[data-theme="dark"] .leaderboard-panel tbody tr:first-child td {
+  background: var(--gold-soft);
+}
+
+:root[data-theme="dark"] .player-point circle {
+  fill: var(--surface);
+}
+
+:root[data-theme="dark"] .timeline-chart .grid-line,
+:root[data-theme="dark"] .timeline-chart .axis-line {
+  stroke: var(--line);
+}

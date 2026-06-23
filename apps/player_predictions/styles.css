@@ -427,3 +427,87 @@ table {
     grid-template-columns: 1fr;
   }
 }
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d141c;
+  --panel: #131d28;
+  --ink: #edf4f8;
+  --muted: #a9b8c7;
+  --line: #2b3a49;
+  --accent: #35c5a6;
+  --accent-strong: #77dfc8;
+  --soft: #173c36;
+  --warn: #3d3020;
+}
+
+.theme-toggle {
+  min-height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 6px;
+  padding: 6px 10px;
+  background: transparent;
+  color: #e7f0f3;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus {
+  border-color: #ffffff;
+  color: #ffffff;
+  outline: none;
+}
+
+:root[data-theme="dark"] .topbar {
+  background: #0f2732;
+}
+
+:root[data-theme="dark"] .site-nav a.active,
+:root[data-theme="dark"] .theme-toggle[aria-pressed="true"] {
+  border-color: #e7f0f3;
+  background: #e7f0f3;
+  color: #0f2732;
+}
+
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] .load-status,
+:root[data-theme="dark"] .future-item,
+:root[data-theme="dark"] .table-wrap,
+:root[data-theme="dark"] .best-thirds,
+:root[data-theme="dark"] .knockout-stage,
+:root[data-theme="dark"] .knockout-stage-count,
+:root[data-theme="dark"] th,
+:root[data-theme="dark"] td {
+  background: var(--panel);
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .first-round-table .group-label,
+:root[data-theme="dark"] .first-round-table .rank,
+:root[data-theme="dark"] .first-round-table .empty,
+:root[data-theme="dark"] .knockout-table th {
+  background: #1c2a37;
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .best-thirds-table td {
+  border-color: #5b4924;
+  background: var(--warn);
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .load-status.is-error {
+  border-color: #7e3b3b;
+  background: #3b1f24;
+  color: #ffb4b4;
+}
+
+:root[data-theme="dark"] .muted {
+  color: var(--muted);
+}

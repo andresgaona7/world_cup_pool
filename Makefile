@@ -24,7 +24,7 @@ rebuild-official-checkpoints:
 build-site:
 	rm -rf public
 	mkdir -p public/data/generated
-	cp index.html styles.css .nojekyll public/
+	cp index.html styles.css theme.js .nojekyll public/
 	cp -R apps public/
 	cp data/generated/consensus_predictions.json data/generated/knockout_predictions.js data/generated/official_results.js data/generated/pool_data.js public/data/generated/
 

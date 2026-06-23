@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>World Cup Pool Consensus Predictions</title>
+  <script src="../../theme.js"></script>
   <style>
     :root {
       color-scheme: light;
@@ -81,6 +82,26 @@
       border-color: #ffffff;
       background: #ffffff;
       color: #14313d;
+    }
+    .theme-toggle {
+      min-height: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 6px;
+      padding: 6px 10px;
+      background: transparent;
+      color: #e7f0f3;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 750;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .theme-toggle:hover,
+    .theme-toggle:focus {
+      border-color: #ffffff;
+      color: #ffffff;
+      outline: none;
     }
     main {
       padding: 24px clamp(16px, 4vw, 48px) 44px;
@@ -182,6 +203,29 @@
       }
       .bar-row { grid-template-columns: minmax(82px, 120px) 1fr 28px; }
     }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0d141c;
+      --panel: #131d28;
+      --ink: #edf4f8;
+      --muted: #a9b8c7;
+      --line: #2b3a49;
+      --accent: #35c5a6;
+      --warn: #f2c76b;
+      --blue: #7eb6f6;
+    }
+    :root[data-theme="dark"] .topbar {
+      background: #0f2732;
+    }
+    :root[data-theme="dark"] .site-nav a.active,
+    :root[data-theme="dark"] .theme-toggle[aria-pressed="true"] {
+      border-color: #e7f0f3;
+      background: #e7f0f3;
+      color: #0f2732;
+    }
+    :root[data-theme="dark"] .bar-track {
+      background: #1c2a37;
+    }
   </style>
 </head>
 <body>
@@ -201,6 +245,7 @@
         <a href="../blog/index.html">Blog</a>
         <a href="../legacy/index.html">Legacy</a>
       </nav>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false"><span data-theme-toggle-label>Dark mode</span></button>
     </div>
   </header>
   <main>
@@ -251,7 +296,7 @@
       <div class="charts" id="bestThirdCharts"></div>
     </section>
   </main>
-  <script id="consensus-data" type="application/json">{"consensus": {"metadata": {"source_file": "data/generated/pool_data.js", "workbook_source": "data/raw/group_stage_and_future_predictions.xlsx", "generated_from": "group_stage_and_future_predictions.xlsx", "generated_at": "2026-06-22T06:08:54.145794+00:00", "player_count": 11}, "group_winner_consensus": {"A": [{"team": "Mexico", "votes": 9}, {"team": "South Korea", "votes": 2}], "B": [{"team": "Switzerland", "votes": 8}, {"team": "Canada", "votes": 3}], "C": [{"team": "Brazil", "votes": 8}, {"team": "Morocco", "votes": 3}], "D": [{"team": "United States", "votes": 6}, {"team": "Türkiye", "votes": 4}, {"team": "Paraguay", "votes": 1}], "E": [{"team": "Germany", "votes": 8}, {"team": "Ecuador", "votes": 3}], "F": [{"team": "Netherlands", "votes": 10}, {"team": "Japan", "votes": 1}], "G": [{"team": "Belgium", "votes": 10}, {"team": "Iran", "votes": 1}], "H": [{"team": "Spain", "votes": 11}], "I": [{"team": "France", "votes": 11}], "J": [{"team": "Argentina", "votes": 11}], "K": [{"team": "Portugal", "votes": 10}, {"team": "Colombia", "votes": 1}], "L": [{"team": "England", "votes": 10}, {"team": "Croatia", "votes": 1}]}, "group_runner_up_consensus": {"A": [{"team": "South Korea", "votes": 5}, {"team": "South Africa", "votes": 3}, {"team": "Czechia", "votes": 2}, {"team": "Mexico", "votes": 1}], "B": [{"team": "Canada", "votes": 7}, {"team": "Switzerland", "votes": 2}, {"team": "Bosnia-Herzegovina", "votes": 2}], "C": [{"team": "Morocco", "votes": 8}, {"team": "Brazil", "votes": 3}], "D": [{"team": "United States", "votes": 4}, {"team": "Türkiye", "votes": 4}, {"team": "Paraguay", "votes": 3}], "E": [{"team": "Ecuador", "votes": 5}, {"team": "Ivory Coast", "votes": 4}, {"team": "Germany", "votes": 2}], "F": [{"team": "Japan", "votes": 8}, {"team": "Sweden", "votes": 2}, {"team": "Netherlands", "votes": 1}], "G": [{"team": "Egypt", "votes": 9}, {"team": "Iran", "votes": 1}, {"team": "Belgium", "votes": 1}], "H": [{"team": "Uruguay", "votes": 10}, {"team": "Saudi Arabia", "votes": 1}], "I": [{"team": "Norway", "votes": 7}, {"team": "Senegal", "votes": 4}], "J": [{"team": "Austria", "votes": 8}, {"team": "Algeria", "votes": 3}], "K": [{"team": "Colombia", "votes": 10}, {"team": "Portugal", "votes": 1}], "L": [{"team": "Croatia", "votes": 9}, {"team": "Ghana", "votes": 2}]}, "group_third_place_consensus": {"A": [{"team": "Czechia", "votes": 6}, {"team": "South Korea", "votes": 3}, {"team": "South Africa", "votes": 1}, {"team": "Mexico", "votes": 1}], "B": [{"team": "Bosnia-Herzegovina", "votes": 7}, {"team": "Qatar", "votes": 2}, {"team": "Canada", "votes": 1}, {"team": "Switzerland", "votes": 1}], "C": [{"team": "Scotland", "votes": 8}, {"team": "Haiti", "votes": 3}], "D": [{"team": "Paraguay", "votes": 6}, {"team": "Türkiye", "votes": 2}, {"team": "Australia", "votes": 2}, {"team": "United States", "votes": 1}], "E": [{"team": "Ivory Coast", "votes": 7}, {"team": "Ecuador", "votes": 3}, {"team": "Germany", "votes": 1}], "F": [{"team": "Sweden", "votes": 9}, {"team": "Japan", "votes": 2}], "G": [{"team": "Iran", "votes": 9}, {"team": "Egypt", "votes": 2}], "H": [{"team": "Saudi Arabia", "votes": 9}, {"team": "Uruguay", "votes": 1}, {"team": "Cape Verde", "votes": 1}], "I": [{"team": "Senegal", "votes": 7}, {"team": "Norway", "votes": 3}, {"team": "Iraq", "votes": 1}], "J": [{"team": "Algeria", "votes": 7}, {"team": "Austria", "votes": 3}, {"team": "Jordan", "votes": 1}], "K": [{"team": "Congo DR", "votes": 8}, {"team": "Uzbekistan", "votes": 3}], "L": [{"team": "Ghana", "votes": 9}, {"team": "England", "votes": 1}, {"team": "Croatia", "votes": 1}]}, "futures_consensus": {"champion": [{"value": "Spain", "votes": 7}, {"value": "Portugal", "votes": 3}, {"value": "France", "votes": 1}], "runner_up": [{"value": "Argentina", "votes": 3}, {"value": "France", "votes": 3}, {"value": "Portugal", "votes": 2}, {"value": "Spain", "votes": 1}, {"value": "Netherlands", "votes": 1}, {"value": "England", "votes": 1}], "favorite_team": [{"value": "France", "votes": 3}, {"value": "Argentina", "votes": 2}, {"value": "Norway", "votes": 1}, {"value": "Morocco", "votes": 1}, {"value": "England", "votes": 1}, {"value": "Ecuador", "votes": 1}, {"value": "Spain", "votes": 1}, {"value": "Brazil", "votes": 1}], "top_scorer": [{"value": "Kylian Mbappe", "votes": 8}, {"value": "Mikel Oyarzabal", "votes": 2}, {"value": "Harry Kane", "votes": 1}], "ecuador_round": [{"value": "Round of 16", "votes": 7}, {"value": "Quarter final", "votes": 2}, {"value": "Round of 32", "votes": 1}, {"value": "Semi final", "votes": 1}]}, "best_third_consensus": [{"team": "Sweden", "votes": 8}, {"team": "Scotland", "votes": 7}, {"team": "Bosnia-Herzegovina", "votes": 7}, {"team": "Ivory Coast", "votes": 7}, {"team": "Senegal", "votes": 6}, {"team": "Paraguay", "votes": 5}, {"team": "Czechia", "votes": 5}, {"team": "Ghana", "votes": 5}, {"team": "Algeria", "votes": 4}, {"team": "Ecuador", "votes": 3}, {"team": "Iran", "votes": 3}, {"team": "Congo DR", "votes": 3}, {"team": "Norway", "votes": 3}, {"team": "South Korea", "votes": 2}, {"team": "Haiti", "votes": 2}, {"team": "Qatar", "votes": 2}, {"team": "Australia", "votes": 2}, {"team": "Uzbekistan", "votes": 1}, {"team": "United States", "votes": 1}, {"team": "Germany", "votes": 1}, {"team": "South Africa", "votes": 1}, {"team": "Saudi Arabia", "votes": 1}, {"team": "Egypt", "votes": 1}, {"team": "England", "votes": 1}, {"team": "Iraq", "votes": 1}, {"team": "Mexico", "votes": 1}, {"team": "Croatia", "votes": 1}, {"team": "Switzerland", "votes": 1}, {"team": "Japan", "votes": 1}, {"team": "Uruguay", "votes": 1}, {"team": "Austria", "votes": 1}]}}</script>
+  <script id="consensus-data" type="application/json">{"consensus": {"metadata": {"source_file": "data/generated/pool_data.js", "workbook_source": "data/raw/group_stage_and_future_predictions.xlsx", "generated_from": "group_stage_and_future_predictions.xlsx", "generated_at": "2026-06-23T05:54:36.504349+00:00", "player_count": 11}, "group_winner_consensus": {"A": [{"team": "Mexico", "votes": 9}, {"team": "South Korea", "votes": 2}], "B": [{"team": "Switzerland", "votes": 8}, {"team": "Canada", "votes": 3}], "C": [{"team": "Brazil", "votes": 8}, {"team": "Morocco", "votes": 3}], "D": [{"team": "United States", "votes": 6}, {"team": "Türkiye", "votes": 4}, {"team": "Paraguay", "votes": 1}], "E": [{"team": "Germany", "votes": 8}, {"team": "Ecuador", "votes": 3}], "F": [{"team": "Netherlands", "votes": 10}, {"team": "Japan", "votes": 1}], "G": [{"team": "Belgium", "votes": 10}, {"team": "Iran", "votes": 1}], "H": [{"team": "Spain", "votes": 11}], "I": [{"team": "France", "votes": 11}], "J": [{"team": "Argentina", "votes": 11}], "K": [{"team": "Portugal", "votes": 10}, {"team": "Colombia", "votes": 1}], "L": [{"team": "England", "votes": 10}, {"team": "Croatia", "votes": 1}]}, "group_runner_up_consensus": {"A": [{"team": "South Korea", "votes": 5}, {"team": "South Africa", "votes": 3}, {"team": "Czechia", "votes": 2}, {"team": "Mexico", "votes": 1}], "B": [{"team": "Canada", "votes": 7}, {"team": "Switzerland", "votes": 2}, {"team": "Bosnia-Herzegovina", "votes": 2}], "C": [{"team": "Morocco", "votes": 8}, {"team": "Brazil", "votes": 3}], "D": [{"team": "United States", "votes": 4}, {"team": "Türkiye", "votes": 4}, {"team": "Paraguay", "votes": 3}], "E": [{"team": "Ecuador", "votes": 5}, {"team": "Ivory Coast", "votes": 4}, {"team": "Germany", "votes": 2}], "F": [{"team": "Japan", "votes": 8}, {"team": "Sweden", "votes": 2}, {"team": "Netherlands", "votes": 1}], "G": [{"team": "Egypt", "votes": 9}, {"team": "Iran", "votes": 1}, {"team": "Belgium", "votes": 1}], "H": [{"team": "Uruguay", "votes": 10}, {"team": "Saudi Arabia", "votes": 1}], "I": [{"team": "Norway", "votes": 7}, {"team": "Senegal", "votes": 4}], "J": [{"team": "Austria", "votes": 8}, {"team": "Algeria", "votes": 3}], "K": [{"team": "Colombia", "votes": 10}, {"team": "Portugal", "votes": 1}], "L": [{"team": "Croatia", "votes": 9}, {"team": "Ghana", "votes": 2}]}, "group_third_place_consensus": {"A": [{"team": "Czechia", "votes": 6}, {"team": "South Korea", "votes": 3}, {"team": "South Africa", "votes": 1}, {"team": "Mexico", "votes": 1}], "B": [{"team": "Bosnia-Herzegovina", "votes": 7}, {"team": "Qatar", "votes": 2}, {"team": "Canada", "votes": 1}, {"team": "Switzerland", "votes": 1}], "C": [{"team": "Scotland", "votes": 8}, {"team": "Haiti", "votes": 3}], "D": [{"team": "Paraguay", "votes": 6}, {"team": "Türkiye", "votes": 2}, {"team": "Australia", "votes": 2}, {"team": "United States", "votes": 1}], "E": [{"team": "Ivory Coast", "votes": 7}, {"team": "Ecuador", "votes": 3}, {"team": "Germany", "votes": 1}], "F": [{"team": "Sweden", "votes": 9}, {"team": "Japan", "votes": 2}], "G": [{"team": "Iran", "votes": 9}, {"team": "Egypt", "votes": 2}], "H": [{"team": "Saudi Arabia", "votes": 9}, {"team": "Uruguay", "votes": 1}, {"team": "Cape Verde", "votes": 1}], "I": [{"team": "Senegal", "votes": 7}, {"team": "Norway", "votes": 3}, {"team": "Iraq", "votes": 1}], "J": [{"team": "Algeria", "votes": 7}, {"team": "Austria", "votes": 3}, {"team": "Jordan", "votes": 1}], "K": [{"team": "Congo DR", "votes": 8}, {"team": "Uzbekistan", "votes": 3}], "L": [{"team": "Ghana", "votes": 9}, {"team": "England", "votes": 1}, {"team": "Croatia", "votes": 1}]}, "futures_consensus": {"champion": [{"value": "Spain", "votes": 7}, {"value": "Portugal", "votes": 3}, {"value": "France", "votes": 1}], "runner_up": [{"value": "Argentina", "votes": 3}, {"value": "France", "votes": 3}, {"value": "Portugal", "votes": 2}, {"value": "Spain", "votes": 1}, {"value": "Netherlands", "votes": 1}, {"value": "England", "votes": 1}], "favorite_team": [{"value": "France", "votes": 3}, {"value": "Argentina", "votes": 2}, {"value": "Norway", "votes": 1}, {"value": "Morocco", "votes": 1}, {"value": "England", "votes": 1}, {"value": "Ecuador", "votes": 1}, {"value": "Spain", "votes": 1}, {"value": "Brazil", "votes": 1}], "top_scorer": [{"value": "Kylian Mbappe", "votes": 8}, {"value": "Mikel Oyarzabal", "votes": 2}, {"value": "Harry Kane", "votes": 1}], "ecuador_round": [{"value": "Round of 16", "votes": 7}, {"value": "Quarter final", "votes": 2}, {"value": "Round of 32", "votes": 1}, {"value": "Semi final", "votes": 1}]}, "best_third_consensus": [{"team": "Sweden", "votes": 8}, {"team": "Scotland", "votes": 7}, {"team": "Bosnia-Herzegovina", "votes": 7}, {"team": "Ivory Coast", "votes": 7}, {"team": "Senegal", "votes": 6}, {"team": "Paraguay", "votes": 5}, {"team": "Czechia", "votes": 5}, {"team": "Ghana", "votes": 5}, {"team": "Algeria", "votes": 4}, {"team": "Ecuador", "votes": 3}, {"team": "Iran", "votes": 3}, {"team": "Congo DR", "votes": 3}, {"team": "Norway", "votes": 3}, {"team": "South Korea", "votes": 2}, {"team": "Haiti", "votes": 2}, {"team": "Qatar", "votes": 2}, {"team": "Australia", "votes": 2}, {"team": "Uzbekistan", "votes": 1}, {"team": "United States", "votes": 1}, {"team": "Germany", "votes": 1}, {"team": "South Africa", "votes": 1}, {"team": "Saudi Arabia", "votes": 1}, {"team": "Egypt", "votes": 1}, {"team": "England", "votes": 1}, {"team": "Iraq", "votes": 1}, {"team": "Mexico", "votes": 1}, {"team": "Croatia", "votes": 1}, {"team": "Switzerland", "votes": 1}, {"team": "Japan", "votes": 1}, {"team": "Uruguay", "votes": 1}, {"team": "Austria", "votes": 1}]}}</script>
   <script>
     const data = JSON.parse(document.querySelector("#consensus-data").textContent);
     const consensus = data.consensus;
