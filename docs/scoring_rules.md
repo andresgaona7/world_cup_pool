@@ -68,8 +68,8 @@ Score mode:
 | Top scorer | 60 |
 | Favorite team last round exact | 35 |
 | Favorite team last round off by one | 5 |
-| Ecuador last round exact | 40 |
-| Ecuador last round off by one | 18 |
+| Ecuador last round exact | 42 |
+| Ecuador last round off by one | 6 |
 | Perfect futures card bonus | 75 |
 
 ## Bonuses
