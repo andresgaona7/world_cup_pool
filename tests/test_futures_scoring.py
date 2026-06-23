@@ -76,9 +76,9 @@ class FuturesScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_futures_prediction(prediction, result)
 
-        self.assertEqual(points, 33.0)
+        self.assertEqual(points, 23.0)
         self.assertEqual(bonuses, 0.0)
-        self.assertEqual(details["futures:favorite_team_last_round"], 15.0)
+        self.assertEqual(details["futures:favorite_team_last_round"], 5.0)
         self.assertEqual(details["futures:ecuador_last_round"], 18.0)
 
 

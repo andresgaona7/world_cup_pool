@@ -54,7 +54,7 @@ Winner-only mode:
 Score mode:
 
 - Exact regulation score and correct advancing team: 2.5x base.
-- Exact regulation score but wrong advancing team: 1.5x base.
+- Total number of goals in the game is more than the total amount of the predicted result: 0.5x base.
 - Correct advancing team but wrong score: 0.5x base.
 - Wrong advancing team: 0.
 
@@ -67,7 +67,7 @@ Score mode:
 | Reversed final pairing | 35 |
 | Top scorer | 60 |
 | Favorite team last round exact | 35 |
-| Favorite team last round off by one | 15 |
+| Favorite team last round off by one | 5 |
 | Ecuador last round exact | 40 |
 | Ecuador last round off by one | 18 |
 | Perfect futures card bonus | 75 |

@@ -3,7 +3,7 @@
   "label": "After group matchday 2",
   "shortLabel": "Group MD2",
   "stage": "group_stage",
-  "completedAt": "2026-06-22T03:19:43+00:00",
+  "completedAt": "2026-06-23T05:37:18+00:00",
   "scenario": {
     "groupResults": {
       "A": [
@@ -47,14 +47,14 @@
         "Cape Verde Islands"
       ],
       "I": [
-        "Norway",
         "France",
+        "Norway",
         "Senegal"
       ],
       "J": [
         "Argentina",
         "Austria",
-        "Jordan"
+        "Algeria"
       ],
       "K": [
         "Colombia",
@@ -71,20 +71,20 @@
       "Sweden",
       "Scotland",
       "Paraguay",
+      "Algeria",
       "Cape Verde Islands",
       "Belgium",
       "Congo DR",
-      "Czechia",
-      "Ecuador"
+      "Czechia"
     ],
     "futures": {
       "champion": "",
       "runnerUp": "",
       "topScorer": "Lionel Messi",
       "teamLastRounds": {
-        "France": "group_stage",
-        "Argentina": "group_stage",
-        "Norway": "group_stage",
+        "France": "round_of_32",
+        "Argentina": "round_of_32",
+        "Norway": "round_of_32",
         "Morocco": "group_stage",
         "England": "group_stage",
         "Ecuador": "group_stage",

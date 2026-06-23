@@ -13,7 +13,7 @@ const FUTURES_POINTS = {
   reversedFinalPairing: 35,
   topScorer: 60,
   favoriteExact: 35,
-  favoriteOffByOne: 15,
+  favoriteOffByOne: 5,
   ecuadorExact: 40,
   ecuadorOffByOne: 18,
   perfectBonus: 75,
@@ -1530,13 +1530,13 @@ function scoreKnockoutMatch(prediction, result) {
   }
 
   const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
+  const actualTotalGoals = result.homeScore + result.awayScore;
+  const predictedTotalGoals = prediction.homeScore + prediction.awayScore;
+  const actualTotalExceedsPrediction = actualTotalGoals > predictedTotalGoals;
   if (exactScore && correctAdvancingTeam) {
     return basePoints * 2.5;
   }
-  if (exactScore) {
-    return basePoints * 1.5;
-  }
-  if (correctAdvancingTeam) {
+  if (correctAdvancingTeam || actualTotalExceedsPrediction) {
     return basePoints * 0.5;
   }
   return 0;

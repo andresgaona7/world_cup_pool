@@ -127,12 +127,13 @@ def score_knockout_prediction(
         prediction.predicted_home_score == result.home_score
         and prediction.predicted_away_score == result.away_score
     )
+    actual_total_goals = result.home_score + result.away_score
+    predicted_total_goals = prediction.predicted_home_score + prediction.predicted_away_score
+    actual_total_exceeds_prediction = actual_total_goals > predicted_total_goals
 
     if exact_score and correct_advancing_team:
         return base_points * 2.5
-    if exact_score:
-        return base_points * 1.5
-    if correct_advancing_team:
+    if correct_advancing_team or actual_total_exceeds_prediction:
         return base_points * 0.5
     return 0.0
 
