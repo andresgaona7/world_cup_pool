@@ -3,7 +3,7 @@
   "label": "After group matchday 2",
   "shortLabel": "Group MD2",
   "stage": "group_stage",
-  "completedAt": "2026-06-23T05:37:18+00:00",
+  "completedAt": "2026-06-24T05:17:23+00:00",
   "scenario": {
     "groupResults": {
       "A": [
@@ -64,33 +64,24 @@
       "L": [
         "England",
         "Ghana",
-        "Panama"
+        "Croatia"
       ]
     },
     "bestThirds": [
       "Sweden",
       "Scotland",
+      "Croatia",
       "Paraguay",
       "Algeria",
       "Cape Verde Islands",
       "Belgium",
-      "Congo DR",
       "Czechia"
     ],
     "futures": {
       "champion": "",
       "runnerUp": "",
-      "topScorer": "Lionel Messi",
-      "teamLastRounds": {
-        "France": "round_of_32",
-        "Argentina": "round_of_32",
-        "Norway": "round_of_32",
-        "Morocco": "group_stage",
-        "England": "group_stage",
-        "Ecuador": "group_stage",
-        "Spain": "group_stage",
-        "Brazil": "group_stage"
-      }
+      "topScorer": "",
+      "teamLastRounds": {}
     }
   },
   "officialMatches": []
