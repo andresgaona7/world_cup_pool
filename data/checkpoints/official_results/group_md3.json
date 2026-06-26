@@ -3,7 +3,7 @@
   "label": "After group matchday 3",
   "shortLabel": "Group MD3",
   "stage": "group_stage",
-  "completedAt": "2026-06-25T03:17:15+00:00",
+  "completedAt": "2026-06-26T09:55:33+00:00",
   "scenario": {
     "groupResults": {
       "A": [
@@ -68,14 +68,14 @@
       ]
     },
     "bestThirds": [
-      "Bosnia-Herzegovina",
       "Sweden",
+      "Ecuador",
+      "Bosnia-Herzegovina",
+      "Paraguay",
       "Croatia",
       "South Korea",
-      "Paraguay",
       "Algeria",
-      "Scotland",
-      "Cape Verde Islands"
+      "Scotland"
     ],
     "futures": {
       "champion": "",
@@ -87,9 +87,9 @@
         "Norway": "round_of_32",
         "Morocco": "round_of_32",
         "Brazil": "round_of_32",
-        "England": "group_stage",
+        "Ecuador": "round_of_32",
         "Spain": "group_stage",
-        "Ecuador": "group_stage"
+        "England": "group_stage"
       }
     }
   },
