@@ -76,8 +76,8 @@ Score mode:
 
 | Bonus | Round of 32 | Round of 16 | Quarterfinal | Semifinal |
 | --- | ---: | ---: | ---: | ---: |
-| Perfect knockout winners | 10 | 15 | 25 | 40 |
-| Perfect knockout scores | 30 | 45 | 75 | 120 |
+| Perfect knockout winners | 25 | 25 | 25 | 25 |
+| Perfect knockout scores | 40 | 25 | 15 | 10 |
 
 Perfect knockout bonuses are calculated separately once each eligible knockout
 stage is complete: Round of 32, Round of 16, Quarterfinal, and Semifinal. The

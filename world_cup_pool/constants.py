@@ -27,16 +27,16 @@ KNOCKOUT_STAGE_MATCH_COUNTS: dict[Stage, int] = {
     Stage.SEMIFINAL: 2,
 }
 KNOCKOUT_PERFECT_WINNER_BONUS_POINTS: dict[Stage, float] = {
-    Stage.ROUND_OF_32: 10.0,
-    Stage.ROUND_OF_16: 15.0,
+    Stage.ROUND_OF_32: 25.0,
+    Stage.ROUND_OF_16: 25.0,
     Stage.QUARTERFINAL: 25.0,
-    Stage.SEMIFINAL: 40.0,
+    Stage.SEMIFINAL: 25.0,
 }
 KNOCKOUT_PERFECT_SCORE_BONUS_POINTS: dict[Stage, float] = {
-    Stage.ROUND_OF_32: 30.0,
-    Stage.ROUND_OF_16: 45.0,
-    Stage.QUARTERFINAL: 75.0,
-    Stage.SEMIFINAL: 120.0,
+    Stage.ROUND_OF_32: 40.0,
+    Stage.ROUND_OF_16: 25.0,
+    Stage.QUARTERFINAL: 15.0,
+    Stage.SEMIFINAL: 10.0,
 }
 
 CHAMPION_POINTS = 80.0
