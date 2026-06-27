@@ -3,7 +3,7 @@
   "label": "After group matchday 3",
   "shortLabel": "Group MD3",
   "stage": "group_stage",
-  "completedAt": "2026-06-26T09:55:33+00:00",
+  "completedAt": "2026-06-27T09:53:58+00:00",
   "scenario": {
     "groupResults": {
       "A": [
@@ -37,14 +37,14 @@
         "Sweden"
       ],
       "G": [
+        "Belgium",
         "Egypt",
-        "Iran",
-        "Belgium"
+        "Iran"
       ],
       "H": [
         "Spain",
-        "Uruguay",
-        "Cape Verde Islands"
+        "Cape Verde Islands",
+        "Uruguay"
       ],
       "I": [
         "France",
@@ -72,10 +72,10 @@
       "Ecuador",
       "Bosnia-Herzegovina",
       "Paraguay",
+      "Senegal",
+      "Iran",
       "Croatia",
-      "South Korea",
-      "Algeria",
-      "Scotland"
+      "South Korea"
     ],
     "futures": {
       "champion": "",

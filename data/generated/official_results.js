@@ -1,7 +1,7 @@
 window.OFFICIAL_RESULTS = {
   "sourceName": "Football-Data.org",
   "sourceUrl": "https://api.football-data.org/v4/competitions/WC/standings?season=2026",
-  "generatedAt": "2026-06-26T09:55:33+00:00",
+  "generatedAt": "2026-06-27T09:53:58+00:00",
   "lastCompletedMatchDate": "",
   "matches": [],
   "groupResults": {
@@ -35,9 +35,21 @@ window.OFFICIAL_RESULTS = {
       "Japan",
       "Sweden"
     ],
-    "G": [],
-    "H": [],
-    "I": [],
+    "G": [
+      "Belgium",
+      "Egypt",
+      "Iran"
+    ],
+    "H": [
+      "Spain",
+      "Cape Verde Islands",
+      "Uruguay"
+    ],
+    "I": [
+      "France",
+      "Norway",
+      "Senegal"
+    ],
     "J": [],
     "K": [],
     "L": []
@@ -47,10 +59,10 @@ window.OFFICIAL_RESULTS = {
     "Ecuador",
     "Bosnia-Herzegovina",
     "Paraguay",
+    "Senegal",
+    "Iran",
     "Croatia",
-    "South Korea",
-    "Algeria",
-    "Scotland"
+    "South Korea"
   ],
   "futures": {
     "champion": "",
@@ -394,55 +406,55 @@ window.OFFICIAL_RESULTS = {
     ],
     "G": [
       {
+        "team": "Belgium",
+        "teamCode": "BEL",
+        "position": 1,
+        "played": 3,
+        "won": 1,
+        "drawn": 2,
+        "lost": 0,
+        "goalsFor": 6,
+        "goalsAgainst": 2,
+        "goalDifference": 4,
+        "points": 5
+      },
+      {
         "team": "Egypt",
         "teamCode": "EGY",
-        "position": 1,
-        "played": 2,
+        "position": 2,
+        "played": 3,
         "won": 1,
-        "drawn": 1,
+        "drawn": 2,
         "lost": 0,
-        "goalsFor": 4,
-        "goalsAgainst": 2,
+        "goalsFor": 5,
+        "goalsAgainst": 3,
         "goalDifference": 2,
-        "points": 4
+        "points": 5
       },
       {
         "team": "Iran",
         "teamCode": "IRN",
-        "position": 2,
-        "played": 2,
-        "won": 0,
-        "drawn": 2,
-        "lost": 0,
-        "goalsFor": 2,
-        "goalsAgainst": 2,
-        "goalDifference": 0,
-        "points": 2
-      },
-      {
-        "team": "Belgium",
-        "teamCode": "BEL",
         "position": 3,
-        "played": 2,
+        "played": 3,
         "won": 0,
-        "drawn": 2,
+        "drawn": 3,
         "lost": 0,
-        "goalsFor": 1,
-        "goalsAgainst": 1,
+        "goalsFor": 3,
+        "goalsAgainst": 3,
         "goalDifference": 0,
-        "points": 2
+        "points": 3
       },
       {
         "team": "New Zealand",
         "teamCode": "NZL",
         "position": 4,
-        "played": 2,
+        "played": 3,
         "won": 0,
         "drawn": 1,
-        "lost": 1,
-        "goalsFor": 3,
-        "goalsAgainst": 5,
-        "goalDifference": -2,
+        "lost": 2,
+        "goalsFor": 4,
+        "goalsAgainst": 10,
+        "goalDifference": -6,
         "points": 1
       }
     ],
@@ -451,53 +463,53 @@ window.OFFICIAL_RESULTS = {
         "team": "Spain",
         "teamCode": "ESP",
         "position": 1,
-        "played": 2,
-        "won": 1,
+        "played": 3,
+        "won": 2,
         "drawn": 1,
         "lost": 0,
-        "goalsFor": 4,
+        "goalsFor": 5,
         "goalsAgainst": 0,
-        "goalDifference": 4,
-        "points": 4
-      },
-      {
-        "team": "Uruguay",
-        "teamCode": "URU",
-        "position": 2,
-        "played": 2,
-        "won": 0,
-        "drawn": 2,
-        "lost": 0,
-        "goalsFor": 3,
-        "goalsAgainst": 3,
-        "goalDifference": 0,
-        "points": 2
+        "goalDifference": 5,
+        "points": 7
       },
       {
         "team": "Cape Verde Islands",
         "teamCode": "CPV",
-        "position": 3,
-        "played": 2,
+        "position": 2,
+        "played": 3,
         "won": 0,
-        "drawn": 2,
+        "drawn": 3,
         "lost": 0,
         "goalsFor": 2,
         "goalsAgainst": 2,
         "goalDifference": 0,
+        "points": 3
+      },
+      {
+        "team": "Uruguay",
+        "teamCode": "URU",
+        "position": 3,
+        "played": 3,
+        "won": 0,
+        "drawn": 2,
+        "lost": 1,
+        "goalsFor": 3,
+        "goalsAgainst": 4,
+        "goalDifference": -1,
         "points": 2
       },
       {
         "team": "Saudi Arabia",
         "teamCode": "KSA",
         "position": 4,
-        "played": 2,
+        "played": 3,
         "won": 0,
-        "drawn": 1,
+        "drawn": 2,
         "lost": 1,
         "goalsFor": 1,
         "goalsAgainst": 5,
         "goalDifference": -4,
-        "points": 1
+        "points": 2
       }
     ],
     "I": [
@@ -505,52 +517,52 @@ window.OFFICIAL_RESULTS = {
         "team": "France",
         "teamCode": "FRA",
         "position": 1,
-        "played": 2,
-        "won": 2,
+        "played": 3,
+        "won": 3,
         "drawn": 0,
         "lost": 0,
-        "goalsFor": 6,
-        "goalsAgainst": 1,
-        "goalDifference": 5,
-        "points": 6
+        "goalsFor": 10,
+        "goalsAgainst": 2,
+        "goalDifference": 8,
+        "points": 9
       },
       {
         "team": "Norway",
         "teamCode": "NOR",
         "position": 2,
-        "played": 2,
+        "played": 3,
         "won": 2,
         "drawn": 0,
-        "lost": 0,
-        "goalsFor": 7,
-        "goalsAgainst": 3,
-        "goalDifference": 4,
+        "lost": 1,
+        "goalsFor": 8,
+        "goalsAgainst": 7,
+        "goalDifference": 1,
         "points": 6
       },
       {
         "team": "Senegal",
         "teamCode": "SEN",
         "position": 3,
-        "played": 2,
-        "won": 0,
+        "played": 3,
+        "won": 1,
         "drawn": 0,
         "lost": 2,
-        "goalsFor": 3,
+        "goalsFor": 8,
         "goalsAgainst": 6,
-        "goalDifference": -3,
-        "points": 0
+        "goalDifference": 2,
+        "points": 3
       },
       {
         "team": "Iraq",
         "teamCode": "IRQ",
         "position": 4,
-        "played": 2,
+        "played": 3,
         "won": 0,
         "drawn": 0,
-        "lost": 2,
+        "lost": 3,
         "goalsFor": 1,
-        "goalsAgainst": 7,
-        "goalDifference": -6,
+        "goalsAgainst": 12,
+        "goalDifference": -11,
         "points": 0
       }
     ],
@@ -908,7 +920,7 @@ window.OFFICIAL_RESULTS = {
       "label": "After group matchday 3",
       "shortLabel": "Group MD3",
       "stage": "group_stage",
-      "completedAt": "2026-06-26T09:55:33+00:00",
+      "completedAt": "2026-06-27T09:53:58+00:00",
       "scenario": {
         "groupResults": {
           "A": [
@@ -942,14 +954,14 @@ window.OFFICIAL_RESULTS = {
             "Sweden"
           ],
           "G": [
+            "Belgium",
             "Egypt",
-            "Iran",
-            "Belgium"
+            "Iran"
           ],
           "H": [
             "Spain",
-            "Uruguay",
-            "Cape Verde Islands"
+            "Cape Verde Islands",
+            "Uruguay"
           ],
           "I": [
             "France",
@@ -977,10 +989,10 @@ window.OFFICIAL_RESULTS = {
           "Ecuador",
           "Bosnia-Herzegovina",
           "Paraguay",
+          "Senegal",
+          "Iran",
           "Croatia",
-          "South Korea",
-          "Algeria",
-          "Scotland"
+          "South Korea"
         ],
         "futures": {
           "champion": "",
@@ -1003,9 +1015,22 @@ window.OFFICIAL_RESULTS = {
   ],
   "overallStandings": [
     {
+      "team": "France",
+      "teamCode": "FRA",
+      "position": 1,
+      "played": 3,
+      "won": 3,
+      "drawn": 0,
+      "lost": 0,
+      "goalsFor": 10,
+      "goalsAgainst": 2,
+      "goalDifference": 8,
+      "points": 9
+    },
+    {
       "team": "Mexico",
       "teamCode": "MEX",
-      "position": 1,
+      "position": 2,
       "played": 3,
       "won": 3,
       "drawn": 0,
@@ -1018,7 +1043,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Netherlands",
       "teamCode": "NED",
-      "position": 2,
+      "position": 3,
       "played": 3,
       "won": 2,
       "drawn": 1,
@@ -1031,7 +1056,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Brazil",
       "teamCode": "BRA",
-      "position": 3,
+      "position": 4,
       "played": 3,
       "won": 2,
       "drawn": 1,
@@ -1042,9 +1067,22 @@ window.OFFICIAL_RESULTS = {
       "points": 7
     },
     {
+      "team": "Spain",
+      "teamCode": "ESP",
+      "position": 5,
+      "played": 3,
+      "won": 2,
+      "drawn": 1,
+      "lost": 0,
+      "goalsFor": 5,
+      "goalsAgainst": 0,
+      "goalDifference": 5,
+      "points": 7
+    },
+    {
       "team": "Switzerland",
       "teamCode": "SUI",
-      "position": 4,
+      "position": 6,
       "played": 3,
       "won": 2,
       "drawn": 1,
@@ -1057,7 +1095,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Morocco",
       "teamCode": "MAR",
-      "position": 5,
+      "position": 7,
       "played": 3,
       "won": 2,
       "drawn": 1,
@@ -1070,7 +1108,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Germany",
       "teamCode": "GER",
-      "position": 6,
+      "position": 8,
       "played": 3,
       "won": 2,
       "drawn": 0,
@@ -1081,22 +1119,9 @@ window.OFFICIAL_RESULTS = {
       "points": 6
     },
     {
-      "team": "France",
-      "teamCode": "FRA",
-      "position": 7,
-      "played": 2,
-      "won": 2,
-      "drawn": 0,
-      "lost": 0,
-      "goalsFor": 6,
-      "goalsAgainst": 1,
-      "goalDifference": 5,
-      "points": 6
-    },
-    {
       "team": "Argentina",
       "teamCode": "ARG",
-      "position": 8,
+      "position": 9,
       "played": 2,
       "won": 2,
       "drawn": 0,
@@ -1109,26 +1134,13 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "United States",
       "teamCode": "USA",
-      "position": 9,
+      "position": 10,
       "played": 3,
       "won": 2,
       "drawn": 0,
       "lost": 1,
       "goalsFor": 8,
       "goalsAgainst": 4,
-      "goalDifference": 4,
-      "points": 6
-    },
-    {
-      "team": "Norway",
-      "teamCode": "NOR",
-      "position": 10,
-      "played": 2,
-      "won": 2,
-      "drawn": 0,
-      "lost": 0,
-      "goalsFor": 7,
-      "goalsAgainst": 3,
       "goalDifference": 4,
       "points": 6
     },
@@ -1159,9 +1171,22 @@ window.OFFICIAL_RESULTS = {
       "points": 6
     },
     {
+      "team": "Norway",
+      "teamCode": "NOR",
+      "position": 13,
+      "played": 3,
+      "won": 2,
+      "drawn": 0,
+      "lost": 1,
+      "goalsFor": 8,
+      "goalsAgainst": 7,
+      "goalDifference": 1,
+      "points": 6
+    },
+    {
       "team": "Japan",
       "teamCode": "JPN",
-      "position": 13,
+      "position": 14,
       "played": 3,
       "won": 1,
       "drawn": 2,
@@ -1172,9 +1197,35 @@ window.OFFICIAL_RESULTS = {
       "points": 5
     },
     {
+      "team": "Belgium",
+      "teamCode": "BEL",
+      "position": 15,
+      "played": 3,
+      "won": 1,
+      "drawn": 2,
+      "lost": 0,
+      "goalsFor": 6,
+      "goalsAgainst": 2,
+      "goalDifference": 4,
+      "points": 5
+    },
+    {
+      "team": "Egypt",
+      "teamCode": "EGY",
+      "position": 16,
+      "played": 3,
+      "won": 1,
+      "drawn": 2,
+      "lost": 0,
+      "goalsFor": 5,
+      "goalsAgainst": 3,
+      "goalDifference": 2,
+      "points": 5
+    },
+    {
       "team": "Canada",
       "teamCode": "CAN",
-      "position": 14,
+      "position": 17,
       "played": 3,
       "won": 1,
       "drawn": 1,
@@ -1187,7 +1238,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Portugal",
       "teamCode": "POR",
-      "position": 15,
+      "position": 18,
       "played": 2,
       "won": 1,
       "drawn": 1,
@@ -1198,35 +1249,9 @@ window.OFFICIAL_RESULTS = {
       "points": 4
     },
     {
-      "team": "Spain",
-      "teamCode": "ESP",
-      "position": 16,
-      "played": 2,
-      "won": 1,
-      "drawn": 1,
-      "lost": 0,
-      "goalsFor": 4,
-      "goalsAgainst": 0,
-      "goalDifference": 4,
-      "points": 4
-    },
-    {
-      "team": "Egypt",
-      "teamCode": "EGY",
-      "position": 17,
-      "played": 2,
-      "won": 1,
-      "drawn": 1,
-      "lost": 0,
-      "goalsFor": 4,
-      "goalsAgainst": 2,
-      "goalDifference": 2,
-      "points": 4
-    },
-    {
       "team": "England",
       "teamCode": "ENG",
-      "position": 18,
+      "position": 19,
       "played": 2,
       "won": 1,
       "drawn": 1,
@@ -1239,7 +1264,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Ghana",
       "teamCode": "GHA",
-      "position": 19,
+      "position": 20,
       "played": 2,
       "won": 1,
       "drawn": 1,
@@ -1252,7 +1277,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Sweden",
       "teamCode": "SWE",
-      "position": 20,
+      "position": 21,
       "played": 3,
       "won": 1,
       "drawn": 1,
@@ -1265,7 +1290,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Australia",
       "teamCode": "AUS",
-      "position": 21,
+      "position": 22,
       "played": 3,
       "won": 1,
       "drawn": 1,
@@ -1278,7 +1303,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Ecuador",
       "teamCode": "ECU",
-      "position": 22,
+      "position": 23,
       "played": 3,
       "won": 1,
       "drawn": 1,
@@ -1291,7 +1316,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Bosnia-Herzegovina",
       "teamCode": "BIH",
-      "position": 23,
+      "position": 24,
       "played": 3,
       "won": 1,
       "drawn": 1,
@@ -1304,7 +1329,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "South Africa",
       "teamCode": "RSA",
-      "position": 24,
+      "position": 25,
       "played": 3,
       "won": 1,
       "drawn": 1,
@@ -1317,7 +1342,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Paraguay",
       "teamCode": "PAR",
-      "position": 25,
+      "position": 26,
       "played": 3,
       "won": 1,
       "drawn": 1,
@@ -1328,9 +1353,35 @@ window.OFFICIAL_RESULTS = {
       "points": 4
     },
     {
+      "team": "Senegal",
+      "teamCode": "SEN",
+      "position": 27,
+      "played": 3,
+      "won": 1,
+      "drawn": 0,
+      "lost": 2,
+      "goalsFor": 8,
+      "goalsAgainst": 6,
+      "goalDifference": 2,
+      "points": 3
+    },
+    {
+      "team": "Iran",
+      "teamCode": "IRN",
+      "position": 28,
+      "played": 3,
+      "won": 0,
+      "drawn": 3,
+      "lost": 0,
+      "goalsFor": 3,
+      "goalsAgainst": 3,
+      "goalDifference": 0,
+      "points": 3
+    },
+    {
       "team": "Austria",
       "teamCode": "AUT",
-      "position": 26,
+      "position": 29,
       "played": 2,
       "won": 1,
       "drawn": 0,
@@ -1341,9 +1392,22 @@ window.OFFICIAL_RESULTS = {
       "points": 3
     },
     {
+      "team": "Cape Verde Islands",
+      "teamCode": "CPV",
+      "position": 30,
+      "played": 3,
+      "won": 0,
+      "drawn": 3,
+      "lost": 0,
+      "goalsFor": 2,
+      "goalsAgainst": 2,
+      "goalDifference": 0,
+      "points": 3
+    },
+    {
       "team": "Croatia",
       "teamCode": "CRO",
-      "position": 27,
+      "position": 31,
       "played": 2,
       "won": 1,
       "drawn": 0,
@@ -1356,7 +1420,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "South Korea",
       "teamCode": "KOR",
-      "position": 28,
+      "position": 32,
       "played": 3,
       "won": 1,
       "drawn": 0,
@@ -1369,7 +1433,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Türkiye",
       "teamCode": "TUR",
-      "position": 29,
+      "position": 33,
       "played": 3,
       "won": 1,
       "drawn": 0,
@@ -1382,7 +1446,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Algeria",
       "teamCode": "ALG",
-      "position": 30,
+      "position": 34,
       "played": 2,
       "won": 1,
       "drawn": 0,
@@ -1395,7 +1459,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Scotland",
       "teamCode": "SCO",
-      "position": 31,
+      "position": 35,
       "played": 3,
       "won": 1,
       "drawn": 0,
@@ -1408,59 +1472,33 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Uruguay",
       "teamCode": "URU",
-      "position": 32,
-      "played": 2,
+      "position": 36,
+      "played": 3,
       "won": 0,
       "drawn": 2,
-      "lost": 0,
+      "lost": 1,
       "goalsFor": 3,
-      "goalsAgainst": 3,
-      "goalDifference": 0,
+      "goalsAgainst": 4,
+      "goalDifference": -1,
       "points": 2
     },
     {
-      "team": "Cape Verde Islands",
-      "teamCode": "CPV",
-      "position": 33,
-      "played": 2,
+      "team": "Saudi Arabia",
+      "teamCode": "KSA",
+      "position": 37,
+      "played": 3,
       "won": 0,
       "drawn": 2,
-      "lost": 0,
-      "goalsFor": 2,
-      "goalsAgainst": 2,
-      "goalDifference": 0,
-      "points": 2
-    },
-    {
-      "team": "Iran",
-      "teamCode": "IRN",
-      "position": 34,
-      "played": 2,
-      "won": 0,
-      "drawn": 2,
-      "lost": 0,
-      "goalsFor": 2,
-      "goalsAgainst": 2,
-      "goalDifference": 0,
-      "points": 2
-    },
-    {
-      "team": "Belgium",
-      "teamCode": "BEL",
-      "position": 35,
-      "played": 2,
-      "won": 0,
-      "drawn": 2,
-      "lost": 0,
+      "lost": 1,
       "goalsFor": 1,
-      "goalsAgainst": 1,
-      "goalDifference": 0,
+      "goalsAgainst": 5,
+      "goalDifference": -4,
       "points": 2
     },
     {
       "team": "Congo DR",
       "teamCode": "COD",
-      "position": 36,
+      "position": 38,
       "played": 2,
       "won": 0,
       "drawn": 1,
@@ -1471,22 +1509,9 @@ window.OFFICIAL_RESULTS = {
       "points": 1
     },
     {
-      "team": "New Zealand",
-      "teamCode": "NZL",
-      "position": 37,
-      "played": 2,
-      "won": 0,
-      "drawn": 1,
-      "lost": 1,
-      "goalsFor": 3,
-      "goalsAgainst": 5,
-      "goalDifference": -2,
-      "points": 1
-    },
-    {
       "team": "Czechia",
       "teamCode": "CZE",
-      "position": 38,
+      "position": 39,
       "played": 3,
       "won": 0,
       "drawn": 1,
@@ -1497,22 +1522,22 @@ window.OFFICIAL_RESULTS = {
       "points": 1
     },
     {
-      "team": "Saudi Arabia",
-      "teamCode": "KSA",
-      "position": 39,
-      "played": 2,
+      "team": "New Zealand",
+      "teamCode": "NZL",
+      "position": 40,
+      "played": 3,
       "won": 0,
       "drawn": 1,
-      "lost": 1,
-      "goalsFor": 1,
-      "goalsAgainst": 5,
-      "goalDifference": -4,
+      "lost": 2,
+      "goalsFor": 4,
+      "goalsAgainst": 10,
+      "goalDifference": -6,
       "points": 1
     },
     {
       "team": "Qatar",
       "teamCode": "QAT",
-      "position": 40,
+      "position": 41,
       "played": 3,
       "won": 0,
       "drawn": 1,
@@ -1525,7 +1550,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Curaçao",
       "teamCode": "CUW",
-      "position": 41,
+      "position": 42,
       "played": 3,
       "won": 0,
       "drawn": 1,
@@ -1538,7 +1563,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Panama",
       "teamCode": "PAN",
-      "position": 42,
+      "position": 43,
       "played": 2,
       "won": 0,
       "drawn": 0,
@@ -1546,19 +1571,6 @@ window.OFFICIAL_RESULTS = {
       "goalsFor": 0,
       "goalsAgainst": 2,
       "goalDifference": -2,
-      "points": 0
-    },
-    {
-      "team": "Senegal",
-      "teamCode": "SEN",
-      "position": 43,
-      "played": 2,
-      "won": 0,
-      "drawn": 0,
-      "lost": 2,
-      "goalsFor": 3,
-      "goalsAgainst": 6,
-      "goalDifference": -3,
       "points": 0
     },
     {
@@ -1588,22 +1600,9 @@ window.OFFICIAL_RESULTS = {
       "points": 0
     },
     {
-      "team": "Iraq",
-      "teamCode": "IRQ",
-      "position": 46,
-      "played": 2,
-      "won": 0,
-      "drawn": 0,
-      "lost": 2,
-      "goalsFor": 1,
-      "goalsAgainst": 7,
-      "goalDifference": -6,
-      "points": 0
-    },
-    {
       "team": "Uzbekistan",
       "teamCode": "UZB",
-      "position": 47,
+      "position": 46,
       "played": 2,
       "won": 0,
       "drawn": 0,
@@ -1616,7 +1615,7 @@ window.OFFICIAL_RESULTS = {
     {
       "team": "Tunisia",
       "teamCode": "TUN",
-      "position": 48,
+      "position": 47,
       "played": 3,
       "won": 0,
       "drawn": 0,
@@ -1624,6 +1623,19 @@ window.OFFICIAL_RESULTS = {
       "goalsFor": 2,
       "goalsAgainst": 12,
       "goalDifference": -10,
+      "points": 0
+    },
+    {
+      "team": "Iraq",
+      "teamCode": "IRQ",
+      "position": 48,
+      "played": 3,
+      "won": 0,
+      "drawn": 0,
+      "lost": 3,
+      "goalsFor": 1,
+      "goalsAgainst": 12,
+      "goalDifference": -11,
       "points": 0
     }
   ]
