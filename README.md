@@ -15,6 +15,7 @@ data/generated/             Committed JS/JSON data consumed by static apps.
 scripts/                    Data builders and official-results updater.
 index.html                  Public dashboard for GitHub Pages.
 apps/player_predictions/    Static reader for submitted workbook picks.
+apps/knockout_bracket/      Static visual knockout bracket board.
 apps/knockout_predictions/  Static knockout bracket prediction template.
 apps/score_visualizer/      Static leaderboard and scenario scorer.
 apps/score_timeline/        Static score-over-time graph.
@@ -145,6 +146,7 @@ Open `index.html` directly in a browser for the pool dashboard. The dashboard
 links to the static apps below, and each app can also be opened directly:
 
 - `apps/player_predictions/index.html`
+- `apps/knockout_bracket/index.html`
 - `apps/knockout_predictions/index.html`
 - `apps/score_visualizer/index.html`
 - `apps/score_timeline/index.html`

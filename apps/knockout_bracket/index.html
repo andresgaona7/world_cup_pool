@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Cup Pool Knockout Bracket</title>
+  <script src="../../theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="title-row">
+      <div>
+        <p class="eyebrow">World Cup 2026 Pool</p>
+        <h1>Knockout Bracket</h1>
+      </div>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false"><span data-theme-toggle-label>Dark mode</span></button>
+    </div>
+    <nav class="site-nav" aria-label="Visualization navigation">
+      <a href="../../index.html">Home</a>
+      <a href="../rules/index.html">Rules</a>
+      <a href="../player_predictions/index.html">Player Picks</a>
+      <a class="active" href="index.html" aria-current="page">Bracket</a>
+      <a href="../score_visualizer/index.html">Scores</a>
+      <a href="../score_timeline/index.html">Official results</a>
+      <a href="../blog/index.html">Blog</a>
+      <a href="../legacy/index.html">Legacy</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="bracket-shell" aria-labelledby="bracketTitle">
+      <div class="bracket-head">
+        <div>
+          <p class="eyebrow">Official Results</p>
+          <h2 id="bracketTitle">2026 Knockout Board</h2>
+        </div>
+        <div class="bracket-actions">
+          <a class="source-link" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/standings">FIFA standings</a>
+          <div class="status-pill" id="statusPill">Loading bracket</div>
+        </div>
+      </div>
+
+      <div class="bracket-board" id="bracketBoard" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script src="../../data/generated/official_results.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
