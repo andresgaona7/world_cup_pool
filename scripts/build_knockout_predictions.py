@@ -478,8 +478,7 @@ def normalize_stage(value: object) -> str:
 
 
 def normalize_mode(value: object) -> str:
-    mode = normalize_header(value)
-    return "score" if mode == "score" else "winner"
+    return "score"
 
 
 def match_identifier(value: object) -> str:

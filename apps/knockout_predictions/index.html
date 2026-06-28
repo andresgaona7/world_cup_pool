@@ -33,14 +33,14 @@
   <main class="page">
     <section class="summary-grid" aria-label="Knockout prediction scoring">
       <article class="summary-card">
-        <p class="eyebrow">Winner-only mode</p>
-        <strong>Correct advancing team</strong>
-        <span>Scores 1x the round base value.</span>
+        <p class="eyebrow">Score mode</p>
+        <strong>Exact score plus winner</strong>
+        <span>Scores 2.0x the round base value.</span>
       </article>
       <article class="summary-card">
         <p class="eyebrow">Score mode</p>
-        <strong>Exact score plus winner</strong>
-        <span>Scores 2.5x the round base value.</span>
+        <strong>Correct winner</strong>
+        <span>Wrong score still earns 1.0x the round base value.</span>
       </article>
       <article class="summary-card">
         <p class="eyebrow">Bonuses</p>
@@ -77,9 +77,9 @@
         <article class="rule-section">
           <h3>Score mode</h3>
           <ul>
-            <li>Exact regulation score and correct advancing team: 2.5x base.</li>
-            <li>Total number of goals in the game is more than the total amount of the predicted result: 0.5x base.</li>
-            <li>Correct advancing team but wrong score: 0.5x base.</li>
+            <li>Exact regulation score and correct advancing team: 2.0x base.</li>
+            <li>Correct advancing team but wrong score: 1.0x base.</li>
+            <li>Regulation draw decided on penalties: 0.5x base fallback.</li>
             <li>Wrong advancing team: 0.</li>
           </ul>
         </article>

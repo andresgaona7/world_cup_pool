@@ -46,16 +46,11 @@ Base points by round:
 | Third-place match | 14 |
 | Final | 20 |
 
-Winner-only mode:
-
-- Correct advancing team: 1x base.
-- Wrong advancing team: 0.
-
 Score mode:
 
-- Exact regulation score and correct advancing team: 2.5x base.
-- Total number of goals in the game is more than the total amount of the predicted result: 0.5x base.
-- Correct advancing team but wrong score: 0.5x base.
+- Exact regulation score and correct advancing team: 2.0x base.
+- Correct advancing team but wrong score: 1.0x base.
+- Regulation draw decided on penalties: 0.5x base fallback.
 - Wrong advancing team: 0.
 
 ## Futures

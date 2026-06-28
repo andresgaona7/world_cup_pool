@@ -273,7 +273,7 @@ function modeText(mode) {
   if (mode === "score") {
     return "Score";
   }
-  return "Winner only";
+  return "Legacy";
 }
 
 function displayCellValue(value) {

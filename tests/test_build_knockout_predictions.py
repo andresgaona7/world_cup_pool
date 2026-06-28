@@ -124,7 +124,9 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
         for index in range(16):
             row = 4 + index
             cells[(row, 1)] = f"Winner {index + 1}"
-            cells[(row, 2)] = "Winner only"
+            cells[(row, 2)] = "Score"
+            cells[(row, 3)] = "1"
+            cells[(row, 4)] = "0"
 
         matches = build_knockout_predictions.extract_predictions(
             cells,
@@ -157,6 +159,10 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
                                     (1, 2): "Ana",
                                     (3, 1): "Winner",
                                     (4, 1): "Ecuador",
+                                    (3, 2): "Home Score",
+                                    (3, 3): "Away Score",
+                                    (4, 2): "1",
+                                    (4, 3): "0",
                                 },
                             }
                         ]
@@ -170,6 +176,10 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
                                 (1, 2): "Ana",
                                 (3, 1): "Winner",
                                 (4, 1): "Brazil",
+                                (3, 2): "Home Score",
+                                (3, 3): "Away Score",
+                                (4, 2): "2",
+                                (4, 3): "1",
                             },
                         }
                     ]
@@ -198,8 +208,10 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
             {
                 "matchId": "104",
                 "stage": "final",
-                "mode": "winner",
+                "mode": "score",
                 "predictedAdvancingTeam": "Ecuador",
+                "homeScore": 1,
+                "awayScore": 0,
             }
         ]
 

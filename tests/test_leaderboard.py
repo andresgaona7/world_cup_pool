@@ -127,7 +127,9 @@ class LeaderboardTests(unittest.TestCase):
             knockout_predictions=(
                 KnockoutPrediction(
                     match_id="F",
-                    mode=PredictionMode.WINNER,
+                    mode=PredictionMode.SCORE,
+                    predicted_home_score=1,
+                    predicted_away_score=0,
                     predicted_advancing_team="France",
                 ),
             ),
@@ -145,10 +147,10 @@ class LeaderboardTests(unittest.TestCase):
 
         self.assertEqual([score.player_name for score in leaderboard], ["Ana", "Ben"])
         self.assertEqual(leaderboard[0].breakdown.group, 14.0)
-        self.assertEqual(leaderboard[0].breakdown.knockout, 50.0)
+        self.assertEqual(leaderboard[0].breakdown.knockout, 40.0)
         self.assertEqual(leaderboard[0].breakdown.futures, 267.0)
         self.assertEqual(leaderboard[0].breakdown.bonuses, 75.0)
-        self.assertEqual(leaderboard[0].total, 406.0)
+        self.assertEqual(leaderboard[0].total, 396.0)
 
 
 if __name__ == "__main__":

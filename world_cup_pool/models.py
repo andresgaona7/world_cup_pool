@@ -19,7 +19,6 @@ class Stage(str, Enum):
 
 
 class PredictionMode(str, Enum):
-    WINNER = "winner"
     SCORE = "score"
 
 
@@ -128,4 +127,3 @@ class PlayerScore:
     @property
     def total(self) -> float:
         return self.breakdown.total
-

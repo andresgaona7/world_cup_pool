@@ -1,4 +1,11 @@
 {
-  "teams": {},
+  "teams": {
+    "Ghana": {
+      "fairPlayPoints": 0
+    },
+    "Ecuador": {
+      "fairPlayPoints": -1
+    }
+  },
   "groupOrder": {}
 }

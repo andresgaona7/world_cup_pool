@@ -35,7 +35,7 @@ class KnockoutScoringTests(unittest.TestCase):
             },
         )
 
-    def test_winner_only_correct_scores_base_points(self):
+    def test_non_score_mode_is_unsupported(self):
         result = KnockoutMatchResult(
             match_id="R32-1",
             stage=Stage.ROUND_OF_32,
@@ -47,13 +47,14 @@ class KnockoutScoringTests(unittest.TestCase):
         )
         prediction = KnockoutPrediction(
             match_id="R32-1",
-            mode=PredictionMode.WINNER,
+            mode="winner",
             predicted_advancing_team="Ecuador",
         )
 
-        self.assertEqual(score_knockout_prediction(prediction, result), 4.0)
+        with self.assertRaisesRegex(ValueError, "Unsupported prediction mode"):
+            score_knockout_prediction(prediction, result)
 
-    def test_score_mode_exact_score_and_winner_scores_two_and_half_base(self):
+    def test_score_mode_exact_score_and_winner_scores_two_times_base(self):
         result = KnockoutMatchResult(
             match_id="QF-1",
             stage=Stage.QUARTERFINAL,
@@ -71,29 +72,29 @@ class KnockoutScoringTests(unittest.TestCase):
             predicted_advancing_team="Brazil",
         )
 
-        self.assertEqual(score_knockout_prediction(prediction, result), 25.0)
+        self.assertEqual(score_knockout_prediction(prediction, result), 20.0)
 
-    def test_score_mode_actual_total_goals_above_prediction_scores_half_base(self):
+    def test_score_mode_penalty_draw_fallback_scores_half_base(self):
         result = KnockoutMatchResult(
             match_id="SF-1",
             stage=Stage.SEMIFINAL,
             home_team="Argentina",
             away_team="Spain",
-            home_score=2,
+            home_score=1,
             away_score=1,
             advancing_team="Spain",
         )
         prediction = KnockoutPrediction(
             match_id="SF-1",
             mode=PredictionMode.SCORE,
-            predicted_home_score=1,
+            predicted_home_score=0,
             predicted_away_score=0,
             predicted_advancing_team="Argentina",
         )
 
         self.assertEqual(score_knockout_prediction(prediction, result), 8.0)
 
-    def test_score_mode_exact_score_wrong_advancing_team_scores_zero(self):
+    def test_score_mode_exact_score_wrong_advancing_team_penalty_draw_scores_half_base(self):
         result = KnockoutMatchResult(
             match_id="SF-2",
             stage=Stage.SEMIFINAL,
@@ -111,9 +112,29 @@ class KnockoutScoringTests(unittest.TestCase):
             predicted_advancing_team="Argentina",
         )
 
+        self.assertEqual(score_knockout_prediction(prediction, result), 8.0)
+
+    def test_score_mode_exact_score_wrong_advancing_team_non_draw_scores_zero(self):
+        result = KnockoutMatchResult(
+            match_id="SF-3",
+            stage=Stage.SEMIFINAL,
+            home_team="Argentina",
+            away_team="Spain",
+            home_score=2,
+            away_score=1,
+            advancing_team="Argentina",
+        )
+        prediction = KnockoutPrediction(
+            match_id="SF-3",
+            mode=PredictionMode.SCORE,
+            predicted_home_score=2,
+            predicted_away_score=1,
+            predicted_advancing_team="Spain",
+        )
+
         self.assertEqual(score_knockout_prediction(prediction, result), 0.0)
 
-    def test_score_mode_correct_winner_wrong_score_scores_half_base(self):
+    def test_score_mode_correct_winner_wrong_score_scores_base(self):
         result = KnockoutMatchResult(
             match_id="F",
             stage=Stage.FINAL,
@@ -131,9 +152,9 @@ class KnockoutScoringTests(unittest.TestCase):
             predicted_advancing_team="Germany",
         )
 
-        self.assertEqual(score_knockout_prediction(prediction, result), 10.0)
+        self.assertEqual(score_knockout_prediction(prediction, result), 20.0)
 
-    def test_wrong_winner_scores_zero(self):
+    def test_score_mode_wrong_winner_non_draw_scores_zero(self):
         result = KnockoutMatchResult(
             match_id="R16-1",
             stage=Stage.ROUND_OF_16,
@@ -145,7 +166,9 @@ class KnockoutScoringTests(unittest.TestCase):
         )
         prediction = KnockoutPrediction(
             match_id="R16-1",
-            mode=PredictionMode.WINNER,
+            mode=PredictionMode.SCORE,
+            predicted_home_score=1,
+            predicted_away_score=0,
             predicted_advancing_team="USA",
         )
 
@@ -242,7 +265,7 @@ class KnockoutScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_knockout_predictions(predictions, results)
 
-        self.assertEqual(points, 100.0)
+        self.assertEqual(points, 80.0)
         self.assertEqual(bonuses, 40.0)
         self.assertEqual(details["bonus:perfect_knockout_winners:quarterfinal"], 25.0)
         self.assertEqual(details["bonus:perfect_knockout_scores:quarterfinal"], 15.0)
@@ -271,7 +294,7 @@ class KnockoutScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_knockout_predictions(predictions, results)
 
-        self.assertEqual(points, 25.0)
+        self.assertEqual(points, 20.0)
         self.assertEqual(bonuses, 0.0)
         self.assertNotIn("bonus:perfect_knockout_winners:quarterfinal", details)
         self.assertNotIn("bonus:perfect_knockout_scores:quarterfinal", details)
@@ -316,7 +339,7 @@ class KnockoutScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_knockout_predictions(predictions, results)
 
-        self.assertEqual(points, 85.0)
+        self.assertEqual(points, 68.0)
         self.assertEqual(bonuses, 0.0)
         self.assertNotIn("bonus:perfect_knockout_winners:third_place_match", details)
         self.assertNotIn("bonus:perfect_knockout_scores:third_place_match", details)

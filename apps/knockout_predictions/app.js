@@ -113,7 +113,6 @@ function renderMatch(stage, matchId, homeSeed, awaySeed) {
       <label>
         <span>Mode</span>
         <select name="match-${matchId}-mode">
-          <option value="winner">Winner only</option>
           <option value="score">Score</option>
         </select>
       </label>

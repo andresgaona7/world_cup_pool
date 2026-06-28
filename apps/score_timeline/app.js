@@ -820,17 +820,18 @@ function scoreKnockoutMatch(prediction, result) {
   const predictedAwayScore = numberOrNull(prediction.awayScore);
 
   if (predictedHomeScore === null || predictedAwayScore === null) {
-    return correctAdvancingTeam ? basePoints : 0;
+    return 0;
   }
 
   const exactScore = predictedHomeScore === result.homeScore && predictedAwayScore === result.awayScore;
-  const actualTotalGoals = result.homeScore + result.awayScore;
-  const predictedTotalGoals = predictedHomeScore + predictedAwayScore;
-  const actualTotalExceedsPrediction = actualTotalGoals > predictedTotalGoals;
+  const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
   if (exactScore && correctAdvancingTeam) {
-    return basePoints * 2.5;
+    return basePoints * 2;
   }
-  if (correctAdvancingTeam || actualTotalExceedsPrediction) {
+  if (correctAdvancingTeam) {
+    return basePoints;
+  }
+  if (decidedOnPenalties) {
     return basePoints * 0.5;
   }
   return 0;

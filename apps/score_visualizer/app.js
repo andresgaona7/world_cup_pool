@@ -178,7 +178,7 @@ function normalizeKnockoutPrediction(match) {
     homeScore,
     awayScore,
     winner: match.winner || match.advancingTeam || match.predictedAdvancingTeam || "",
-    mode: homeScore === null || awayScore === null ? "winner" : "score",
+    mode: "score",
   };
 }
 
@@ -1525,18 +1525,15 @@ function scoreKnockoutMatch(prediction, result) {
   const basePoints = KNOCKOUT_BASE_POINTS[result.stage] || 0;
   const correctAdvancingTeam = prediction.winner && prediction.winner === result.advancingTeam;
 
-  if (prediction.mode === "winner") {
-    return correctAdvancingTeam ? basePoints : 0;
-  }
-
   const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
-  const actualTotalGoals = result.homeScore + result.awayScore;
-  const predictedTotalGoals = prediction.homeScore + prediction.awayScore;
-  const actualTotalExceedsPrediction = actualTotalGoals > predictedTotalGoals;
+  const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
   if (exactScore && correctAdvancingTeam) {
-    return basePoints * 2.5;
+    return basePoints * 2;
   }
-  if (correctAdvancingTeam || actualTotalExceedsPrediction) {
+  if (correctAdvancingTeam) {
+    return basePoints;
+  }
+  if (decidedOnPenalties) {
     return basePoints * 0.5;
   }
   return 0;

@@ -114,9 +114,6 @@ def score_knockout_prediction(
     base_points = KNOCKOUT_BASE_POINTS[result.stage]
     correct_advancing_team = prediction.predicted_advancing_team == result.advancing_team
 
-    if prediction.mode == PredictionMode.WINNER:
-        return base_points if correct_advancing_team else 0.0
-
     if prediction.mode != PredictionMode.SCORE:
         raise ValueError(f"Unsupported prediction mode: {prediction.mode}")
 
@@ -127,13 +124,13 @@ def score_knockout_prediction(
         prediction.predicted_home_score == result.home_score
         and prediction.predicted_away_score == result.away_score
     )
-    actual_total_goals = result.home_score + result.away_score
-    predicted_total_goals = prediction.predicted_home_score + prediction.predicted_away_score
-    actual_total_exceeds_prediction = actual_total_goals > predicted_total_goals
+    decided_on_penalties = result.home_score == result.away_score and bool(result.advancing_team)
 
     if exact_score and correct_advancing_team:
-        return base_points * 2.5
-    if correct_advancing_team or actual_total_exceeds_prediction:
+        return base_points * 2.0
+    if correct_advancing_team:
+        return base_points
+    if decided_on_penalties:
         return base_points * 0.5
     return 0.0
 
