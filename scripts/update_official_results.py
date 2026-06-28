@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -26,6 +27,10 @@ OUTPUT_PATH = ROOT / "data" / "generated" / "official_results.js"
 RATE_STATE_PATH = ROOT / "data" / ".cache" / "football_data_rate_limit.json"
 FIFA_RANKINGS_PATH = ROOT / "data" / "manual" / "fifa_rankings.json"
 MANUAL_ADJUSTMENTS_PATH = ROOT / "data" / "manual" / "official_fair_play.json"
+OFFICIAL_RESULTS_RE = re.compile(
+    r"^\s*window\.OFFICIAL_RESULTS\s*=\s*(?P<payload>\{.*\})\s*;\s*$",
+    re.DOTALL,
+)
 SOURCE_URL = "https://api.football-data.org/v4/competitions/WC/standings?season=2026"
 API_KEY_ENV = "FOOTBALL_DATA_API_KEY"
 DEFAULT_API_KEY = "9a022f9d132d4a5d9d01116e0f99ab6f"
@@ -60,6 +65,16 @@ GROUP_STAGE_GAMES = 3
 DEFAULT_MIN_REQUESTS_AVAILABLE = 1
 DEFAULT_MAX_RETRIES = 2
 DEFAULT_TRANSPORT = "auto"
+PRESERVED_GROUP_STAGE_FIELDS = (
+    "lastCompletedMatchDate",
+    "matches",
+    "groupResults",
+    "bestThirds",
+    "futures",
+    "provisionalGroupStandings",
+    "timelineCheckpoints",
+    "overallStandings",
+)
 
 
 class FetchHTTPError(RuntimeError):
@@ -123,6 +138,11 @@ def main() -> None:
         ),
         "overallStandings": overall_standings,
     }
+    preserved_fields = preserve_existing_group_stage_results(
+        data,
+        args.output,
+        refresh_group_stage_results=args.refresh_group_stage_results,
+    )
 
     if not any(group_standings.values()) and not overall_standings and not args.allow_empty:
         raise RuntimeError(
@@ -139,6 +159,11 @@ def main() -> None:
         f"{len(group_standings)} groups ({completed_count} complete), "
         f"{len(overall_standings)} overall rows"
     )
+    if preserved_fields:
+        print(
+            "Preserved existing group-stage result fields: "
+            + ", ".join(preserved_fields)
+        )
 
 
 def parse_args() -> argparse.Namespace:
@@ -201,7 +226,51 @@ def parse_args() -> argparse.Namespace:
             f"Defaults to {MANUAL_ADJUSTMENTS_PATH.relative_to(ROOT)}."
         ),
     )
+    parser.add_argument(
+        "--refresh-group-stage-results",
+        action="store_true",
+        help=(
+            "Replace group-stage scoring fields from Football-Data. By default, "
+            "existing group-stage fields in the output file are preserved."
+        ),
+    )
     return parser.parse_args()
+
+
+def read_existing_official_results(path: Path) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+
+    text = path.read_text(encoding="utf-8")
+    match = OFFICIAL_RESULTS_RE.match(text)
+    if not match:
+        raise ValueError(f"{path} does not contain a window.OFFICIAL_RESULTS assignment")
+
+    payload = json.loads(match.group("payload"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"{path} did not contain a JSON object")
+    return payload
+
+
+def preserve_existing_group_stage_results(
+    data: dict[str, Any],
+    output_path: Path,
+    *,
+    refresh_group_stage_results: bool,
+) -> list[str]:
+    if refresh_group_stage_results:
+        return []
+
+    existing_data = read_existing_official_results(output_path)
+    if existing_data is None:
+        return []
+
+    preserved_fields = []
+    for field in PRESERVED_GROUP_STAGE_FIELDS:
+        if field in existing_data:
+            data[field] = existing_data[field]
+            preserved_fields.append(field)
+    return preserved_fields
 
 
 def read_source(args: argparse.Namespace) -> dict[str, Any]:

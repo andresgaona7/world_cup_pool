@@ -54,7 +54,11 @@ python3 -m unittest discover -s tests
 
 `make update-official-results` reads `FOOTBALL_DATA_API_KEY` when set. The
 updater also supports `--api-key`, `--input`, `--output`, `--allow-empty`, and
-`--transport`.
+`--transport`. By default, the updater preserves the existing group-stage
+scoring fields in `data/generated/official_results.js`, including group
+results, best thirds, provisional standings, timeline checkpoints, overall
+standings, and futures. Use `--refresh-group-stage-results` only when you
+intend to replace those fields from Football-Data again.
 
 ## Data Flow
 
@@ -81,7 +85,9 @@ consensus JSON export and the standalone `apps/consensus_predictions/index.html`
 `data/generated/official_results.js`, which is loaded by
 `apps/score_visualizer/index.html` and `apps/score_timeline/index.html`.
 When standings need the final FIFA ranking tie-breaker, the updater reads
-manual rankings from `data/manual/fifa_rankings.json`.
+manual rankings from `data/manual/fifa_rankings.json`. Existing group-stage
+score inputs are preserved on normal updater runs so settled group-stage
+scores and the legacy third-place table do not change accidentally.
 
 Official fair-play tiebreakers and unresolved group-order corrections are
 entered manually in `data/manual/official_fair_play.json` because the

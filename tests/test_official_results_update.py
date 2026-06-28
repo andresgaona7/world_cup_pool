@@ -215,6 +215,102 @@ class OfficialResultsUpdateTests(unittest.TestCase):
             ["Czechia"],
         )
 
+    def test_preserves_existing_group_stage_results_by_default(self):
+        existing_results = {
+            "sourceName": "Football-Data.org",
+            "groupResults": {"A": ["Mexico", "South Korea", "Czechia"]},
+            "bestThirds": ["Czechia"],
+            "futures": {
+                "champion": "",
+                "runnerUp": "",
+                "topScorer": "Lionel Messi",
+                "teamLastRounds": {"Ecuador": "round_of_32"},
+            },
+            "provisionalGroupStandings": {
+                "A": [
+                    self.official_row("Mexico", 3, 1, 2),
+                    self.official_row("South Korea", 3, 1, 2),
+                    self.official_row("Czechia", 0, -1, 1),
+                ]
+            },
+            "timelineCheckpoints": [
+                {
+                    "key": "group_md1",
+                    "scenario": {
+                        "groupResults": {"A": ["Mexico", "South Korea", "Czechia"]},
+                        "bestThirds": ["Czechia"],
+                    },
+                }
+            ],
+            "overallStandings": [self.official_row("Mexico", 3, 1, 2)],
+        }
+        new_results = {
+            "sourceName": "Football-Data.org",
+            "groupResults": {"A": ["Canada", "Qatar", "Switzerland"]},
+            "bestThirds": ["Switzerland"],
+            "futures": {
+                "champion": "",
+                "runnerUp": "",
+                "topScorer": "",
+                "teamLastRounds": {},
+            },
+            "provisionalGroupStandings": {
+                "A": [
+                    self.official_row("Canada", 6, 3, 4),
+                    self.official_row("Qatar", 3, 0, 2),
+                    self.official_row("Switzerland", 1, -1, 1),
+                ]
+            },
+            "timelineCheckpoints": [],
+            "overallStandings": [self.official_row("Canada", 6, 3, 4)],
+        }
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output_path = Path(temp_dir) / "official_results.js"
+            output_path.write_text(
+                f"window.OFFICIAL_RESULTS = {json.dumps(existing_results)};\n",
+                encoding="utf-8",
+            )
+
+            preserved = update_official_results.preserve_existing_group_stage_results(
+                new_results,
+                output_path,
+                refresh_group_stage_results=False,
+            )
+
+        self.assertIn("groupResults", preserved)
+        self.assertIn("provisionalGroupStandings", preserved)
+        self.assertIn("timelineCheckpoints", preserved)
+        self.assertEqual(new_results["groupResults"], existing_results["groupResults"])
+        self.assertEqual(new_results["bestThirds"], existing_results["bestThirds"])
+        self.assertEqual(new_results["futures"], existing_results["futures"])
+        self.assertEqual(
+            new_results["provisionalGroupStandings"],
+            existing_results["provisionalGroupStandings"],
+        )
+        self.assertEqual(
+            new_results["timelineCheckpoints"],
+            existing_results["timelineCheckpoints"],
+        )
+
+    def test_refresh_group_stage_results_skips_preservation(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output_path = Path(temp_dir) / "official_results.js"
+            output_path.write_text(
+                'window.OFFICIAL_RESULTS = {"groupResults": {"A": ["Mexico"]}};\n',
+                encoding="utf-8",
+            )
+            new_results = {"groupResults": {"A": ["Canada"]}}
+
+            preserved = update_official_results.preserve_existing_group_stage_results(
+                new_results,
+                output_path,
+                refresh_group_stage_results=True,
+            )
+
+        self.assertEqual(preserved, [])
+        self.assertEqual(new_results["groupResults"], {"A": ["Canada"]})
+
     def row(
         self,
         name,
