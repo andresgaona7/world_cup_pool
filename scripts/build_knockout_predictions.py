@@ -68,6 +68,22 @@ HEADER_ALIASES = {
     "mode": {"mode", "prediction mode"},
     "home_score": {"home score", "home_score", "score home"},
     "away_score": {"away score", "away_score", "score away"},
+    "home_penalty_score": {
+        "home penalty score",
+        "home penalties",
+        "home penalty",
+        "home pk",
+        "pk home",
+        "penalty home",
+    },
+    "away_penalty_score": {
+        "away penalty score",
+        "away penalties",
+        "away penalty",
+        "away pk",
+        "pk away",
+        "penalty away",
+    },
     "predicted_advancing_team": {
         "advancing team",
         "advancing",
@@ -303,6 +319,12 @@ def extract_section_predictions(
             prediction["homeScore"] = home_score
         if away_score is not None:
             prediction["awayScore"] = away_score
+        home_penalty_score = optional_int(row_values.get("home_penalty_score", ""))
+        away_penalty_score = optional_int(row_values.get("away_penalty_score", ""))
+        if home_penalty_score is not None:
+            prediction["homePenaltyScore"] = home_penalty_score
+        if away_penalty_score is not None:
+            prediction["awayPenaltyScore"] = away_penalty_score
         predictions.append(prediction)
 
     return predictions

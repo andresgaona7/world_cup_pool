@@ -125,9 +125,19 @@ def score_knockout_prediction(
         and prediction.predicted_away_score == result.away_score
     )
     decided_on_penalties = result.home_score == result.away_score and bool(result.advancing_team)
+    exact_penalty_score = (
+        decided_on_penalties
+        and result.home_penalty_score is not None
+        and result.away_penalty_score is not None
+        and prediction.predicted_home_penalty_score == result.home_penalty_score
+        and prediction.predicted_away_penalty_score == result.away_penalty_score
+    )
 
     if exact_score and correct_advancing_team:
-        return base_points * 2.0
+        points = base_points * 2.0
+        if exact_penalty_score:
+            points += base_points
+        return points
     if correct_advancing_team:
         return base_points
     if decided_on_penalties:

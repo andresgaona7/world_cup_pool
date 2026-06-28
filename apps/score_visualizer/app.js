@@ -170,6 +170,8 @@ function normalizeKnockoutPredictions(sourceData) {
 function normalizeKnockoutPrediction(match) {
   const homeScore = numberOrNull(match.homeScore);
   const awayScore = numberOrNull(match.awayScore);
+  const homePenaltyScore = numberOrNull(match.homePenaltyScore);
+  const awayPenaltyScore = numberOrNull(match.awayPenaltyScore);
   return {
     matchId: String(match.matchId || match.id || ""),
     stage: normalizeKnockoutStage(match.stage || ""),
@@ -177,6 +179,8 @@ function normalizeKnockoutPrediction(match) {
     awayTeam: match.awayTeam || match.away || "",
     homeScore,
     awayScore,
+    homePenaltyScore,
+    awayPenaltyScore,
     winner: match.winner || match.advancingTeam || match.predictedAdvancingTeam || "",
     mode: "score",
   };
@@ -214,6 +218,8 @@ function normalizeOfficialKnockoutMatch(match) {
     awayTeam: match.awayTeam || match.away || "",
     homeScore: numberOrNull(match.homeScore),
     awayScore: numberOrNull(match.awayScore),
+    homePenaltyScore: numberOrNull(match.homePenaltyScore),
+    awayPenaltyScore: numberOrNull(match.awayPenaltyScore),
     advancingTeam: match.advancingTeam || match.winner || "",
   };
 }
@@ -954,10 +960,11 @@ function knockoutComparisonRows(player) {
     const prediction = predictionByMatch.get(result.matchId);
     const points = prediction ? scoreKnockoutMatch(prediction, result) : 0;
     const match = points > 0;
+    const officialScore = knockoutScoreLabel(result);
     return {
       stage: result.stage,
       matchLabel: `${result.homeTeam} vs ${result.awayTeam}`,
-      officialLabel: `${result.homeTeam} ${result.homeScore}-${result.awayScore} ${result.awayTeam}; ${result.advancingTeam} advanced`,
+      officialLabel: `${result.homeTeam} ${officialScore} ${result.awayTeam}; ${result.advancingTeam} advanced`,
       predictionLabel: prediction ? knockoutPredictionLabel(prediction, result) : "",
       match,
       points,
@@ -968,7 +975,7 @@ function knockoutComparisonRows(player) {
 
 function knockoutPredictionLabel(prediction, result) {
   const score = prediction.homeScore !== null && prediction.awayScore !== null
-    ? `${result.homeTeam} ${prediction.homeScore}-${prediction.awayScore} ${result.awayTeam}; `
+    ? `${result.homeTeam} ${knockoutScoreLabel(prediction)} ${result.awayTeam}; `
     : "";
   return `${score}${prediction.winner || "No winner"} advanced`;
 }
@@ -976,6 +983,12 @@ function knockoutPredictionLabel(prediction, result) {
 function knockoutMatchStatus(prediction, result, points) {
   const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
   const correctWinner = prediction.winner && prediction.winner === result.advancingTeam;
+  const exactPenaltyScore = hasPenaltyScore(result) &&
+    prediction.homePenaltyScore === result.homePenaltyScore &&
+    prediction.awayPenaltyScore === result.awayPenaltyScore;
+  if (exactScore && correctWinner && exactPenaltyScore) {
+    return "Exact penalties";
+  }
   if (exactScore && correctWinner) {
     return "Exact";
   }
@@ -986,6 +999,18 @@ function knockoutMatchStatus(prediction, result, points) {
     return "Winner";
   }
   return points > 0 ? "Partial" : "No match";
+}
+
+function knockoutScoreLabel(match) {
+  const score = `${match.homeScore ?? "-"}-${match.awayScore ?? "-"}`;
+  if (hasPenaltyScore(match)) {
+    return `${score} (${match.homePenaltyScore}-${match.awayPenaltyScore} pens)`;
+  }
+  return score;
+}
+
+function hasPenaltyScore(match) {
+  return match.homePenaltyScore !== null && match.awayPenaltyScore !== null;
 }
 
 function futuresComparisonRows(player, comparisonScenario) {
@@ -1527,8 +1552,11 @@ function scoreKnockoutMatch(prediction, result) {
 
   const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
   const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
+  const exactPenaltyScore = hasPenaltyScore(result) &&
+    prediction.homePenaltyScore === result.homePenaltyScore &&
+    prediction.awayPenaltyScore === result.awayPenaltyScore;
   if (exactScore && correctAdvancingTeam) {
-    return basePoints * 2;
+    return basePoints * (exactPenaltyScore ? 3 : 2);
   }
   if (correctAdvancingTeam) {
     return basePoints;

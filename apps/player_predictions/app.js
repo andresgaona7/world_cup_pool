@@ -266,7 +266,11 @@ function scoreText(match) {
   if (match.homeScore === undefined && match.awayScore === undefined) {
     return "Blank";
   }
-  return `${match.homeScore ?? "-"}-${match.awayScore ?? "-"}`;
+  const score = `${match.homeScore ?? "-"}-${match.awayScore ?? "-"}`;
+  if (match.homePenaltyScore !== undefined || match.awayPenaltyScore !== undefined) {
+    return `${score} (${match.homePenaltyScore ?? "-"}-${match.awayPenaltyScore ?? "-"} pens)`;
+  }
+  return score;
 }
 
 function modeText(mode) {

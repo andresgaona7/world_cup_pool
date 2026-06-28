@@ -124,6 +124,14 @@ function renderMatch(stage, matchId, homeSeed, awaySeed) {
         <span>Away score</span>
         <input name="match-${matchId}-away-score" type="number" min="0" inputmode="numeric">
       </label>
+      <label>
+        <span>Home penalties</span>
+        <input name="match-${matchId}-home-penalty-score" type="number" min="0" inputmode="numeric">
+      </label>
+      <label>
+        <span>Away penalties</span>
+        <input name="match-${matchId}-away-penalty-score" type="number" min="0" inputmode="numeric">
+      </label>
     </div>
     <label class="winner-field">
       <span>Advancing team</span>

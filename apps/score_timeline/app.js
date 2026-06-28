@@ -572,6 +572,8 @@ function normalizeKnockoutResults(matches) {
       awayTeam: match.awayTeam || match.away || "",
       homeScore: numberOrNull(match.homeScore),
       awayScore: numberOrNull(match.awayScore),
+      homePenaltyScore: numberOrNull(match.homePenaltyScore),
+      awayPenaltyScore: numberOrNull(match.awayPenaltyScore),
       advancingTeam: match.advancingTeam || match.winner || "",
     }))
     .filter((match) =>
@@ -825,8 +827,11 @@ function scoreKnockoutMatch(prediction, result) {
 
   const exactScore = predictedHomeScore === result.homeScore && predictedAwayScore === result.awayScore;
   const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
+  const exactPenaltyScore = hasPenaltyScore(result) &&
+    numberOrNull(prediction.homePenaltyScore) === result.homePenaltyScore &&
+    numberOrNull(prediction.awayPenaltyScore) === result.awayPenaltyScore;
   if (exactScore && correctAdvancingTeam) {
-    return basePoints * 2;
+    return basePoints * (exactPenaltyScore ? 3 : 2);
   }
   if (correctAdvancingTeam) {
     return basePoints;
@@ -835,6 +840,10 @@ function scoreKnockoutMatch(prediction, result) {
     return basePoints * 0.5;
   }
   return 0;
+}
+
+function hasPenaltyScore(match) {
+  return match.homePenaltyScore !== null && match.awayPenaltyScore !== null;
 }
 
 function scoreFutures(player, scenario) {

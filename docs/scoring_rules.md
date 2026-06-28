@@ -49,6 +49,8 @@ Base points by round:
 Score mode:
 
 - Exact regulation score and correct advancing team: 2.0x base.
+- Exact penalty shootout score on a match decided by penalties: +1.0x base,
+  only when the regulation draw score and advancing team are also exact.
 - Correct advancing team but wrong score: 1.0x base.
 - Regulation draw decided on penalties: 0.5x base fallback.
 - Wrong advancing team: 0.

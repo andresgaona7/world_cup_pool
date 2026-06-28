@@ -462,6 +462,67 @@ body {
   padding: 18px;
 }
 
+.score-example {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+  padding: 14px;
+}
+
+.score-example-head {
+  display: grid;
+  gap: 4px;
+}
+
+.score-example-head span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.score-example-head strong {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.score-example-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.score-example-list div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  gap: 12px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+
+.score-example-list dt {
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.score-example-list dd {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 7px 9px;
+  white-space: nowrap;
+}
+
 @media (max-width: 900px) {
   .timeline-focus-layout {
     grid-template-columns: 1fr;
@@ -516,6 +577,15 @@ body {
 
   .checkpoint-history-row {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .score-example-list div {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .score-example-list dd {
+    justify-self: start;
   }
 }
 
@@ -581,6 +651,10 @@ body {
 :root[data-theme="dark"] .app-card {
   background: var(--surface);
   color: var(--ink);
+}
+
+:root[data-theme="dark"] .score-example-list dd {
+  background: var(--surface);
 }
 
 :root[data-theme="dark"] .primary-link {

@@ -39,12 +39,16 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
             (3, 2): "Mode",
             (3, 3): "Home Score",
             (3, 4): "Away Score",
-            (3, 5): "Winner",
+            (3, 5): "Home Penalty Score",
+            (3, 6): "Away Penalty Score",
+            (3, 7): "Winner",
             (4, 1): "104.0",
             (4, 2): "Score",
             (4, 3): "2.0",
             (4, 4): "1.0",
-            (4, 5): "Ecuador",
+            (4, 5): "5.0",
+            (4, 6): "4.0",
+            (4, 7): "Ecuador",
         }
 
         predictions = build_knockout_predictions.extract_predictions(cells)
@@ -59,6 +63,8 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
                     "predictedAdvancingTeam": "Ecuador",
                     "homeScore": 2,
                     "awayScore": 1,
+                    "homePenaltyScore": 5,
+                    "awayPenaltyScore": 4,
                 }
             ],
         )

@@ -49,6 +49,8 @@ class KnockoutMatchResult:
     home_score: int
     away_score: int
     advancing_team: str
+    home_penalty_score: int | None = None
+    away_penalty_score: int | None = None
 
 
 @dataclass(frozen=True)
@@ -60,6 +62,8 @@ class KnockoutPrediction:
     predicted_advancing_team: str
     predicted_home_score: int | None = None
     predicted_away_score: int | None = None
+    predicted_home_penalty_score: int | None = None
+    predicted_away_penalty_score: int | None = None
 
 
 @dataclass(frozen=True)
