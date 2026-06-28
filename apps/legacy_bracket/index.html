@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Cup Pool Wikipedia Bracket</title>
+  <script src="../../theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="title-row">
+      <div>
+        <p class="eyebrow">World Cup 2026 Pool</p>
+        <h1>Wikipedia Bracket</h1>
+      </div>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false"><span data-theme-toggle-label>Dark mode</span></button>
+    </div>
+    <nav class="site-nav" aria-label="Visualization navigation">
+      <a href="../../index.html">Home</a>
+      <a href="../rules/index.html">Rules</a>
+      <a href="../player_predictions/index.html">Player Picks</a>
+      <a href="../knockout_bracket/index.html">Bracket</a>
+      <a href="../score_visualizer/index.html">Scores</a>
+      <a href="../score_timeline/index.html">Official results</a>
+      <a href="../blog/index.html">Blog</a>
+      <a class="active" href="../legacy/index.html" aria-current="page">Legacy</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Legacy reference</p>
+          <h2>2026 Knockout Stage Bracket</h2>
+        </div>
+        <a class="source-link" href="https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage#Bracket">Wikipedia source</a>
+      </div>
+      <div class="source-note">
+        Match order mirrors the published Wikipedia bracket template. Round of 32 teams are filled from the latest available fixture updates.
+      </div>
+      <div id="wikiBracket" class="bracket-board" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
