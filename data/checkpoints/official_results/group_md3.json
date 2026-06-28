@@ -3,7 +3,7 @@
   "label": "After group matchday 3",
   "shortLabel": "Group MD3",
   "stage": "group_stage",
-  "completedAt": "2026-06-27T09:53:58+00:00",
+  "completedAt": "2026-06-28T04:52:34+00:00",
   "scenario": {
     "groupResults": {
       "A": [
@@ -63,33 +63,49 @@
       ],
       "L": [
         "England",
-        "Ghana",
-        "Croatia"
+        "Croatia",
+        "Ghana"
       ]
     },
     "bestThirds": [
+      "Congo DR",
       "Sweden",
       "Ecuador",
+      "Ghana",
       "Bosnia-Herzegovina",
+      "Algeria",
       "Paraguay",
-      "Senegal",
-      "Iran",
-      "Croatia",
-      "South Korea"
+      "Senegal"
     ],
     "futures": {
       "champion": "",
       "runnerUp": "",
       "topScorer": "Lionel Messi",
       "teamLastRounds": {
+        "South Korea": "group_stage",
+        "Czechia": "group_stage",
+        "Qatar": "group_stage",
+        "Scotland": "group_stage",
+        "Haiti": "group_stage",
+        "Türkiye": "group_stage",
+        "Curaçao": "group_stage",
+        "Tunisia": "group_stage",
+        "Iran": "group_stage",
+        "New Zealand": "group_stage",
+        "Uruguay": "group_stage",
+        "Saudi Arabia": "group_stage",
+        "Iraq": "group_stage",
+        "Jordan": "group_stage",
+        "Uzbekistan": "group_stage",
+        "Panama": "group_stage",
         "France": "round_of_32",
         "Argentina": "round_of_32",
         "Norway": "round_of_32",
         "Morocco": "round_of_32",
         "Brazil": "round_of_32",
         "Ecuador": "round_of_32",
-        "Spain": "group_stage",
-        "England": "group_stage"
+        "Spain": "round_of_32",
+        "England": "round_of_32"
       }
     }
   },
