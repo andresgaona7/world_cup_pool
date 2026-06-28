@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Cup Pool Knockout Standings</title>
+  <script src="../../theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="title-row">
+      <div>
+        <p class="eyebrow">World Cup 2026 Pool</p>
+        <h1>Knockout Standings</h1>
+      </div>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false"><span data-theme-toggle-label>Dark mode</span></button>
+    </div>
+    <nav class="site-nav" aria-label="Visualization navigation">
+      <a href="../../index.html">Home</a>
+      <a href="../rules/index.html">Rules</a>
+      <a href="../player_predictions/index.html">Player Picks</a>
+      <a href="../knockout_bracket/index.html">Bracket</a>
+      <a href="../score_visualizer/index.html">Scores</a>
+      <a href="../score_timeline/index.html">Official results</a>
+      <a href="../blog/index.html">Blog</a>
+      <a class="active" href="../legacy/index.html" aria-current="page">Legacy</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="hero-panel" aria-labelledby="knockoutTitle">
+      <div>
+        <p class="eyebrow">Tournament standings</p>
+        <h2 id="knockoutTitle">2026 Knockout Phase</h2>
+      </div>
+      <div class="hero-actions">
+        <a class="source-link" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/standings">FIFA standings</a>
+        <div class="status-pill" id="statusPill">Loading bracket</div>
+      </div>
+    </section>
+
+    <section class="stage-shell" aria-label="Knockout stage filter">
+      <div class="stage-tabs" id="stageTabs"></div>
+      <div class="stage-summary" id="stageSummary"></div>
+    </section>
+
+    <section class="champion-strip" id="championStrip" aria-label="Final stage summary"></section>
+
+    <section class="path-grid" id="pathGrid" aria-label="Knockout tournament paths"></section>
+  </main>
+
+  <script src="../../data/generated/official_results.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
