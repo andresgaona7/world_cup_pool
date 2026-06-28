@@ -47,6 +47,18 @@ const KNOCKOUT_PERFECT_SCORE_BONUS_POINTS = {
   quarterfinal: 15,
   semifinal: 10,
 };
+const ROUND_OF_32_BONUS_QUESTION_POINTS = 2;
+const ROUND_OF_32_BONUS_QUESTIONS = [
+  "How many matches will go to extra time?",
+  "How many matches will be decided by penalties?",
+  "Which team will score the most goals?",
+  "Total goals scored in the R-32 (no penalties)",
+  "Which team will score the fastest goal?",
+  "Which team will score the latest goal, including extra time?",
+  "Team with the biggest winning margin?",
+  "How many yellow cards will be shown?",
+  "How many red cards will be shown?",
+];
 const KNOCKOUT_STAGE_LABELS = {
   round_of_32: "Round of 32",
   round_of_16: "Round of 16",
@@ -817,8 +829,29 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
             </table>
           </div>
         </div>
+        ${stage === "round_of_32" ? roundOf32BonusQuestionsHtml() : ""}
       </div>
     </section>
+  `;
+}
+
+function roundOf32BonusQuestionsHtml() {
+  const maxPoints = ROUND_OF_32_BONUS_QUESTIONS.length * ROUND_OF_32_BONUS_QUESTION_POINTS;
+  return `
+        <div class="comparison-block bonus-question-block">
+          <div class="bonus-question-head">
+            <h3>Round of 32 Bonus Questions</h3>
+            <span>${formatPoints(ROUND_OF_32_BONUS_QUESTION_POINTS)} pts each, ${formatPoints(maxPoints)} pts max</span>
+          </div>
+          <ol class="bonus-question-list">
+            ${ROUND_OF_32_BONUS_QUESTIONS.map((question) => `
+              <li>
+                <span>${escapeHtml(question)}</span>
+                <strong>${formatPoints(ROUND_OF_32_BONUS_QUESTION_POINTS)} pts</strong>
+              </li>
+            `).join("")}
+          </ol>
+        </div>
   `;
 }
 

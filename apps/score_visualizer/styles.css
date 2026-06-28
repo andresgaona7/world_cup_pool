@@ -464,6 +464,60 @@ td {
   font-size: 17px;
 }
 
+.bonus-question-block {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 14px;
+}
+
+.bonus-question-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.bonus-question-head h3 {
+  margin: 0;
+}
+
+.bonus-question-head span {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.bonus-question-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 22px;
+}
+
+.bonus-question-list li {
+  padding-left: 2px;
+}
+
+.bonus-question-list li::marker {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.bonus-question-list span {
+  color: var(--ink);
+}
+
+.bonus-question-list strong {
+  display: inline-flex;
+  margin-left: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
 .knockout-stage-panels {
   display: grid;
   gap: 22px;
@@ -777,6 +831,7 @@ td {
 :root[data-theme="dark"] select,
 :root[data-theme="dark"] input,
 :root[data-theme="dark"] .comparison-metric,
+:root[data-theme="dark"] .bonus-question-block,
 :root[data-theme="dark"] .table-wrap,
 :root[data-theme="dark"] .matchup-card,
 :root[data-theme="dark"] .score-card,

@@ -71,6 +71,26 @@ Score mode:
 
 ## Bonuses
 
+### Round of 32 bonus questions
+
+The Round of 32 has 9 fixed-point bonus questions worth 2 points each, for an
+18 point maximum. These bonus-question points are independent of knockout base
+points and do not scale with the Round of 32 match value.
+
+| Question | Points |
+| --- | ---: |
+| How many matches will go to extra time? | 2 |
+| How many matches will be decided by penalties? | 2 |
+| Which team will score the most goals? | 2 |
+| Total goals scored in the R-32 (no penalties) | 2 |
+| Which team will score the fastest goal? | 2 |
+| Which team will score the latest goal, including extra time? | 2 |
+| Team with the biggest winning margin? | 2 |
+| How many yellow cards will be shown? | 2 |
+| How many red cards will be shown? | 2 |
+
+### Perfect-card bonuses
+
 | Bonus | Round of 32 | Round of 16 | Quarterfinal | Semifinal |
 | --- | ---: | ---: | ---: | ---: |
 | Perfect knockout winners | 25 | 25 | 25 | 25 |
