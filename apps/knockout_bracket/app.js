@@ -58,6 +58,9 @@ const BRACKET_ROUNDS = [
   },
 ];
 
+const officialData = window.OFFICIAL_RESULTS || {};
+const officialMatches = latestOfficialKnockoutMatches(officialData);
+const officialMatchesById = new Map(officialMatches.map((match) => [match.matchId, match]));
 const board = document.querySelector("#wikiBracket");
 
 renderBracket();
@@ -87,25 +90,187 @@ function renderRound(round) {
 }
 
 function renderMatch([matchId, homeSeed, awaySeed, label]) {
+  const officialMatch = officialMatchesById.get(String(matchId));
+  const homeTeam = displayTeam(officialMatch?.homeTeam ? officialTeam(officialMatch.homeTeam) : homeSeed);
+  const awayTeam = displayTeam(officialMatch?.awayTeam ? officialTeam(officialMatch.awayTeam) : awaySeed);
+  const statusLabel = officialMatch
+    ? resultStatusLabel(officialMatch)
+    : "Pending";
   const article = document.createElement("article");
-  article.className = "match-card";
+  article.className = `match-card ${officialMatch ? "has-result" : "is-pending"}`;
   article.innerHTML = `
     <div class="match-head">
       <strong>Match ${matchId}</strong>
-      <span>${label || ""}</span>
+      <span>${label || statusLabel}</span>
     </div>
-    ${teamRow(homeSeed)}
-    ${teamRow(awaySeed)}
+    ${teamRow(homeTeam, officialMatch, "home")}
+    ${teamRow(awayTeam, officialMatch, "away")}
+    <div class="match-status">${statusLabel}</div>
   `;
   return article;
 }
 
-function teamRow(team) {
-  const normalized = typeof team === "string" ? placeholder(team) : team;
+function teamRow(team, officialMatch, side) {
+  const score = scoreForSide(officialMatch, side);
+  const winnerClass = isWinner(officialMatch, team.name) ? " is-winner" : "";
   return `
-    <div class="team-row">
-      <span>${normalized.flag ? `<span class="flag" aria-hidden="true">${normalized.flag}</span>` : ""}${normalized.name}</span>
-      <b></b>
+    <div class="team-row${winnerClass}">
+      <span>${team.flag ? `<span class="flag" aria-hidden="true">${team.flag}</span>` : ""}${team.name}</span>
+      <b>${score}</b>
     </div>
   `;
+}
+
+function displayTeam(seed) {
+  if (typeof seed !== "string") {
+    return seed;
+  }
+
+  const winnerMatch = seed.match(/^Winner Match (\d+)$/);
+  if (winnerMatch) {
+    const match = officialMatchesById.get(winnerMatch[1]);
+    return match?.advancingTeam ? officialTeam(match.advancingTeam) : placeholder(seed);
+  }
+
+  const loserMatch = seed.match(/^Loser Match (\d+)$/);
+  if (loserMatch) {
+    const match = officialMatchesById.get(loserMatch[1]);
+    const loser = matchLoser(match);
+    return loser ? officialTeam(loser) : placeholder(seed);
+  }
+
+  return placeholder(seed);
+}
+
+function officialTeam(name) {
+  return country(name, flagForTeam(name));
+}
+
+function scoreForSide(match, side) {
+  if (!match || match.homeScore === null || match.awayScore === null) {
+    return "";
+  }
+  const score = side === "home" ? match.homeScore : match.awayScore;
+  const penaltyScore = side === "home" ? match.homePenaltyScore : match.awayPenaltyScore;
+  return penaltyScore === null ? String(score) : `${score} (${penaltyScore})`;
+}
+
+function isWinner(match, teamName) {
+  return Boolean(match?.advancingTeam && teamName && match.advancingTeam === teamName);
+}
+
+function matchLoser(match) {
+  if (!match?.advancingTeam) {
+    return "";
+  }
+  if (match.advancingTeam === match.homeTeam) {
+    return match.awayTeam;
+  }
+  if (match.advancingTeam === match.awayTeam) {
+    return match.homeTeam;
+  }
+  return "";
+}
+
+function resultStatusLabel(match) {
+  if (!match) {
+    return "Pending";
+  }
+  const score = knockoutScoreLabel(match);
+  const duration = durationLabel(match.duration);
+  return `${score}${duration ? ` ${duration}` : ""}`;
+}
+
+function knockoutScoreLabel(match) {
+  const score = `${match.homeScore ?? "-"}-${match.awayScore ?? "-"}`;
+  if (match.homePenaltyScore !== null && match.awayPenaltyScore !== null) {
+    return `${score}, ${match.homePenaltyScore}-${match.awayPenaltyScore} pens`;
+  }
+  return score;
+}
+
+function durationLabel(duration) {
+  if (duration === "EXTRA_TIME") {
+    return "AET";
+  }
+  if (duration === "PENALTY_SHOOTOUT" || duration === "PENALTIES") {
+    return "Pens";
+  }
+  return "";
+}
+
+function latestOfficialKnockoutMatches(resultsData) {
+  const matchesById = new Map();
+  [
+    ...(resultsData?.officialMatches || []),
+    ...(resultsData?.matches || []),
+    ...(resultsData?.timelineCheckpoints || []).flatMap((checkpoint) => checkpoint.officialMatches || []),
+  ]
+    .map(normalizeOfficialKnockoutMatch)
+    .filter((match) => match.matchId && match.homeTeam && match.awayTeam)
+    .forEach((match) => matchesById.set(match.matchId, match));
+
+  return [...matchesById.values()];
+}
+
+function normalizeOfficialKnockoutMatch(match) {
+  return {
+    matchId: String(match.matchId || match.id || ""),
+    stage: String(match.stage || ""),
+    homeTeam: match.homeTeam || match.home || "",
+    awayTeam: match.awayTeam || match.away || "",
+    homeScore: numberOrNull(match.homeScore),
+    awayScore: numberOrNull(match.awayScore),
+    homePenaltyScore: numberOrNull(match.homePenaltyScore),
+    awayPenaltyScore: numberOrNull(match.awayPenaltyScore),
+    advancingTeam: match.advancingTeam || match.winner || "",
+    duration: match.duration || "",
+  };
+}
+
+function numberOrNull(value) {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function flagForTeam(name) {
+  return {
+    Algeria: "🇩🇿",
+    Argentina: "🇦🇷",
+    Australia: "🇦🇺",
+    Belgium: "🇧🇪",
+    "Bosnia-Herzegovina": "🇧🇦",
+    "Bosnia and Herzegovina": "🇧🇦",
+    Brazil: "🇧🇷",
+    Canada: "🇨🇦",
+    "Cape Verde Islands": "🇨🇻",
+    "Cabo Verde": "🇨🇻",
+    Colombia: "🇨🇴",
+    Croatia: "🇭🇷",
+    "Congo DR": "🇨🇩",
+    "DR Congo": "🇨🇩",
+    Ecuador: "🇪🇨",
+    Egypt: "🇪🇬",
+    England: "🏴",
+    France: "🇫🇷",
+    Germany: "🇩🇪",
+    Ghana: "🇬🇭",
+    "Ivory Coast": "🇨🇮",
+    Japan: "🇯🇵",
+    Mexico: "🇲🇽",
+    Morocco: "🇲🇦",
+    Netherlands: "🇳🇱",
+    Norway: "🇳🇴",
+    Paraguay: "🇵🇾",
+    Portugal: "🇵🇹",
+    Senegal: "🇸🇳",
+    Spain: "🇪🇸",
+    "South Africa": "🇿🇦",
+    Sweden: "🇸🇪",
+    Switzerland: "🇨🇭",
+    "United States": "🇺🇸",
+  }[name] || "";
 }

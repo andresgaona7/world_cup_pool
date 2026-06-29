@@ -206,6 +206,10 @@ h3 {
   background: #ffffff;
 }
 
+.match-card.has-result {
+  border-color: rgba(14, 118, 110, 0.45);
+}
+
 .match-head {
   display: flex;
   justify-content: space-between;
@@ -233,6 +237,10 @@ h3 {
   border-bottom: 1px solid var(--line);
 }
 
+.team-row.is-winner {
+  background: var(--soft);
+}
+
 .team-row:last-child {
   border-bottom: 0;
 }
@@ -249,6 +257,21 @@ h3 {
   color: var(--ink);
   font-size: 13px;
   font-weight: 750;
+}
+
+.team-row.is-winner > span,
+.team-row.is-winner b {
+  color: var(--accent-strong);
+  font-weight: 900;
+}
+
+.match-status {
+  min-height: 30px;
+  padding: 7px 10px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .flag {

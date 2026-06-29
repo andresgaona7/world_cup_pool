@@ -1,4 +1,4 @@
-.PHONY: build-pool-data build-knockout-predictions build-consensus-predictions update-official-results apply-manual-futures create-official-checkpoint rebuild-official-checkpoints build-site test
+.PHONY: build-pool-data build-knockout-predictions build-consensus-predictions update-official-results update-official-knockout-results apply-manual-futures create-official-checkpoint rebuild-official-checkpoints build-site test
 
 build-pool-data:
 	python3 scripts/build_pool_data.py
@@ -11,6 +11,9 @@ build-consensus-predictions:
 
 update-official-results:
 	python3 scripts/update_official_results.py --transport "$${OFFICIAL_RESULTS_TRANSPORT:-auto}"
+
+update-official-knockout-results:
+	python3 scripts/update_official_knockout_results.py
 
 apply-manual-futures:
 	python3 scripts/apply_manual_futures.py

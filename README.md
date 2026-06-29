@@ -32,6 +32,7 @@ make build-pool-data
 make build-knockout-predictions
 make build-consensus-predictions
 make update-official-results
+make update-official-knockout-results
 make apply-manual-futures
 CHECKPOINT=group_md1 make create-official-checkpoint
 make rebuild-official-checkpoints
@@ -46,6 +47,7 @@ python3 scripts/build_pool_data.py
 python3 scripts/build_knockout_predictions.py
 python3 scripts/build_consensus_predictions.py
 python3 scripts/update_official_results.py --transport "${OFFICIAL_RESULTS_TRANSPORT:-auto}"
+python3 scripts/update_official_knockout_results.py
 python3 scripts/apply_manual_futures.py
 python3 scripts/create_official_checkpoint.py group_md1
 python3 scripts/create_official_checkpoint.py --rebuild-only
@@ -60,6 +62,15 @@ scoring fields in `data/generated/official_results.js`, including group
 results, best thirds, provisional standings, timeline checkpoints, overall
 standings, and futures. Use `--refresh-group-stage-results` only when you
 intend to replace those fields from Football-Data again.
+
+`make update-official-knockout-results` reads `FOOTBALL_DATA_API_KEY` when set.
+It fetches Football-Data match records, saves the untouched response to
+`data/raw/official/football_data_wc_matches_2026.json`, writes reviewable
+knockout data to `data/manual/official_knockout_results.json`, and merges
+official knockout matches into `data/generated/official_results.js`. The match
+endpoint supplies teams, score, stage, status, duration, winner, and referee
+metadata. Cards and fastest/latest goal teams are not present in that endpoint
+and must be reviewed manually unless another event source is added.
 
 ## Data Flow
 
@@ -89,6 +100,12 @@ When standings need the final FIFA ranking tie-breaker, the updater reads
 manual rankings from `data/manual/fifa_rankings.json`. Existing group-stage
 score inputs are preserved on normal updater runs so settled group-stage
 scores and the legacy third-place table do not change accidentally.
+
+`scripts/update_official_knockout_results.py` fetches Football-Data match
+records and updates official knockout match data in
+`data/generated/official_results.js`. The same official match data is loaded by
+`apps/knockout_bracket/index.html`, `apps/player_predictions/index.html`, and
+`apps/score_visualizer/index.html`.
 
 Official fair-play tiebreakers and unresolved group-order corrections are
 entered manually in `data/manual/official_fair_play.json` because the

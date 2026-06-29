@@ -345,7 +345,7 @@ table {
 }
 
 .knockout-table {
-  min-width: 320px;
+  min-width: 680px;
   font-size: 13px;
 }
 
@@ -373,6 +373,26 @@ table {
 .knockout-table th:last-child,
 .knockout-table td:last-child {
   border-right: 0;
+}
+
+.result-cell {
+  font-weight: 850;
+}
+
+.result-exact {
+  color: #0a5e58;
+}
+
+.result-partial {
+  color: #6d5b0b;
+}
+
+.result-pending {
+  color: var(--muted);
+}
+
+.result-miss {
+  color: #9b2c2c;
 }
 
 .empty-note {

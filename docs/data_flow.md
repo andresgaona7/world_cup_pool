@@ -73,5 +73,24 @@ Football-Data.org standings API
   -> apps/score_timeline/index.html
 ```
 
+Official knockout match results use the Football-Data matches endpoint:
+
+```text
+Football-Data.org matches API
+  -> scripts/update_official_knockout_results.py
+  -> data/raw/official/football_data_wc_matches_2026.json
+  -> data/manual/official_knockout_results.json
+  -> data/generated/official_results.js
+  -> apps/knockout_bracket/index.html
+  -> apps/player_predictions/index.html
+  -> apps/score_visualizer/index.html
+```
+
+The knockout updater preserves the raw API response for later inspection, then
+normalizes match IDs, teams, stages, scores, duration, winners, penalty fields
+when present, and referee metadata. The Football-Data match endpoint does not
+provide cards or fastest/latest goal teams, so those Round of 32 bonus-question
+answers remain manual unless another event source is added.
+
 The static apps intentionally load committed generated files directly, so they
 can be opened from disk without a package install, dev server, or build step.

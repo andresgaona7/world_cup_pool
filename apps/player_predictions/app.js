@@ -1,5 +1,6 @@
 const data = window.POOL_DATA || { players: [] };
 const knockoutData = window.KNOCKOUT_PREDICTIONS || { stages: [], players: [] };
+const officialData = window.OFFICIAL_RESULTS || {};
 
 const KNOCKOUT_STAGE_ORDER = [
   "round_of_32",
@@ -8,6 +9,16 @@ const KNOCKOUT_STAGE_ORDER = [
   "semifinal",
   "final",
 ];
+const KNOCKOUT_BASE_POINTS = {
+  round_of_32: 4,
+  round_of_16: 6,
+  quarterfinal: 10,
+  semifinal: 16,
+  final: 20,
+};
+const officialMatchesById = new Map(
+  latestOfficialKnockoutMatches(officialData).map((match) => [match.matchId, match])
+);
 
 let selectedIndex = 0;
 
@@ -201,6 +212,8 @@ function knockoutStageContent(stage, matches) {
         <th scope="col">Match</th>
         <th scope="col">Pick</th>
         <th scope="col">Score</th>
+        <th scope="col">Official</th>
+        <th scope="col">Status</th>
         <th scope="col">Mode</th>
       </tr>
     </thead>
@@ -210,14 +223,21 @@ function knockoutStageContent(stage, matches) {
   tbody.replaceChildren(
     ...stageMatches.map((match) => {
       const tr = document.createElement("tr");
+      const officialMatch = officialMatchesById.get(String(match.matchId));
+      const status = officialMatch ? predictionStatus(match, officialMatch) : "Pending";
       [
         `Match ${match.matchId}`,
         match.predictedAdvancingTeam || "Blank",
         scoreText(match),
+        officialText(officialMatch),
+        status,
         modeText(match.mode),
-      ].forEach((value) => {
+      ].forEach((value, index) => {
         const td = document.createElement("td");
         td.textContent = value;
+        if (index === 4) {
+          td.className = statusClass(status);
+        }
         tr.append(td);
       });
       return tr;
@@ -271,6 +291,143 @@ function scoreText(match) {
     return `${score} (${match.homePenaltyScore ?? "-"}-${match.awayPenaltyScore ?? "-"} pens)`;
   }
   return score;
+}
+
+function officialText(match) {
+  if (!match || match.homeScore === null || match.awayScore === null) {
+    return "Pending";
+  }
+  const score = knockoutScoreText(match);
+  return `${match.homeTeam} ${score} ${match.awayTeam}; ${match.advancingTeam || "winner pending"}`;
+}
+
+function predictionStatus(prediction, result) {
+  const points = scoreKnockoutPrediction(prediction, result);
+  const exactScore = numberOrNull(prediction.homeScore) === result.homeScore &&
+    numberOrNull(prediction.awayScore) === result.awayScore;
+  const correctWinner = prediction.predictedAdvancingTeam === result.advancingTeam;
+  const exactPenaltyScore = hasPenaltyScore(result) &&
+    numberOrNull(prediction.homePenaltyScore) === result.homePenaltyScore &&
+    numberOrNull(prediction.awayPenaltyScore) === result.awayPenaltyScore;
+  if (exactScore && correctWinner && exactPenaltyScore) {
+    return "Exact penalties";
+  }
+  if (exactScore && correctWinner) {
+    return "Exact";
+  }
+  if (correctWinner) {
+    return "Winner";
+  }
+  if (points > 0) {
+    return "Partial";
+  }
+  return "No match";
+}
+
+function scoreKnockoutPrediction(prediction, result) {
+  const basePoints = KNOCKOUT_BASE_POINTS[result.stage] || 0;
+  const predictedHomeScore = numberOrNull(prediction.homeScore);
+  const predictedAwayScore = numberOrNull(prediction.awayScore);
+  const exactScore = predictedHomeScore === result.homeScore && predictedAwayScore === result.awayScore;
+  const correctWinner = prediction.predictedAdvancingTeam === result.advancingTeam;
+  const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
+  const exactPenaltyScore = decidedOnPenalties &&
+    hasPenaltyScore(result) &&
+    numberOrNull(prediction.homePenaltyScore) === result.homePenaltyScore &&
+    numberOrNull(prediction.awayPenaltyScore) === result.awayPenaltyScore;
+
+  if (exactScore && correctWinner) {
+    return basePoints * (exactPenaltyScore ? 3 : 2);
+  }
+  if (correctWinner) {
+    return basePoints;
+  }
+  if (decidedOnPenalties) {
+    return basePoints * 0.5;
+  }
+  return 0;
+}
+
+function knockoutScoreText(match) {
+  const score = `${match.homeScore ?? "-"}-${match.awayScore ?? "-"}`;
+  if (hasPenaltyScore(match)) {
+    return `${score} (${match.homePenaltyScore}-${match.awayPenaltyScore} pens)`;
+  }
+  return score;
+}
+
+function hasPenaltyScore(match) {
+  return match.homePenaltyScore !== null && match.awayPenaltyScore !== null;
+}
+
+function statusClass(status) {
+  if (status === "Exact" || status === "Exact penalties") {
+    return "result-cell result-exact";
+  }
+  if (status === "Winner" || status === "Partial") {
+    return "result-cell result-partial";
+  }
+  if (status === "Pending") {
+    return "result-cell result-pending";
+  }
+  return "result-cell result-miss";
+}
+
+function latestOfficialKnockoutMatches(resultsData) {
+  const matchesById = new Map();
+  [
+    ...(resultsData?.officialMatches || []),
+    ...(resultsData?.matches || []),
+    ...(resultsData?.timelineCheckpoints || []).flatMap((checkpoint) => checkpoint.officialMatches || []),
+  ]
+    .map(normalizeOfficialKnockoutMatch)
+    .filter((match) =>
+      match.matchId &&
+      match.stage in KNOCKOUT_BASE_POINTS &&
+      match.homeTeam &&
+      match.awayTeam &&
+      match.homeScore !== null &&
+      match.awayScore !== null
+    )
+    .forEach((match) => matchesById.set(match.matchId, match));
+  return [...matchesById.values()];
+}
+
+function normalizeOfficialKnockoutMatch(match) {
+  return {
+    matchId: String(match.matchId || match.id || ""),
+    stage: normalizeKnockoutStage(match.stage || ""),
+    homeTeam: match.homeTeam || match.home || "",
+    awayTeam: match.awayTeam || match.away || "",
+    homeScore: numberOrNull(match.homeScore),
+    awayScore: numberOrNull(match.awayScore),
+    homePenaltyScore: numberOrNull(match.homePenaltyScore),
+    awayPenaltyScore: numberOrNull(match.awayPenaltyScore),
+    advancingTeam: match.advancingTeam || match.winner || "",
+  };
+}
+
+function normalizeKnockoutStage(stage) {
+  const text = String(stage || "").trim().toLowerCase();
+  return {
+    last_32: "round_of_32",
+    round_of_32: "round_of_32",
+    last_16: "round_of_16",
+    round_of_16: "round_of_16",
+    quarter_finals: "quarterfinal",
+    quarterfinal: "quarterfinal",
+    semi_finals: "semifinal",
+    semifinal: "semifinal",
+    final: "final",
+  }[text] || text;
+}
+
+function numberOrNull(value) {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
 }
 
 function modeText(mode) {
