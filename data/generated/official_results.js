@@ -1,7 +1,7 @@
 window.OFFICIAL_RESULTS = {
   "sourceName": "Football-Data.org",
   "sourceUrl": "https://api.football-data.org/v4/competitions/WC/standings?season=2026",
-  "generatedAt": "2026-06-29T17:45:25+00:00",
+  "generatedAt": "2026-06-29T19:29:52+00:00",
   "lastCompletedMatchDate": "",
   "matches": [
     {
@@ -476,7 +476,7 @@ window.OFFICIAL_RESULTS = {
       "Argentina": "round_of_32",
       "Norway": "round_of_32",
       "Morocco": "round_of_32",
-      "Brazil": "round_of_32",
+      "Brazil": "round_of_16",
       "Ecuador": "round_of_32",
       "Spain": "round_of_32",
       "England": "round_of_32"
@@ -1438,7 +1438,7 @@ window.OFFICIAL_RESULTS = {
       "label": "After round of 32",
       "shortLabel": "R32",
       "stage": "round_of_32",
-      "completedAt": "2026-06-29T17:45:25+00:00",
+      "completedAt": "2026-06-29T19:29:52+00:00",
       "scenario": {
         "groupResults": {
           "A": [
@@ -1537,7 +1537,7 @@ window.OFFICIAL_RESULTS = {
             "Argentina": "round_of_32",
             "Norway": "round_of_32",
             "Morocco": "round_of_32",
-            "Brazil": "round_of_32",
+            "Brazil": "round_of_16",
             "Ecuador": "round_of_32",
             "Spain": "round_of_32",
             "England": "round_of_32"
