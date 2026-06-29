@@ -420,6 +420,18 @@ table {
   border-right: 0;
 }
 
+.score-link {
+  color: var(--accent-strong);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.score-link:hover,
+.score-link:focus {
+  color: var(--accent);
+}
+
 .result-cell {
   font-weight: 850;
 }

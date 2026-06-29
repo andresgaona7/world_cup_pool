@@ -200,10 +200,9 @@ window.KNOCKOUT_PREDICTIONS = {
           "awayTeam": "Japan",
           "homeScore": 2,
           "awayScore": 2,
-          "ignoredFields": [
-            "homePenaltyScore",
-            "awayPenaltyScore"
-          ]
+          "homePenaltyScore": 4,
+          "awayPenaltyScore": 5,
+          "predictedAdvancingTeam": "Japan"
         },
         {
           "matchId": "82",
@@ -296,9 +295,7 @@ window.KNOCKOUT_PREDICTIONS = {
           "final": 1
         },
         "duplicateMatchIds": [],
-        "incompleteMatchIds": [
-          "81"
-        ]
+        "incompleteMatchIds": []
       },
       "bonusAnswers": {
         "round_of_32": [
@@ -2586,10 +2583,9 @@ window.KNOCKOUT_PREDICTIONS = {
           "mode": "score",
           "homeTeam": "South Africa",
           "awayTeam": "Canada",
-          "ignoredFields": [
-            "homeScore",
-            "awayScore"
-          ]
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Canada"
         },
         {
           "matchId": "76",
@@ -2748,7 +2744,6 @@ window.KNOCKOUT_PREDICTIONS = {
         },
         "duplicateMatchIds": [],
         "incompleteMatchIds": [
-          "75",
           "77"
         ]
       },

@@ -16,6 +16,7 @@ const KNOCKOUT_BASE_POINTS = {
   semifinal: 16,
   final: 20,
 };
+const LATEST_GOAL_BONUS_KEY = "latest_goal_team";
 const officialMatchesById = new Map(
   latestOfficialKnockoutMatches(officialData).map((match) => [match.matchId, match])
 );
@@ -277,17 +278,70 @@ function roundOf32BonusAnswersTable(knockoutPlayer) {
   tbody.replaceChildren(
     ...answers.map((item) => {
       const tr = document.createElement("tr");
-      [item.question || "", item.answer || "Blank"].forEach((value) => {
-        const td = document.createElement("td");
-        td.textContent = value;
-        tr.append(td);
-      });
+      const question = item.question || "";
+      const answer = item.answer || "Blank";
+      const questionCell = document.createElement("td");
+      questionCell.textContent = question;
+
+      const answerCell = document.createElement("td");
+      if (canonicalBonusQuestion(question) === LATEST_GOAL_BONUS_KEY && item.answer) {
+        const link = document.createElement("a");
+        link.className = "score-link";
+        link.href = scoreVisualizerLatestGoalUrl(knockoutPlayer?.name || "");
+        link.textContent = answer;
+        link.setAttribute("aria-label", `View ${answer} latest-goal scoring details in Score Visualizer`);
+        answerCell.append(link);
+      } else {
+        answerCell.textContent = answer;
+      }
+      tr.append(questionCell, answerCell);
       return tr;
     })
   );
   table.append(tbody);
   wrap.append(title, table);
   return wrap;
+}
+
+function scoreVisualizerLatestGoalUrl(playerName) {
+  const params = new URLSearchParams();
+  if (playerName) {
+    params.set("player", playerName);
+  }
+  params.set("section", "round_of_32_bonus");
+  return `../score_visualizer/index.html?${params.toString()}#round-of-32-bonus`;
+}
+
+function canonicalBonusQuestion(question) {
+  const text = String(question || "").toLowerCase();
+  if (text.includes("extra time") && !text.includes("latest goal")) {
+    return "extra_time_matches";
+  }
+  if (text.includes("penalties")) {
+    return "penalty_matches";
+  }
+  if (text.includes("most goals")) {
+    return "most_goals_team";
+  }
+  if (text.includes("total goals")) {
+    return "total_goals";
+  }
+  if (text.includes("fastest goal")) {
+    return "fastest_goal_team";
+  }
+  if (text.includes("latest goal")) {
+    return LATEST_GOAL_BONUS_KEY;
+  }
+  if (text.includes("biggest winning margin")) {
+    return "biggest_winning_margin_team";
+  }
+  if (text.includes("yellow cards")) {
+    return "yellow_cards";
+  }
+  if (text.includes("red cards")) {
+    return "red_cards";
+  }
+  return "";
 }
 
 function renderKnockoutError() {

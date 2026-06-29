@@ -59,6 +59,12 @@ const ROUND_OF_32_BONUS_QUESTIONS = [
   "How many yellow cards will be shown?",
   "How many red cards will be shown?",
 ];
+const KNOCKOUT_TEAM_ALIASES = {
+  bosnia: "bosnia-herzegovina",
+  "bosnia and herzegovina": "bosnia-herzegovina",
+  morroco: "morocco",
+  nederlands: "netherlands",
+};
 const KNOCKOUT_STAGE_LABELS = {
   round_of_32: "Round of 32",
   round_of_16: "Round of 16",
@@ -90,8 +96,10 @@ const knockoutPredictionsByPlayer = normalizeKnockoutPredictions(knockoutData);
 const knockoutBonusAnswersByPlayer = normalizeKnockoutBonusAnswers(knockoutData);
 const officialScenario = normalizeOfficialScenario(players, officialData);
 const scenario = officialScenario;
+const officialRoundOf32BonusResults = officialData?.roundOf32BonusResults || {};
 const officialKnockoutMatches = latestOfficialKnockoutMatches(officialData);
-let comparisonPlayerIndex = 0;
+const officialKnockoutDisplayMatches = latestOfficialKnockoutDisplayMatches(officialData);
+let comparisonPlayerIndex = initialComparisonPlayerIndex();
 
 const leaderboardTable = document.querySelector("#leaderboardTable");
 const rulesGrid = document.querySelector("#rulesGrid");
@@ -106,7 +114,7 @@ const knockoutStagePanels = document.querySelector("#knockoutStagePanels");
 const futuresComparisonTable = document.querySelector("#futuresComparisonTable");
 
 playerSelect?.addEventListener("change", (event) => {
-  selectComparisonPlayer(Number.parseInt(event.target.value, 10) || 0);
+  selectComparisonPlayer(Number.parseInt(event.target.value, 10) || 0, { syncUrl: true });
 });
 
 leaderboardTable.addEventListener("click", (event) => {
@@ -114,7 +122,7 @@ leaderboardTable.addEventListener("click", (event) => {
   if (!row) {
     return;
   }
-  selectComparisonPlayer(Number.parseInt(row.dataset.playerIndex, 10) || 0);
+  selectComparisonPlayer(Number.parseInt(row.dataset.playerIndex, 10) || 0, { syncUrl: true });
 });
 
 leaderboardTable.addEventListener("keydown", (event) => {
@@ -128,11 +136,12 @@ leaderboardTable.addEventListener("keydown", (event) => {
   }
 
   event.preventDefault();
-  selectComparisonPlayer(Number.parseInt(row.dataset.playerIndex, 10) || 0);
+  selectComparisonPlayer(Number.parseInt(row.dataset.playerIndex, 10) || 0, { syncUrl: true });
 });
 
 populatePlayerSelect();
 render();
+scrollToRequestedSection();
 
 function render() {
   renderComparison();
@@ -141,14 +150,60 @@ function render() {
   renderLeaderboard();
 }
 
-function selectComparisonPlayer(playerIndex) {
+function selectComparisonPlayer(playerIndex, options = {}) {
   comparisonPlayerIndex = Math.max(0, Math.min(playerIndex, players.length - 1));
   if (playerSelect) {
     playerSelect.value = String(comparisonPlayerIndex);
   }
+  if (options.syncUrl) {
+    syncPlayerUrl();
+  }
   renderComparison();
   renderKnockoutComparison();
   renderLeaderboard();
+}
+
+function initialComparisonPlayerIndex() {
+  const requestedPlayer = new URLSearchParams(window.location.search).get("player");
+  if (!requestedPlayer) {
+    return 0;
+  }
+  const requestedName = normalizeName(requestedPlayer);
+  const playerIndex = players.findIndex((player) => normalizeName(player.name) === requestedName);
+  return playerIndex === -1 ? 0 : playerIndex;
+}
+
+function normalizeName(name) {
+  return String(name || "").trim().toLowerCase();
+}
+
+function syncPlayerUrl() {
+  if (!window.history?.replaceState) {
+    return;
+  }
+  const selectedPlayer = players[comparisonPlayerIndex];
+  if (!selectedPlayer) {
+    return;
+  }
+  const params = new URLSearchParams(window.location.search);
+  params.set("player", selectedPlayer.name);
+  const section = params.get("section");
+  const nextUrl = `${window.location.pathname}?${params.toString()}${window.location.hash}`;
+  window.history.replaceState(null, "", nextUrl);
+  if (section === "round_of_32_bonus" && !window.location.hash) {
+    window.history.replaceState(null, "", `${nextUrl}#round-of-32-bonus`);
+  }
+}
+
+function scrollToRequestedSection() {
+  const params = new URLSearchParams(window.location.search);
+  const requestedSection = params.get("section");
+  if (requestedSection !== "round_of_32_bonus" && window.location.hash !== "#round-of-32-bonus") {
+    return;
+  }
+  window.requestAnimationFrame(() => {
+    document.querySelector("#round-of-32-bonus")?.scrollIntoView({ block: "start" });
+  });
 }
 
 function normalizePlayer(player) {
@@ -223,6 +278,28 @@ function latestOfficialKnockoutMatches(resultsData) {
       match.homeScore !== null &&
       match.awayScore !== null &&
       match.advancingTeam
+    )
+    .forEach((match) => matchesById.set(match.matchId, match));
+
+  return [...matchesById.values()].sort((a, b) => {
+    const stageDiff = (KNOCKOUT_STAGE_ORDER[a.stage] || 0) - (KNOCKOUT_STAGE_ORDER[b.stage] || 0);
+    return stageDiff || Number(a.matchId) - Number(b.matchId);
+  });
+}
+
+function latestOfficialKnockoutDisplayMatches(resultsData) {
+  const matchesById = new Map();
+  [
+    ...(resultsData?.officialMatches || []),
+    ...(resultsData?.matches || []),
+    ...(resultsData?.timelineCheckpoints || []).flatMap((checkpoint) => checkpoint.officialMatches || []),
+  ]
+    .map(normalizeOfficialKnockoutMatch)
+    .filter((match) =>
+      match.matchId &&
+      match.stage in KNOCKOUT_BASE_POINTS &&
+      match.homeTeam &&
+      match.awayTeam
     )
     .forEach((match) => matchesById.set(match.matchId, match));
 
@@ -777,18 +854,10 @@ function renderKnockoutComparison() {
 function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
   const stageRows = rows.filter((row) => row.stage === stage);
   const stageScore = scoreKnockoutStage(selectedPlayer, stage);
-  const stageTotal = stageScore.points + stageScore.bonus;
-  const hasStageResults = stageRows.length > 0;
+  const predictionPoints = stageScore.points + stageScore.perfectWinnersBonus + stageScore.perfectScoresBonus;
+  const stageTotal = predictionPoints + stageScore.bonusQuestionPoints;
+  const hasStageResults = stageRows.some((row) => row.hasResult);
   const basePoints = KNOCKOUT_BASE_POINTS[stage] || 0;
-  const earnedMultiplier = basePoints ? stageScore.points / basePoints : 0;
-  const bonusEquation = KNOCKOUT_PERFECT_BONUS_STAGES.has(stage)
-    ? `
-          <span class="comparison-operator">+</span>
-          ${comparisonMetricHtml("Perfect winners bonus", `${formatPoints(stageScore.perfectWinnersBonus)} pts`)}
-          <span class="comparison-operator">+</span>
-          ${comparisonMetricHtml("Perfect scores bonus", `${formatPoints(stageScore.perfectScoresBonus)} pts`)}
-      `
-    : "";
 
   return `
     <section class="panel knockout-stage-panel">
@@ -800,12 +869,13 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
       </div>
       <div class="comparison-summary">
         <div class="comparison-equation-row">
-          ${comparisonMetricHtml("Base points", `${formatPoints(basePoints)} pts`)}
-          <span class="comparison-operator">x</span>
-          ${comparisonMetricHtml("Earned multiplier", `${formatMultiplier(earnedMultiplier)}x`)}
-          ${bonusEquation}
+          ${comparisonMetricHtml("Base point", `${formatPoints(basePoints)} pts`)}
+          <span class="comparison-operator">|</span>
+          ${comparisonMetricHtml("Prediction points", `${formatPoints(predictionPoints)} pts`)}
+          <span class="comparison-operator">+</span>
+          ${comparisonMetricHtml("Bonus questions points", `${formatPoints(stageScore.bonusQuestionPoints)} pts`)}
           <span class="comparison-operator">=</span>
-          ${comparisonMetricHtml("Knockout score", `${formatPoints(stageTotal)} pts`)}
+          ${comparisonMetricHtml("Total points", `${formatPoints(stageTotal)} pts`)}
         </div>
       </div>
       <div class="comparison-content">
@@ -814,25 +884,37 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
             <table>
               <thead>
                 <tr>
-                  <th>Match</th>
-                  <th>Official result</th>
-                  <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
+                  <th rowspan="2">Match</th>
+                  <th colspan="3">Official</th>
+                  <th colspan="3">Predicted</th>
+                  <th rowspan="2">Multiplier</th>
+                  <th rowspan="2">Total points</th>
+                </tr>
+                <tr>
                   <th>Result</th>
-                  <th>Points</th>
+                  <th>Penalties</th>
+                  <th>Adv team</th>
+                  <th>Result</th>
+                  <th>Penalties</th>
+                  <th>Adv team</th>
                 </tr>
               </thead>
               <tbody>
                 ${stageRows.length ? stageRows.map((row) => `
                   <tr>
                     <td>${escapeHtml(row.matchLabel)}</td>
-                    <td>${escapeHtml(row.officialLabel)}</td>
-                    <td>${row.predictionLabel ? escapeHtml(row.predictionLabel) : '<span class="muted">Pending</span>'}</td>
-                    <td>${resultBadge(row)}</td>
-                    <td>${formatPoints(row.points)}</td>
+                    <td>${knockoutValueHtml(row.officialResult)}</td>
+                    <td>${knockoutValueHtml(row.officialPenalties)}</td>
+                    <td>${knockoutValueHtml(row.officialAdvancingTeam)}</td>
+                    <td>${knockoutValueHtml(row.predictedResult)}</td>
+                    <td>${knockoutValueHtml(row.predictedPenalties)}</td>
+                    <td>${knockoutValueHtml(row.predictedAdvancingTeam)}</td>
+                    <td>${row.hasResult ? `${formatMultiplier(row.earnedMultiplier)}x` : '<span class="muted">Pending</span>'}</td>
+                    <td class="total">${row.hasResult ? formatPoints(row.points) : '<span class="muted">Pending</span>'}</td>
                   </tr>
                 `).join("") : `
                   <tr>
-                    <td colspan="5"><span class="muted">No official ${escapeHtml(knockoutStageLabel(stage).toLowerCase())} results are available yet.</span></td>
+                    <td colspan="9"><span class="muted">No official ${escapeHtml(knockoutStageLabel(stage).toLowerCase())} fixtures are available yet.</span></td>
                   </tr>
                 `}
               </tbody>
@@ -849,12 +931,12 @@ function roundOf32BonusQuestionsHtml(selectedPlayer) {
   const maxPoints = ROUND_OF_32_BONUS_QUESTIONS.length * ROUND_OF_32_BONUS_QUESTION_POINTS;
   const answerByQuestion = new Map(
     (knockoutBonusAnswersByPlayer.get(selectedPlayer?.name || "") || []).map((item) => [
-      item.question,
+      canonicalBonusQuestion(item.question),
       item.answer || "Blank",
     ])
   );
   return `
-        <div class="comparison-block bonus-question-block">
+        <div class="comparison-block bonus-question-block" id="round-of-32-bonus">
           <div class="bonus-question-head">
             <h3>Round of 32 Bonus Questions</h3>
             <span>${formatPoints(ROUND_OF_32_BONUS_QUESTION_POINTS)} pts each, ${formatPoints(maxPoints)} pts max</span>
@@ -863,7 +945,7 @@ function roundOf32BonusQuestionsHtml(selectedPlayer) {
             ${ROUND_OF_32_BONUS_QUESTIONS.map((question) => `
               <li>
                 <span>${escapeHtml(question)}</span>
-                <strong>${escapeHtml(answerByQuestion.get(question) || "Blank")}</strong>
+                <strong>${escapeHtml(answerByQuestion.get(canonicalBonusQuestion(question)) || "Blank")}</strong>
               </li>
             `).join("")}
           </ol>
@@ -1003,35 +1085,39 @@ function knockoutComparisonRows(player) {
   }
 
   const predictions = knockoutPredictionsByPlayer.get(player.name) || [];
-  const predictionByMatch = new Map(predictions.map((prediction) => [prediction.matchId, prediction]));
+  const predictionIndex = knockoutPredictionIndex(predictions);
 
-  return officialKnockoutMatches.map((result) => {
-    const prediction = predictionByMatch.get(result.matchId);
-    const points = prediction ? scoreKnockoutMatch(prediction, result) : 0;
+  return officialKnockoutDisplayMatches.map((result) => {
+    const prediction = findKnockoutPrediction(result, predictionIndex);
+    const hasResult = result.homeScore !== null && result.awayScore !== null && Boolean(result.advancingTeam);
+    const points = prediction && hasResult ? scoreKnockoutMatch(prediction, result) : 0;
     const match = points > 0;
-    const officialScore = knockoutScoreLabel(result);
     return {
       stage: result.stage,
       matchLabel: `${result.homeTeam} vs ${result.awayTeam}`,
-      officialLabel: `${result.homeTeam} ${officialScore} ${result.awayTeam}; ${result.advancingTeam} advanced`,
-      predictionLabel: prediction ? knockoutPredictionLabel(prediction, result) : "",
+      homeTeam: result.homeTeam,
+      awayTeam: result.awayTeam,
+      officialResult: hasResult ? knockoutRegulationScoreLabel(result) : "",
+      officialPenalties: hasPenaltyScore(result) ? knockoutPenaltyScoreLabel(result) : "",
+      officialAdvancingTeam: result.advancingTeam,
+      predictedResult: prediction && prediction.homeScore !== null && prediction.awayScore !== null
+        ? knockoutRegulationScoreLabel(prediction)
+        : "",
+      predictedPenalties: prediction && hasPenaltyScore(prediction) ? knockoutPenaltyScoreLabel(prediction) : "",
+      predictedAdvancingTeam: prediction?.winner || "",
       match,
       points,
-      status: prediction ? knockoutMatchStatus(prediction, result, points) : "No prediction",
+      hasResult,
+      basePoints: KNOCKOUT_BASE_POINTS[result.stage] || 0,
+      earnedMultiplier: knockoutEarnedMultiplier(result, prediction, hasResult),
+      status: prediction && hasResult ? knockoutMatchStatus(prediction, result, points) : (prediction ? "Pending result" : "No prediction"),
     };
   });
 }
 
-function knockoutPredictionLabel(prediction, result) {
-  const score = prediction.homeScore !== null && prediction.awayScore !== null
-    ? `${result.homeTeam} ${knockoutScoreLabel(prediction)} ${result.awayTeam}; `
-    : "";
-  return `${score}${prediction.winner || "No winner"} advanced`;
-}
-
 function knockoutMatchStatus(prediction, result, points) {
   const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
-  const correctWinner = prediction.winner && prediction.winner === result.advancingTeam;
+  const correctWinner = sameKnockoutTeam(prediction.winner, result.advancingTeam);
   const exactPenaltyScore = hasPenaltyScore(result) &&
     prediction.homePenaltyScore === result.homePenaltyScore &&
     prediction.awayPenaltyScore === result.awayPenaltyScore;
@@ -1050,12 +1136,71 @@ function knockoutMatchStatus(prediction, result, points) {
   return points > 0 ? "Partial" : "No match";
 }
 
+function knockoutPredictionIndex(predictions) {
+  return {
+    byFixture: new Map(predictions.map((prediction) => [knockoutFixtureKey(prediction), prediction])),
+    byMatchId: new Map(predictions.map((prediction) => [prediction.matchId, prediction])),
+  };
+}
+
+function findKnockoutPrediction(result, predictionIndex) {
+  const fixtureMatch = predictionIndex.byFixture.get(knockoutFixtureKey(result));
+  if (fixtureMatch) {
+    return fixtureMatch;
+  }
+
+  const idMatch = predictionIndex.byMatchId.get(result.matchId);
+  return idMatch && sameKnockoutFixture(idMatch, result) ? idMatch : null;
+}
+
+function sameKnockoutFixture(left, right) {
+  return knockoutFixtureKey(left) === knockoutFixtureKey(right);
+}
+
+function sameKnockoutTeam(left, right) {
+  return Boolean(left && right) && canonicalKnockoutTeamName(left) === canonicalKnockoutTeamName(right);
+}
+
+function knockoutFixtureKey(match) {
+  return [
+    match.stage || "",
+    canonicalKnockoutTeamName(match.homeTeam),
+    canonicalKnockoutTeamName(match.awayTeam),
+  ].join("|");
+}
+
+function canonicalKnockoutTeamName(name) {
+  const normalized = String(name || "").trim().toLowerCase();
+  return KNOCKOUT_TEAM_ALIASES[normalized] || normalized;
+}
+
 function knockoutScoreLabel(match) {
-  const score = `${match.homeScore ?? "-"}-${match.awayScore ?? "-"}`;
+  const score = knockoutRegulationScoreLabel(match);
   if (hasPenaltyScore(match)) {
-    return `${score} (${match.homePenaltyScore}-${match.awayPenaltyScore} pens)`;
+    return `${score} (${knockoutPenaltyScoreLabel(match)} pens)`;
   }
   return score;
+}
+
+function knockoutRegulationScoreLabel(match) {
+  return `${match.homeScore ?? "-"}-${match.awayScore ?? "-"}`;
+}
+
+function knockoutPenaltyScoreLabel(match) {
+  return `${match.homePenaltyScore ?? "-"}-${match.awayPenaltyScore ?? "-"}`;
+}
+
+function knockoutValueHtml(value) {
+  return value ? escapeHtml(value) : '<span class="muted">Pending</span>';
+}
+
+function knockoutEarnedMultiplier(result, prediction, hasResult) {
+  const basePoints = KNOCKOUT_BASE_POINTS[result.stage] || 0;
+  if (!prediction || !hasResult || !basePoints) {
+    return 0;
+  }
+  const points = scoreKnockoutMatch(prediction, result);
+  return points / basePoints;
 }
 
 function hasPenaltyScore(match) {
@@ -1542,17 +1687,19 @@ function scoreKnockout(player) {
   const points = stageScores.reduce((total, stageScore) => total + stageScore.points, 0);
   const perfectWinnersBonus = stageScores.reduce((total, stageScore) => total + stageScore.perfectWinnersBonus, 0);
   const perfectScoresBonus = stageScores.reduce((total, stageScore) => total + stageScore.perfectScoresBonus, 0);
+  const bonusQuestionPoints = stageScores.reduce((total, stageScore) => total + stageScore.bonusQuestionPoints, 0);
   return {
     points,
-    bonus: perfectWinnersBonus + perfectScoresBonus,
+    bonus: perfectWinnersBonus + perfectScoresBonus + bonusQuestionPoints,
     perfectWinnersBonus,
     perfectScoresBonus,
+    bonusQuestionPoints,
   };
 }
 
 function scoreKnockoutStage(player, stage) {
   const predictions = knockoutPredictionsByPlayer.get(player?.name || "") || [];
-  const predictionByMatch = new Map(predictions.map((prediction) => [prediction.matchId, prediction]));
+  const predictionIndex = knockoutPredictionIndex(predictions);
   const stageMatches = officialKnockoutMatches.filter((match) => match.stage === stage);
   let points = 0;
   const completeBonusStage =
@@ -1562,7 +1709,7 @@ function scoreKnockoutStage(player, stage) {
   let perfectScoresPossible = completeBonusStage;
 
   stageMatches.forEach((result) => {
-    const prediction = predictionByMatch.get(result.matchId);
+    const prediction = findKnockoutPrediction(result, predictionIndex);
     if (!prediction) {
       perfectWinnersPossible = false;
       perfectScoresPossible = false;
@@ -1571,7 +1718,7 @@ function scoreKnockoutStage(player, stage) {
 
     points += scoreKnockoutMatch(prediction, result);
 
-    if (prediction.winner !== result.advancingTeam) {
+    if (!sameKnockoutTeam(prediction.winner, result.advancingTeam)) {
       perfectWinnersPossible = false;
     }
 
@@ -1579,7 +1726,7 @@ function scoreKnockoutStage(player, stage) {
       prediction.mode === "score" &&
       prediction.homeScore === result.homeScore &&
       prediction.awayScore === result.awayScore &&
-      prediction.winner === result.advancingTeam;
+      sameKnockoutTeam(prediction.winner, result.advancingTeam);
     if (!exactScore) {
       perfectScoresPossible = false;
     }
@@ -1587,17 +1734,112 @@ function scoreKnockoutStage(player, stage) {
 
   const perfectWinnersBonus = perfectWinnersPossible ? KNOCKOUT_PERFECT_WINNER_BONUS_POINTS[stage] : 0;
   const perfectScoresBonus = perfectScoresPossible ? KNOCKOUT_PERFECT_SCORE_BONUS_POINTS[stage] : 0;
+  const bonusQuestionPoints = stage === "round_of_32" ? scoreRoundOf32BonusQuestions(player) : 0;
   return {
     points,
-    bonus: perfectWinnersBonus + perfectScoresBonus,
+    bonus: perfectWinnersBonus + perfectScoresBonus + bonusQuestionPoints,
     perfectWinnersBonus,
     perfectScoresBonus,
+    bonusQuestionPoints,
   };
+}
+
+function scoreRoundOf32BonusQuestions(player) {
+  const answers = knockoutBonusAnswersByPlayer.get(player?.name || "") || [];
+  return answers.reduce((total, item) => {
+    const actual = officialRoundOf32BonusAnswer(item.question);
+    if (actual === null || actual === "" || actual === undefined) {
+      return total;
+    }
+    return total + (bonusAnswerMatches(item.answer, actual) ? ROUND_OF_32_BONUS_QUESTION_POINTS : 0);
+  }, 0);
+}
+
+function officialRoundOf32BonusAnswer(question) {
+  const key = canonicalBonusQuestion(question);
+  const values = {
+    extra_time_matches: officialRoundOf32BonusResults.extraTimeMatches,
+    penalty_matches: officialRoundOf32BonusResults.penaltyMatches,
+    most_goals_team: officialRoundOf32BonusResults.mostGoalsTeam,
+    total_goals: officialRoundOf32BonusResults.totalGoals,
+    fastest_goal_team: officialRoundOf32BonusResults.fastestGoalTeam,
+    latest_goal_team: officialRoundOf32BonusResults.latestGoalTeam,
+    biggest_winning_margin_team: officialRoundOf32BonusResults.biggestWinningMarginTeam,
+    yellow_cards: officialRoundOf32BonusResults.yellowCards,
+    red_cards: officialRoundOf32BonusResults.redCards,
+  };
+  return values[key];
+}
+
+function canonicalBonusQuestion(question) {
+  const text = String(question || "").toLowerCase();
+  if (text.includes("extra time") && !text.includes("latest goal")) {
+    return "extra_time_matches";
+  }
+  if (text.includes("penalties")) {
+    return "penalty_matches";
+  }
+  if (text.includes("most goals")) {
+    return "most_goals_team";
+  }
+  if (text.includes("total goals")) {
+    return "total_goals";
+  }
+  if (text.includes("fastest goal")) {
+    return "fastest_goal_team";
+  }
+  if (text.includes("latest goal")) {
+    return "latest_goal_team";
+  }
+  if (text.includes("biggest winning margin")) {
+    return "biggest_winning_margin_team";
+  }
+  if (text.includes("yellow cards")) {
+    return "yellow_cards";
+  }
+  if (text.includes("red cards")) {
+    return "red_cards";
+  }
+  return "";
+}
+
+function bonusAnswerMatches(prediction, actual) {
+  const predictedText = String(prediction || "").trim();
+  if (!predictedText) {
+    return false;
+  }
+  if (typeof actual === "number") {
+    return numericBonusAnswerMatches(predictedText, actual);
+  }
+  return sameKnockoutTeam(predictedText, String(actual));
+}
+
+function numericBonusAnswerMatches(prediction, actual) {
+  const normalized = prediction.replace(/\s+/g, " ").trim();
+  const rangeMatch = normalized.match(/^(\d+)\s*-\s*(\d+)$/);
+  if (rangeMatch) {
+    const low = Number(rangeMatch[1]);
+    const high = Number(rangeMatch[2]);
+    return actual >= low && actual <= high;
+  }
+
+  const greaterThanMatch = normalized.match(/^>\s*(\d+)$/);
+  if (greaterThanMatch) {
+    return actual > Number(greaterThanMatch[1]);
+  }
+
+  const lessThanMatch = normalized.match(/^<\s*(\d+)$/);
+  if (lessThanMatch) {
+    return actual < Number(lessThanMatch[1]);
+  }
+
+  const exact = Number(normalized);
+  return Number.isFinite(exact) && actual === exact;
 }
 
 function scoreKnockoutMatch(prediction, result) {
   const basePoints = KNOCKOUT_BASE_POINTS[result.stage] || 0;
-  const correctAdvancingTeam = prediction.winner && prediction.winner === result.advancingTeam;
+  const correctAdvancingTeam = sameKnockoutTeam(prediction.winner, result.advancingTeam);
 
   const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
   const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
