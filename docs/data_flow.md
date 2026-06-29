@@ -61,7 +61,6 @@ apps/knockout_predictions/index.html
 
 apps/knockout_bracket/index.html
   -> apps/knockout_bracket/app.js
-  -> data/generated/official_results.js
 ```
 
 Official group-stage results are fetched separately:
