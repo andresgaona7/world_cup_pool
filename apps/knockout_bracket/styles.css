@@ -265,15 +265,6 @@ h3 {
   font-weight: 900;
 }
 
-.match-status {
-  min-height: 30px;
-  padding: 7px 10px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 800;
-}
-
 .flag {
   display: inline-flex;
   width: 24px;

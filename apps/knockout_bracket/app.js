@@ -93,19 +93,15 @@ function renderMatch([matchId, homeSeed, awaySeed, label]) {
   const officialMatch = officialMatchesById.get(String(matchId));
   const homeTeam = displayTeam(officialMatch?.homeTeam ? officialTeam(officialMatch.homeTeam) : homeSeed);
   const awayTeam = displayTeam(officialMatch?.awayTeam ? officialTeam(officialMatch.awayTeam) : awaySeed);
-  const statusLabel = officialMatch
-    ? resultStatusLabel(officialMatch)
-    : "Pending";
   const article = document.createElement("article");
   article.className = `match-card ${officialMatch ? "has-result" : "is-pending"}`;
   article.innerHTML = `
     <div class="match-head">
       <strong>Match ${matchId}</strong>
-      <span>${label || statusLabel}</span>
+      ${label ? `<span>${label}</span>` : ""}
     </div>
     ${teamRow(homeTeam, officialMatch, "home")}
     ${teamRow(awayTeam, officialMatch, "away")}
-    <div class="match-status">${statusLabel}</div>
   `;
   return article;
 }
@@ -168,33 +164,6 @@ function matchLoser(match) {
   }
   if (match.advancingTeam === match.awayTeam) {
     return match.homeTeam;
-  }
-  return "";
-}
-
-function resultStatusLabel(match) {
-  if (!match) {
-    return "Pending";
-  }
-  const score = knockoutScoreLabel(match);
-  const duration = durationLabel(match.duration);
-  return `${score}${duration ? ` ${duration}` : ""}`;
-}
-
-function knockoutScoreLabel(match) {
-  const score = `${match.homeScore ?? "-"}-${match.awayScore ?? "-"}`;
-  if (match.homePenaltyScore !== null && match.awayPenaltyScore !== null) {
-    return `${score}, ${match.homePenaltyScore}-${match.awayPenaltyScore} pens`;
-  }
-  return score;
-}
-
-function durationLabel(duration) {
-  if (duration === "EXTRA_TIME") {
-    return "AET";
-  }
-  if (duration === "PENALTY_SHOOTOUT" || duration === "PENALTIES") {
-    return "Pens";
   }
   return "";
 }
