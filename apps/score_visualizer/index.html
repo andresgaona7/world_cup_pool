@@ -67,25 +67,32 @@
       </div>
     </section>
 
-    <section class="panel comparison-panel">
+    <section class="panel comparison-panel collapsible-panel is-collapsed" data-collapsible-panel data-collapsible-key="first-round" data-collapsed="true">
       <div class="panel-head">
         <div>
           <h2>First Round</h2>
         </div>
-        <span class="rule-pill" id="comparisonStatus">Pending results</span>
-      </div>
-      <div id="comparisonSummary" class="comparison-summary"></div>
-      <div class="comparison-content">
-        <div class="comparison-block">
-          <h3>Group Stage</h3>
-          <div class="table-wrap">
-            <table id="groupComparisonTable"></table>
-          </div>
+        <div class="panel-actions">
+          <span class="rule-pill" id="comparisonStatus">Pending results</span>
+          <button class="collapse-toggle" type="button" aria-expanded="false">
+            <span class="collapse-toggle-label">Show</span>
+          </button>
         </div>
-        <div class="comparison-block">
-          <h3>Best Thirds</h3>
-          <div class="table-wrap">
-            <table id="bestThirdComparisonTable"></table>
+      </div>
+      <div class="collapsible-body">
+        <div id="comparisonSummary" class="comparison-summary"></div>
+        <div class="comparison-content">
+          <div class="comparison-block">
+            <h3>Group Stage</h3>
+            <div class="table-wrap">
+              <table id="groupComparisonTable"></table>
+            </div>
+          </div>
+          <div class="comparison-block">
+            <h3>Best Thirds</h3>
+            <div class="table-wrap">
+              <table id="bestThirdComparisonTable"></table>
+            </div>
           </div>
         </div>
       </div>
@@ -93,18 +100,23 @@
 
     <div id="knockoutStagePanels" class="knockout-stage-panels"></div>
 
-    <section class="panel futures-comparison-panel">
+    <section class="panel futures-comparison-panel collapsible-panel" data-collapsible-panel data-collapsible-key="futures">
       <div class="panel-head">
         <div>
           <h2>Futures Comparison</h2>
         </div>
+        <button class="collapse-toggle" type="button" aria-expanded="true">
+          <span class="collapse-toggle-label">Hide</span>
+        </button>
       </div>
-      <div id="futuresSummary" class="comparison-summary"></div>
-      <div class="comparison-content">
-        <div class="comparison-block">
-          <h3>Futures</h3>
-          <div class="table-wrap">
-            <table id="futuresComparisonTable"></table>
+      <div class="collapsible-body">
+        <div id="futuresSummary" class="comparison-summary"></div>
+        <div class="comparison-content">
+          <div class="comparison-block">
+            <h3>Futures</h3>
+            <div class="table-wrap">
+              <table id="futuresComparisonTable"></table>
+            </div>
           </div>
         </div>
       </div>

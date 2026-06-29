@@ -99,6 +99,7 @@ const scenario = officialScenario;
 const officialRoundOf32BonusResults = officialData?.roundOf32BonusResults || {};
 const officialKnockoutMatches = latestOfficialKnockoutMatches(officialData);
 const officialKnockoutDisplayMatches = latestOfficialKnockoutDisplayMatches(officialData);
+const collapsedPanels = new Map();
 let comparisonPlayerIndex = initialComparisonPlayerIndex();
 
 const leaderboardTable = document.querySelector("#leaderboardTable");
@@ -112,6 +113,20 @@ const groupComparisonTable = document.querySelector("#groupComparisonTable");
 const bestThirdComparisonTable = document.querySelector("#bestThirdComparisonTable");
 const knockoutStagePanels = document.querySelector("#knockoutStagePanels");
 const futuresComparisonTable = document.querySelector("#futuresComparisonTable");
+
+document.addEventListener("click", (event) => {
+  const toggle = event.target.closest(".collapse-toggle");
+  if (!toggle) {
+    return;
+  }
+
+  const panel = toggle.closest("[data-collapsible-panel]");
+  if (!panel) {
+    return;
+  }
+
+  setPanelCollapsed(panel, !panel.classList.contains("is-collapsed"));
+});
 
 playerSelect?.addEventListener("change", (event) => {
   selectComparisonPlayer(Number.parseInt(event.target.value, 10) || 0, { syncUrl: true });
@@ -140,6 +155,7 @@ leaderboardTable.addEventListener("keydown", (event) => {
 });
 
 populatePlayerSelect();
+initializeCollapsiblePanels();
 render();
 scrollToRequestedSection();
 
@@ -148,6 +164,37 @@ function render() {
   renderKnockoutComparison();
   renderRules();
   renderLeaderboard();
+}
+
+function initializeCollapsiblePanels() {
+  document.querySelectorAll("[data-collapsible-panel]").forEach((panel) => {
+    const collapsed = panel.dataset.collapsed === "true";
+    if (panel.dataset.collapsibleKey) {
+      collapsedPanels.set(panel.dataset.collapsibleKey, collapsed);
+    }
+    setPanelCollapsed(panel, collapsed);
+  });
+}
+
+function setPanelCollapsed(panel, collapsed) {
+  panel.classList.toggle("is-collapsed", collapsed);
+  panel.dataset.collapsed = collapsed ? "true" : "false";
+  if (panel.dataset.collapsibleKey) {
+    collapsedPanels.set(panel.dataset.collapsibleKey, collapsed);
+  }
+
+  const toggle = panel.querySelector(".collapse-toggle");
+  const label = toggle?.querySelector(".collapse-toggle-label");
+  if (toggle) {
+    toggle.setAttribute("aria-expanded", String(!collapsed));
+  }
+  if (label) {
+    label.textContent = collapsed ? "Show" : "Hide";
+  }
+}
+
+function isPanelCollapsed(key, defaultCollapsed = false) {
+  return collapsedPanels.has(key) ? collapsedPanels.get(key) : defaultCollapsed;
 }
 
 function selectComparisonPlayer(playerIndex, options = {}) {
@@ -852,76 +899,85 @@ function renderKnockoutComparison() {
 }
 
 function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
+  const panelKey = `knockout-${stage}`;
   const stageRows = rows.filter((row) => row.stage === stage);
   const stageScore = scoreKnockoutStage(selectedPlayer, stage);
   const predictionPoints = stageScore.points + stageScore.perfectWinnersBonus + stageScore.perfectScoresBonus;
   const stageTotal = predictionPoints + stageScore.bonusQuestionPoints;
   const hasStageResults = stageRows.some((row) => row.hasResult);
   const basePoints = KNOCKOUT_BASE_POINTS[stage] || 0;
+  const collapsed = isPanelCollapsed(panelKey);
 
   return `
-    <section class="panel knockout-stage-panel">
+    <section class="panel knockout-stage-panel collapsible-panel ${collapsed ? "is-collapsed" : ""}" data-collapsible-panel data-collapsible-key="${escapeHtml(panelKey)}" data-collapsed="${collapsed ? "true" : "false"}">
       <div class="panel-head">
         <div>
           <h2>${escapeHtml(knockoutStageLabel(stage))}</h2>
         </div>
-        <span class="rule-pill ${hasStageResults ? "" : "pending"}">${hasStageResults ? "Official results" : "Pending results"}</span>
-      </div>
-      <div class="comparison-summary">
-        <div class="comparison-equation-row">
-          ${comparisonMetricHtml("Base point", `${formatPoints(basePoints)} pts`)}
-          <span class="comparison-operator">|</span>
-          ${comparisonMetricHtml("Prediction points", `${formatPoints(predictionPoints)} pts`)}
-          <span class="comparison-operator">+</span>
-          ${comparisonMetricHtml("Bonus questions points", `${formatPoints(stageScore.bonusQuestionPoints)} pts`)}
-          <span class="comparison-operator">=</span>
-          ${comparisonMetricHtml("Total points", `${formatPoints(stageTotal)} pts`)}
+        <div class="panel-actions">
+          <span class="rule-pill ${hasStageResults ? "" : "pending"}">${hasStageResults ? "Official results" : "Pending results"}</span>
+          <button class="collapse-toggle" type="button" aria-expanded="${collapsed ? "false" : "true"}">
+            <span class="collapse-toggle-label">${collapsed ? "Show" : "Hide"}</span>
+          </button>
         </div>
       </div>
-      <div class="comparison-content">
-        <div class="comparison-block">
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th rowspan="2">Match</th>
-                  <th colspan="3">Official</th>
-                  <th colspan="3">Predicted</th>
-                  <th rowspan="2">Multiplier</th>
-                  <th rowspan="2">Total points</th>
-                </tr>
-                <tr>
-                  <th>Result</th>
-                  <th>Penalties</th>
-                  <th>Adv team</th>
-                  <th>Result</th>
-                  <th>Penalties</th>
-                  <th>Adv team</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${stageRows.length ? stageRows.map((row) => `
-                  <tr>
-                    <td>${escapeHtml(row.matchLabel)}</td>
-                    <td>${knockoutValueHtml(row.officialResult)}</td>
-                    <td>${knockoutValueHtml(row.officialPenalties)}</td>
-                    <td>${knockoutValueHtml(row.officialAdvancingTeam)}</td>
-                    <td>${knockoutValueHtml(row.predictedResult)}</td>
-                    <td>${knockoutValueHtml(row.predictedPenalties)}</td>
-                    <td>${knockoutValueHtml(row.predictedAdvancingTeam)}</td>
-                    <td>${row.hasResult ? `${formatMultiplier(row.earnedMultiplier)}x` : '<span class="muted">Pending</span>'}</td>
-                    <td class="total">${row.hasResult ? formatPoints(row.points) : '<span class="muted">Pending</span>'}</td>
-                  </tr>
-                `).join("") : `
-                  <tr>
-                    <td colspan="9"><span class="muted">No official ${escapeHtml(knockoutStageLabel(stage).toLowerCase())} fixtures are available yet.</span></td>
-                  </tr>
-                `}
-              </tbody>
-            </table>
+      <div class="collapsible-body">
+        <div class="comparison-summary">
+          <div class="comparison-equation-row">
+            ${comparisonMetricHtml("Base point", `${formatPoints(basePoints)} pts`)}
+            <span class="comparison-operator">|</span>
+            ${comparisonMetricHtml("Prediction points", `${formatPoints(predictionPoints)} pts`)}
+            <span class="comparison-operator">+</span>
+            ${comparisonMetricHtml("Bonus questions points", `${formatPoints(stageScore.bonusQuestionPoints)} pts`)}
+            <span class="comparison-operator">=</span>
+            ${comparisonMetricHtml("Total points", `${formatPoints(stageTotal)} pts`)}
           </div>
         </div>
-        ${stage === "round_of_32" ? roundOf32BonusQuestionsHtml(selectedPlayer) : ""}
+        <div class="comparison-content">
+          <div class="comparison-block">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th rowspan="2">Match</th>
+                    <th colspan="3">Official</th>
+                    <th colspan="3">Predicted</th>
+                    <th rowspan="2">Multiplier</th>
+                    <th rowspan="2">Total points</th>
+                  </tr>
+                  <tr>
+                    <th>Result</th>
+                    <th>Penalties</th>
+                    <th>Adv team</th>
+                    <th>Result</th>
+                    <th>Penalties</th>
+                    <th>Adv team</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${stageRows.length ? stageRows.map((row) => `
+                    <tr>
+                      <td>${escapeHtml(row.matchLabel)}</td>
+                      <td>${knockoutValueHtml(row.officialResult)}</td>
+                      <td>${knockoutValueHtml(row.officialPenalties)}</td>
+                      <td>${knockoutValueHtml(row.officialAdvancingTeam)}</td>
+                      <td>${knockoutValueHtml(row.predictedResult)}</td>
+                      <td>${knockoutValueHtml(row.predictedPenalties)}</td>
+                      <td>${knockoutValueHtml(row.predictedAdvancingTeam)}</td>
+                      <td>${row.hasResult ? `${formatMultiplier(row.earnedMultiplier)}x` : '<span class="muted">Pending</span>'}</td>
+                      <td class="total">${row.hasResult ? formatPoints(row.points) : '<span class="muted">Pending</span>'}</td>
+                    </tr>
+                  `).join("") : `
+                    <tr>
+                      <td colspan="9"><span class="muted">No official ${escapeHtml(knockoutStageLabel(stage).toLowerCase())} fixtures are available yet.</span></td>
+                    </tr>
+                  `}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          ${stage === "round_of_32" ? roundOf32BonusQuestionsHtml(selectedPlayer) : ""}
+        </div>
       </div>
     </section>
   `;
