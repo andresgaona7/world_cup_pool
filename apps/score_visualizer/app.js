@@ -62,6 +62,10 @@ const ROUND_OF_32_BONUS_QUESTIONS = [
 const KNOCKOUT_TEAM_ALIASES = {
   bosnia: "bosnia-herzegovina",
   "bosnia and herzegovina": "bosnia-herzegovina",
+  "cape verde": "cape verde islands",
+  "dr congo": "congo dr",
+  "democratic republic of congo": "congo dr",
+  "democratic republic of the congo": "congo dr",
   morroco: "morocco",
   nederlands: "netherlands",
 };
