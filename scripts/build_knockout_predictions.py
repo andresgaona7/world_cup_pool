@@ -99,6 +99,10 @@ HEADER_ALIASES = {
 
 SKIPPED_SHEETS = {"leaderboard", "templateresults", "rd"}
 ROUND_OF_32_BONUS_QUESTION_ROWS = 9
+ROUND_OF_32_BONUS_QUESTION_ALIASES = {
+    "Which team will score the latest goal (including extra time)?": "Which team will score the latest goal?",
+    "Which team will score the latest goal, including extra time?": "Which team will score the latest goal?",
+}
 
 
 def main() -> None:
@@ -523,7 +527,7 @@ def extract_bonus_answers(
     heading_row, heading_column = bonus_heading
     answers = []
     for row in range(heading_row + 1, heading_row + 1 + ROUND_OF_32_BONUS_QUESTION_ROWS):
-        question = clean_text(cells.get((row, heading_column), ""))
+        question = canonical_bonus_question(clean_text(cells.get((row, heading_column), "")))
         if not question:
             continue
         answer = cell_text(cells, row, heading_column + 4, ignored_cells=ignored_cells)
@@ -532,6 +536,10 @@ def extract_bonus_answers(
             answer_payload["ignored"] = True
         answers.append(answer_payload)
     return {"round_of_32": answers} if answers else {}
+
+
+def canonical_bonus_question(question: str) -> str:
+    return ROUND_OF_32_BONUS_QUESTION_ALIASES.get(question, question)
 
 
 def predicted_advancing_team(

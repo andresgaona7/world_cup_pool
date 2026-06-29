@@ -54,7 +54,7 @@ const ROUND_OF_32_BONUS_QUESTIONS = [
   "Which team will score the most goals?",
   "Total goals scored in the R-32 (no penalties)",
   "Which team will score the fastest goal?",
-  "Which team will score the latest goal, including extra time?",
+  "Which team will score the latest goal?",
   "Team with the biggest winning margin?",
   "How many yellow cards will be shown?",
   "How many red cards will be shown?",

@@ -320,7 +320,7 @@ window.KNOCKOUT_PREDICTIONS = {
             "answer": "Argentina"
           },
           {
-            "question": "Which team will score the latest goal (including extra time)?",
+            "question": "Which team will score the latest goal?",
             "answer": "Ecuador"
           },
           {
@@ -359,7 +359,7 @@ window.KNOCKOUT_PREDICTIONS = {
           "answer": "Argentina"
         },
         {
-          "question": "Which team will score the latest goal (including extra time)?",
+          "question": "Which team will score the latest goal?",
           "answer": "Ecuador"
         },
         {
@@ -596,7 +596,7 @@ window.KNOCKOUT_PREDICTIONS = {
             "answer": "Germany"
           },
           {
-            "question": "Which team will score the latest goal (including extra time)?",
+            "question": "Which team will score the latest goal?",
             "answer": "Portugal"
           },
           {
@@ -635,7 +635,7 @@ window.KNOCKOUT_PREDICTIONS = {
           "answer": "Germany"
         },
         {
-          "question": "Which team will score the latest goal (including extra time)?",
+          "question": "Which team will score the latest goal?",
           "answer": "Portugal"
         },
         {
@@ -866,7 +866,7 @@ window.KNOCKOUT_PREDICTIONS = {
             "answer": "Argentina"
           },
           {
-            "question": "Which team will score the latest goal (including extra time)?",
+            "question": "Which team will score the latest goal?",
             "answer": "Senegal"
           },
           {
@@ -905,7 +905,7 @@ window.KNOCKOUT_PREDICTIONS = {
           "answer": "Argentina"
         },
         {
-          "question": "Which team will score the latest goal (including extra time)?",
+          "question": "Which team will score the latest goal?",
           "answer": "Senegal"
         },
         {
@@ -1136,7 +1136,7 @@ window.KNOCKOUT_PREDICTIONS = {
             "answer": "Argentina"
           },
           {
-            "question": "Which team will score the latest goal (including extra time)?",
+            "question": "Which team will score the latest goal?",
             "answer": "Australia"
           },
           {
@@ -1175,7 +1175,7 @@ window.KNOCKOUT_PREDICTIONS = {
           "answer": "Argentina"
         },
         {
-          "question": "Which team will score the latest goal (including extra time)?",
+          "question": "Which team will score the latest goal?",
           "answer": "Australia"
         },
         {
@@ -1410,7 +1410,7 @@ window.KNOCKOUT_PREDICTIONS = {
             "answer": "United States"
           },
           {
-            "question": "Which team will score the latest goal (including extra time)?",
+            "question": "Which team will score the latest goal?",
             "answer": "Egypt"
           },
           {
@@ -1449,7 +1449,7 @@ window.KNOCKOUT_PREDICTIONS = {
           "answer": "United States"
         },
         {
-          "question": "Which team will score the latest goal (including extra time)?",
+          "question": "Which team will score the latest goal?",
           "answer": "Egypt"
         },
         {
@@ -1678,7 +1678,7 @@ window.KNOCKOUT_PREDICTIONS = {
             "answer": "United States"
           },
           {
-            "question": "Which team will score the latest goal (including extra time)?",
+            "question": "Which team will score the latest goal?",
             "answer": "Egypt"
           },
           {
@@ -1717,7 +1717,7 @@ window.KNOCKOUT_PREDICTIONS = {
           "answer": "United States"
         },
         {
-          "question": "Which team will score the latest goal (including extra time)?",
+          "question": "Which team will score the latest goal?",
           "answer": "Egypt"
         },
         {
@@ -1951,7 +1951,7 @@ window.KNOCKOUT_PREDICTIONS = {
             "answer": "United States"
           },
           {
-            "question": "Which team will score the latest goal (including extra time)?",
+            "question": "Which team will score the latest goal?",
             "answer": "Japan"
           },
           {
@@ -1990,7 +1990,7 @@ window.KNOCKOUT_PREDICTIONS = {
           "answer": "United States"
         },
         {
-          "question": "Which team will score the latest goal (including extra time)?",
+          "question": "Which team will score the latest goal?",
           "answer": "Japan"
         },
         {
@@ -2221,7 +2221,7 @@ window.KNOCKOUT_PREDICTIONS = {
             "answer": "Argentina"
           },
           {
-            "question": "Which team will score the latest goal (including extra time)?",
+            "question": "Which team will score the latest goal?",
             "answer": "France"
           },
           {
@@ -2260,7 +2260,7 @@ window.KNOCKOUT_PREDICTIONS = {
           "answer": "Argentina"
         },
         {
-          "question": "Which team will score the latest goal (including extra time)?",
+          "question": "Which team will score the latest goal?",
           "answer": "France"
         },
         {
@@ -2495,7 +2495,7 @@ window.KNOCKOUT_PREDICTIONS = {
             "answer": "Nederlands"
           },
           {
-            "question": "Which team will score the latest goal (including extra time)?",
+            "question": "Which team will score the latest goal?",
             "answer": "Portugal"
           },
           {
@@ -2534,7 +2534,7 @@ window.KNOCKOUT_PREDICTIONS = {
           "answer": "Nederlands"
         },
         {
-          "question": "Which team will score the latest goal (including extra time)?",
+          "question": "Which team will score the latest goal?",
           "answer": "Portugal"
         },
         {
@@ -2770,7 +2770,7 @@ window.KNOCKOUT_PREDICTIONS = {
             "answer": "Argentina"
           },
           {
-            "question": "Which team will score the latest goal (including extra time)?",
+            "question": "Which team will score the latest goal?",
             "answer": "Norway"
           },
           {
@@ -2809,7 +2809,7 @@ window.KNOCKOUT_PREDICTIONS = {
           "answer": "Argentina"
         },
         {
-          "question": "Which team will score the latest goal (including extra time)?",
+          "question": "Which team will score the latest goal?",
           "answer": "Norway"
         },
         {
@@ -2837,14 +2837,20 @@ window.KNOCKOUT_PREDICTIONS = {
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "Germany",
-          "awayTeam": "Paraguay"
+          "awayTeam": "Paraguay",
+          "homeScore": 3,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Germany"
         },
         {
           "matchId": "74",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "France",
-          "awayTeam": "Sweden"
+          "awayTeam": "Sweden",
+          "homeScore": 4,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
         },
         {
           "matchId": "75",
@@ -2862,91 +2868,134 @@ window.KNOCKOUT_PREDICTIONS = {
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "Nederlands",
-          "awayTeam": "Morroco"
+          "awayTeam": "Morroco",
+          "homeScore": 2,
+          "awayScore": 2,
+          "homePenaltyScore": 5,
+          "awayPenaltyScore": 3,
+          "predictedAdvancingTeam": "Nederlands"
         },
         {
           "matchId": "77",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "Portugal",
-          "awayTeam": "Croatia"
+          "awayTeam": "Croatia",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Portugal"
         },
         {
           "matchId": "78",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "Spain",
-          "awayTeam": "Austria"
+          "awayTeam": "Austria",
+          "homeScore": 2,
+          "awayScore": 0,
+          "predictedAdvancingTeam": "Spain"
         },
         {
           "matchId": "79",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "United States",
-          "awayTeam": "Bosnia"
+          "awayTeam": "Bosnia",
+          "homeScore": 3,
+          "awayScore": 0,
+          "predictedAdvancingTeam": "United States"
         },
         {
           "matchId": "80",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "Belgium",
-          "awayTeam": "Senegal"
+          "awayTeam": "Senegal",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Belgium"
         },
         {
           "matchId": "81",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "Brazil",
-          "awayTeam": "Japan"
+          "awayTeam": "Japan",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 5,
+          "awayPenaltyScore": 3,
+          "predictedAdvancingTeam": "Brazil"
         },
         {
           "matchId": "82",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "Ivory Coast",
-          "awayTeam": "Norway"
+          "awayTeam": "Norway",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "Norway"
         },
         {
           "matchId": "83",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "Mexico",
-          "awayTeam": "Ecuador"
+          "awayTeam": "Ecuador",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "Ecuador"
         },
         {
           "matchId": "84",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "England",
-          "awayTeam": "DR Congo"
+          "awayTeam": "DR Congo",
+          "homeScore": 2,
+          "awayScore": 0,
+          "predictedAdvancingTeam": "England"
         },
         {
           "matchId": "85",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "Argentina",
-          "awayTeam": "Cape Verde"
+          "awayTeam": "Cape Verde",
+          "homeScore": 3,
+          "awayScore": 0,
+          "predictedAdvancingTeam": "Argentina"
         },
         {
           "matchId": "86",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "Australia",
-          "awayTeam": "Egypt"
+          "awayTeam": "Egypt",
+          "homeScore": 1,
+          "awayScore": 0,
+          "predictedAdvancingTeam": "Australia"
         },
         {
           "matchId": "87",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "Switzerland",
-          "awayTeam": "Algeria"
+          "awayTeam": "Algeria",
+          "homeScore": 2,
+          "awayScore": 0,
+          "predictedAdvancingTeam": "Switzerland"
         },
         {
           "matchId": "88",
           "stage": "round_of_32",
           "mode": "score",
           "homeTeam": "Colombia",
-          "awayTeam": "Ghana"
+          "awayTeam": "Ghana",
+          "homeScore": 3,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Colombia"
         }
       ],
       "validation": {
@@ -2968,100 +3017,85 @@ window.KNOCKOUT_PREDICTIONS = {
         },
         "duplicateMatchIds": [],
         "incompleteMatchIds": [
-          "73",
-          "74",
-          "75",
-          "76",
-          "77",
-          "78",
-          "79",
-          "80",
-          "81",
-          "82",
-          "83",
-          "84",
-          "85",
-          "86",
-          "87",
-          "88"
+          "75"
         ]
       },
       "bonusAnswers": {
         "round_of_32": [
           {
             "question": "How many matches will go to extra time?",
-            "answer": ""
+            "answer": "5 - 8"
           },
           {
             "question": "How many matches will be decided by penalties?",
-            "answer": ""
+            "answer": "0 - 4"
           },
           {
             "question": "Which team will score the most goals?",
-            "answer": ""
+            "answer": "France"
           },
           {
             "question": "Total goals scored in the R-32 (no penalties)",
-            "answer": ""
+            "answer": "21 - 30"
           },
           {
             "question": "Which team will score the fastest goal?",
-            "answer": ""
+            "answer": "France"
           },
           {
-            "question": "Which team will score the latest goal (including extra time)?",
-            "answer": ""
+            "question": "Which team will score the latest goal?",
+            "answer": "Ecuador"
           },
           {
             "question": "Team with the biggest winning margin?",
-            "answer": ""
+            "answer": "France"
           },
           {
             "question": "How many yellow cards will be shown?",
-            "answer": ""
+            "answer": "11 - 15"
           },
           {
             "question": "How many red cards will be shown?",
-            "answer": ""
+            "answer": "0 - 2"
           }
         ]
       },
       "roundOf32BonusAnswers": [
         {
           "question": "How many matches will go to extra time?",
-          "answer": ""
+          "answer": "5 - 8"
         },
         {
           "question": "How many matches will be decided by penalties?",
-          "answer": ""
+          "answer": "0 - 4"
         },
         {
           "question": "Which team will score the most goals?",
-          "answer": ""
+          "answer": "France"
         },
         {
           "question": "Total goals scored in the R-32 (no penalties)",
-          "answer": ""
+          "answer": "21 - 30"
         },
         {
           "question": "Which team will score the fastest goal?",
-          "answer": ""
+          "answer": "France"
         },
         {
-          "question": "Which team will score the latest goal (including extra time)?",
-          "answer": ""
+          "question": "Which team will score the latest goal?",
+          "answer": "Ecuador"
         },
         {
           "question": "Team with the biggest winning margin?",
-          "answer": ""
+          "answer": "France"
         },
         {
           "question": "How many yellow cards will be shown?",
-          "answer": ""
+          "answer": "11 - 15"
         },
         {
           "question": "How many red cards will be shown?",
-          "answer": ""
+          "answer": "0 - 2"
         }
       ]
     }

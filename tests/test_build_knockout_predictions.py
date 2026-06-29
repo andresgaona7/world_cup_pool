@@ -232,6 +232,27 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
             },
         )
 
+    def test_normalizes_latest_goal_bonus_question_label(self):
+        cells = {
+            (36, 13): "Bonus questions",
+            (37, 13): "Which team will score the latest goal (including extra time)?",
+            (37, 17): "Ecuador",
+        }
+
+        answers = build_knockout_predictions.extract_bonus_answers(cells)
+
+        self.assertEqual(
+            answers,
+            {
+                "round_of_32": [
+                    {
+                        "question": "Which team will score the latest goal?",
+                        "answer": "Ecuador",
+                    },
+                ]
+            },
+        )
+
     def test_merges_player_predictions_across_stage_workbooks(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)

@@ -100,6 +100,12 @@ const PLAYER_EMOJIS = {
   "elwebo ai": "🪺",
   "elwebo con ai-chatgpt": "🪺",
 };
+const KNOCKOUT_TEAM_ALIASES = {
+  bosnia: "bosnia-herzegovina",
+  "bosnia and herzegovina": "bosnia-herzegovina",
+  morroco: "morocco",
+  nederlands: "netherlands",
+};
 const COLORS = ["#0f7a63", "#255f9d", "#986800", "#9d3333", "#5b6b2f", "#7b4da8", "#007c89", "#c45113", "#42526e", "#0b604e", "#734222"];
 const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -773,7 +779,7 @@ function scoreKnockout(player, officialMatches) {
 
 function scoreKnockoutStage(player, stage, officialMatches) {
   const predictions = knockoutPredictionsByPlayer.get(player.name) || [];
-  const predictionByMatch = new Map(predictions.map((prediction) => [prediction.matchId, prediction]));
+  const predictionIndex = knockoutPredictionIndex(predictions);
   const stageMatches = officialMatches.filter((match) => match.stage === stage);
   let points = 0;
   const completeBonusStage =
@@ -783,7 +789,7 @@ function scoreKnockoutStage(player, stage, officialMatches) {
   let perfectScoresPossible = completeBonusStage;
 
   stageMatches.forEach((result) => {
-    const prediction = predictionByMatch.get(result.matchId);
+    const prediction = findKnockoutPrediction(result, predictionIndex);
     if (!prediction) {
       perfectWinnersPossible = false;
       perfectScoresPossible = false;
@@ -793,14 +799,14 @@ function scoreKnockoutStage(player, stage, officialMatches) {
     points += scoreKnockoutMatch(prediction, result);
 
     const predictedAdvancingTeam = prediction.winner || prediction.advancingTeam || prediction.predictedAdvancingTeam || "";
-    if (predictedAdvancingTeam !== result.advancingTeam) {
+    if (!sameKnockoutTeam(predictedAdvancingTeam, result.advancingTeam)) {
       perfectWinnersPossible = false;
     }
 
     const exactScore =
       numberOrNull(prediction.homeScore) === result.homeScore &&
       numberOrNull(prediction.awayScore) === result.awayScore &&
-      predictedAdvancingTeam === result.advancingTeam;
+      sameKnockoutTeam(predictedAdvancingTeam, result.advancingTeam);
     if (!exactScore) {
       perfectScoresPossible = false;
     }
@@ -817,7 +823,7 @@ function scoreKnockoutStage(player, stage, officialMatches) {
 function scoreKnockoutMatch(prediction, result) {
   const basePoints = KNOCKOUT_BASE_POINTS[result.stage] || 0;
   const predictedAdvancingTeam = prediction.winner || prediction.advancingTeam || prediction.predictedAdvancingTeam || "";
-  const correctAdvancingTeam = predictedAdvancingTeam && predictedAdvancingTeam === result.advancingTeam;
+  const correctAdvancingTeam = sameKnockoutTeam(predictedAdvancingTeam, result.advancingTeam);
   const predictedHomeScore = numberOrNull(prediction.homeScore);
   const predictedAwayScore = numberOrNull(prediction.awayScore);
 
@@ -840,6 +846,48 @@ function scoreKnockoutMatch(prediction, result) {
     return basePoints * 0.5;
   }
   return 0;
+}
+
+function knockoutPredictionIndex(predictions) {
+  return {
+    byFixture: new Map(predictions.map((prediction) => [knockoutFixtureKey(prediction), prediction])),
+    byMatchId: new Map(predictions.map((prediction) => [prediction.matchId, prediction])),
+  };
+}
+
+function findKnockoutPrediction(result, predictionIndex) {
+  const fixtureMatch = predictionIndex.byFixture.get(knockoutFixtureKey(result));
+  if (fixtureMatch) {
+    return fixtureMatch;
+  }
+
+  const idMatch = predictionIndex.byMatchId.get(result.matchId);
+  return idMatch && sameKnockoutFixture(idMatch, result) ? idMatch : null;
+}
+
+function sameKnockoutFixture(left, right) {
+  return knockoutFixtureKey(left) === knockoutFixtureKey(right);
+}
+
+function sameKnockoutTeam(left, right) {
+  return Boolean(left && right) && canonicalKnockoutTeamName(left) === canonicalKnockoutTeamName(right);
+}
+
+function knockoutFixtureKey(match) {
+  return [
+    match.stage || "",
+    canonicalKnockoutTeamName(match.homeTeam),
+    canonicalKnockoutTeamName(match.awayTeam),
+  ].join("|");
+}
+
+function canonicalKnockoutTeamName(value) {
+  const normalized = String(value || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  return KNOCKOUT_TEAM_ALIASES[normalized] || normalized;
 }
 
 function hasPenaltyScore(match) {
