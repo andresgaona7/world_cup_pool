@@ -144,6 +144,94 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
         self.assertEqual(matches[-1]["matchId"], "88")
         self.assertEqual({match["stage"] for match in matches}, {"round_of_32"})
 
+    def test_extracts_visual_round_of_32_layout_and_ignores_red_cells(self):
+        cells = {
+            (1, 1): "Name",
+            (1, 2): "Ana",
+            (9, 3): "Round of 32",
+            (10, 3): "Group A",
+            (10, 6): "",
+            (18, 13): "Round of 32",
+            (19, 13): "Germany",
+            (19, 14): "2",
+            (19, 15): "0",
+            (19, 16): "Paraguay",
+            (20, 13): "France",
+            (20, 14): "1",
+            (20, 15): "1",
+            (20, 16): "Sweden",
+            (20, 17): "5",
+            (20, 18): "4",
+            (21, 13): "South Africa",
+            (21, 14): "1",
+            (21, 15): "2",
+            (21, 16): "Canada",
+        }
+        for index in range(3, 16):
+            row = 19 + index
+            cells[(row, 13)] = f"Home {index + 1}"
+            cells[(row, 14)] = "1"
+            cells[(row, 15)] = "0"
+            cells[(row, 16)] = f"Away {index + 1}"
+
+        matches = build_knockout_predictions.extract_predictions(
+            cells,
+            default_stage="round_of_32",
+            ignored_cells={(21, 14), (21, 15)},
+        )
+
+        self.assertEqual(len(matches), 16)
+        self.assertEqual(
+            matches[0],
+            {
+                "matchId": "73",
+                "stage": "round_of_32",
+                "mode": "score",
+                "homeTeam": "Germany",
+                "awayTeam": "Paraguay",
+                "homeScore": 2,
+                "awayScore": 0,
+                "predictedAdvancingTeam": "Germany",
+            },
+        )
+        self.assertEqual(matches[1]["predictedAdvancingTeam"], "France")
+        self.assertEqual(matches[1]["homePenaltyScore"], 5)
+        self.assertNotIn("homeScore", matches[2])
+        self.assertNotIn("awayScore", matches[2])
+        self.assertNotIn("predictedAdvancingTeam", matches[2])
+        self.assertEqual(matches[2]["ignoredFields"], ["homeScore", "awayScore"])
+
+    def test_extracts_round_of_32_bonus_answers_from_visual_layout(self):
+        cells = {
+            (36, 13): "Bonus questions",
+            (37, 13): "How many matches will go to extra time?",
+            (37, 17): "5 - 8",
+            (38, 13): "How many matches will be decided by penalties?",
+            (38, 17): "0 - 4",
+        }
+
+        answers = build_knockout_predictions.extract_bonus_answers(
+            cells,
+            ignored_cells={(38, 17)},
+        )
+
+        self.assertEqual(
+            answers,
+            {
+                "round_of_32": [
+                    {
+                        "question": "How many matches will go to extra time?",
+                        "answer": "5 - 8",
+                    },
+                    {
+                        "question": "How many matches will be decided by penalties?",
+                        "answer": "",
+                        "ignored": True,
+                    },
+                ]
+            },
+        )
+
     def test_merges_player_predictions_across_stage_workbooks(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -227,6 +315,22 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
         self.assertEqual(validation["matchCount"], 1)
         self.assertEqual(validation["missingOrExtraByStage"]["round_of_32"], 16)
         self.assertNotIn("final", validation["missingOrExtraByStage"])
+
+    def test_validation_reports_incomplete_visual_predictions(self):
+        matches = [
+            {
+                "matchId": "73",
+                "stage": "round_of_32",
+                "mode": "score",
+                "homeTeam": "Germany",
+                "awayTeam": "Paraguay",
+            }
+        ]
+
+        validation = build_knockout_predictions.validate_predictions(matches)
+
+        self.assertFalse(validation["complete"])
+        self.assertEqual(validation["incompleteMatchIds"], ["73"])
 
 
 if __name__ == "__main__":

@@ -183,11 +183,11 @@ function renderKnockoutPredictions(player) {
     if (!target) {
       return;
     }
-    target.replaceChildren(...knockoutStageContent(stage, matches));
+    target.replaceChildren(...knockoutStageContent(stage, matches, knockoutPlayer));
   });
 }
 
-function knockoutStageContent(stage, matches) {
+function knockoutStageContent(stage, matches, knockoutPlayer) {
   const stageMatches = matches.filter((match) => match.stage === stage.stage);
 
   const count = document.createElement("span");
@@ -209,12 +209,10 @@ function knockoutStageContent(stage, matches) {
   table.innerHTML = `
     <thead>
       <tr>
-        <th scope="col">Match</th>
-        <th scope="col">Pick</th>
-        <th scope="col">Score</th>
-        <th scope="col">Official</th>
-        <th scope="col">Status</th>
-        <th scope="col">Mode</th>
+        <th scope="col">Teams</th>
+        <th scope="col">Game Score</th>
+        <th scope="col">Penalty Score</th>
+        <th scope="col">Advancing Team</th>
       </tr>
     </thead>
   `;
@@ -223,21 +221,17 @@ function knockoutStageContent(stage, matches) {
   tbody.replaceChildren(
     ...stageMatches.map((match) => {
       const tr = document.createElement("tr");
-      const officialMatch = officialMatchesById.get(String(match.matchId));
-      const status = officialMatch ? predictionStatus(match, officialMatch) : "Pending";
+      if ((match.ignoredFields || []).length) {
+        tr.className = "ignored-row";
+      }
       [
-        `Match ${match.matchId}`,
+        teamsText(match),
+        gameScoreText(match),
+        penaltyScoreText(match),
         match.predictedAdvancingTeam || "Blank",
-        scoreText(match),
-        officialText(officialMatch),
-        status,
-        modeText(match.mode),
-      ].forEach((value, index) => {
+      ].forEach((value) => {
         const td = document.createElement("td");
         td.textContent = value;
-        if (index === 4) {
-          td.className = statusClass(status);
-        }
         tr.append(td);
       });
       return tr;
@@ -245,7 +239,55 @@ function knockoutStageContent(stage, matches) {
   );
   table.append(tbody);
   wrap.append(table);
-  return [count, wrap];
+
+  const content = [count, wrap];
+  if (stage.stage === "round_of_32") {
+    const bonusAnswers = roundOf32BonusAnswersTable(knockoutPlayer);
+    if (bonusAnswers) {
+      content.push(bonusAnswers);
+    }
+  }
+  return content;
+}
+
+function roundOf32BonusAnswersTable(knockoutPlayer) {
+  const answers = knockoutPlayer?.bonusAnswers?.round_of_32 || knockoutPlayer?.roundOf32BonusAnswers || [];
+  if (!answers.length) {
+    return null;
+  }
+
+  const wrap = document.createElement("div");
+  wrap.className = "bonus-answer-wrap";
+
+  const title = document.createElement("h4");
+  title.textContent = "Bonus Questions";
+
+  const table = document.createElement("table");
+  table.className = "bonus-answer-table";
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th scope="col">Question</th>
+        <th scope="col">Answer</th>
+      </tr>
+    </thead>
+  `;
+
+  const tbody = document.createElement("tbody");
+  tbody.replaceChildren(
+    ...answers.map((item) => {
+      const tr = document.createElement("tr");
+      [item.question || "", item.answer || "Blank"].forEach((value) => {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.append(td);
+      });
+      return tr;
+    })
+  );
+  table.append(tbody);
+  wrap.append(title, table);
+  return wrap;
 }
 
 function renderKnockoutError() {
@@ -280,6 +322,26 @@ function findKnockoutPlayer(name) {
 
 function normalizeName(name) {
   return String(name || "").trim().toLowerCase();
+}
+
+function teamsText(match) {
+  const homeTeam = match.homeTeam || "TBD";
+  const awayTeam = match.awayTeam || "TBD";
+  return `${homeTeam} vs ${awayTeam}`;
+}
+
+function gameScoreText(match) {
+  if (match.homeScore === undefined && match.awayScore === undefined) {
+    return "Blank";
+  }
+  return `${match.homeScore ?? "-"}-${match.awayScore ?? "-"}`;
+}
+
+function penaltyScoreText(match) {
+  if (match.homePenaltyScore === undefined && match.awayPenaltyScore === undefined) {
+    return "-";
+  }
+  return `${match.homePenaltyScore ?? "-"}-${match.awayPenaltyScore ?? "-"}`;
 }
 
 function scoreText(match) {

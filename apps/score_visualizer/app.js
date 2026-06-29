@@ -87,6 +87,7 @@ const RANK_PATTERN = /^\d+(?:\.0)?$/;
 
 const players = rawData.players.map(normalizePlayer);
 const knockoutPredictionsByPlayer = normalizeKnockoutPredictions(knockoutData);
+const knockoutBonusAnswersByPlayer = normalizeKnockoutBonusAnswers(knockoutData);
 const officialScenario = normalizeOfficialScenario(players, officialData);
 const scenario = officialScenario;
 const officialKnockoutMatches = latestOfficialKnockoutMatches(officialData);
@@ -175,6 +176,15 @@ function normalizeKnockoutPredictions(sourceData) {
     (sourceData?.players || []).map((player) => [
       player.name || player.sheet || "",
       (player.matches || []).map(normalizeKnockoutPrediction).filter((match) => match.matchId),
+    ])
+  );
+}
+
+function normalizeKnockoutBonusAnswers(sourceData) {
+  return new Map(
+    (sourceData?.players || []).map((player) => [
+      player.name || player.sheet || "",
+      player.bonusAnswers?.round_of_32 || player.roundOf32BonusAnswers || [],
     ])
   );
 }
@@ -829,14 +839,20 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
             </table>
           </div>
         </div>
-        ${stage === "round_of_32" ? roundOf32BonusQuestionsHtml() : ""}
+        ${stage === "round_of_32" ? roundOf32BonusQuestionsHtml(selectedPlayer) : ""}
       </div>
     </section>
   `;
 }
 
-function roundOf32BonusQuestionsHtml() {
+function roundOf32BonusQuestionsHtml(selectedPlayer) {
   const maxPoints = ROUND_OF_32_BONUS_QUESTIONS.length * ROUND_OF_32_BONUS_QUESTION_POINTS;
+  const answerByQuestion = new Map(
+    (knockoutBonusAnswersByPlayer.get(selectedPlayer?.name || "") || []).map((item) => [
+      item.question,
+      item.answer || "Blank",
+    ])
+  );
   return `
         <div class="comparison-block bonus-question-block">
           <div class="bonus-question-head">
@@ -847,7 +863,7 @@ function roundOf32BonusQuestionsHtml() {
             ${ROUND_OF_32_BONUS_QUESTIONS.map((question) => `
               <li>
                 <span>${escapeHtml(question)}</span>
-                <strong>${formatPoints(ROUND_OF_32_BONUS_QUESTION_POINTS)} pts</strong>
+                <strong>${escapeHtml(answerByQuestion.get(question) || "Blank")}</strong>
               </li>
             `).join("")}
           </ol>

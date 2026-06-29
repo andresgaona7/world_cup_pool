@@ -345,7 +345,7 @@ table {
 }
 
 .knockout-table {
-  min-width: 680px;
+  min-width: 560px;
   font-size: 13px;
 }
 
@@ -370,8 +370,53 @@ table {
   border-bottom: 0;
 }
 
+.knockout-table tr.ignored-row td {
+  background: #fff0f0;
+}
+
 .knockout-table th:last-child,
 .knockout-table td:last-child {
+  border-right: 0;
+}
+
+.bonus-answer-wrap {
+  border-top: 1px solid var(--line);
+  background: #fff;
+}
+
+.bonus-answer-wrap h4 {
+  margin: 0;
+  padding: 10px 12px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.bonus-answer-table {
+  min-width: 560px;
+  font-size: 13px;
+}
+
+.bonus-answer-table th,
+.bonus-answer-table td {
+  padding: 8px 9px;
+  border-top: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.bonus-answer-table th {
+  color: var(--muted);
+  background: #fbfcfd;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.bonus-answer-table th:last-child,
+.bonus-answer-table td:last-child {
   border-right: 0;
 }
 
@@ -500,6 +545,7 @@ table {
 :root[data-theme="dark"] .best-thirds,
 :root[data-theme="dark"] .knockout-stage,
 :root[data-theme="dark"] .knockout-stage-count,
+:root[data-theme="dark"] .bonus-answer-wrap,
 :root[data-theme="dark"] th,
 :root[data-theme="dark"] td {
   background: var(--panel);
@@ -509,7 +555,8 @@ table {
 :root[data-theme="dark"] .first-round-table .group-label,
 :root[data-theme="dark"] .first-round-table .rank,
 :root[data-theme="dark"] .first-round-table .empty,
-:root[data-theme="dark"] .knockout-table th {
+:root[data-theme="dark"] .knockout-table th,
+:root[data-theme="dark"] .bonus-answer-table th {
   background: #1c2a37;
   color: var(--muted);
 }
@@ -518,6 +565,10 @@ table {
   border-color: #5b4924;
   background: var(--warn);
   color: var(--ink);
+}
+
+:root[data-theme="dark"] .knockout-table tr.ignored-row td {
+  background: #3a2024;
 }
 
 :root[data-theme="dark"] .load-status.is-error {
