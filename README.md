@@ -64,13 +64,27 @@ standings, and futures. Use `--refresh-group-stage-results` only when you
 intend to replace those fields from Football-Data again.
 
 `make update-official-knockout-results` reads `FOOTBALL_DATA_API_KEY` when set.
-It fetches Football-Data match records, saves the untouched response to
-`data/raw/official/football_data_wc_matches_2026.json`, writes reviewable
-knockout data to `data/manual/official_knockout_results.json`, and merges
-official knockout matches into `data/generated/official_results.js`. The match
-endpoint supplies teams, score, stage, status, duration, winner, and referee
-metadata. Cards and fastest/latest goal teams are not present in that endpoint
-and must be reviewed manually unless another event source is added.
+It uses the Football-Data matches endpoint, not the standings endpoint, because
+knockout scores live in match records. The command writes three artifacts:
+
+- `data/raw/official/football_data_wc_matches_2026.json`: untouched API
+  response for review and debugging.
+- `data/manual/official_knockout_results.json`: normalized, readable knockout
+  match data that can be inspected before committing.
+- `data/generated/official_results.js`: browser data consumed by the static
+  apps.
+
+The generated file receives knockout-specific fields such as `officialMatches`,
+`matches`, `roundOf32BonusResults`, and `knockoutSource`. Existing frozen
+group-stage scoring fields are preserved. The match endpoint supplies teams,
+score, stage, status, duration, winner, penalty details when present, and
+referee metadata. Cards and fastest/latest goal teams are not present in that
+endpoint and must be reviewed manually unless another event source is added.
+
+Use the knockout updater after official knockout match records change, then run
+`make apply-manual-futures` if `data/manual/official_futures.json` has changed.
+Run `make build-site` afterward when the ignored `public/` copy needs to match
+the committed files under `data/generated/`.
 
 ## Data Flow
 
@@ -208,6 +222,7 @@ make build-pool-data
 make build-knockout-predictions
 make build-consensus-predictions
 make update-official-results
+make update-official-knockout-results
 make apply-manual-futures
 CHECKPOINT=group_md1 make create-official-checkpoint
 make test
@@ -217,6 +232,7 @@ git commit -m "Update public pool dashboard"
 git push origin dev
 ```
 
-`make update-official-results` needs internet access because it fetches
-Football-Data standings. The other static website files and tests can be worked
-on locally without an internet connection.
+`make update-official-results` and `make update-official-knockout-results` need
+internet access because they fetch Football-Data standings and match records.
+The other static website files and tests can be worked on locally without an
+internet connection.
