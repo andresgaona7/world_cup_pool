@@ -521,32 +521,25 @@ td {
   white-space: nowrap;
 }
 
-.bonus-question-list {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-  padding-left: 22px;
+.bonus-question-table th:first-child,
+.bonus-question-table td:first-child {
+  min-width: 260px;
 }
 
-.bonus-question-list li {
-  padding-left: 2px;
+.bonus-question-table th:last-child,
+.bonus-question-table td:last-child {
+  width: 120px;
+  white-space: nowrap;
 }
 
-.bonus-question-list li::marker {
-  color: var(--muted);
+.bonus-question-table .official-answer {
+  color: var(--accent);
   font-weight: 800;
 }
 
-.bonus-question-list span {
-  color: var(--ink);
-}
-
-.bonus-question-list strong {
-  display: inline-flex;
-  margin-left: 8px;
-  color: var(--muted);
-  font-size: 12px;
-  white-space: nowrap;
+.bonus-question-table .points-answer {
+  color: var(--blue);
+  font-weight: 850;
 }
 
 .knockout-stage-panels {

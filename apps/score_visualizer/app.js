@@ -1001,14 +1001,39 @@ function roundOf32BonusQuestionsHtml(selectedPlayer) {
             <h3>Round of 32 Bonus Questions</h3>
             <span>${formatPoints(ROUND_OF_32_BONUS_QUESTION_POINTS)} pts each, ${formatPoints(maxPoints)} pts max</span>
           </div>
-          <ol class="bonus-question-list">
-            ${ROUND_OF_32_BONUS_QUESTIONS.map((question) => `
-              <li>
-                <span>${escapeHtml(question)}</span>
-                <strong>${escapeHtml(answerByQuestion.get(canonicalBonusQuestion(question)) || "Blank")}</strong>
-              </li>
-            `).join("")}
-          </ol>
+          <div class="table-wrap bonus-question-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Your answer</th>
+                  <th>Official answer</th>
+                  <th>Points earned</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${ROUND_OF_32_BONUS_QUESTIONS.map((question) => {
+                  const playerAnswer = answerByQuestion.get(canonicalBonusQuestion(question)) || "Blank";
+                  const officialAnswer = officialRoundOf32BonusAnswer(question);
+                  const earnedPoints = roundOf32BonusQuestionPoints(playerAnswer, officialAnswer);
+                  return `
+                    <tr>
+                      <td>${escapeHtml(question)}</td>
+                      <td>${escapeHtml(playerAnswer)}</td>
+                      <td class="official-answer">${escapeHtml(formatRoundOf32BonusAnswer(officialAnswer))}</td>
+                      <td class="points-answer total">${earnedPoints === null ? "Pending" : formatPoints(earnedPoints)}</td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3">Round of 32 bonus questions total</td>
+                  <td class="total">${formatPoints(scoreRoundOf32BonusQuestions(selectedPlayer))}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </div>
   `;
 }
@@ -1807,12 +1832,16 @@ function scoreKnockoutStage(player, stage) {
 function scoreRoundOf32BonusQuestions(player) {
   const answers = knockoutBonusAnswersByPlayer.get(player?.name || "") || [];
   return answers.reduce((total, item) => {
-    const actual = officialRoundOf32BonusAnswer(item.question);
-    if (actual === null || actual === "" || actual === undefined) {
-      return total;
-    }
-    return total + (bonusAnswerMatches(item.answer, actual) ? ROUND_OF_32_BONUS_QUESTION_POINTS : 0);
+    const earnedPoints = roundOf32BonusQuestionPoints(item.answer, officialRoundOf32BonusAnswer(item.question));
+    return total + (earnedPoints || 0);
   }, 0);
+}
+
+function roundOf32BonusQuestionPoints(playerAnswer, officialAnswer) {
+  if (officialAnswer === null || officialAnswer === "" || officialAnswer === undefined) {
+    return null;
+  }
+  return bonusAnswerMatches(playerAnswer, officialAnswer) ? ROUND_OF_32_BONUS_QUESTION_POINTS : 0;
 }
 
 function officialRoundOf32BonusAnswer(question) {
@@ -1831,19 +1860,26 @@ function officialRoundOf32BonusAnswer(question) {
   return values[key];
 }
 
+function formatRoundOf32BonusAnswer(answer) {
+  if (answer === null || answer === "" || answer === undefined) {
+    return "Pending";
+  }
+  return String(answer);
+}
+
 function canonicalBonusQuestion(question) {
   const text = String(question || "").toLowerCase();
   if (text.includes("extra time") && !text.includes("latest goal")) {
     return "extra_time_matches";
-  }
-  if (text.includes("penalties")) {
-    return "penalty_matches";
   }
   if (text.includes("most goals")) {
     return "most_goals_team";
   }
   if (text.includes("total goals")) {
     return "total_goals";
+  }
+  if (text.includes("penalties")) {
+    return "penalty_matches";
   }
   if (text.includes("fastest goal")) {
     return "fastest_goal_team";
