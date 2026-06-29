@@ -65,7 +65,7 @@ CHECKPOINTS: tuple[dict[str, Any], ...] = (
     },
     {
         "key": "third_place_match",
-        "label": "After third-place match",
+        "label": "After 3rd place",
         "shortLabel": "3rd",
         "stage": "third_place_match",
     },
@@ -237,6 +237,10 @@ def build_checkpoint(checkpoint_key: str, official_results: dict[str, Any]) -> d
         },
         "officialMatches": normalize_matches(official_results.get("matches")),
     }
+    if metadata["stage"] == "round_of_32":
+        checkpoint["roundOf32BonusResults"] = normalize_round_of_32_bonus_results(
+            official_results.get("roundOf32BonusResults")
+        )
     if metadata.get("includeFutures"):
         checkpoint["includeFutures"] = True
     return checkpoint
@@ -270,6 +274,10 @@ def string_value(source: dict[str, Any], key: str) -> str:
 
 def normalize_matches(value: Any) -> list[Any]:
     return value if isinstance(value, list) else []
+
+
+def normalize_round_of_32_bonus_results(value: Any) -> dict[str, Any]:
+    return value if isinstance(value, dict) else {}
 
 
 def completed_at(official_results: dict[str, Any]) -> str:

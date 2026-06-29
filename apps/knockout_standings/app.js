@@ -58,7 +58,7 @@ const ROUNDS = [
       ["102", "Winner Match 99", "Winner Match 100"],
     ],
   },
-  { key: "thirdPlace", title: "Third Place", shortTitle: "3P", matches: [["103", "Loser Match 101", "Loser Match 102"]] },
+  { key: "thirdPlace", title: "3rd place", shortTitle: "3P", matches: [["103", "Loser Match 101", "Loser Match 102"]] },
   { key: "final", title: "Final", shortTitle: "Final", matches: [["104", "Winner Match 101", "Winner Match 102"]] },
 ];
 
@@ -147,7 +147,7 @@ function renderChampionStrip() {
       <strong>${escapeHtml(scoreLabel(allMatches.get("104")))}</strong>
     </article>
     <article>
-      <span>Third Place</span>
+      <span>3rd place</span>
       <strong>${escapeHtml(scoreLabel(allMatches.get("103")))}</strong>
     </article>
   `;

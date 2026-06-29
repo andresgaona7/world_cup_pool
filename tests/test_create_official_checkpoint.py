@@ -104,6 +104,34 @@ class CreateOfficialCheckpointTests(unittest.TestCase):
             official_results = create_official_checkpoint.read_official_results(official_path)
             self.assertEqual(official_results["timelineCheckpoints"], [])
 
+    def test_round_of_32_checkpoint_preserves_bonus_results(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            official_path, checkpoint_dir = self.write_fixture(temp_dir)
+
+            create_official_checkpoint.create_or_rebuild_checkpoint(
+                checkpoint_key="round_of_32",
+                rebuild_only=False,
+                official_results_path=official_path,
+                checkpoint_dir=checkpoint_dir,
+            )
+
+            checkpoint_path = checkpoint_dir / "round_of_32.json"
+            checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+            official_results = create_official_checkpoint.read_official_results(official_path)
+
+            self.assertEqual(
+                checkpoint["roundOf32BonusResults"],
+                {
+                    "extraTimeMatches": 0,
+                    "penaltyMatches": 0,
+                    "totalGoals": 4,
+                },
+            )
+            self.assertEqual(
+                official_results["timelineCheckpoints"][0]["roundOf32BonusResults"],
+                checkpoint["roundOf32BonusResults"],
+            )
+
     def write_fixture(self, temp_dir):
         temp_path = Path(temp_dir)
         official_path = temp_path / "official_results.js"
@@ -131,6 +159,11 @@ class CreateOfficialCheckpointTests(unittest.TestCase):
             },
             "timelineCheckpoints": [{"key": "old"}],
             "overallStandings": [{"team": "Mexico"}],
+            "roundOf32BonusResults": {
+                "extraTimeMatches": 0,
+                "penaltyMatches": 0,
+                "totalGoals": 4,
+            },
         }
         payload = json.dumps(data, ensure_ascii=False, indent=2)
         official_path.write_text(

@@ -52,7 +52,7 @@ const BRACKET_ROUNDS = [
   {
     title: "Medal Matches",
     matches: [
-      ["103", "Loser Match 101", "Loser Match 102", "Third-place match"],
+      ["103", "Loser Match 101", "Loser Match 102", "3rd place"],
       ["104", "Winner Match 101", "Winner Match 102", "Final"],
     ],
   },

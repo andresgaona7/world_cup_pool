@@ -1943,7 +1943,18 @@ window.OFFICIAL_RESULTS = {
           "awayExtraTimeScore": null,
           "referees": []
         }
-      ]
+      ],
+      "roundOf32BonusResults": {
+        "extraTimeMatches": 0,
+        "penaltyMatches": 0,
+        "mostGoalsTeam": "Brazil",
+        "totalGoals": 4,
+        "fastestGoalTeam": "",
+        "latestGoalTeam": "",
+        "biggestWinningMarginTeam": "",
+        "yellowCards": null,
+        "redCards": null
+      }
     }
   ],
   "overallStandings": [
@@ -2976,7 +2987,7 @@ window.OFFICIAL_RESULTS = {
   "knockoutSource": {
     "sourceName": "Football-Data.org matches",
     "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-    "generatedAt": "2026-06-29T19:40:31+00:00",
+    "generatedAt": "2026-06-29T20:04:28+00:00",
     "rawPath": "data/raw/official/football_data_wc_matches_2026.json",
     "normalizedPath": "data/manual/official_knockout_results.json"
   }

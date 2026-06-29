@@ -246,17 +246,6 @@ body {
   dominant-baseline: central;
 }
 
-.player-point .bonus-label {
-  fill: var(--gold);
-  font-size: 10px;
-  font-weight: 850;
-  paint-order: stroke;
-  stroke: #fff;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 3px;
-}
-
 .tooltip {
   position: absolute;
   z-index: 2;

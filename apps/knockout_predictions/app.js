@@ -65,7 +65,7 @@ const STAGES = [
   },
 ];
 
-const EXTRA_BASE_POINTS = [["Third-place match", 14]];
+const EXTRA_BASE_POINTS = [["3rd place", 14]];
 const bracket = document.querySelector("#bracket");
 const basePointsTable = document.querySelector("#basePointsTable");
 

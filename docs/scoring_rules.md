@@ -43,7 +43,7 @@ Base points by round:
 | Round of 16 | 6 |
 | Quarterfinal | 10 |
 | Semifinal | 16 |
-| Third-place match | 14 |
+| 3rd place | 14 |
 | Final | 20 |
 
 Score mode:
@@ -98,7 +98,7 @@ points and do not scale with the Round of 32 match value.
 
 Perfect knockout bonuses are calculated separately once each eligible knockout
 stage is complete: Round of 32, Round of 16, Quarterfinal, and Semifinal. The
-Third-place match and Final do not award perfect knockout winner or perfect
+3rd place and Final do not award perfect knockout winner or perfect
 knockout score bonuses.
 
 Perfect futures card bonus: 75 points.

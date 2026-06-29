@@ -74,7 +74,7 @@ const KNOCKOUT_STAGE_LABELS = {
   round_of_16: "Round of 16",
   quarterfinal: "Quarterfinals",
   semifinal: "Semifinals",
-  third_place_match: "Third-place match",
+  third_place_match: "3rd place",
   final: "Final",
 };
 const LEADERBOARD_KNOCKOUT_STAGES = Object.keys(KNOCKOUT_BASE_POINTS);
@@ -85,7 +85,7 @@ const STAGES = [
   ["round_of_16", "Round of 16"],
   ["quarterfinal", "Quarter final"],
   ["semifinal", "Semi final"],
-  ["third_place_match", "Third-place match"],
+  ["third_place_match", "3rd place"],
   ["runner_up", "Runner-up"],
   ["champion", "Champion"],
 ];

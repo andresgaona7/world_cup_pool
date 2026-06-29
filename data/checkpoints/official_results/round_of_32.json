@@ -496,5 +496,16 @@
       "awayExtraTimeScore": null,
       "referees": []
     }
-  ]
+  ],
+  "roundOf32BonusResults": {
+    "extraTimeMatches": 0,
+    "penaltyMatches": 0,
+    "mostGoalsTeam": "Brazil",
+    "totalGoals": 4,
+    "fastestGoalTeam": "",
+    "latestGoalTeam": "",
+    "biggestWinningMarginTeam": "",
+    "yellowCards": null,
+    "redCards": null
+  }
 }

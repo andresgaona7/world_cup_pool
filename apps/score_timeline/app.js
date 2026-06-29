@@ -46,12 +46,13 @@ const KNOCKOUT_PERFECT_SCORE_BONUS_POINTS = {
   quarterfinal: 15,
   semifinal: 10,
 };
+const ROUND_OF_32_BONUS_QUESTION_POINTS = 2;
 const KNOCKOUT_STAGE_LABELS = {
   round_of_32: "Round of 32",
   round_of_16: "Round of 16",
   quarterfinal: "Quarterfinals",
   semifinal: "Semifinals",
-  third_place_match: "Third-place match",
+  third_place_match: "3rd place",
   final: "Final",
 };
 const LEADERBOARD_KNOCKOUT_STAGES = Object.keys(KNOCKOUT_BASE_POINTS);
@@ -62,7 +63,7 @@ const STAGES = [
   ["round_of_16", "Round of 16"],
   ["quarterfinal", "Quarter final"],
   ["semifinal", "Semi final"],
-  ["third_place_match", "Third-place match"],
+  ["third_place_match", "3rd place"],
   ["runner_up", "Runner-up"],
   ["champion", "Champion"],
 ];
@@ -76,7 +77,7 @@ const PLANNED_TIMELINE_CHECKPOINTS = [
   { key: "round_of_16", label: "Round of 16", shortLabel: "R16", stage: "round_of_16" },
   { key: "quarterfinal", label: "Quarterfinal", shortLabel: "QF", stage: "quarterfinal" },
   { key: "semifinal", label: "Semifinal", shortLabel: "SF", stage: "semifinal" },
-  { key: "third_place_match", label: "Third-place match", shortLabel: "3rd", stage: "third_place_match" },
+  { key: "third_place_match", label: "3rd place", shortLabel: "3rd", stage: "third_place_match" },
   { key: "final", label: "Final", shortLabel: "Final", stage: "final" },
   { key: "futures", label: "Futures results", shortLabel: "Futures", stage: "futures", includeFutures: true },
   { key: "bonuses", label: "Bonuses", shortLabel: "Bonus", stage: "bonuses", includeFutures: true, includeBonuses: true },
@@ -115,6 +116,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 
 const players = rawData.players.map(normalizePlayer);
 const knockoutPredictionsByPlayer = normalizeKnockoutPredictions(knockoutData);
+const knockoutBonusAnswersByPlayer = normalizeKnockoutBonusAnswers(knockoutData);
 const checkpoints = buildTimelineCheckpoints(players, officialData);
 let selectedCheckpointIndex = latestAvailableCheckpointIndex(checkpoints);
 
@@ -268,6 +270,15 @@ function normalizeKnockoutPredictions(data) {
   return predictions;
 }
 
+function normalizeKnockoutBonusAnswers(sourceData) {
+  return new Map(
+    (sourceData?.players || []).map((player) => [
+      player.name || player.sheet || "",
+      player.bonusAnswers?.round_of_32 || player.roundOf32BonusAnswers || [],
+    ])
+  );
+}
+
 function buildTimelineCheckpoints(sourcePlayers, resultsData) {
   const startCheckpoint = {
     key: "start",
@@ -278,9 +289,10 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
     isAvailable: true,
     scenario: emptyScenario(sourcePlayers),
     officialMatches: [],
+    roundOf32BonusResults: {},
   };
   const declared = (resultsData?.timelineCheckpoints || [])
-    .map((checkpoint) => normalizeTimelineCheckpoint(sourcePlayers, checkpoint))
+    .map((checkpoint) => normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData))
     .filter(Boolean);
 
   if (declared.length) {
@@ -300,6 +312,7 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
       isAvailable: true,
       scenario: fallbackScenario,
       officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
+      roundOf32BonusResults: resultsData?.roundOf32BonusResults || {},
     }
     : null;
   if (fallbackCheckpoint) {
@@ -316,6 +329,7 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
       isAvailable: true,
       scenario: fallbackScenario,
       officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
+      roundOf32BonusResults: resultsData?.roundOf32BonusResults || {},
     });
     fallbackCheckpoints.push({
       key: "bonuses",
@@ -328,6 +342,7 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
       isAvailable: true,
       scenario: fallbackScenario,
       officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
+      roundOf32BonusResults: resultsData?.roundOf32BonusResults || {},
     });
   }
 
@@ -337,10 +352,14 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
   ];
 }
 
-function normalizeTimelineCheckpoint(sourcePlayers, checkpoint) {
+function normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData = {}) {
   const scenario = normalizeCheckpointScenario(sourcePlayers, checkpoint?.scenario || checkpoint);
   const officialMatches = normalizeKnockoutResults(checkpoint.officialMatches || checkpoint.matches || []);
   const stage = normalizeStage(checkpoint.stage || checkpoint.key || "group_stage");
+  const roundOf32BonusResults =
+    checkpoint.roundOf32BonusResults ||
+    (stage === "round_of_32" ? resultsData?.roundOf32BonusResults : {}) ||
+    {};
   const includeFutures = Boolean(checkpoint.includeFutures || checkpoint.key === "futures" || stage === "futures");
   const includeBonuses = Boolean(checkpoint.includeBonuses || checkpoint.key === "bonuses" || stage === "bonuses");
   const includesFutures = includeFutures || includeBonuses;
@@ -357,6 +376,7 @@ function normalizeTimelineCheckpoint(sourcePlayers, checkpoint) {
       : hasNonFuturesScenarioData(scenario) || officialMatches.length > 0,
     scenario,
     officialMatches,
+    roundOf32BonusResults,
   };
 }
 
@@ -701,18 +721,17 @@ function scoreAllPlayersForCheckpoint(sourcePlayers, checkpoint) {
     .map((player, playerIndex) => {
       const group = scoreGroups(player, checkpoint.scenario);
       const bestThirds = scoreBestThirds(player, checkpoint.scenario);
-      const knockout = scoreKnockout(player, checkpoint.officialMatches || []);
+      const knockout = scoreKnockout(player, checkpoint.officialMatches || [], checkpoint.roundOf32BonusResults || {});
       const knockoutStages = Object.fromEntries(
         LEADERBOARD_KNOCKOUT_STAGES.map((stage) => {
-          const stageScore = scoreKnockoutStage(player, stage, checkpoint.officialMatches || []);
-          return [stage, stageScore.points];
+          const stageScore = scoreKnockoutStage(player, stage, checkpoint.officialMatches || [], checkpoint.roundOf32BonusResults || {});
+          return [stage, stageScore.points + stageScore.bonus];
         })
       );
       const futuresScore = checkpoint.includeFutures ? scoreFutures(player, checkpoint.scenario) : { points: 0, bonus: 0 };
       const firstRound = group + bestThirds;
       const bonus = knockout.bonus + futuresScore.bonus;
-      const includedBonus = checkpoint.includeBonuses ? bonus : 0;
-      const total = firstRound + knockout.points + futuresScore.points + includedBonus;
+      const total = firstRound + knockout.points + knockout.bonus + futuresScore.points + futuresScore.bonus;
       return {
         playerIndex,
         name: player.name,
@@ -720,12 +739,12 @@ function scoreAllPlayersForCheckpoint(sourcePlayers, checkpoint) {
         group,
         bestThirds,
         firstRound,
-        knockout: knockout.points,
+        knockout: knockout.points + knockout.bonus,
         knockoutStages,
         futures: futuresScore.points,
         bonus,
-        includedBonus,
-        displayedTotal: firstRound + knockout.points,
+        includedBonus: bonus,
+        displayedTotal: firstRound + knockout.points + knockout.bonus,
         total,
       };
     })
@@ -770,10 +789,10 @@ function scoreBestThirds(player, scenario) {
   return player.bestThirds.filter((pick) => actual.has(pick.team)).length * BEST_THIRD_TEAM_POINTS;
 }
 
-function scoreKnockout(player, officialMatches) {
+function scoreKnockout(player, officialMatches, roundOf32BonusResults = {}) {
   const resultMatches = officialMatches.filter((match) => match.stage in KNOCKOUT_BASE_POINTS);
   const stageScores = Object.keys(KNOCKOUT_BASE_POINTS).map((stage) =>
-    scoreKnockoutStage(player, stage, resultMatches)
+    scoreKnockoutStage(player, stage, resultMatches, roundOf32BonusResults)
   );
   const points = stageScores.reduce((total, stageScore) => total + stageScore.points, 0);
   const bonus = stageScores.reduce((total, stageScore) => total + stageScore.bonus, 0);
@@ -781,7 +800,7 @@ function scoreKnockout(player, officialMatches) {
   return { points, bonus };
 }
 
-function scoreKnockoutStage(player, stage, officialMatches) {
+function scoreKnockoutStage(player, stage, officialMatches, roundOf32BonusResults = {}) {
   const predictions = knockoutPredictionsByPlayer.get(player.name) || [];
   const predictionIndex = knockoutPredictionIndex(predictions);
   const stageMatches = officialMatches.filter((match) => match.stage === stage);
@@ -818,10 +837,111 @@ function scoreKnockoutStage(player, stage, officialMatches) {
 
   const perfectWinnersBonus = perfectWinnersPossible ? KNOCKOUT_PERFECT_WINNER_BONUS_POINTS[stage] : 0;
   const perfectScoresBonus = perfectScoresPossible ? KNOCKOUT_PERFECT_SCORE_BONUS_POINTS[stage] : 0;
+  const bonusQuestionPoints = stage === "round_of_32" ? scoreRoundOf32BonusQuestions(player, roundOf32BonusResults) : 0;
   return {
     points,
-    bonus: perfectWinnersBonus + perfectScoresBonus,
+    bonus: perfectWinnersBonus + perfectScoresBonus + bonusQuestionPoints,
   };
+}
+
+function scoreRoundOf32BonusQuestions(player, roundOf32BonusResults = {}) {
+  const answers = knockoutBonusAnswersByPlayer.get(player?.name || "") || [];
+  return answers.reduce((total, item) => {
+    const earnedPoints = roundOf32BonusQuestionPoints(
+      item.answer,
+      officialRoundOf32BonusAnswer(item.question, roundOf32BonusResults)
+    );
+    return total + (earnedPoints || 0);
+  }, 0);
+}
+
+function roundOf32BonusQuestionPoints(playerAnswer, officialAnswer) {
+  if (officialAnswer === null || officialAnswer === "" || officialAnswer === undefined) {
+    return null;
+  }
+  return bonusAnswerMatches(playerAnswer, officialAnswer) ? ROUND_OF_32_BONUS_QUESTION_POINTS : 0;
+}
+
+function officialRoundOf32BonusAnswer(question, roundOf32BonusResults = {}) {
+  const key = canonicalBonusQuestion(question);
+  const values = {
+    extra_time_matches: roundOf32BonusResults.extraTimeMatches,
+    penalty_matches: roundOf32BonusResults.penaltyMatches,
+    most_goals_team: roundOf32BonusResults.mostGoalsTeam,
+    total_goals: roundOf32BonusResults.totalGoals,
+    fastest_goal_team: roundOf32BonusResults.fastestGoalTeam,
+    latest_goal_team: roundOf32BonusResults.latestGoalTeam,
+    biggest_winning_margin_team: roundOf32BonusResults.biggestWinningMarginTeam,
+    yellow_cards: roundOf32BonusResults.yellowCards,
+    red_cards: roundOf32BonusResults.redCards,
+  };
+  return values[key];
+}
+
+function canonicalBonusQuestion(question) {
+  const text = String(question || "").toLowerCase();
+  if (text.includes("extra time") && !text.includes("latest goal")) {
+    return "extra_time_matches";
+  }
+  if (text.includes("most goals")) {
+    return "most_goals_team";
+  }
+  if (text.includes("total goals")) {
+    return "total_goals";
+  }
+  if (text.includes("penalties")) {
+    return "penalty_matches";
+  }
+  if (text.includes("fastest goal")) {
+    return "fastest_goal_team";
+  }
+  if (text.includes("latest goal")) {
+    return "latest_goal_team";
+  }
+  if (text.includes("biggest winning margin")) {
+    return "biggest_winning_margin_team";
+  }
+  if (text.includes("yellow cards")) {
+    return "yellow_cards";
+  }
+  if (text.includes("red cards")) {
+    return "red_cards";
+  }
+  return "";
+}
+
+function bonusAnswerMatches(prediction, actual) {
+  const predictedText = String(prediction || "").trim();
+  if (!predictedText) {
+    return false;
+  }
+  if (typeof actual === "number") {
+    return numericBonusAnswerMatches(predictedText, actual);
+  }
+  return sameKnockoutTeam(predictedText, String(actual));
+}
+
+function numericBonusAnswerMatches(prediction, actual) {
+  const normalized = prediction.replace(/\s+/g, " ").trim();
+  const rangeMatch = normalized.match(/^(\d+)\s*-\s*(\d+)$/);
+  if (rangeMatch) {
+    const low = Number(rangeMatch[1]);
+    const high = Number(rangeMatch[2]);
+    return actual >= low && actual <= high;
+  }
+
+  const greaterThanMatch = normalized.match(/^>\s*(\d+)$/);
+  if (greaterThanMatch) {
+    return actual > Number(greaterThanMatch[1]);
+  }
+
+  const lessThanMatch = normalized.match(/^<\s*(\d+)$/);
+  if (lessThanMatch) {
+    return actual < Number(lessThanMatch[1]);
+  }
+
+  const exact = Number(normalized);
+  return Number.isFinite(exact) && actual === exact;
 }
 
 function scoreKnockoutMatch(prediction, result) {
@@ -1151,11 +1271,6 @@ function renderChart(series, sourceCheckpoints) {
         svgElement("circle", { cx: x, cy: y, r: isSelected ? 18 : 13, stroke: row.color }),
         svgText(row.emoji, x, y + 1, isSelected ? "selected-player-icon" : "", "middle")
       );
-      if (point.includedBonus > 0) {
-        group.append(
-          svgText(`+${formatPoints(point.includedBonus)} bonus`, x, y - (isSelected ? 24 : 19), "bonus-label", "middle")
-        );
-      }
       group.addEventListener("mouseenter", (event) => showTooltip(event, row, point, sourceCheckpoints[index]));
       group.addEventListener("mousemove", (event) => positionTooltip(event));
       group.addEventListener("mouseleave", hideTooltip);
@@ -1292,7 +1407,6 @@ function renderLeaderboard(rows, series) {
         <th>Group Stage</th>
         ${LEADERBOARD_KNOCKOUT_STAGES.map((stage) => `<th>${escapeHtml(knockoutStageLabel(stage))}</th>`).join("")}
         <th>Futures</th>
-        <th>Bonus</th>
       </tr>
     </thead>
     <tbody>
@@ -1304,7 +1418,6 @@ function renderLeaderboard(rows, series) {
           <td>${formatPoints(row.firstRound)}</td>
           ${LEADERBOARD_KNOCKOUT_STAGES.map((stage) => `<td>${formatPoints(row.knockoutStages[stage] || 0)}</td>`).join("")}
           <td>${formatPoints(row.futures)}</td>
-          <td>${formatPoints(row.bonus)}</td>
         </tr>
       `).join("")}
     </tbody>
