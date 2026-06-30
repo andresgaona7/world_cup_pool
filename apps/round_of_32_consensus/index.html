@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World Cup Pool Round of 32 Consensus</title>
+  <script src="../../theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="title-row">
+      <div>
+        <p class="eyebrow">World Cup 2026 Pool</p>
+        <h1>Round of 32 Consensus</h1>
+      </div>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false"><span data-theme-toggle-label>Dark mode</span></button>
+    </div>
+    <nav class="site-nav" aria-label="Visualization navigation">
+      <a href="../../index.html">Home</a>
+      <a href="../rules/index.html">Rules</a>
+      <a href="../player_predictions/index.html">Player Picks</a>
+      <a href="../knockout_bracket/index.html">Bracket</a>
+      <a href="../score_visualizer/index.html">Scores</a>
+      <a href="../score_timeline/index.html">Official results</a>
+      <a href="../blog/index.html">Blog</a>
+      <a class="active" href="../legacy/index.html" aria-current="page">Legacy</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="summary-grid" id="metrics" aria-label="Round of 32 consensus metrics"></section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Predicted winners</p>
+          <h2>Match Consensus</h2>
+        </div>
+      </div>
+      <div class="match-grid" id="matchGrid"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Overall picks</p>
+          <h2>Advancing Teams</h2>
+        </div>
+      </div>
+      <div class="chart-list" id="advancingTeams"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Bonus questions</p>
+          <h2>Round of 32 Bonus Consensus</h2>
+        </div>
+      </div>
+      <div class="bonus-grid" id="bonusQuestions"></div>
+    </section>
+  </main>
+
+  <script id="round-of-32-consensus-data" type="application/json">{"consensus": {"metadata": {"source_file": "data/generated/knockout_predictions.js", "generated_from": ["data/raw/round_of_32.xlsx"], "generated_at": "2026-06-30T00:28:13.595432+00:00", "player_count": 11, "match_count": 16}, "matches": [{"matchId": "73", "homeTeam": "Germany", "awayTeam": "Paraguay", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Germany", "votes": 11}], "scoreConsensus": [{"value": "2-0", "votes": 6}, {"value": "3-0", "votes": 2}, {"value": "3-1", "votes": 2}, {"value": "4-0", "votes": 1}], "penaltyConsensus": []}, {"matchId": "74", "homeTeam": "France", "awayTeam": "Sweden", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "France", "votes": 11}], "scoreConsensus": [{"value": "3-1", "votes": 4}, {"value": "4-1", "votes": 4}, {"value": "3-0", "votes": 2}, {"value": "2-0", "votes": 1}], "penaltyConsensus": []}, {"matchId": "75", "homeTeam": "South Africa", "awayTeam": "Canada", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Canada", "votes": 9}, {"value": "Blank", "votes": 2}], "scoreConsensus": [{"value": "1-2", "votes": 4}, {"value": "0-2", "votes": 3}, {"value": "1-1", "votes": 2}, {"value": "Blank", "votes": 2}], "penaltyConsensus": [{"value": "3-5", "votes": 1}, {"value": "4-5", "votes": 1}]}, {"matchId": "76", "homeTeam": "Netherlands", "awayTeam": "Morocco", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Netherlands", "votes": 9}, {"value": "Morocco", "votes": 2}], "scoreConsensus": [{"value": "2-1", "votes": 5}, {"value": "2-2", "votes": 3}, {"value": "1-1", "votes": 2}, {"value": "1-0", "votes": 1}], "penaltyConsensus": [{"value": "5-3", "votes": 2}, {"value": "3-4", "votes": 1}, {"value": "4-2", "votes": 1}, {"value": "4-5", "votes": 1}, {"value": "4-3", "votes": 1}]}, {"matchId": "77", "homeTeam": "Portugal", "awayTeam": "Croatia", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Portugal", "votes": 9}, {"value": "Croatia", "votes": 1}, {"value": "Blank", "votes": 1}], "scoreConsensus": [{"value": "2-1", "votes": 5}, {"value": "1-1", "votes": 4}, {"value": "1-0", "votes": 1}, {"value": "3-1", "votes": 1}], "penaltyConsensus": [{"value": "5-4", "votes": 2}, {"value": "3-4", "votes": 1}]}, {"matchId": "78", "homeTeam": "Spain", "awayTeam": "Austria", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Spain", "votes": 11}], "scoreConsensus": [{"value": "2-0", "votes": 8}, {"value": "2-1", "votes": 2}, {"value": "3-1", "votes": 1}], "penaltyConsensus": []}, {"matchId": "79", "homeTeam": "United States", "awayTeam": "Bosnia-Herzegovina", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "United States", "votes": 11}], "scoreConsensus": [{"value": "3-0", "votes": 4}, {"value": "3-1", "votes": 3}, {"value": "2-0", "votes": 2}, {"value": "2-1", "votes": 1}, {"value": "4-0", "votes": 1}], "penaltyConsensus": []}, {"matchId": "80", "homeTeam": "Belgium", "awayTeam": "Senegal", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Belgium", "votes": 8}, {"value": "Senegal", "votes": 3}], "scoreConsensus": [{"value": "2-1", "votes": 4}, {"value": "1-1", "votes": 2}, {"value": "2-2", "votes": 2}, {"value": "0-0", "votes": 1}, {"value": "2-0", "votes": 1}, {"value": "1-2", "votes": 1}], "penaltyConsensus": [{"value": "4-3", "votes": 2}, {"value": "2-4", "votes": 2}, {"value": "3-1", "votes": 1}]}, {"matchId": "81", "homeTeam": "Brazil", "awayTeam": "Japan", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Brazil", "votes": 7}, {"value": "Japan", "votes": 4}], "scoreConsensus": [{"value": "2-1", "votes": 3}, {"value": "2-0", "votes": 2}, {"value": "1-1", "votes": 2}, {"value": "2-2", "votes": 1}, {"value": "1-0", "votes": 1}, {"value": "2-3", "votes": 1}, {"value": "1-2", "votes": 1}], "penaltyConsensus": [{"value": "4-5", "votes": 2}, {"value": "5-3", "votes": 1}]}, {"matchId": "82", "homeTeam": "Ivory Coast", "awayTeam": "Norway", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Norway", "votes": 11}], "scoreConsensus": [{"value": "1-3", "votes": 3}, {"value": "1-2", "votes": 2}, {"value": "2-2", "votes": 2}, {"value": "2-3", "votes": 2}, {"value": "0-1", "votes": 1}, {"value": "1-1", "votes": 1}], "penaltyConsensus": [{"value": "4-5", "votes": 2}, {"value": "5-6", "votes": 1}]}, {"matchId": "83", "homeTeam": "Mexico", "awayTeam": "Ecuador", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Ecuador", "votes": 7}, {"value": "Mexico", "votes": 4}], "scoreConsensus": [{"value": "1-1", "votes": 3}, {"value": "1-0", "votes": 3}, {"value": "1-2", "votes": 2}, {"value": "2-0", "votes": 1}, {"value": "0-2", "votes": 1}, {"value": "1-3", "votes": 1}], "penaltyConsensus": [{"value": "4-5", "votes": 1}, {"value": "3-4", "votes": 1}, {"value": "2-4", "votes": 1}]}, {"matchId": "84", "homeTeam": "England", "awayTeam": "DR Congo", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "England", "votes": 11}], "scoreConsensus": [{"value": "2-0", "votes": 4}, {"value": "3-1", "votes": 3}, {"value": "3-0", "votes": 3}, {"value": "2-1", "votes": 1}], "penaltyConsensus": []}, {"matchId": "85", "homeTeam": "Argentina", "awayTeam": "Cape Verde", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Argentina", "votes": 11}], "scoreConsensus": [{"value": "3-0", "votes": 5}, {"value": "4-0", "votes": 2}, {"value": "2-0", "votes": 2}, {"value": "2-1", "votes": 1}, {"value": "5-0", "votes": 1}], "penaltyConsensus": []}, {"matchId": "86", "homeTeam": "Australia", "awayTeam": "Egypt", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Egypt", "votes": 6}, {"value": "Australia", "votes": 5}], "scoreConsensus": [{"value": "1-1", "votes": 4}, {"value": "2-1", "votes": 2}, {"value": "0-1", "votes": 1}, {"value": "0-0", "votes": 1}, {"value": "1-2", "votes": 1}, {"value": "2-2", "votes": 1}, {"value": "1-0", "votes": 1}], "penaltyConsensus": [{"value": "3-4", "votes": 1}, {"value": "5-4", "votes": 1}, {"value": "4-3", "votes": 1}, {"value": "4-5", "votes": 1}, {"value": "3-5", "votes": 1}, {"value": "2-4", "votes": 1}]}, {"matchId": "87", "homeTeam": "Switzerland", "awayTeam": "Algeria", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Switzerland", "votes": 9}, {"value": "Algeria", "votes": 2}], "scoreConsensus": [{"value": "2-0", "votes": 4}, {"value": "2-1", "votes": 3}, {"value": "1-0", "votes": 1}, {"value": "0-1", "votes": 1}, {"value": "3-0", "votes": 1}, {"value": "1-2", "votes": 1}], "penaltyConsensus": []}, {"matchId": "88", "homeTeam": "Colombia", "awayTeam": "Ghana", "picks": 11, "missingPicks": 0, "advancingTeamConsensus": [{"value": "Colombia", "votes": 10}, {"value": "Ghana", "votes": 1}], "scoreConsensus": [{"value": "2-1", "votes": 4}, {"value": "2-0", "votes": 2}, {"value": "3-1", "votes": 2}, {"value": "0-2", "votes": 1}, {"value": "3-0", "votes": 1}, {"value": "1-0", "votes": 1}], "penaltyConsensus": []}], "advancing_teams": [{"value": "Germany", "votes": 11}, {"value": "France", "votes": 11}, {"value": "Spain", "votes": 11}, {"value": "United States", "votes": 11}, {"value": "Norway", "votes": 11}, {"value": "England", "votes": 11}, {"value": "Argentina", "votes": 11}, {"value": "Colombia", "votes": 10}, {"value": "Canada", "votes": 9}, {"value": "Netherlands", "votes": 9}, {"value": "Portugal", "votes": 9}, {"value": "Switzerland", "votes": 9}, {"value": "Belgium", "votes": 8}, {"value": "Ecuador", "votes": 7}, {"value": "Brazil", "votes": 7}, {"value": "Egypt", "votes": 6}, {"value": "Australia", "votes": 5}, {"value": "Japan", "votes": 4}, {"value": "Mexico", "votes": 4}, {"value": "Senegal", "votes": 3}, {"value": "Morocco", "votes": 2}, {"value": "Algeria", "votes": 2}, {"value": "Ghana", "votes": 1}, {"value": "Croatia", "votes": 1}], "bonus_questions": [{"question": "How many matches will go to extra time?", "answers": [{"value": "5 - 8", "votes": 6}, {"value": "0 - 4", "votes": 5}]}, {"question": "How many matches will be decided by penalties?", "answers": [{"value": "0 - 4", "votes": 10}, {"value": "5 - 8", "votes": 1}]}, {"question": "Which team will score the most goals?", "answers": [{"value": "France", "votes": 6}, {"value": "Argentina", "votes": 5}]}, {"question": "Total goals scored in the R-32 (no penalties)", "answers": [{"value": "41 - 50", "votes": 5}, {"value": "31 - 40", "votes": 4}, {"value": "21 - 30", "votes": 2}]}, {"question": "Which team will score the fastest goal?", "answers": [{"value": "Argentina", "votes": 5}, {"value": "United States", "votes": 3}, {"value": "Germany", "votes": 1}, {"value": "Netherlands", "votes": 1}, {"value": "France", "votes": 1}]}, {"question": "Which team will score the latest goal?", "answers": [{"value": "Ecuador", "votes": 2}, {"value": "Portugal", "votes": 2}, {"value": "Egypt", "votes": 2}, {"value": "Senegal", "votes": 1}, {"value": "Australia", "votes": 1}, {"value": "Japan", "votes": 1}, {"value": "France", "votes": 1}, {"value": "Norway", "votes": 1}]}, {"question": "Team with the biggest winning margin?", "answers": [{"value": "Argentina", "votes": 6}, {"value": "France", "votes": 4}, {"value": "Germany", "votes": 1}]}, {"question": "How many yellow cards will be shown?", "answers": [{"value": "> 40", "votes": 5}, {"value": "11 - 15", "votes": 2}, {"value": "6 - 10", "votes": 1}, {"value": "36 - 40", "votes": 1}, {"value": "26 - 30", "votes": 1}, {"value": "21 - 25", "votes": 1}]}, {"question": "How many red cards will be shown?", "answers": [{"value": "0 - 2", "votes": 7}, {"value": "3 - 5", "votes": 4}]}]}}</script>
+  <script src="app.js"></script>
+</body>
+
+</html>

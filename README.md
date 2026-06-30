@@ -16,11 +16,11 @@ scripts/                    Data builders and official-results updater.
 index.html                  Public dashboard for GitHub Pages.
 apps/player_predictions/    Static reader for submitted workbook picks.
 apps/knockout_bracket/      Static Wikipedia-style knockout bracket board.
-apps/knockout_predictions/  Static knockout bracket prediction template.
 apps/score_visualizer/      Static leaderboard and scenario scorer.
 apps/score_timeline/        Static score-over-time graph.
 apps/consensus_predictions/ Standalone generated consensus visualization.
 apps/blog/                  Manual comment entries.
+archived_apps/              Older standalone app surfaces not published by default.
 public/                     Ignored GitHub Pages artifact from `make build-site`.
 docs/                       Scoring rules and data-flow notes.
 ```
@@ -180,11 +180,13 @@ links to the static apps below, and each app can also be opened directly:
 
 - `apps/player_predictions/index.html`
 - `apps/knockout_bracket/index.html`
-- `apps/knockout_predictions/index.html`
 - `apps/score_visualizer/index.html`
 - `apps/score_timeline/index.html`
 - `apps/consensus_predictions/index.html`
 - `apps/blog/index.html`
+
+Older standalone knockout reference pages live in `archived_apps/` so they do
+not appear as active app routes or get copied into `public/` by default.
 
 No package install, dev server, or build step is required as long as generated
 files in `data/generated/` are present.

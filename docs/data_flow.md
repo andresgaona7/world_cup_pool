@@ -52,16 +52,16 @@ data/generated/pool_data.js
   -> apps/consensus_predictions/index.html
 ```
 
-The knockout prediction screen is a static bracket template based on the
+The active knockout bracket screen is a static bracket template based on the
 published 2026 knockout-stage match order:
 
 ```text
-apps/knockout_predictions/index.html
-  -> apps/knockout_predictions/app.js
-
 apps/knockout_bracket/index.html
   -> apps/knockout_bracket/app.js
 ```
+
+Older standalone knockout prediction and standings pages are archived under
+`archived_apps/` and are not copied into the GitHub Pages artifact by default.
 
 Official group-stage results are fetched separately:
 
