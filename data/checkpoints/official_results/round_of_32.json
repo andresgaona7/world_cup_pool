@@ -143,23 +143,23 @@
       "matchId": "74",
       "sourceMatchId": 537415,
       "stage": "round_of_32",
-      "status": "TIMED",
+      "status": "FINISHED",
       "utcDate": "2026-06-29T20:30:00Z",
-      "sourceUpdatedAt": "2026-06-29T05:20:12Z",
+      "sourceUpdatedAt": "2026-06-30T00:27:13Z",
       "homeTeam": "Germany",
       "awayTeam": "Paraguay",
-      "homeScore": null,
-      "awayScore": null,
-      "advancingTeam": "",
-      "duration": "REGULAR",
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeFullTimeScore": null,
-      "awayFullTimeScore": null,
-      "homeRegularTimeScore": null,
-      "awayRegularTimeScore": null,
-      "homeExtraTimeScore": null,
-      "awayExtraTimeScore": null,
+      "homeScore": 1,
+      "awayScore": 1,
+      "advancingTeam": "Paraguay",
+      "duration": "PENALTY_SHOOTOUT",
+      "homePenaltyScore": 3,
+      "awayPenaltyScore": 4,
+      "homeFullTimeScore": 4,
+      "awayFullTimeScore": 5,
+      "homeRegularTimeScore": 1,
+      "awayRegularTimeScore": 1,
+      "homeExtraTimeScore": 0,
+      "awayExtraTimeScore": 0,
       "referees": [
         {
           "name": "Jalal Jayed",
@@ -189,7 +189,13 @@
       "awayRegularTimeScore": null,
       "homeExtraTimeScore": null,
       "awayExtraTimeScore": null,
-      "referees": []
+      "referees": [
+        {
+          "name": "Wilton Sampaio",
+          "type": "REFEREE",
+          "nationality": "Brazil"
+        }
+      ]
     },
     {
       "matchId": "76",
@@ -498,10 +504,10 @@
     }
   ],
   "roundOf32BonusResults": {
-    "extraTimeMatches": 0,
-    "penaltyMatches": 0,
+    "extraTimeMatches": 1,
+    "penaltyMatches": 1,
     "mostGoalsTeam": "Brazil",
-    "totalGoals": 4,
+    "totalGoals": 6,
     "fastestGoalTeam": "",
     "latestGoalTeam": "",
     "biggestWinningMarginTeam": "",

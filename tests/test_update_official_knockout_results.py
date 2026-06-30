@@ -77,6 +77,35 @@ class UpdateOfficialKnockoutResultsTests(unittest.TestCase):
         self.assertEqual(matches[3]["homePenaltyScore"], 5)
         self.assertEqual(matches[3]["awayPenaltyScore"], 4)
 
+    def test_derives_shootout_winner_from_full_time_when_upstream_winner_is_missing(self):
+        raw_data = {
+            "matches": [
+                self.match(
+                    source_id=537415,
+                    stage="LAST_32",
+                    home="Germany",
+                    away="Paraguay",
+                    winner=None,
+                    full_time=(4, 5),
+                    regular_time=(1, 1),
+                    extra_time=(0, 0),
+                    penalties=(4, 4),
+                    duration="PENALTY_SHOOTOUT",
+                    utc_date="2026-06-29T20:30:00Z",
+                )
+            ]
+        }
+
+        normalized = update_official_knockout_results.build_normalized_data(raw_data)
+        match = normalized["matches"][0]
+
+        self.assertEqual(match["matchId"], "74")
+        self.assertEqual(match["homeScore"], 1)
+        self.assertEqual(match["awayScore"], 1)
+        self.assertEqual(match["homePenaltyScore"], 3)
+        self.assertEqual(match["awayPenaltyScore"], 4)
+        self.assertEqual(match["advancingTeam"], "Paraguay")
+
     def test_computes_reviewable_round_of_32_bonus_values_when_possible(self):
         raw_data = {
             "matches": [

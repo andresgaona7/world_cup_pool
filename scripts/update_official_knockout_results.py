@@ -307,7 +307,7 @@ def normalize_match(match: dict[str, Any], stage: str, pool_match_id: str) -> di
     regular_time = score_value(score, "regularTime")
     full_time = score_value(score, "fullTime")
     extra_time = score_value(score, "extraTime")
-    penalties = score_value(score, "penalties")
+    penalties = penalty_score(score, regular_time, extra_time, full_time)
     scoring_score = regular_time or full_time
 
     if not pool_match_id or not home_team or not away_team:
@@ -326,7 +326,7 @@ def normalize_match(match: dict[str, Any], stage: str, pool_match_id: str) -> di
         "awayTeam": away_team,
         "homeScore": home_score,
         "awayScore": away_score,
-        "advancingTeam": advancing_team(match, score, home_team, away_team),
+        "advancingTeam": advancing_team(match, score, home_team, away_team, penalties),
         "duration": string_value(score.get("duration")),
         "homePenaltyScore": penalties.get("home") if penalties else None,
         "awayPenaltyScore": penalties.get("away") if penalties else None,
@@ -358,11 +358,49 @@ def score_value(score: dict[str, Any], key: str) -> dict[str, int | None]:
     }
 
 
+def penalty_score(
+    score: dict[str, Any],
+    regular_time: dict[str, int | None],
+    extra_time: dict[str, int | None],
+    full_time: dict[str, int | None],
+) -> dict[str, int | None]:
+    penalties = score_value(score, "penalties")
+    if (
+        penalties
+        and penalties.get("home") is not None
+        and penalties.get("away") is not None
+        and penalties.get("home") != penalties.get("away")
+    ):
+        return penalties
+
+    duration = string_value(score.get("duration")).upper()
+    if duration not in {"PENALTY_SHOOTOUT", "PENALTIES"}:
+        return penalties
+
+    if not full_time or full_time.get("home") is None or full_time.get("away") is None:
+        return penalties
+
+    base_home = optional_int(regular_time.get("home") if regular_time else None) or 0
+    base_away = optional_int(regular_time.get("away") if regular_time else None) or 0
+    extra_home = optional_int(extra_time.get("home") if extra_time else None) or 0
+    extra_away = optional_int(extra_time.get("away") if extra_time else None) or 0
+    derived = {
+        "home": optional_int(full_time.get("home")) - base_home - extra_home,
+        "away": optional_int(full_time.get("away")) - base_away - extra_away,
+    }
+    if derived["home"] is not None and derived["away"] is not None and (
+        derived["home"] > 0 or derived["away"] > 0
+    ):
+        return derived
+    return penalties
+
+
 def advancing_team(
     match: dict[str, Any],
     score: dict[str, Any],
     home_team: str,
     away_team: str,
+    penalties: dict[str, int | None],
 ) -> str:
     winner = str(score.get("winner") or "").upper()
     if winner == "HOME_TEAM":
@@ -374,6 +412,11 @@ def advancing_team(
     winner_team = match.get("winner")
     if isinstance(winner_team, dict):
         return normalize_team(winner_team)
+    if penalties.get("home") is not None and penalties.get("away") is not None:
+        if penalties["home"] > penalties["away"]:
+            return home_team
+        if penalties["away"] > penalties["home"]:
+            return away_team
     return ""
 
 

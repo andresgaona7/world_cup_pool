@@ -80,11 +80,18 @@ group-stage scoring fields are preserved. The match endpoint supplies teams,
 score, stage, status, duration, winner, penalty details when present, and
 referee metadata. Cards and fastest/latest goal teams are not present in that
 endpoint and must be reviewed manually unless another event source is added.
+If Football-Data reports a penalty shootout with a missing winner or tied
+`score.penalties` value, the updater derives the shootout score from
+`fullTime - regularTime - extraTime` and uses that derived penalty result to
+set the advancing team.
 
 Use the knockout updater after official knockout match records change, then run
 `make apply-manual-futures` if `data/manual/official_futures.json` has changed.
-Run `make build-site` afterward when the ignored `public/` copy needs to match
-the committed files under `data/generated/`.
+If the update should become part of the score timeline, create or rebuild the
+matching checkpoint afterward, for example
+`CHECKPOINT=round_of_32 make create-official-checkpoint`. Run
+`make build-site` afterward when the ignored `public/` copy needs to match the
+committed files under `data/generated/`.
 
 ## Data Flow
 
@@ -226,7 +233,7 @@ make build-consensus-predictions
 make update-official-results
 make update-official-knockout-results
 make apply-manual-futures
-CHECKPOINT=group_md1 make create-official-checkpoint
+CHECKPOINT=round_of_32 make create-official-checkpoint
 make test
 make build-site
 git add data/generated data/manual/official_futures.json index.html styles.css apps docs scripts .github/workflows/pages.yml Makefile .gitignore README.md

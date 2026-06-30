@@ -37,23 +37,23 @@ window.OFFICIAL_RESULTS = {
       "matchId": "74",
       "sourceMatchId": 537415,
       "stage": "round_of_32",
-      "status": "TIMED",
+      "status": "FINISHED",
       "utcDate": "2026-06-29T20:30:00Z",
-      "sourceUpdatedAt": "2026-06-29T05:20:12Z",
+      "sourceUpdatedAt": "2026-06-30T00:27:13Z",
       "homeTeam": "Germany",
       "awayTeam": "Paraguay",
-      "homeScore": null,
-      "awayScore": null,
-      "advancingTeam": "",
-      "duration": "REGULAR",
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeFullTimeScore": null,
-      "awayFullTimeScore": null,
-      "homeRegularTimeScore": null,
-      "awayRegularTimeScore": null,
-      "homeExtraTimeScore": null,
-      "awayExtraTimeScore": null,
+      "homeScore": 1,
+      "awayScore": 1,
+      "advancingTeam": "Paraguay",
+      "duration": "PENALTY_SHOOTOUT",
+      "homePenaltyScore": 3,
+      "awayPenaltyScore": 4,
+      "homeFullTimeScore": 4,
+      "awayFullTimeScore": 5,
+      "homeRegularTimeScore": 1,
+      "awayRegularTimeScore": 1,
+      "homeExtraTimeScore": 0,
+      "awayExtraTimeScore": 0,
       "referees": [
         {
           "name": "Jalal Jayed",
@@ -83,7 +83,13 @@ window.OFFICIAL_RESULTS = {
       "awayRegularTimeScore": null,
       "homeExtraTimeScore": null,
       "awayExtraTimeScore": null,
-      "referees": []
+      "referees": [
+        {
+          "name": "Wilton Sampaio",
+          "type": "REFEREE",
+          "nationality": "Brazil"
+        }
+      ]
     },
     {
       "matchId": "76",
@@ -1590,23 +1596,23 @@ window.OFFICIAL_RESULTS = {
           "matchId": "74",
           "sourceMatchId": 537415,
           "stage": "round_of_32",
-          "status": "TIMED",
+          "status": "FINISHED",
           "utcDate": "2026-06-29T20:30:00Z",
-          "sourceUpdatedAt": "2026-06-29T05:20:12Z",
+          "sourceUpdatedAt": "2026-06-30T00:27:13Z",
           "homeTeam": "Germany",
           "awayTeam": "Paraguay",
-          "homeScore": null,
-          "awayScore": null,
-          "advancingTeam": "",
-          "duration": "REGULAR",
-          "homePenaltyScore": null,
-          "awayPenaltyScore": null,
-          "homeFullTimeScore": null,
-          "awayFullTimeScore": null,
-          "homeRegularTimeScore": null,
-          "awayRegularTimeScore": null,
-          "homeExtraTimeScore": null,
-          "awayExtraTimeScore": null,
+          "homeScore": 1,
+          "awayScore": 1,
+          "advancingTeam": "Paraguay",
+          "duration": "PENALTY_SHOOTOUT",
+          "homePenaltyScore": 3,
+          "awayPenaltyScore": 4,
+          "homeFullTimeScore": 4,
+          "awayFullTimeScore": 5,
+          "homeRegularTimeScore": 1,
+          "awayRegularTimeScore": 1,
+          "homeExtraTimeScore": 0,
+          "awayExtraTimeScore": 0,
           "referees": [
             {
               "name": "Jalal Jayed",
@@ -1636,7 +1642,13 @@ window.OFFICIAL_RESULTS = {
           "awayRegularTimeScore": null,
           "homeExtraTimeScore": null,
           "awayExtraTimeScore": null,
-          "referees": []
+          "referees": [
+            {
+              "name": "Wilton Sampaio",
+              "type": "REFEREE",
+              "nationality": "Brazil"
+            }
+          ]
         },
         {
           "matchId": "76",
@@ -1945,10 +1957,10 @@ window.OFFICIAL_RESULTS = {
         }
       ],
       "roundOf32BonusResults": {
-        "extraTimeMatches": 0,
-        "penaltyMatches": 0,
+        "extraTimeMatches": 1,
+        "penaltyMatches": 1,
         "mostGoalsTeam": "Brazil",
-        "totalGoals": 4,
+        "totalGoals": 6,
         "fastestGoalTeam": "",
         "latestGoalTeam": "",
         "biggestWinningMarginTeam": "",
@@ -2619,23 +2631,23 @@ window.OFFICIAL_RESULTS = {
       "matchId": "74",
       "sourceMatchId": 537415,
       "stage": "round_of_32",
-      "status": "TIMED",
+      "status": "FINISHED",
       "utcDate": "2026-06-29T20:30:00Z",
-      "sourceUpdatedAt": "2026-06-29T05:20:12Z",
+      "sourceUpdatedAt": "2026-06-30T00:27:13Z",
       "homeTeam": "Germany",
       "awayTeam": "Paraguay",
-      "homeScore": null,
-      "awayScore": null,
-      "advancingTeam": "",
-      "duration": "REGULAR",
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeFullTimeScore": null,
-      "awayFullTimeScore": null,
-      "homeRegularTimeScore": null,
-      "awayRegularTimeScore": null,
-      "homeExtraTimeScore": null,
-      "awayExtraTimeScore": null,
+      "homeScore": 1,
+      "awayScore": 1,
+      "advancingTeam": "Paraguay",
+      "duration": "PENALTY_SHOOTOUT",
+      "homePenaltyScore": 3,
+      "awayPenaltyScore": 4,
+      "homeFullTimeScore": 4,
+      "awayFullTimeScore": 5,
+      "homeRegularTimeScore": 1,
+      "awayRegularTimeScore": 1,
+      "homeExtraTimeScore": 0,
+      "awayExtraTimeScore": 0,
       "referees": [
         {
           "name": "Jalal Jayed",
@@ -2665,7 +2677,13 @@ window.OFFICIAL_RESULTS = {
       "awayRegularTimeScore": null,
       "homeExtraTimeScore": null,
       "awayExtraTimeScore": null,
-      "referees": []
+      "referees": [
+        {
+          "name": "Wilton Sampaio",
+          "type": "REFEREE",
+          "nationality": "Brazil"
+        }
+      ]
     },
     {
       "matchId": "76",
@@ -2974,10 +2992,10 @@ window.OFFICIAL_RESULTS = {
     }
   ],
   "roundOf32BonusResults": {
-    "extraTimeMatches": 0,
-    "penaltyMatches": 0,
+    "extraTimeMatches": 1,
+    "penaltyMatches": 1,
     "mostGoalsTeam": "Brazil",
-    "totalGoals": 4,
+    "totalGoals": 6,
     "fastestGoalTeam": "",
     "latestGoalTeam": "",
     "biggestWinningMarginTeam": "",
@@ -2987,7 +3005,7 @@ window.OFFICIAL_RESULTS = {
   "knockoutSource": {
     "sourceName": "Football-Data.org matches",
     "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-    "generatedAt": "2026-06-29T20:04:28+00:00",
+    "generatedAt": "2026-06-30T00:56:23+00:00",
     "rawPath": "data/raw/official/football_data_wc_matches_2026.json",
     "normalizedPath": "data/manual/official_knockout_results.json"
   }
