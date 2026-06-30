@@ -27,6 +27,7 @@ DEFAULT_RAW_OUTPUT_PATH = (
     ROOT / "data" / "raw" / "official" / "football_data_wc_matches_2026.json"
 )
 DEFAULT_NORMALIZED_OUTPUT_PATH = ROOT / "data" / "manual" / "official_knockout_results.json"
+DEFAULT_OVERRIDES_PATH = ROOT / "data" / "manual" / "official_knockout_overrides.json"
 DEFAULT_OFFICIAL_RESULTS_PATH = ROOT / "data" / "generated" / "official_results.js"
 OFFICIAL_RESULTS_RE = re.compile(
     r"^\s*window\.OFFICIAL_RESULTS\s*=\s*(?P<payload>\{.*\})\s*;\s*$",
@@ -102,6 +103,7 @@ def main() -> None:
         input_path=args.input,
         raw_output_path=args.raw_output,
         normalized_output_path=args.normalized_output,
+        overrides_path=args.overrides,
         official_results_path=args.official_results,
         api_key=args.api_key or environ.get(API_KEY_ENV) or DEFAULT_API_KEY,
         merge_official_results=not args.no_merge,
@@ -146,6 +148,15 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--overrides",
+        type=Path,
+        default=DEFAULT_OVERRIDES_PATH,
+        help=(
+            "Manual knockout result corrections for upstream API gaps. "
+            f"Defaults to {DEFAULT_OVERRIDES_PATH.relative_to(ROOT)} if present."
+        ),
+    )
+    parser.add_argument(
         "--official-results",
         type=Path,
         default=DEFAULT_OFFICIAL_RESULTS_PATH,
@@ -167,6 +178,7 @@ def update_official_knockout_results(
     input_path: Path | None,
     raw_output_path: Path,
     normalized_output_path: Path,
+    overrides_path: Path | None,
     official_results_path: Path,
     api_key: str,
     merge_official_results: bool = True,
@@ -175,6 +187,7 @@ def update_official_knockout_results(
     write_json(raw_output_path, raw_data)
 
     normalized = build_normalized_data(raw_data)
+    apply_manual_overrides(normalized, read_manual_overrides(overrides_path))
     write_json(normalized_output_path, normalized)
 
     if merge_official_results:
@@ -192,6 +205,67 @@ def update_official_knockout_results(
         write_official_results(official_results_path, official_results)
 
     return normalized
+
+
+def read_manual_overrides(path: Path | None) -> dict[str, Any]:
+    if path is None or not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError(f"{path} must contain a JSON object")
+    return data
+
+
+def apply_manual_overrides(
+    normalized: dict[str, Any],
+    overrides: dict[str, Any],
+) -> None:
+    matches_by_id = {
+        str(match.get("matchId")): match
+        for match in normalized.get("matches", [])
+        if isinstance(match, dict) and match.get("matchId") is not None
+    }
+    overrides_by_id = overrides.get("matches", {})
+    if not isinstance(overrides_by_id, dict):
+        return
+
+    applied: list[str] = []
+    for match_id, override in overrides_by_id.items():
+        match = matches_by_id.get(str(match_id))
+        if not match or not isinstance(override, dict):
+            continue
+        apply_match_override(match, override)
+        applied.append(str(match_id))
+
+    if applied:
+        normalized["roundOf32BonusResults"] = compute_round_of_32_bonus_results(
+            normalized.get("matches", [])
+        )
+        normalized.setdefault("notes", []).append(
+            f"Applied manual knockout override(s) for match ID(s): {', '.join(sorted(applied))}."
+        )
+
+
+def apply_match_override(match: dict[str, Any], override: dict[str, Any]) -> None:
+    int_fields = (
+        "homeScore",
+        "awayScore",
+        "homePenaltyScore",
+        "awayPenaltyScore",
+        "homeFullTimeScore",
+        "awayFullTimeScore",
+        "homeRegularTimeScore",
+        "awayRegularTimeScore",
+        "homeExtraTimeScore",
+        "awayExtraTimeScore",
+    )
+    string_fields = ("advancingTeam", "duration", "status")
+    for field in int_fields:
+        if field in override:
+            match[field] = optional_int(override.get(field))
+    for field in string_fields:
+        if field in override:
+            match[field] = string_value(override.get(field))
 
 
 def read_source(input_path: Path | None, api_key: str) -> dict[str, Any]:

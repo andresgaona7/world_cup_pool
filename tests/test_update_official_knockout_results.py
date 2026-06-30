@@ -106,6 +106,47 @@ class UpdateOfficialKnockoutResultsTests(unittest.TestCase):
         self.assertEqual(match["awayPenaltyScore"], 4)
         self.assertEqual(match["advancingTeam"], "Paraguay")
 
+    def test_applies_manual_override_when_upstream_shootout_data_is_tied(self):
+        raw_data = {
+            "matches": [
+                self.match(
+                    source_id=537418,
+                    stage="LAST_32",
+                    home="Netherlands",
+                    away="Morocco",
+                    winner=None,
+                    full_time=(4, 4),
+                    regular_time=(1, 1),
+                    extra_time=(0, 0),
+                    penalties=(3, 3),
+                    duration="PENALTY_SHOOTOUT",
+                    utc_date="2026-06-30T01:00:00Z",
+                )
+            ]
+        }
+        normalized = update_official_knockout_results.build_normalized_data(raw_data)
+
+        update_official_knockout_results.apply_manual_overrides(
+            normalized,
+            {
+                "matches": {
+                    "75": {
+                        "advancingTeam": "Morocco",
+                        "homePenaltyScore": 2,
+                        "awayPenaltyScore": 3,
+                    }
+                }
+            },
+        )
+        match = normalized["matches"][0]
+
+        self.assertEqual(match["matchId"], "75")
+        self.assertEqual(match["homeScore"], 1)
+        self.assertEqual(match["awayScore"], 1)
+        self.assertEqual(match["homePenaltyScore"], 2)
+        self.assertEqual(match["awayPenaltyScore"], 3)
+        self.assertEqual(match["advancingTeam"], "Morocco")
+
     def test_computes_reviewable_round_of_32_bonus_values_when_possible(self):
         raw_data = {
             "matches": [
@@ -184,6 +225,7 @@ class UpdateOfficialKnockoutResultsTests(unittest.TestCase):
                 input_path=input_path,
                 raw_output_path=raw_output_path,
                 normalized_output_path=normalized_output_path,
+                overrides_path=None,
                 official_results_path=official_results_path,
                 api_key="unused",
             )

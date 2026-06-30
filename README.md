@@ -85,6 +85,11 @@ If Football-Data reports a penalty shootout with a missing winner or tied
 `fullTime - regularTime - extraTime` and uses that derived penalty result to
 set the advancing team.
 
+When Football-Data still cannot identify a knockout winner or shootout score,
+store the reviewed correction in
+`data/manual/official_knockout_overrides.json`. Overrides are keyed by pool
+match ID and are applied during `make update-official-knockout-results`.
+
 Use the knockout updater after official knockout match records change, then run
 `make apply-manual-futures` if `data/manual/official_futures.json` has changed.
 If the update should become part of the score timeline, create or rebuild the
@@ -92,6 +97,28 @@ matching checkpoint afterward, for example
 `CHECKPOINT=round_of_32 make create-official-checkpoint`. Run
 `make build-site` afterward when the ignored `public/` copy needs to match the
 committed files under `data/generated/`.
+
+For knockout-score updates, use this review loop:
+
+```bash
+make update-official-knockout-results
+```
+
+Review `data/raw/official/football_data_wc_matches_2026.json` for any finished
+matches where Football-Data leaves `score.winner` empty or reports tied penalty
+fields. If the raw payload does not contain enough information to infer the
+winner or shootout score, add the reviewed correction to
+`data/manual/official_knockout_overrides.json`, then rerun:
+
+```bash
+make update-official-knockout-results
+CHECKPOINT=round_of_32 make create-official-checkpoint
+make build-site
+```
+
+Then verify the affected match in `data/manual/official_knockout_results.json`,
+`data/generated/official_results.js`, and
+`data/checkpoints/official_results/round_of_32.json`.
 
 ## Data Flow
 
@@ -232,11 +259,13 @@ make build-knockout-predictions
 make build-consensus-predictions
 make update-official-results
 make update-official-knockout-results
+# Review raw knockout data; if overrides changed, rerun the knockout updater.
+make update-official-knockout-results
 make apply-manual-futures
 CHECKPOINT=round_of_32 make create-official-checkpoint
 make test
 make build-site
-git add data/generated data/manual/official_futures.json index.html styles.css apps docs scripts .github/workflows/pages.yml Makefile .gitignore README.md
+git add data/generated data/checkpoints data/manual index.html styles.css apps docs scripts .github/workflows/pages.yml Makefile .gitignore README.md
 git commit -m "Update public pool dashboard"
 git push origin dev
 ```

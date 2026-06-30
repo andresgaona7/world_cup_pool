@@ -1,7 +1,7 @@
 {
   "sourceName": "Football-Data.org matches",
   "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-  "generatedAt": "2026-06-30T00:56:23+00:00",
+  "generatedAt": "2026-06-30T05:41:32+00:00",
   "matches": [
     {
       "matchId": "73",
@@ -65,23 +65,23 @@
       "matchId": "75",
       "sourceMatchId": 537418,
       "stage": "round_of_32",
-      "status": "TIMED",
+      "status": "FINISHED",
       "utcDate": "2026-06-30T01:00:00Z",
-      "sourceUpdatedAt": "2026-06-29T05:20:12Z",
+      "sourceUpdatedAt": "2026-06-30T04:08:17Z",
       "homeTeam": "Netherlands",
       "awayTeam": "Morocco",
-      "homeScore": null,
-      "awayScore": null,
-      "advancingTeam": "",
-      "duration": "REGULAR",
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeFullTimeScore": null,
-      "awayFullTimeScore": null,
-      "homeRegularTimeScore": null,
-      "awayRegularTimeScore": null,
-      "homeExtraTimeScore": null,
-      "awayExtraTimeScore": null,
+      "homeScore": 1,
+      "awayScore": 1,
+      "advancingTeam": "Morocco",
+      "duration": "PENALTY_SHOOTOUT",
+      "homePenaltyScore": 2,
+      "awayPenaltyScore": 3,
+      "homeFullTimeScore": 3,
+      "awayFullTimeScore": 4,
+      "homeRegularTimeScore": 1,
+      "awayRegularTimeScore": 1,
+      "homeExtraTimeScore": 0,
+      "awayExtraTimeScore": 0,
       "referees": [
         {
           "name": "Wilton Sampaio",
@@ -397,10 +397,10 @@
     }
   ],
   "roundOf32BonusResults": {
-    "extraTimeMatches": 1,
-    "penaltyMatches": 1,
+    "extraTimeMatches": 2,
+    "penaltyMatches": 2,
     "mostGoalsTeam": "Brazil",
-    "totalGoals": 6,
+    "totalGoals": 8,
     "fastestGoalTeam": "",
     "latestGoalTeam": "",
     "biggestWinningMarginTeam": "",
@@ -410,6 +410,7 @@
   "notes": [
     "Football-Data supplies teams, score, winner, stage, status, duration, and referee metadata.",
     "Penalty, extra-time, and regular-time sub-scores are included only when the upstream score object exposes them.",
-    "Cards and fastest/latest goal teams are not present in this endpoint and should be reviewed manually."
+    "Cards and fastest/latest goal teams are not present in this endpoint and should be reviewed manually.",
+    "Applied manual knockout override(s) for match ID(s): 75."
   ]
 }
