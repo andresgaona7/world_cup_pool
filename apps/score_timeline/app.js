@@ -8,13 +8,13 @@ const GROUP_FULL_ORDER_BONUS = 5;
 const BEST_THIRD_TEAM_POINTS = 3;
 
 const FUTURES_POINTS = {
-  champion: 80,
-  runnerUp: 50,
-  reversedFinalPairing: 35,
-  topScorer: 60,
-  favoriteExact: 35,
+  champion: 20,
+  runnerUp: 15,
+  reversedFinalPairing: 10,
+  topScorer: 5,
+  favoriteExact: 10,
   favoriteOffByOne: 5,
-  ecuadorExact: 42,
+  ecuadorExact: 12,
   ecuadorOffByOne: 6,
   perfectBonus: 75,
 };

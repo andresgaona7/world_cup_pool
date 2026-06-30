@@ -31,9 +31,9 @@ class FuturesScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_futures_prediction(prediction, result)
 
-        self.assertEqual(points, 267.0)
+        self.assertEqual(points, 62.0)
         self.assertEqual(bonuses, 75.0)
-        self.assertEqual(details["futures:champion"], 80.0)
+        self.assertEqual(details["futures:champion"], 20.0)
         self.assertEqual(details["bonus:perfect_futures"], 75.0)
 
     def test_reversed_final_pairing_scores_partial_bonus_only_for_finalists(self):
@@ -54,9 +54,9 @@ class FuturesScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_futures_prediction(prediction, result)
 
-        self.assertEqual(points, 35.0)
+        self.assertEqual(points, 10.0)
         self.assertEqual(bonuses, 0.0)
-        self.assertEqual(details["futures:reversed_final_pairing"], 35.0)
+        self.assertEqual(details["futures:reversed_final_pairing"], 10.0)
 
     def test_last_round_off_by_one_scores_partial_points(self):
         prediction = FuturesPrediction(
@@ -100,9 +100,9 @@ class FuturesScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_futures_prediction(prediction, result)
 
-        self.assertEqual(points, 60.0)
+        self.assertEqual(points, 5.0)
         self.assertEqual(bonuses, 0.0)
-        self.assertEqual(details["futures:top_scorer"], 60.0)
+        self.assertEqual(details["futures:top_scorer"], 5.0)
 
     def test_normalizes_top_scorer_and_favorite_team_names(self):
         prediction = FuturesPrediction(
@@ -122,10 +122,10 @@ class FuturesScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_futures_prediction(prediction, result)
 
-        self.assertEqual(points, 95.0)
+        self.assertEqual(points, 15.0)
         self.assertEqual(bonuses, 0.0)
-        self.assertEqual(details["futures:top_scorer"], 60.0)
-        self.assertEqual(details["futures:favorite_team_last_round"], 35.0)
+        self.assertEqual(details["futures:top_scorer"], 5.0)
+        self.assertEqual(details["futures:favorite_team_last_round"], 10.0)
 
 
 if __name__ == "__main__":

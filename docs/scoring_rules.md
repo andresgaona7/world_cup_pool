@@ -59,13 +59,13 @@ Score mode:
 
 | Prediction | Points |
 | --- | ---: |
-| Champion | 80 |
-| Runner-up | 50 |
-| Reversed final pairing | 35 |
-| Top scorer | 60 |
-| Favorite team last round exact | 35 |
+| Champion | 20 |
+| Runner-up | 15 |
+| Reversed final pairing | 10 |
+| Top scorer | 5 |
+| Favorite team last round exact | 10 |
 | Favorite team last round off by one | 5 |
-| Ecuador last round exact | 42 |
+| Ecuador last round exact | 12 |
 | Ecuador last round off by one | 6 |
 | Perfect futures card bonus | 75 |
 
