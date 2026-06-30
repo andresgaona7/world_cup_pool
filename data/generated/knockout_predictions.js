@@ -1038,9 +1038,9 @@ window.KNOCKOUT_PREDICTIONS = {
           "mode": "score",
           "homeTeam": "Mexico",
           "awayTeam": "Ecuador",
-          "homeScore": 1,
-          "awayScore": 0,
-          "predictedAdvancingTeam": "Mexico"
+          "homeScore": 0,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Ecuador"
         },
         {
           "matchId": "84",
