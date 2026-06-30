@@ -42,6 +42,7 @@ class BuildPoolDataTests(unittest.TestCase):
             (4, 3): "Bosnia",
             (5, 3): "Czech Republic",
             (6, 3): "DR Congo",
+            (8, 3): "Kylian Mbappé - 7",
         }
 
         futures = build_pool_data.extract_futures(cells, "Player")
@@ -49,6 +50,7 @@ class BuildPoolDataTests(unittest.TestCase):
         self.assertEqual(futures["champion"]["value"], "Bosnia-Herzegovina")
         self.assertEqual(futures["runner_up"]["value"], "Czechia")
         self.assertEqual(futures["favorite_team"]["value"], "Congo DR")
+        self.assertEqual(futures["top_scorer"]["value"], "Kylian Mbappe")
 
 
 if __name__ == "__main__":

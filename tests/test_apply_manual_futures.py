@@ -64,6 +64,42 @@ class ApplyManualFuturesTests(unittest.TestCase):
             ["Kylian Mbappe", "Lionel Messi"],
         )
 
+    def test_normalizes_manual_top_scorers_and_team_names(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manual_path, official_path = self.write_fixture(temp_dir)
+            manual = json.loads(manual_path.read_text(encoding="utf-8"))
+            manual["champion"] = "Turkey"
+            manual["topScorer"] = "Kylian Mbappé"
+            manual["topScorers"] = ["Mbappe", "Leo Messi"]
+            manual["teamLastRounds"] = {
+                "DR Congo": "round_of_16",
+                "Turkiye": "champion",
+            }
+            manual_path.write_text(json.dumps(manual), encoding="utf-8")
+
+            apply_manual_futures.apply_manual_futures(
+                manual_futures_path=manual_path,
+                manual_fair_play_path=temp_dir_path(temp_dir) / "official_fair_play.json",
+                official_results_path=official_path,
+            )
+
+            official_results = apply_manual_futures.read_official_results(official_path)
+
+        self.assertEqual(official_results["futures"]["champion"], "Türkiye")
+        self.assertEqual(official_results["futures"]["topScorer"], "Kylian Mbappe")
+        self.assertEqual(
+            official_results["futures"]["topScorers"],
+            ["Kylian Mbappe", "Lionel Messi"],
+        )
+        self.assertEqual(
+            official_results["futures"]["teamLastRounds"]["Congo DR"],
+            "round_of_16",
+        )
+        self.assertEqual(
+            official_results["futures"]["teamLastRounds"]["Türkiye"],
+            "champion",
+        )
+
     def test_rejects_unknown_round_keys(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             manual_path, official_path = self.write_fixture(temp_dir)

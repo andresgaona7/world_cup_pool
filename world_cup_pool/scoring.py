@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+import unicodedata
 from collections.abc import Iterable
 
 from .constants import (
@@ -35,6 +37,15 @@ from .models import (
     ScoreBreakdown,
     Stage,
 )
+
+TEAM_NAME_ALIASES = {
+    "bosnia": "bosnia herzegovina",
+    "bosnia and herzegovina": "bosnia herzegovina",
+    "dr congo": "congo dr",
+    "democratic republic of congo": "congo dr",
+    "democratic republic of the congo": "congo dr",
+    "turkey": "turkiye",
+}
 
 
 GROUP_QUALIFIER_POINTS = 1.0
@@ -218,7 +229,7 @@ def score_futures_prediction(
 
     champion_correct = prediction.champion == result.champion
     runner_up_correct = prediction.runner_up == result.runner_up
-    top_scorer_correct = prediction.top_scorer in _result_top_scorers(result)
+    top_scorer_correct = _normalize_name(prediction.top_scorer) in _result_top_scorers(result)
 
     if champion_correct:
         total += CHAMPION_POINTS
@@ -241,7 +252,10 @@ def score_futures_prediction(
         total += TOP_SCORER_POINTS
         details["futures:top_scorer"] = TOP_SCORER_POINTS
 
-    favorite_actual_stage = result.team_last_rounds.get(prediction.favorite_team)
+    favorite_actual_stage = _team_last_round(
+        result.team_last_rounds,
+        prediction.favorite_team,
+    )
     favorite_correct = favorite_actual_stage == prediction.favorite_team_last_round
     if favorite_actual_stage is not None:
         points = _last_round_points(
@@ -254,7 +268,7 @@ def score_futures_prediction(
             total += points
             details["futures:favorite_team_last_round"] = points
 
-    ecuador_actual_stage = result.team_last_rounds.get(result.ecuador_team_name)
+    ecuador_actual_stage = _team_last_round(result.team_last_rounds, result.ecuador_team_name)
     ecuador_correct = ecuador_actual_stage == prediction.ecuador_last_round
     if ecuador_actual_stage is not None:
         points = _last_round_points(
@@ -282,10 +296,34 @@ def score_futures_prediction(
 
 
 def _result_top_scorers(result: FuturesResult) -> set[str]:
-    scorers = {scorer for scorer in result.top_scorers if scorer}
+    scorers = {_normalize_name(scorer) for scorer in result.top_scorers if scorer}
     if result.top_scorer:
-        scorers.add(result.top_scorer)
+        scorers.add(_normalize_name(result.top_scorer))
     return scorers
+
+
+def _team_last_round(team_last_rounds: dict[str, Stage], team_name: str) -> Stage | None:
+    exact_match = team_last_rounds.get(team_name)
+    if exact_match is not None:
+        return exact_match
+
+    normalized_team = _normalize_team_name(team_name)
+    for candidate, stage in team_last_rounds.items():
+        if _normalize_team_name(candidate) == normalized_team:
+            return stage
+    return None
+
+
+def _normalize_team_name(name: str) -> str:
+    normalized = _normalize_name(name)
+    return TEAM_NAME_ALIASES.get(normalized, normalized)
+
+
+def _normalize_name(name: str) -> str:
+    normalized = unicodedata.normalize("NFKD", str(name or ""))
+    ascii_name = normalized.encode("ascii", "ignore").decode("ascii")
+    without_count = re.sub(r"\s*[-–—]?\s*\d+\s*$", "", ascii_name)
+    return re.sub(r"[^a-z0-9]+", " ", without_count.lower()).strip()
 
 
 def score_player(entry: PlayerEntry, results: OfficialResults) -> PlayerScore:

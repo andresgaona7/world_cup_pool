@@ -338,7 +338,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Mbappe"
+          "value": "Kylian Mbappe"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -648,7 +648,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Mbappe"
+          "value": "Kylian Mbappe"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -1578,7 +1578,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "mbappe"
+          "value": "Kylian Mbappe"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -1888,7 +1888,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Mbappe"
+          "value": "Kylian Mbappe"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -2198,7 +2198,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Kylian Mbappé 🇫🇷"
+          "value": "Kylian Mbappe"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -2508,7 +2508,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Kylian Mbappé - 7"
+          "value": "Kylian Mbappe"
         },
         "ecuador_round": {
           "label": "Ecuador last round",
@@ -3128,7 +3128,7 @@ window.POOL_DATA = {
         },
         "top_scorer": {
           "label": "Top scorer",
-          "value": "Kylian mbappe"
+          "value": "Kylian Mbappe"
         },
         "ecuador_round": {
           "label": "Ecuador last round",

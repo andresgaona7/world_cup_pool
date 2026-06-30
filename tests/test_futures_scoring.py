@@ -104,6 +104,29 @@ class FuturesScoringTests(unittest.TestCase):
         self.assertEqual(bonuses, 0.0)
         self.assertEqual(details["futures:top_scorer"], 60.0)
 
+    def test_normalizes_top_scorer_and_favorite_team_names(self):
+        prediction = FuturesPrediction(
+            champion="Argentina",
+            runner_up="Spain",
+            top_scorer="Kylian Mbappe",
+            favorite_team="DR Congo",
+            favorite_team_last_round=Stage.ROUND_OF_16,
+            ecuador_last_round=Stage.GROUP_STAGE,
+        )
+        result = FuturesResult(
+            champion="Brazil",
+            runner_up="France",
+            top_scorer="Kylian Mbappé",
+            team_last_rounds={"Congo DR": Stage.ROUND_OF_16},
+        )
+
+        points, bonuses, details = score_futures_prediction(prediction, result)
+
+        self.assertEqual(points, 95.0)
+        self.assertEqual(bonuses, 0.0)
+        self.assertEqual(details["futures:top_scorer"], 60.0)
+        self.assertEqual(details["futures:favorite_team_last_round"], 35.0)
+
 
 if __name__ == "__main__":
     unittest.main()

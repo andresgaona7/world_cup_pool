@@ -1304,6 +1304,33 @@ function actualTopScorers(futures) {
   return scorers;
 }
 
+function normalizedTopScorerNames(futures) {
+  return actualTopScorers(futures).map(normalizePersonName);
+}
+
+function normalizePersonName(name) {
+  return String(name || "")
+    .trim()
+    .replace(/\s*[-–—]?\s*\d+\s*$/, "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function actualTeamLastRound(teamLastRounds, teamName) {
+  const rounds = teamLastRounds || {};
+  if (rounds[teamName]) {
+    return rounds[teamName];
+  }
+  const normalizedTeam = canonicalKnockoutTeamName(teamName);
+  const match = Object.entries(rounds).find(
+    ([candidate]) => canonicalKnockoutTeamName(candidate) === normalizedTeam
+  );
+  return match ? match[1] : undefined;
+}
+
 function futuresComparisonRows(player, comparisonScenario) {
   if (!player) {
     return [];
@@ -1313,7 +1340,7 @@ function futuresComparisonRows(player, comparisonScenario) {
   const actual = comparisonScenario.futures;
   const championCorrect = Boolean(actual.champion) && prediction.champion === actual.champion;
   const runnerUpCorrect = Boolean(actual.runnerUp) && prediction.runnerUp === actual.runnerUp;
-  const topScorerCorrect = actualTopScorers(actual).includes(prediction.topScorer);
+  const topScorerCorrect = normalizedTopScorerNames(actual).includes(normalizePersonName(prediction.topScorer));
   const reversedFinalPairing =
     !championCorrect &&
     !runnerUpCorrect &&
@@ -1321,12 +1348,12 @@ function futuresComparisonRows(player, comparisonScenario) {
     actual.runnerUp &&
     prediction.champion === actual.runnerUp &&
     prediction.runnerUp === actual.champion;
-  const favoriteActualStage = actual.teamLastRounds[prediction.favoriteTeam];
+  const favoriteActualStage = actualTeamLastRound(actual.teamLastRounds, prediction.favoriteTeam);
   const favoritePoints = lastRoundPoints(prediction.favoriteRound, favoriteActualStage, {
     exact: FUTURES_POINTS.favoriteExact,
     offByOne: FUTURES_POINTS.favoriteOffByOne,
   });
-  const ecuadorActualStage = actual.teamLastRounds.Ecuador;
+  const ecuadorActualStage = actualTeamLastRound(actual.teamLastRounds, "Ecuador");
   const ecuadorPoints = lastRoundPoints(prediction.ecuadorRound, ecuadorActualStage, {
     exact: FUTURES_POINTS.ecuadorExact,
     offByOne: FUTURES_POINTS.ecuadorOffByOne,
@@ -1993,7 +2020,7 @@ function scoreFutures(player) {
 
   const championCorrect = Boolean(actual.champion) && prediction.champion === actual.champion;
   const runnerUpCorrect = Boolean(actual.runnerUp) && prediction.runnerUp === actual.runnerUp;
-  const topScorerCorrect = actualTopScorers(actual).includes(prediction.topScorer);
+  const topScorerCorrect = normalizedTopScorerNames(actual).includes(normalizePersonName(prediction.topScorer));
 
   if (championCorrect) {
     points += FUTURES_POINTS.champion;
@@ -2015,14 +2042,14 @@ function scoreFutures(player) {
     points += FUTURES_POINTS.topScorer;
   }
 
-  const favoriteActualStage = actual.teamLastRounds[prediction.favoriteTeam];
+  const favoriteActualStage = actualTeamLastRound(actual.teamLastRounds, prediction.favoriteTeam);
   const favoritePoints = lastRoundPoints(prediction.favoriteRound, favoriteActualStage, {
     exact: FUTURES_POINTS.favoriteExact,
     offByOne: FUTURES_POINTS.favoriteOffByOne,
   });
   points += favoritePoints;
 
-  const ecuadorActualStage = actual.teamLastRounds.Ecuador;
+  const ecuadorActualStage = actualTeamLastRound(actual.teamLastRounds, "Ecuador");
   const ecuadorPoints = lastRoundPoints(prediction.ecuadorRound, ecuadorActualStage, {
     exact: FUTURES_POINTS.ecuadorExact,
     offByOne: FUTURES_POINTS.ecuadorOffByOne,

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 from pathlib import Path
 from xml.etree import ElementTree as ET
 from zipfile import ZipFile
@@ -56,6 +57,15 @@ COUNTRY_ALIASES = {
     "turkey": "Türkiye",
     "turkiye": "Türkiye",
     "türkiye": "Türkiye",
+}
+PLAYER_ALIASES = {
+    "k mbappe": "Kylian Mbappe",
+    "kylian mbappe": "Kylian Mbappe",
+    "kylian mbappe lottin": "Kylian Mbappe",
+    "mbappe": "Kylian Mbappe",
+    "lionel messi": "Lionel Messi",
+    "leo messi": "Lionel Messi",
+    "messi": "Lionel Messi",
 }
 
 
@@ -181,6 +191,22 @@ def normalize_country(value: object) -> str:
     return COUNTRY_ALIASES.get(text.lower(), text)
 
 
+def normalize_player_name(value: object) -> str:
+    text = player_name_text(value)
+    return PLAYER_ALIASES.get(normalization_key(text), text)
+
+
+def player_name_text(value: object) -> str:
+    text = clean_text(value)
+    return re.sub(r"\s*[-–—]?\s*\d+\s*$", "", text).strip()
+
+
+def normalization_key(value: object) -> str:
+    normalized = unicodedata.normalize("NFKD", clean_text(value))
+    text = normalized.encode("ascii", "ignore").decode("ascii").lower()
+    return re.sub(r"[^a-z0-9]+", " ", text).strip()
+
+
 def extract_futures(cells: dict[tuple[int, int], str], sheet_name: str) -> dict[str, dict[str, str]]:
     futures = {}
     for key, row in FUTURE_ROWS.items():
@@ -189,6 +215,8 @@ def extract_futures(cells: dict[tuple[int, int], str], sheet_name: str) -> dict[
             value = sheet_name
         if key in {"champion", "runner_up", "favorite_team"}:
             value = normalize_country(value)
+        if key == "top_scorer":
+            value = normalize_player_name(value)
         futures[key] = {
             "label": FUTURE_LABELS[key],
             "value": value,

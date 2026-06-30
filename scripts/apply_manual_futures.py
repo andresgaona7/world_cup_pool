@@ -7,6 +7,7 @@ import argparse
 import json
 import re
 import sys
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -42,6 +43,15 @@ TEAM_NAME_ALIASES = {
     "Turkey": "Türkiye",
     "Turkiye": "Türkiye",
     "Tutkey": "Türkiye",
+}
+PLAYER_NAME_ALIASES = {
+    "k mbappe": "Kylian Mbappe",
+    "kylian mbappe": "Kylian Mbappe",
+    "kylian mbappe lottin": "Kylian Mbappe",
+    "mbappe": "Kylian Mbappe",
+    "lionel messi": "Lionel Messi",
+    "leo messi": "Lionel Messi",
+    "messi": "Lionel Messi",
 }
 ROUND_KEYS = {
     "",
@@ -168,11 +178,14 @@ def read_manual_futures(path: Path) -> dict[str, Any]:
         key: string_value(payload, key)
         for key in FUTURES_KEYS
     }
+    futures["champion"] = canonical_team_name(futures["champion"])
+    futures["runnerUp"] = canonical_team_name(futures["runnerUp"])
+    futures["topScorer"] = normalize_player_name(futures["topScorer"])
     futures["topScorers"] = top_scorers(payload)
     if not futures["topScorer"] and futures["topScorers"]:
         futures["topScorer"] = futures["topScorers"][0]
     futures["teamLastRounds"] = {
-        team: normalize_round(round_key, team)
+        canonical_team_name(team): normalize_round(round_key, team)
         for team, round_key in team_last_rounds.items()
         if isinstance(team, str) and team.strip()
     }
@@ -302,13 +315,13 @@ def normalize_futures(value: Any) -> dict[str, Any]:
         value = {}
     team_last_rounds = value.get("teamLastRounds", {})
     futures = {
-        "champion": string_value(value, "champion"),
-        "runnerUp": string_value(value, "runnerUp"),
-        "topScorer": string_value(value, "topScorer"),
+        "champion": canonical_team_name(string_value(value, "champion")),
+        "runnerUp": canonical_team_name(string_value(value, "runnerUp")),
+        "topScorer": normalize_player_name(string_value(value, "topScorer")),
         "topScorers": top_scorers(value),
         "teamLastRounds": (
             {
-                team: round_key
+                canonical_team_name(team): round_key
                 for team, round_key in team_last_rounds.items()
                 if isinstance(team, str) and isinstance(round_key, str)
             }
@@ -325,13 +338,13 @@ def top_scorers(source: dict[str, Any]) -> list[str]:
     value = source.get("topScorers")
     if isinstance(value, list):
         scorers = [
-            scorer.strip()
+            normalize_player_name(scorer)
             for scorer in value
-            if isinstance(scorer, str) and scorer.strip()
+            if normalize_player_name(scorer)
         ]
     else:
         scorers = []
-    fallback = string_value(source, "topScorer")
+    fallback = normalize_player_name(string_value(source, "topScorer"))
     if fallback and fallback not in scorers:
         scorers.insert(0, fallback)
     return scorers
@@ -355,7 +368,32 @@ def string_value(source: dict[str, Any], key: str) -> str:
 
 
 def canonical_team_name(name: str) -> str:
-    return TEAM_NAME_ALIASES.get(name, name)
+    name = clean_name(name)
+    if not name:
+        return ""
+    aliases = {normalization_key(alias): canonical for alias, canonical in TEAM_NAME_ALIASES.items()}
+    return aliases.get(normalization_key(name), TEAM_NAME_ALIASES.get(name, name))
+
+
+def normalize_player_name(name: Any) -> str:
+    cleaned = player_name_text(name)
+    if not cleaned:
+        return ""
+    return PLAYER_NAME_ALIASES.get(normalization_key(cleaned), cleaned)
+
+
+def player_name_text(name: Any) -> str:
+    return re.sub(r"\s*[-–—]?\s*\d+\s*$", "", clean_name(name)).strip()
+
+
+def clean_name(name: Any) -> str:
+    return re.sub(r"\s+", " ", str(name)).strip() if isinstance(name, str) else ""
+
+
+def normalization_key(name: str) -> str:
+    normalized = unicodedata.normalize("NFKD", clean_name(name))
+    ascii_name = normalized.encode("ascii", "ignore").decode("ascii")
+    return re.sub(r"[^a-z0-9]+", " ", ascii_name.lower()).strip()
 
 
 def int_value(value: Any) -> int:
