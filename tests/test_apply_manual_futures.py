@@ -28,6 +28,7 @@ class ApplyManualFuturesTests(unittest.TestCase):
                 "champion": "Spain",
                 "runnerUp": "Argentina",
                 "topScorer": "Kylian Mbappe",
+                "topScorers": ["Kylian Mbappe"],
                 "teamLastRounds": {
                     "Mexico": "group_stage",
                     "Ecuador": "quarterfinal",
@@ -40,6 +41,28 @@ class ApplyManualFuturesTests(unittest.TestCase):
                 official_results["timelineCheckpoints"][0]["scenario"]["futures"],
                 expected_futures,
             )
+
+    def test_accepts_multiple_tied_top_scorers(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manual_path, official_path = self.write_fixture(temp_dir)
+            manual = json.loads(manual_path.read_text(encoding="utf-8"))
+            manual["topScorer"] = ""
+            manual["topScorers"] = ["Kylian Mbappe", "Lionel Messi"]
+            manual_path.write_text(json.dumps(manual), encoding="utf-8")
+
+            apply_manual_futures.apply_manual_futures(
+                manual_futures_path=manual_path,
+                manual_fair_play_path=temp_dir_path(temp_dir) / "official_fair_play.json",
+                official_results_path=official_path,
+            )
+
+            official_results = apply_manual_futures.read_official_results(official_path)
+
+        self.assertEqual(official_results["futures"]["topScorer"], "Kylian Mbappe")
+        self.assertEqual(
+            official_results["futures"]["topScorers"],
+            ["Kylian Mbappe", "Lionel Messi"],
+        )
 
     def test_rejects_unknown_round_keys(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -186,6 +209,7 @@ class ApplyManualFuturesTests(unittest.TestCase):
                 "champion": "",
                 "runnerUp": "",
                 "topScorer": "",
+                "topScorers": [],
                 "teamLastRounds": {"Mexico": "group_stage"},
             },
             "bestThirds": ["Czechia", "Qatar"],
@@ -213,6 +237,7 @@ class ApplyManualFuturesTests(unittest.TestCase):
                             "champion": "",
                             "runnerUp": "",
                             "topScorer": "",
+                            "topScorers": [],
                             "teamLastRounds": {},
                         },
                         "bestThirds": ["Czechia", "Qatar"],

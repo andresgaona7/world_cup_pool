@@ -87,6 +87,7 @@ class FuturesResult:
     top_scorer: str
     team_last_rounds: dict[str, Stage]
     ecuador_team_name: str = "Ecuador"
+    top_scorers: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

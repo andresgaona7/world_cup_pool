@@ -81,6 +81,29 @@ class FuturesScoringTests(unittest.TestCase):
         self.assertEqual(details["futures:favorite_team_last_round"], 5.0)
         self.assertEqual(details["futures:ecuador_last_round"], 6.0)
 
+    def test_tied_top_scorers_all_score_as_correct(self):
+        prediction = FuturesPrediction(
+            champion="Argentina",
+            runner_up="Spain",
+            top_scorer="Lionel Messi",
+            favorite_team="Ecuador",
+            favorite_team_last_round=Stage.GROUP_STAGE,
+            ecuador_last_round=Stage.GROUP_STAGE,
+        )
+        result = FuturesResult(
+            champion="Brazil",
+            runner_up="France",
+            top_scorer="Kylian Mbappe",
+            top_scorers=("Kylian Mbappe", "Lionel Messi"),
+            team_last_rounds={},
+        )
+
+        points, bonuses, details = score_futures_prediction(prediction, result)
+
+        self.assertEqual(points, 60.0)
+        self.assertEqual(bonuses, 0.0)
+        self.assertEqual(details["futures:top_scorer"], 60.0)
+
 
 if __name__ == "__main__":
     unittest.main()

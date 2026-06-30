@@ -478,6 +478,7 @@ function buildConsensusScenario(sourcePlayers) {
       champion,
       runnerUp,
       topScorer,
+      topScorers: topScorer ? [topScorer] : [],
       teamLastRounds,
     },
   };
@@ -501,6 +502,7 @@ function normalizeOfficialScenario(sourcePlayers, resultsData) {
       champion: futures.champion || "",
       runnerUp: futures.runnerUp || "",
       topScorer: futures.topScorer || "",
+      topScorers: actualTopScorers(futures),
       teamLastRounds: {
         ...Object.fromEntries(trackedTeams(sourcePlayers).map((team) => [team, ""])),
         ...(futures.teamLastRounds || {}),
@@ -1292,6 +1294,16 @@ function hasPenaltyScore(match) {
   return match.homePenaltyScore !== null && match.awayPenaltyScore !== null;
 }
 
+function actualTopScorers(futures) {
+  const scorers = Array.isArray(futures?.topScorers)
+    ? futures.topScorers.filter(Boolean)
+    : [];
+  if (futures?.topScorer && !scorers.includes(futures.topScorer)) {
+    scorers.unshift(futures.topScorer);
+  }
+  return scorers;
+}
+
 function futuresComparisonRows(player, comparisonScenario) {
   if (!player) {
     return [];
@@ -1301,7 +1313,7 @@ function futuresComparisonRows(player, comparisonScenario) {
   const actual = comparisonScenario.futures;
   const championCorrect = Boolean(actual.champion) && prediction.champion === actual.champion;
   const runnerUpCorrect = Boolean(actual.runnerUp) && prediction.runnerUp === actual.runnerUp;
-  const topScorerCorrect = Boolean(actual.topScorer) && prediction.topScorer === actual.topScorer;
+  const topScorerCorrect = actualTopScorers(actual).includes(prediction.topScorer);
   const reversedFinalPairing =
     !championCorrect &&
     !runnerUpCorrect &&
@@ -1359,9 +1371,9 @@ function futuresComparisonRows(player, comparisonScenario) {
     },
     {
       label: "Top scorer",
-      actual: actual.topScorer,
+      actual: actualTopScorers(actual).join(" / "),
       prediction: prediction.topScorer,
-      hasResult: Boolean(actual.topScorer),
+      hasResult: actualTopScorers(actual).length > 0,
       match: topScorerCorrect,
       points: topScorerCorrect ? FUTURES_POINTS.topScorer : 0,
       bonus: 0,
@@ -1417,7 +1429,7 @@ function hasFuturesComparisonData(actual) {
   return Boolean(
     actual.champion ||
     actual.runnerUp ||
-    actual.topScorer ||
+    actualTopScorers(actual).length > 0 ||
     Object.values(actual.teamLastRounds).some(Boolean)
   );
 }
@@ -1693,6 +1705,7 @@ function hasScenarioData(value) {
     value.futures.champion ||
     value.futures.runnerUp ||
     value.futures.topScorer ||
+    actualTopScorers(value.futures).length > 0 ||
     Object.values(value.futures.teamLastRounds).some(Boolean)
   );
 }
@@ -1980,7 +1993,7 @@ function scoreFutures(player) {
 
   const championCorrect = Boolean(actual.champion) && prediction.champion === actual.champion;
   const runnerUpCorrect = Boolean(actual.runnerUp) && prediction.runnerUp === actual.runnerUp;
-  const topScorerCorrect = Boolean(actual.topScorer) && prediction.topScorer === actual.topScorer;
+  const topScorerCorrect = actualTopScorers(actual).includes(prediction.topScorer);
 
   if (championCorrect) {
     points += FUTURES_POINTS.champion;

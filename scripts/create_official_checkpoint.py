@@ -259,12 +259,32 @@ def normalize_futures(value: Any) -> dict[str, Any]:
     if not isinstance(value, dict):
         value = {}
     team_last_rounds = value.get("teamLastRounds", {})
-    return {
+    futures = {
         "champion": string_value(value, "champion"),
         "runnerUp": string_value(value, "runnerUp"),
         "topScorer": string_value(value, "topScorer"),
+        "topScorers": top_scorers(value),
         "teamLastRounds": team_last_rounds if isinstance(team_last_rounds, dict) else {},
     }
+    if not futures["topScorer"] and futures["topScorers"]:
+        futures["topScorer"] = futures["topScorers"][0]
+    return futures
+
+
+def top_scorers(source: dict[str, Any]) -> list[str]:
+    value = source.get("topScorers")
+    if isinstance(value, list):
+        scorers = [
+            scorer.strip()
+            for scorer in value
+            if isinstance(scorer, str) and scorer.strip()
+        ]
+    else:
+        scorers = []
+    fallback = string_value(source, "topScorer")
+    if fallback and fallback not in scorers:
+        scorers.insert(0, fallback)
+    return scorers
 
 
 def string_value(source: dict[str, Any], key: str) -> str:

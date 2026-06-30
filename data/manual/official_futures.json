@@ -2,10 +2,14 @@
   "champion": "",
   "runnerUp": "",
   "topScorer": "Lionel Messi",
+  "topScorers": [
+    "Lionel Messi",
+    "Kylian Mbappé"
+  ],
   "teamLastRounds": {
-    "France": "round_of_32",
+    "France": "round_of_16",
     "Argentina": "round_of_32",
-    "Norway": "round_of_32",
+    "Norway": "round_of_16",
     "Morocco": "round_of_16",
     "Brazil": "round_of_16",
     "Ecuador": "round_of_32",

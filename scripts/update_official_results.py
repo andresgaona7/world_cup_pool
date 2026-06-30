@@ -118,6 +118,7 @@ def main() -> None:
             "champion": "",
             "runnerUp": "",
             "topScorer": "",
+            "topScorers": [],
             "teamLastRounds": eliminated_group_stage_teams(group_standings, completed_groups),
         },
         "provisionalGroupStandings": {
@@ -130,6 +131,7 @@ def main() -> None:
                 "champion": "",
                 "runnerUp": "",
                 "topScorer": "",
+                "topScorers": [],
                 "teamLastRounds": eliminated_group_stage_teams(
                     group_standings,
                     completed_groups,

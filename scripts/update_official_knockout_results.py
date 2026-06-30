@@ -78,6 +78,16 @@ ROUND_OF_32_MATCH_PAIRS = {
 ROUND_OF_32_PAIR_LOOKUP = {
     frozenset(pair): match_id for match_id, pair in ROUND_OF_32_MATCH_PAIRS.items()
 }
+ROUND_OF_16_PATHS = {
+    "89": ("74", "77"),
+    "90": ("73", "75"),
+    "91": ("76", "78"),
+    "92": ("79", "80"),
+    "93": ("83", "84"),
+    "94": ("81", "82"),
+    "95": ("86", "88"),
+    "96": ("85", "87"),
+}
 ROUND_OF_32_BONUS_DEFAULTS = {
     "extraTimeMatches": None,
     "penaltyMatches": None,
@@ -321,6 +331,7 @@ def normalize_knockout_matches(matches: Any) -> list[dict[str, Any]]:
         by_stage[stage].append(match)
 
     normalized_matches: list[dict[str, Any]] = []
+    advancing_by_match_id: dict[str, str] = {}
     for stage in STAGE_ORDER:
         stage_matches = sorted(
             by_stage.get(stage, []),
@@ -336,12 +347,17 @@ def normalize_knockout_matches(matches: Any) -> list[dict[str, Any]]:
                 stage=stage,
                 fallback_index=index,
                 assigned_match_ids=assigned_match_ids,
+                advancing_by_match_id=advancing_by_match_id,
             )
             if pool_match_id:
                 assigned_match_ids.add(pool_match_id)
             normalized = normalize_match(match, stage, pool_match_id)
             if normalized:
                 normalized_matches.append(normalized)
+                if normalized.get("advancingTeam"):
+                    advancing_by_match_id[str(normalized["matchId"])] = str(
+                        normalized["advancingTeam"]
+                    )
     return sorted(
         normalized_matches,
         key=lambda match: (
@@ -357,14 +373,27 @@ def pool_match_id_for_match(
     stage: str,
     fallback_index: int,
     assigned_match_ids: set[str],
+    advancing_by_match_id: dict[str, str],
 ) -> str:
     if stage == "round_of_32":
         pair = frozenset((normalize_team(match.get("homeTeam")), normalize_team(match.get("awayTeam"))))
         pair_match_id = ROUND_OF_32_PAIR_LOOKUP.get(pair)
         if pair_match_id:
             return pair_match_id
+    if stage == "round_of_16":
+        path_match_id = round_of_16_match_id_for_match(
+            match,
+            advancing_by_match_id=advancing_by_match_id,
+            assigned_match_ids=assigned_match_ids,
+        )
+        if path_match_id:
+            return path_match_id
 
     match_ids = STAGE_MATCH_IDS[stage]
+    if stage == "round_of_16":
+        for match_id in match_ids:
+            if match_id not in assigned_match_ids:
+                return match_id
     for match_id in match_ids[fallback_index:]:
         if match_id not in assigned_match_ids:
             return match_id
@@ -372,6 +401,34 @@ def pool_match_id_for_match(
         if match_id not in assigned_match_ids:
             return match_id
     return ""
+
+
+def round_of_16_match_id_for_match(
+    match: dict[str, Any],
+    *,
+    advancing_by_match_id: dict[str, str],
+    assigned_match_ids: set[str],
+) -> str:
+    fixture_teams = {
+        team
+        for team in (normalize_team(match.get("homeTeam")), normalize_team(match.get("awayTeam")))
+        if team
+    }
+    if not fixture_teams:
+        return ""
+
+    candidates: list[str] = []
+    for match_id, feeder_match_ids in ROUND_OF_16_PATHS.items():
+        if match_id in assigned_match_ids:
+            continue
+        expected_teams = {
+            advancing_by_match_id[feeder_id]
+            for feeder_id in feeder_match_ids
+            if advancing_by_match_id.get(feeder_id)
+        }
+        if fixture_teams and fixture_teams.issubset(expected_teams):
+            candidates.append(match_id)
+    return candidates[0] if len(candidates) == 1 else ""
 
 
 def normalize_match(match: dict[str, Any], stage: str, pool_match_id: str) -> dict[str, Any]:

@@ -106,6 +106,50 @@ class UpdateOfficialKnockoutResultsTests(unittest.TestCase):
         self.assertEqual(match["awayPenaltyScore"], 4)
         self.assertEqual(match["advancingTeam"], "Paraguay")
 
+    def test_maps_round_of_16_matches_by_feeder_winners_before_schedule_order(self):
+        raw_data = {
+            "matches": [
+                self.match(
+                    source_id=537417,
+                    stage="LAST_32",
+                    home="South Africa",
+                    away="Canada",
+                    winner="AWAY_TEAM",
+                    full_time=(0, 1),
+                    utc_date="2026-06-28T19:00:00Z",
+                ),
+                self.match(
+                    source_id=537418,
+                    stage="LAST_32",
+                    home="Netherlands",
+                    away="Morocco",
+                    winner="AWAY_TEAM",
+                    full_time=(1, 2),
+                    utc_date="2026-06-30T01:00:00Z",
+                ),
+                self.match(
+                    source_id=537376,
+                    stage="LAST_16",
+                    home="Canada",
+                    away="Morocco",
+                    winner=None,
+                    full_time=(None, None),
+                    utc_date="2026-07-04T17:00:00Z",
+                    status="TIMED",
+                ),
+            ]
+        }
+
+        normalized = update_official_knockout_results.build_normalized_data(raw_data)
+        round_of_16_matches = [
+            match for match in normalized["matches"] if match["stage"] == "round_of_16"
+        ]
+
+        self.assertEqual(len(round_of_16_matches), 1)
+        self.assertEqual(round_of_16_matches[0]["matchId"], "90")
+        self.assertEqual(round_of_16_matches[0]["homeTeam"], "Canada")
+        self.assertEqual(round_of_16_matches[0]["awayTeam"], "Morocco")
+
     def test_applies_manual_override_when_upstream_shootout_data_is_tied(self):
         raw_data = {
             "matches": [
@@ -256,6 +300,7 @@ class UpdateOfficialKnockoutResultsTests(unittest.TestCase):
         extra_time=None,
         penalties=None,
         duration="REGULAR",
+        status="FINISHED",
     ):
         score = {
             "winner": winner,
@@ -272,7 +317,7 @@ class UpdateOfficialKnockoutResultsTests(unittest.TestCase):
         return {
             "id": source_id,
             "utcDate": utc_date,
-            "status": "FINISHED",
+            "status": status,
             "stage": stage,
             "lastUpdated": "2026-06-29T03:25:00Z",
             "homeTeam": {"name": home, "shortName": home, "tla": home[:3].upper()},

@@ -457,6 +457,7 @@ function normalizeCheckpointScenario(sourcePlayers, checkpointScenario) {
       champion: futures.champion || "",
       runnerUp: futures.runnerUp || "",
       topScorer: futures.topScorer || "",
+      topScorers: actualTopScorers(futures),
       teamLastRounds: {
         ...Object.fromEntries(trackedTeams(sourcePlayers).map((team) => [team, ""])),
         ...(futures.teamLastRounds || {}),
@@ -483,6 +484,7 @@ function normalizeOfficialScenario(sourcePlayers, resultsData) {
       champion: futures.champion || "",
       runnerUp: futures.runnerUp || "",
       topScorer: futures.topScorer || "",
+      topScorers: actualTopScorers(futures),
       teamLastRounds: {
         ...Object.fromEntries(trackedTeams(sourcePlayers).map((team) => [team, ""])),
         ...(futures.teamLastRounds || {}),
@@ -499,6 +501,7 @@ function emptyScenario(sourcePlayers) {
       champion: "",
       runnerUp: "",
       topScorer: "",
+      topScorers: [],
       teamLastRounds: Object.fromEntries(trackedTeams(sourcePlayers).map((team) => [team, ""])),
     },
   };
@@ -657,6 +660,7 @@ function hasFuturesData(value) {
     value.futures.champion ||
     value.futures.runnerUp ||
     value.futures.topScorer ||
+    actualTopScorers(value.futures).length > 0 ||
     Object.values(value.futures.teamLastRounds).some(Boolean)
   );
 }
@@ -1018,6 +1022,16 @@ function hasPenaltyScore(match) {
   return match.homePenaltyScore !== null && match.awayPenaltyScore !== null;
 }
 
+function actualTopScorers(futures) {
+  const scorers = Array.isArray(futures?.topScorers)
+    ? futures.topScorers.filter(Boolean)
+    : [];
+  if (futures?.topScorer && !scorers.includes(futures.topScorer)) {
+    scorers.unshift(futures.topScorer);
+  }
+  return scorers;
+}
+
 function scoreFutures(player, scenario) {
   const prediction = player.futures;
   const actual = scenario.futures;
@@ -1026,7 +1040,7 @@ function scoreFutures(player, scenario) {
 
   const championCorrect = Boolean(actual.champion) && prediction.champion === actual.champion;
   const runnerUpCorrect = Boolean(actual.runnerUp) && prediction.runnerUp === actual.runnerUp;
-  const topScorerCorrect = Boolean(actual.topScorer) && prediction.topScorer === actual.topScorer;
+  const topScorerCorrect = actualTopScorers(actual).includes(prediction.topScorer);
 
   if (championCorrect) {
     points += FUTURES_POINTS.champion;

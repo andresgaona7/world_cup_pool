@@ -218,7 +218,7 @@ def score_futures_prediction(
 
     champion_correct = prediction.champion == result.champion
     runner_up_correct = prediction.runner_up == result.runner_up
-    top_scorer_correct = prediction.top_scorer == result.top_scorer
+    top_scorer_correct = prediction.top_scorer in _result_top_scorers(result)
 
     if champion_correct:
         total += CHAMPION_POINTS
@@ -279,6 +279,13 @@ def score_futures_prediction(
         details["bonus:perfect_futures"] = PERFECT_FUTURES_BONUS
 
     return total, bonuses, details
+
+
+def _result_top_scorers(result: FuturesResult) -> set[str]:
+    scorers = {scorer for scorer in result.top_scorers if scorer}
+    if result.top_scorer:
+        scorers.add(result.top_scorer)
+    return scorers
 
 
 def score_player(entry: PlayerEntry, results: OfficialResults) -> PlayerScore:
