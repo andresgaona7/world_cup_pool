@@ -367,6 +367,9 @@ function normalizeOfficialKnockoutMatch(match) {
     awayScore: numberOrNull(match.awayScore),
     homePenaltyScore: numberOrNull(match.homePenaltyScore),
     awayPenaltyScore: numberOrNull(match.awayPenaltyScore),
+    homeExtraTimeScore: numberOrNull(match.homeExtraTimeScore),
+    awayExtraTimeScore: numberOrNull(match.awayExtraTimeScore),
+    duration: match.duration || "",
     advancingTeam: match.advancingTeam || match.winner || "",
   };
 }
@@ -943,13 +946,14 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
                 <thead>
                   <tr>
                     <th rowspan="2">Match</th>
-                    <th colspan="3">Official</th>
+                    <th colspan="4">Official</th>
                     <th colspan="3">Predicted</th>
                     <th rowspan="2">Multiplier</th>
                     <th rowspan="2">Total points</th>
                   </tr>
                   <tr>
                     <th>Result</th>
+                    <th>Extra time</th>
                     <th>Penalties</th>
                     <th>Adv team</th>
                     <th>Result</th>
@@ -962,6 +966,7 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
                     <tr>
                       <td>${escapeHtml(row.matchLabel)}</td>
                       <td>${knockoutValueHtml(row.officialResult)}</td>
+                      <td>${knockoutValueHtml(row.officialExtraTime, "--")}</td>
                       <td>${knockoutValueHtml(row.officialPenalties, "--")}</td>
                       <td>${knockoutValueHtml(row.officialAdvancingTeam)}</td>
                       <td>${knockoutValueHtml(row.predictedResult)}</td>
@@ -972,7 +977,7 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
                     </tr>
                   `).join("") : `
                     <tr>
-                      <td colspan="9"><span class="muted">No official ${escapeHtml(knockoutStageLabel(stage).toLowerCase())} fixtures are available yet.</span></td>
+                      <td colspan="10"><span class="muted">No official ${escapeHtml(knockoutStageLabel(stage).toLowerCase())} fixtures are available yet.</span></td>
                     </tr>
                   `}
                 </tbody>
@@ -1182,6 +1187,7 @@ function knockoutComparisonRows(player) {
       homeTeam: result.homeTeam,
       awayTeam: result.awayTeam,
       officialResult: hasResult ? knockoutRegulationScoreLabel(result) : "",
+      officialExtraTime: hasExtraTime(result) ? "Yes" : "",
       officialPenalties: hasPenaltyScore(result) ? knockoutPenaltyScoreLabel(result) : "",
       officialAdvancingTeam: result.advancingTeam,
       predictedResult: prediction && prediction.homeScore !== null && prediction.awayScore !== null
@@ -1296,6 +1302,13 @@ function knockoutEarnedMultiplier(result, prediction, hasResult) {
 
 function hasPenaltyScore(match) {
   return match.homePenaltyScore !== null && match.awayPenaltyScore !== null;
+}
+
+function hasExtraTime(match) {
+  const duration = String(match.duration || "").toUpperCase();
+  return ["EXTRA_TIME", "PENALTY_SHOOTOUT", "PENALTIES"].includes(duration) ||
+    match.homeExtraTimeScore !== null ||
+    match.awayExtraTimeScore !== null;
 }
 
 function actualTopScorers(futures) {
