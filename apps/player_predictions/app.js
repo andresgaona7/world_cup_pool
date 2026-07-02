@@ -426,7 +426,7 @@ function scoreKnockoutPrediction(prediction, result) {
     }
     return basePoints;
   }
-  if (decidedOnPenalties) {
+  if (decidedOnPenalties && exactScore) {
     return basePoints * 0.5;
   }
   return 0;

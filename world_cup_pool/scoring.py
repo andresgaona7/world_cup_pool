@@ -152,7 +152,7 @@ def score_knockout_prediction(
                 return base_points * 2.0
             return base_points * 1.5
         return base_points
-    if decided_on_penalties:
+    if decided_on_penalties and exact_score:
         return base_points * 0.5
     return 0.0
 

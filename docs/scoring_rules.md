@@ -57,8 +57,8 @@ Score mode:
 - Exact regulation draw and correct advancing team, but wrong or missing
   penalty shootout score: 2.0x base.
 - Correct advancing team but wrong score: 1.0x base.
-- Regulation draw decided on penalties: 0.5x base fallback.
-- Wrong advancing team: 0.
+- Exact regulation draw but wrong advancing team: 0.5x base fallback.
+- Wrong advancing team with any other score: 0.
 
 Penalty shootout example:
 
