@@ -10,12 +10,9 @@ const BEST_THIRD_TEAM_POINTS = 3;
 const FUTURES_POINTS = {
   champion: 20,
   runnerUp: 15,
-  reversedFinalPairing: 10,
-  topScorer: 5,
+  topScorer: 10,
   favoriteExact: 10,
-  favoriteOffByOne: 5,
   ecuadorExact: 12,
-  ecuadorOffByOne: 6,
   perfectBonus: 75,
 };
 
@@ -1085,16 +1082,6 @@ function scoreFutures(player, scenario) {
   if (runnerUpCorrect) {
     points += FUTURES_POINTS.runnerUp;
   }
-  if (
-    !championCorrect &&
-    !runnerUpCorrect &&
-    actual.champion &&
-    actual.runnerUp &&
-    prediction.champion === actual.runnerUp &&
-    prediction.runnerUp === actual.champion
-  ) {
-    points += FUTURES_POINTS.reversedFinalPairing;
-  }
   if (topScorerCorrect) {
     points += FUTURES_POINTS.topScorer;
   }
@@ -1102,13 +1089,11 @@ function scoreFutures(player, scenario) {
   const favoriteActualStage = actualTeamLastRound(actual.teamLastRounds, prediction.favoriteTeam);
   points += lastRoundPoints(prediction.favoriteRound, favoriteActualStage, {
     exact: FUTURES_POINTS.favoriteExact,
-    offByOne: FUTURES_POINTS.favoriteOffByOne,
   });
 
   const ecuadorActualStage = actualTeamLastRound(actual.teamLastRounds, "Ecuador");
   points += lastRoundPoints(prediction.ecuadorRound, ecuadorActualStage, {
     exact: FUTURES_POINTS.ecuadorExact,
-    offByOne: FUTURES_POINTS.ecuadorOffByOne,
   });
 
   if (
@@ -1146,9 +1131,6 @@ function lastRoundPoints(predicted, actual, pointValues) {
   }
   if (STAGE_ORDER[predicted] === STAGE_ORDER[actual]) {
     return pointValues.exact;
-  }
-  if (Math.abs(STAGE_ORDER[predicted] - STAGE_ORDER[actual]) === 1) {
-    return pointValues.offByOne;
   }
   return 0;
 }

@@ -79,12 +79,9 @@ Official result: Argentina 1-1 Spain; Argentina advances 5-4 on penalties.
 | --- | ---: |
 | Champion | 20 |
 | Runner-up | 15 |
-| Reversed final pairing | 10 |
-| Top scorer | 5 |
+| Top scorer | 10 |
 | Favorite team last round exact | 10 |
-| Favorite team last round off by one | 5 |
 | Ecuador last round exact | 12 |
-| Ecuador last round off by one | 6 |
 | Perfect futures card bonus | 75 |
 
 ## Bonuses

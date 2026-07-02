@@ -31,12 +31,12 @@ class FuturesScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_futures_prediction(prediction, result)
 
-        self.assertEqual(points, 62.0)
+        self.assertEqual(points, 67.0)
         self.assertEqual(bonuses, 75.0)
         self.assertEqual(details["futures:champion"], 20.0)
         self.assertEqual(details["bonus:perfect_futures"], 75.0)
 
-    def test_reversed_final_pairing_scores_partial_bonus_only_for_finalists(self):
+    def test_reversed_final_pairing_scores_no_points(self):
         prediction = FuturesPrediction(
             champion="France",
             runner_up="Brazil",
@@ -54,11 +54,11 @@ class FuturesScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_futures_prediction(prediction, result)
 
-        self.assertEqual(points, 10.0)
+        self.assertEqual(points, 0.0)
         self.assertEqual(bonuses, 0.0)
-        self.assertEqual(details["futures:reversed_final_pairing"], 10.0)
+        self.assertNotIn("futures:reversed_final_pairing", details)
 
-    def test_last_round_off_by_one_scores_partial_points(self):
+    def test_last_round_off_by_one_scores_no_points(self):
         prediction = FuturesPrediction(
             champion="Brazil",
             runner_up="France",
@@ -76,10 +76,10 @@ class FuturesScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_futures_prediction(prediction, result)
 
-        self.assertEqual(points, 11.0)
+        self.assertEqual(points, 0.0)
         self.assertEqual(bonuses, 0.0)
-        self.assertEqual(details["futures:favorite_team_last_round"], 5.0)
-        self.assertEqual(details["futures:ecuador_last_round"], 6.0)
+        self.assertNotIn("futures:favorite_team_last_round", details)
+        self.assertNotIn("futures:ecuador_last_round", details)
 
     def test_tied_top_scorers_all_score_as_correct(self):
         prediction = FuturesPrediction(
@@ -100,9 +100,9 @@ class FuturesScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_futures_prediction(prediction, result)
 
-        self.assertEqual(points, 5.0)
+        self.assertEqual(points, 10.0)
         self.assertEqual(bonuses, 0.0)
-        self.assertEqual(details["futures:top_scorer"], 5.0)
+        self.assertEqual(details["futures:top_scorer"], 10.0)
 
     def test_normalizes_top_scorer_and_favorite_team_names(self):
         prediction = FuturesPrediction(
@@ -122,9 +122,9 @@ class FuturesScoringTests(unittest.TestCase):
 
         points, bonuses, details = score_futures_prediction(prediction, result)
 
-        self.assertEqual(points, 15.0)
+        self.assertEqual(points, 20.0)
         self.assertEqual(bonuses, 0.0)
-        self.assertEqual(details["futures:top_scorer"], 5.0)
+        self.assertEqual(details["futures:top_scorer"], 10.0)
         self.assertEqual(details["futures:favorite_team_last_round"], 10.0)
 
 

@@ -9,16 +9,13 @@ from collections.abc import Iterable
 from .constants import (
     CHAMPION_POINTS,
     ECUADOR_LAST_ROUND_EXACT_POINTS,
-    ECUADOR_LAST_ROUND_OFF_BY_ONE_POINTS,
     FAVORITE_LAST_ROUND_EXACT_POINTS,
-    FAVORITE_LAST_ROUND_OFF_BY_ONE_POINTS,
     KNOCKOUT_BASE_POINTS,
     KNOCKOUT_PERFECT_BONUS_STAGES,
     KNOCKOUT_PERFECT_SCORE_BONUS_POINTS,
     KNOCKOUT_PERFECT_WINNER_BONUS_POINTS,
     KNOCKOUT_STAGE_MATCH_COUNTS,
     PERFECT_FUTURES_BONUS,
-    REVERSED_FINAL_PAIRING_POINTS,
     RUNNER_UP_POINTS,
     STAGE_ORDER,
     TOP_SCORER_POINTS,
@@ -243,15 +240,6 @@ def score_futures_prediction(
         total += RUNNER_UP_POINTS
         details["futures:runner_up"] = RUNNER_UP_POINTS
 
-    if (
-        not champion_correct
-        and not runner_up_correct
-        and prediction.champion == result.runner_up
-        and prediction.runner_up == result.champion
-    ):
-        total += REVERSED_FINAL_PAIRING_POINTS
-        details["futures:reversed_final_pairing"] = REVERSED_FINAL_PAIRING_POINTS
-
     if top_scorer_correct:
         total += TOP_SCORER_POINTS
         details["futures:top_scorer"] = TOP_SCORER_POINTS
@@ -266,7 +254,6 @@ def score_futures_prediction(
             prediction.favorite_team_last_round,
             favorite_actual_stage,
             exact_points=FAVORITE_LAST_ROUND_EXACT_POINTS,
-            off_by_one_points=FAVORITE_LAST_ROUND_OFF_BY_ONE_POINTS,
         )
         if points:
             total += points
@@ -279,7 +266,6 @@ def score_futures_prediction(
             prediction.ecuador_last_round,
             ecuador_actual_stage,
             exact_points=ECUADOR_LAST_ROUND_EXACT_POINTS,
-            off_by_one_points=ECUADOR_LAST_ROUND_OFF_BY_ONE_POINTS,
         )
         if points:
             total += points
@@ -380,13 +366,10 @@ def _last_round_points(
     actual: Stage,
     *,
     exact_points: float,
-    off_by_one_points: float,
 ) -> float:
     predicted_order = STAGE_ORDER[predicted]
     actual_order = STAGE_ORDER[actual]
 
     if predicted_order == actual_order:
         return exact_points
-    if abs(predicted_order - actual_order) == 1:
-        return off_by_one_points
     return 0.0

@@ -41,7 +41,7 @@ The tests cover the main scoring behaviors well:
 
 - Group scoring includes qualifier credit, exact-position bonus, full-order bonus, partial swapped qualifiers, non-advancing third-place slots, and best-third order independence.
 - Knockout scoring covers winner-only mode, exact score with correct winner, exact draw with wrong advancing team, correct winner with wrong score, wrong winner, required score fields, and perfect knockout bonuses.
-- Futures scoring covers a perfect futures card, reversed final pairing, and off-by-one last-round partial credit.
+- Futures scoring covers a perfect futures card and exact futures outcomes.
 - Leaderboard scoring confirms sorting and full breakdown totals.
 - Data/update tests cover country normalization, official-results grouping, FIFA ranking tie-break loading, timeline checkpoints, official checkpoints, and manual futures merging.
 
