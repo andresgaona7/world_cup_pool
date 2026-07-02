@@ -370,7 +370,11 @@ function predictionStatus(prediction, result) {
   const points = scoreKnockoutPrediction(prediction, result);
   const exactScore = numberOrNull(prediction.homeScore) === result.homeScore &&
     numberOrNull(prediction.awayScore) === result.awayScore;
+  const predictedPenalties = numberOrNull(prediction.homeScore) !== null &&
+    numberOrNull(prediction.awayScore) !== null &&
+    numberOrNull(prediction.homeScore) === numberOrNull(prediction.awayScore);
   const correctWinner = prediction.predictedAdvancingTeam === result.advancingTeam;
+  const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
   const exactPenaltyScore = hasPenaltyScore(result) &&
     numberOrNull(prediction.homePenaltyScore) === result.homePenaltyScore &&
     numberOrNull(prediction.awayPenaltyScore) === result.awayPenaltyScore;
@@ -379,6 +383,9 @@ function predictionStatus(prediction, result) {
   }
   if (exactScore && correctWinner) {
     return "Exact";
+  }
+  if (correctWinner && decidedOnPenalties && predictedPenalties) {
+    return "Winner + penalties";
   }
   if (correctWinner) {
     return "Winner";
@@ -394,6 +401,9 @@ function scoreKnockoutPrediction(prediction, result) {
   const predictedHomeScore = numberOrNull(prediction.homeScore);
   const predictedAwayScore = numberOrNull(prediction.awayScore);
   const exactScore = predictedHomeScore === result.homeScore && predictedAwayScore === result.awayScore;
+  const predictedPenalties = predictedHomeScore !== null &&
+    predictedAwayScore !== null &&
+    predictedHomeScore === predictedAwayScore;
   const correctWinner = prediction.predictedAdvancingTeam === result.advancingTeam;
   const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
   const exactPenaltyScore = decidedOnPenalties &&
@@ -401,10 +411,19 @@ function scoreKnockoutPrediction(prediction, result) {
     numberOrNull(prediction.homePenaltyScore) === result.homePenaltyScore &&
     numberOrNull(prediction.awayPenaltyScore) === result.awayPenaltyScore;
 
+  if (exactScore && correctWinner && exactPenaltyScore) {
+    return basePoints * 3;
+  }
   if (exactScore && correctWinner) {
-    return basePoints * (exactPenaltyScore ? 3 : 2);
+    return basePoints * 2;
   }
   if (correctWinner) {
+    if (decidedOnPenalties && predictedPenalties) {
+      if (exactPenaltyScore) {
+        return basePoints * 2;
+      }
+      return basePoints * 1.5;
+    }
     return basePoints;
   }
   if (decidedOnPenalties) {
@@ -429,7 +448,7 @@ function statusClass(status) {
   if (status === "Exact" || status === "Exact penalties") {
     return "result-cell result-exact";
   }
-  if (status === "Winner" || status === "Partial") {
+  if (status === "Winner" || status === "Winner + penalties" || status === "Partial") {
     return "result-cell result-partial";
   }
   if (status === "Pending") {

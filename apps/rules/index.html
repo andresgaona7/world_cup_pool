@@ -66,9 +66,14 @@
           <ul>
             <li>Base values by round: Round of 32 = 4, Round of 16 = 6, quarterfinal = 10, semifinal = 16, third-place
               match = 14, final = 20.</li>
-            <li>Score mode: exact regulation score and correct advancing team earns 2.0x base.</li>
-            <li>Score mode: exact penalty shootout score earns an extra 1.0x base, only when the regulation draw score
+            <li>Score mode: exact regulation score and correct advancing team on a match not decided by penalties earns
+              2.0x base.</li>
+            <li>Score mode: exact penalty shootout score earns 3.0x base, only when the regulation draw score
               and advancing team are also exact.</li>
+            <li>Score mode: predicted penalty shootout and correct advancing team with the wrong regulation draw score
+              earns 1.5x base.</li>
+            <li>Score mode: exact regulation draw and correct advancing team with a wrong or missing penalty shootout
+              score earns 2.0x base.</li>
             <li>Score mode: correct advancing team with the wrong score earns 1.0x base.</li>
             <li>Score mode: regulation draw decided on penalties earns a 0.5x base fallback.</li>
             <li>Score mode: wrong advancing team earns 0.</li>
@@ -89,6 +94,14 @@
               </div>
               <div>
                 <dt>Prediction: 0-0, Argentina, 5-4 pens</dt>
+                <dd>2.0x base</dd>
+              </div>
+              <div>
+                <dt>Prediction: 0-0, Argentina, wrong penalty score</dt>
+                <dd>1.5x base</dd>
+              </div>
+              <div>
+                <dt>Prediction: 2-1, Argentina</dt>
                 <dd>1.0x base</dd>
               </div>
               <div>

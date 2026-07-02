@@ -1205,6 +1205,10 @@ function knockoutComparisonRows(player) {
 function knockoutMatchStatus(prediction, result, points) {
   const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
   const correctWinner = sameKnockoutTeam(prediction.winner, result.advancingTeam);
+  const predictedPenalties = prediction.homeScore !== null &&
+    prediction.awayScore !== null &&
+    prediction.homeScore === prediction.awayScore;
+  const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
   const exactPenaltyScore = hasPenaltyScore(result) &&
     prediction.homePenaltyScore === result.homePenaltyScore &&
     prediction.awayPenaltyScore === result.awayPenaltyScore;
@@ -1216,6 +1220,9 @@ function knockoutMatchStatus(prediction, result, points) {
   }
   if (exactScore) {
     return "Exact score";
+  }
+  if (correctWinner && decidedOnPenalties && predictedPenalties) {
+    return "Winner + penalties";
   }
   if (correctWinner) {
     return "Winner";
@@ -1978,14 +1985,26 @@ function scoreKnockoutMatch(prediction, result) {
   const correctAdvancingTeam = sameKnockoutTeam(prediction.winner, result.advancingTeam);
 
   const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
+  const predictedPenalties = prediction.homeScore !== null &&
+    prediction.awayScore !== null &&
+    prediction.homeScore === prediction.awayScore;
   const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
   const exactPenaltyScore = hasPenaltyScore(result) &&
     prediction.homePenaltyScore === result.homePenaltyScore &&
     prediction.awayPenaltyScore === result.awayPenaltyScore;
+  if (exactScore && correctAdvancingTeam && exactPenaltyScore) {
+    return basePoints * 3;
+  }
   if (exactScore && correctAdvancingTeam) {
-    return basePoints * (exactPenaltyScore ? 3 : 2);
+    return basePoints * 2;
   }
   if (correctAdvancingTeam) {
+    if (decidedOnPenalties && predictedPenalties) {
+      if (exactPenaltyScore) {
+        return basePoints * 2;
+      }
+      return basePoints * 1.5;
+    }
     return basePoints;
   }
   if (decidedOnPenalties) {

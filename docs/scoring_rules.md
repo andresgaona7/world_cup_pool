@@ -48,12 +48,30 @@ Base points by round:
 
 Score mode:
 
-- Exact regulation score and correct advancing team: 2.0x base.
-- Exact penalty shootout score on a match decided by penalties: +1.0x base,
+- Exact regulation score and correct advancing team on a match not decided by
+  penalties: 2.0x base.
+- Exact penalty shootout score on a match decided by penalties: 3.0x base,
   only when the regulation draw score and advancing team are also exact.
+- Predicted a penalty shootout and correct advancing team, but wrong regulation
+  draw score: 1.5x base.
+- Exact regulation draw and correct advancing team, but wrong or missing
+  penalty shootout score: 2.0x base.
 - Correct advancing team but wrong score: 1.0x base.
 - Regulation draw decided on penalties: 0.5x base fallback.
 - Wrong advancing team: 0.
+
+Penalty shootout example:
+
+Official result: Argentina 1-1 Spain; Argentina advances 5-4 on penalties.
+
+| Prediction | Multiplier |
+| --- | ---: |
+| 1-1, Argentina, 5-4 pens | 3.0x base |
+| 1-1, Argentina, wrong or no penalty score | 2.0x base |
+| 0-0, Argentina, 5-4 pens | 2.0x base |
+| 0-0, Argentina, wrong penalty score | 1.5x base |
+| 2-1, Argentina | 1.0x base |
+| 1-1, Spain | 0.5x base |
 
 ## Futures
 
