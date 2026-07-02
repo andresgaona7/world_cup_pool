@@ -1186,7 +1186,7 @@ function knockoutComparisonRows(player) {
       matchLabel: `${result.homeTeam} vs ${result.awayTeam}`,
       homeTeam: result.homeTeam,
       awayTeam: result.awayTeam,
-      officialResult: hasResult ? knockoutRegulationScoreLabel(result) : "",
+      officialResult: hasResult ? knockoutOfficialScoreLabel(result) : "",
       officialExtraTime: hasExtraTime(result) ? "Yes" : "",
       officialPenalties: hasPenaltyScore(result) ? knockoutPenaltyScoreLabel(result) : "",
       officialAdvancingTeam: result.advancingTeam,
@@ -1281,6 +1281,15 @@ function knockoutScoreLabel(match) {
 
 function knockoutRegulationScoreLabel(match) {
   return `${match.homeScore ?? "-"}-${match.awayScore ?? "-"}`;
+}
+
+function knockoutOfficialScoreLabel(match) {
+  const homeFullTimeScore = numberOrNull(match.homeFullTimeScore);
+  const awayFullTimeScore = numberOrNull(match.awayFullTimeScore);
+  if (homeFullTimeScore !== null && awayFullTimeScore !== null) {
+    return `${homeFullTimeScore}-${awayFullTimeScore}`;
+  }
+  return knockoutRegulationScoreLabel(match);
 }
 
 function knockoutPenaltyScoreLabel(match) {
