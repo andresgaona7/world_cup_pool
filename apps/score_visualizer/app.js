@@ -587,6 +587,9 @@ function numberValue(value, fallback) {
 }
 
 function numberOrNull(value) {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
   const number = Number(value);
   return Number.isFinite(number) ? number : null;
 }
@@ -959,10 +962,10 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
                     <tr>
                       <td>${escapeHtml(row.matchLabel)}</td>
                       <td>${knockoutValueHtml(row.officialResult)}</td>
-                      <td>${knockoutValueHtml(row.officialPenalties)}</td>
+                      <td>${knockoutValueHtml(row.officialPenalties, "--")}</td>
                       <td>${knockoutValueHtml(row.officialAdvancingTeam)}</td>
                       <td>${knockoutValueHtml(row.predictedResult)}</td>
-                      <td>${knockoutValueHtml(row.predictedPenalties)}</td>
+                      <td>${knockoutValueHtml(row.predictedPenalties, "--")}</td>
                       <td>${knockoutValueHtml(row.predictedAdvancingTeam)}</td>
                       <td>${row.hasResult ? `${formatMultiplier(row.earnedMultiplier)}x` : '<span class="muted">Pending</span>'}</td>
                       <td class="total">${row.hasResult ? formatPoints(row.points) : '<span class="muted">Pending</span>'}</td>
@@ -1278,8 +1281,8 @@ function knockoutPenaltyScoreLabel(match) {
   return `${match.homePenaltyScore ?? "-"}-${match.awayPenaltyScore ?? "-"}`;
 }
 
-function knockoutValueHtml(value) {
-  return value ? escapeHtml(value) : '<span class="muted">Pending</span>';
+function knockoutValueHtml(value, emptyLabel = "Pending") {
+  return value ? escapeHtml(value) : `<span class="muted">${escapeHtml(emptyLabel)}</span>`;
 }
 
 function knockoutEarnedMultiplier(result, prediction, hasResult) {
