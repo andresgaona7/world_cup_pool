@@ -32,6 +32,7 @@ build-site:
 	mkdir -p public/data/generated
 	cp index.html styles.css theme.js .nojekyll public/
 	cp -R apps public/
+	cp -R static public/
 	cp data/generated/consensus_predictions.json data/generated/knockout_predictions.js data/generated/official_results.js data/generated/pool_data.js data/generated/round_of_32_consensus.json public/data/generated/
 
 test:
