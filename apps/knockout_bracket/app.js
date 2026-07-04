@@ -107,7 +107,7 @@ function renderMatch([matchId, homeSeed, awaySeed, label]) {
 }
 
 function teamRow(team, officialMatch, side) {
-  const score = scoreForSide(officialMatch, side);
+  const score = scoreHtmlForSide(officialMatch, side);
   const winnerClass = isWinner(officialMatch, team.name) ? " is-winner" : "";
   return `
     <div class="team-row${winnerClass}">
@@ -142,13 +142,32 @@ function officialTeam(name) {
   return country(name, flagForTeam(name));
 }
 
-function scoreForSide(match, side) {
+function scoreHtmlForSide(match, side) {
   if (!match || match.homeScore === null || match.awayScore === null) {
     return "";
   }
-  const score = side === "home" ? match.homeScore : match.awayScore;
+  const baseScore = side === "home" ? match.homeScore : match.awayScore;
   const penaltyScore = side === "home" ? match.homePenaltyScore : match.awayPenaltyScore;
-  return penaltyScore === null ? String(score) : `${score} (${penaltyScore})`;
+  if (isPenaltyShootout(match) && penaltyScore !== null) {
+    return `${baseScore}<span class="score-detail score-detail-pen">PEN ${penaltyScore}</span>`;
+  }
+
+  const extraTimeScore = side === "home" ? match.homeExtraTimeScore : match.awayExtraTimeScore;
+  if (playedExtraTime(match) && extraTimeScore !== null) {
+    return `${baseScore}<span class="score-detail score-detail-et">ET ${extraTimeScore}</span>`;
+  }
+
+  return String(baseScore);
+}
+
+function playedExtraTime(match) {
+  const duration = String(match?.duration || "").toUpperCase();
+  return duration.includes("EXTRA_TIME") || match?.homeExtraTimeScore !== null || match?.awayExtraTimeScore !== null;
+}
+
+function isPenaltyShootout(match) {
+  const duration = String(match?.duration || "").toUpperCase();
+  return duration.includes("PENAL") || match?.homePenaltyScore !== null || match?.awayPenaltyScore !== null;
 }
 
 function isWinner(match, teamName) {
@@ -192,6 +211,10 @@ function normalizeOfficialKnockoutMatch(match) {
     awayScore: numberOrNull(match.awayScore),
     homePenaltyScore: numberOrNull(match.homePenaltyScore),
     awayPenaltyScore: numberOrNull(match.awayPenaltyScore),
+    homeFullTimeScore: numberOrNull(match.homeFullTimeScore),
+    awayFullTimeScore: numberOrNull(match.awayFullTimeScore),
+    homeExtraTimeScore: numberOrNull(match.homeExtraTimeScore),
+    awayExtraTimeScore: numberOrNull(match.awayExtraTimeScore),
     advancingTeam: match.advancingTeam || match.winner || "",
     duration: match.duration || "",
   };
