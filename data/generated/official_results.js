@@ -2478,6 +2478,7 @@ window.OFFICIAL_RESULTS = {
         "extraTimeMatches": 5,
         "penaltyMatches": 3,
         "mostGoalsTeam": [
+          "Argentina",
           "France",
           "Spain"
         ],
@@ -3775,6 +3776,7 @@ window.OFFICIAL_RESULTS = {
     "extraTimeMatches": 5,
     "penaltyMatches": 3,
     "mostGoalsTeam": [
+      "Argentina",
       "France",
       "Spain"
     ],
@@ -3791,7 +3793,7 @@ window.OFFICIAL_RESULTS = {
   "knockoutSource": {
     "sourceName": "Football-Data.org matches",
     "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-    "generatedAt": "2026-07-04T07:14:43+00:00",
+    "generatedAt": "2026-07-04T08:02:50+00:00",
     "rawPath": "data/raw/official/football_data_wc_matches_2026.json",
     "normalizedPath": "data/manual/official_knockout_results.json"
   }

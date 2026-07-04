@@ -1,7 +1,7 @@
 {
   "sourceName": "Football-Data.org matches",
   "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-  "generatedAt": "2026-07-04T07:14:43+00:00",
+  "generatedAt": "2026-07-04T08:02:50+00:00",
   "matches": [
     {
       "matchId": "73",
@@ -656,6 +656,7 @@
     "extraTimeMatches": 5,
     "penaltyMatches": 3,
     "mostGoalsTeam": [
+      "Argentina",
       "France",
       "Spain"
     ],
