@@ -218,6 +218,36 @@ class OfficialResultsUpdateTests(unittest.TestCase):
     def test_preserves_existing_group_stage_results_by_default(self):
         existing_results = {
             "sourceName": "Football-Data.org",
+            "matches": [
+                {
+                    "matchId": "73",
+                    "stage": "round_of_32",
+                    "homeTeam": "South Africa",
+                    "awayTeam": "Canada",
+                    "homeScore": 0,
+                    "awayScore": 1,
+                }
+            ],
+            "officialMatches": [
+                {
+                    "matchId": "73",
+                    "stage": "round_of_32",
+                    "homeTeam": "South Africa",
+                    "awayTeam": "Canada",
+                    "homeScore": 0,
+                    "awayScore": 1,
+                }
+            ],
+            "roundOf32BonusResults": {
+                "extraTimeMatches": 3,
+                "penaltyMatches": 2,
+                "mostGoalsTeam": "Canada",
+                "totalGoals": 48,
+            },
+            "knockoutSource": {
+                "sourceName": "Football-Data.org matches",
+                "normalizedPath": "data/manual/official_knockout_results.json",
+            },
             "groupResults": {"A": ["Mexico", "South Korea", "Czechia"]},
             "bestThirds": ["Czechia"],
             "futures": {
@@ -246,6 +276,7 @@ class OfficialResultsUpdateTests(unittest.TestCase):
         }
         new_results = {
             "sourceName": "Football-Data.org",
+            "matches": [],
             "groupResults": {"A": ["Canada", "Qatar", "Switzerland"]},
             "bestThirds": ["Switzerland"],
             "futures": {
@@ -279,8 +310,25 @@ class OfficialResultsUpdateTests(unittest.TestCase):
             )
 
         self.assertIn("groupResults", preserved)
+        self.assertIn("matches", preserved)
+        self.assertIn("officialMatches", preserved)
+        self.assertIn("roundOf32BonusResults", preserved)
+        self.assertIn("knockoutSource", preserved)
         self.assertIn("provisionalGroupStandings", preserved)
         self.assertIn("timelineCheckpoints", preserved)
+        self.assertEqual(new_results["matches"], existing_results["matches"])
+        self.assertEqual(
+            new_results["officialMatches"],
+            existing_results["officialMatches"],
+        )
+        self.assertEqual(
+            new_results["roundOf32BonusResults"],
+            existing_results["roundOf32BonusResults"],
+        )
+        self.assertEqual(
+            new_results["knockoutSource"],
+            existing_results["knockoutSource"],
+        )
         self.assertEqual(new_results["groupResults"], existing_results["groupResults"])
         self.assertEqual(new_results["bestThirds"], existing_results["bestThirds"])
         self.assertEqual(new_results["futures"], existing_results["futures"])
@@ -293,14 +341,41 @@ class OfficialResultsUpdateTests(unittest.TestCase):
             existing_results["timelineCheckpoints"],
         )
 
-    def test_refresh_group_stage_results_skips_preservation(self):
+    def test_refresh_group_stage_results_preserves_knockout_results(self):
+        existing_results = {
+            "groupResults": {"A": ["Mexico"]},
+            "matches": [
+                {
+                    "matchId": "73",
+                    "stage": "round_of_32",
+                    "homeTeam": "South Africa",
+                    "awayTeam": "Canada",
+                    "homeScore": 0,
+                    "awayScore": 1,
+                }
+            ],
+            "officialMatches": [
+                {
+                    "matchId": "73",
+                    "stage": "round_of_32",
+                    "homeTeam": "South Africa",
+                    "awayTeam": "Canada",
+                    "homeScore": 0,
+                    "awayScore": 1,
+                }
+            ],
+            "roundOf32BonusResults": {"totalGoals": 48},
+            "knockoutSource": {
+                "normalizedPath": "data/manual/official_knockout_results.json"
+            },
+        }
         with tempfile.TemporaryDirectory() as temp_dir:
             output_path = Path(temp_dir) / "official_results.js"
             output_path.write_text(
-                'window.OFFICIAL_RESULTS = {"groupResults": {"A": ["Mexico"]}};\n',
+                f"window.OFFICIAL_RESULTS = {json.dumps(existing_results)};\n",
                 encoding="utf-8",
             )
-            new_results = {"groupResults": {"A": ["Canada"]}}
+            new_results = {"groupResults": {"A": ["Canada"]}, "matches": []}
 
             preserved = update_official_results.preserve_existing_group_stage_results(
                 new_results,
@@ -308,8 +383,24 @@ class OfficialResultsUpdateTests(unittest.TestCase):
                 refresh_group_stage_results=True,
             )
 
-        self.assertEqual(preserved, [])
+        self.assertEqual(
+            preserved,
+            ["matches", "officialMatches", "roundOf32BonusResults", "knockoutSource"],
+        )
         self.assertEqual(new_results["groupResults"], {"A": ["Canada"]})
+        self.assertEqual(new_results["matches"], existing_results["matches"])
+        self.assertEqual(
+            new_results["officialMatches"],
+            existing_results["officialMatches"],
+        )
+        self.assertEqual(
+            new_results["roundOf32BonusResults"],
+            existing_results["roundOf32BonusResults"],
+        )
+        self.assertEqual(
+            new_results["knockoutSource"],
+            existing_results["knockoutSource"],
+        )
 
     def row(
         self,

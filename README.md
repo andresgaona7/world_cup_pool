@@ -57,11 +57,13 @@ python3 -m unittest discover -s tests
 
 `make update-official-results` reads `FOOTBALL_DATA_API_KEY` when set. The
 updater also supports `--api-key`, `--input`, `--output`, `--allow-empty`, and
-`--transport`. By default, the updater preserves the existing group-stage
-scoring fields in `data/generated/official_results.js`, including group
-results, best thirds, provisional standings, timeline checkpoints, overall
-standings, and futures. Use `--refresh-group-stage-results` only when you
-intend to replace those fields from Football-Data again.
+`--transport`. By default, the updater preserves the completed scoring fields
+already in `data/generated/official_results.js`, including group results, best
+thirds, provisional standings, timeline checkpoints, overall standings, futures,
+and the completed Round of 32 knockout matches, source metadata, and bonus
+answers. Use `--refresh-group-stage-results` only when you intend to replace the
+group-stage fields from Football-Data again; Round of 32 knockout data remains
+preserved by this command.
 
 `make update-official-knockout-results` reads `FOOTBALL_DATA_API_KEY` when set.
 It uses the Football-Data matches endpoint, not the standings endpoint, because

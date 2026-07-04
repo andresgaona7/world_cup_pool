@@ -67,13 +67,18 @@ DEFAULT_MAX_RETRIES = 2
 DEFAULT_TRANSPORT = "auto"
 PRESERVED_GROUP_STAGE_FIELDS = (
     "lastCompletedMatchDate",
-    "matches",
     "groupResults",
     "bestThirds",
     "futures",
     "provisionalGroupStandings",
     "timelineCheckpoints",
     "overallStandings",
+)
+PRESERVED_KNOCKOUT_FIELDS = (
+    "matches",
+    "officialMatches",
+    "roundOf32BonusResults",
+    "knockoutSource",
 )
 
 
@@ -260,15 +265,16 @@ def preserve_existing_group_stage_results(
     *,
     refresh_group_stage_results: bool,
 ) -> list[str]:
-    if refresh_group_stage_results:
-        return []
-
     existing_data = read_existing_official_results(output_path)
     if existing_data is None:
         return []
 
     preserved_fields = []
-    for field in PRESERVED_GROUP_STAGE_FIELDS:
+    fields = list(PRESERVED_KNOCKOUT_FIELDS)
+    if not refresh_group_stage_results:
+        fields.extend(PRESERVED_GROUP_STAGE_FIELDS)
+
+    for field in fields:
         if field in existing_data:
             data[field] = existing_data[field]
             preserved_fields.append(field)
