@@ -3,8 +3,7 @@
   "runnerUp": "",
   "topScorer": "Lionel Messi",
   "topScorers": [
-    "Lionel Messi",
-    "Kylian Mbappé"
+    "Lionel Messi"
   ],
   "teamLastRounds": {
     "Ecuador": "round_of_32",
@@ -14,6 +13,6 @@
     "Brazil": "round_of_16",
     "England": "round_of_16",
     "Spain": "round_of_16",
-    "Argentina": "round_of_32"
+    "Argentina": "round_of_16"
   }
 }

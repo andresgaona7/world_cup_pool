@@ -80,6 +80,10 @@ group-stage scoring fields are preserved. The match endpoint supplies teams,
 score, stage, status, duration, winner, penalty details when present, and
 referee metadata. Cards and fastest/latest goal teams are not present in that
 endpoint and must be reviewed manually unless another event source is added.
+Store reviewed Round of 32 bonus-question answers in
+`data/manual/round_of_32_bonus_results.json`; the knockout updater overlays
+that file after every Football-Data refresh so manual answers are not lost when
+`data/manual/official_knockout_results.json` is regenerated.
 If Football-Data reports a penalty shootout with a missing winner or tied
 `score.penalties` value, the updater derives the shootout score from
 `fullTime - regularTime - extraTime` and uses that derived penalty result to

@@ -1,16 +1,5 @@
 {
   "matches": {
-    "82": {
-      "homeScore": 2,
-      "awayScore": 2,
-      "advancingTeam": "Belgium",
-      "duration": "EXTRA_TIME",
-      "homeFullTimeScore": 3,
-      "awayFullTimeScore": 2,
-      "homeRegularTimeScore": 2,
-      "awayRegularTimeScore": 2,
-      "homeExtraTimeScore": 1,
-      "awayExtraTimeScore": 0
-    }
+
   }
 }

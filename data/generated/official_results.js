@@ -730,8 +730,7 @@ window.OFFICIAL_RESULTS = {
     "runnerUp": "",
     "topScorer": "Lionel Messi",
     "topScorers": [
-      "Lionel Messi",
-      "Kylian Mbappe"
+      "Lionel Messi"
     ],
     "teamLastRounds": {
       "South Korea": "group_stage",
@@ -751,7 +750,7 @@ window.OFFICIAL_RESULTS = {
       "Uzbekistan": "group_stage",
       "Panama": "group_stage",
       "France": "round_of_16",
-      "Argentina": "round_of_32",
+      "Argentina": "round_of_16",
       "Norway": "round_of_16",
       "Morocco": "round_of_16",
       "Brazil": "round_of_16",
@@ -1795,8 +1794,7 @@ window.OFFICIAL_RESULTS = {
           "runnerUp": "",
           "topScorer": "Lionel Messi",
           "topScorers": [
-            "Lionel Messi",
-            "Kylian Mbappe"
+            "Lionel Messi"
           ],
           "teamLastRounds": {
             "South Korea": "group_stage",
@@ -1816,7 +1814,7 @@ window.OFFICIAL_RESULTS = {
             "Uzbekistan": "group_stage",
             "Panama": "group_stage",
             "France": "round_of_16",
-            "Argentina": "round_of_32",
+            "Argentina": "round_of_16",
             "Norway": "round_of_16",
             "Morocco": "round_of_16",
             "Brazil": "round_of_16",
@@ -3793,7 +3791,7 @@ window.OFFICIAL_RESULTS = {
   "knockoutSource": {
     "sourceName": "Football-Data.org matches",
     "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-    "generatedAt": "2026-07-04T06:47:47+00:00",
+    "generatedAt": "2026-07-04T07:14:43+00:00",
     "rawPath": "data/raw/official/football_data_wc_matches_2026.json",
     "normalizedPath": "data/manual/official_knockout_results.json"
   }

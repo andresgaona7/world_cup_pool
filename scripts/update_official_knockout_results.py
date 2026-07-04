@@ -28,6 +28,7 @@ DEFAULT_RAW_OUTPUT_PATH = (
 )
 DEFAULT_NORMALIZED_OUTPUT_PATH = ROOT / "data" / "manual" / "official_knockout_results.json"
 DEFAULT_OVERRIDES_PATH = ROOT / "data" / "manual" / "official_knockout_overrides.json"
+DEFAULT_ROUND_OF_32_BONUS_PATH = ROOT / "data" / "manual" / "round_of_32_bonus_results.json"
 DEFAULT_OFFICIAL_RESULTS_PATH = ROOT / "data" / "generated" / "official_results.js"
 OFFICIAL_RESULTS_RE = re.compile(
     r"^\s*window\.OFFICIAL_RESULTS\s*=\s*(?P<payload>\{.*\})\s*;\s*$",
@@ -114,6 +115,7 @@ def main() -> None:
         raw_output_path=args.raw_output,
         normalized_output_path=args.normalized_output,
         overrides_path=args.overrides,
+        round_of_32_bonus_path=args.round_of_32_bonus,
         official_results_path=args.official_results,
         api_key=args.api_key or environ.get(API_KEY_ENV) or DEFAULT_API_KEY,
         merge_official_results=not args.no_merge,
@@ -167,6 +169,16 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--round-of-32-bonus",
+        type=Path,
+        default=DEFAULT_ROUND_OF_32_BONUS_PATH,
+        help=(
+            "Manual Round of 32 bonus-question answers that should survive "
+            "Football-Data refreshes. "
+            f"Defaults to {DEFAULT_ROUND_OF_32_BONUS_PATH.relative_to(ROOT)} if present."
+        ),
+    )
+    parser.add_argument(
         "--official-results",
         type=Path,
         default=DEFAULT_OFFICIAL_RESULTS_PATH,
@@ -191,6 +203,7 @@ def update_official_knockout_results(
     overrides_path: Path | None,
     official_results_path: Path,
     api_key: str,
+    round_of_32_bonus_path: Path | None = None,
     merge_official_results: bool = True,
 ) -> dict[str, Any]:
     raw_data = read_source(input_path, api_key)
@@ -198,6 +211,11 @@ def update_official_knockout_results(
 
     normalized = build_normalized_data(raw_data)
     apply_manual_overrides(normalized, read_manual_overrides(overrides_path))
+    apply_round_of_32_bonus_results(
+        normalized,
+        read_round_of_32_bonus_results(round_of_32_bonus_path),
+        round_of_32_bonus_path,
+    )
     write_json(normalized_output_path, normalized)
 
     if merge_official_results:
@@ -224,6 +242,48 @@ def read_manual_overrides(path: Path | None) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise ValueError(f"{path} must contain a JSON object")
     return data
+
+
+def read_round_of_32_bonus_results(path: Path | None) -> dict[str, Any]:
+    if path is None or not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError(f"{path} must contain a JSON object")
+    return data
+
+
+def apply_round_of_32_bonus_results(
+    normalized: dict[str, Any],
+    bonus_results: dict[str, Any],
+    source_path: Path | None,
+) -> None:
+    if not bonus_results:
+        return
+
+    current = normalized.setdefault(
+        "roundOf32BonusResults",
+        dict(ROUND_OF_32_BONUS_DEFAULTS),
+    )
+    if not isinstance(current, dict):
+        current = dict(ROUND_OF_32_BONUS_DEFAULTS)
+        normalized["roundOf32BonusResults"] = current
+
+    allowed_keys = set(ROUND_OF_32_BONUS_DEFAULTS)
+    reviewed = {
+        key: value
+        for key, value in bonus_results.items()
+        if key in allowed_keys
+    }
+    current.update(reviewed)
+    if reviewed:
+        source_label = (
+            display_path(source_path) if source_path is not None else "manual bonus file"
+        )
+        normalized.setdefault("notes", []).append(
+            "Applied reviewed Round of 32 bonus-question answer(s) from "
+            f"{source_label}."
+        )
 
 
 def apply_manual_overrides(

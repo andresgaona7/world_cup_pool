@@ -324,6 +324,74 @@ class UpdateOfficialKnockoutResultsTests(unittest.TestCase):
             self.assertIn("roundOf32BonusResults", merged)
             self.assertEqual(merged["knockoutSource"]["normalizedPath"], str(normalized_output_path))
 
+    def test_merges_reviewed_round_of_32_bonus_file(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            input_path = temp_path / "matches.json"
+            raw_output_path = temp_path / "raw.json"
+            normalized_output_path = temp_path / "normalized.json"
+            official_results_path = temp_path / "official_results.js"
+            bonus_path = temp_path / "round_of_32_bonus_results.json"
+
+            input_path.write_text(
+                json.dumps(
+                    {
+                        "matches": [
+                            self.match(
+                                source_id=537417,
+                                stage="LAST_32",
+                                home="South Africa",
+                                away="Canada",
+                                winner="AWAY_TEAM",
+                                full_time=(0, 1),
+                                utc_date="2026-06-28T19:00:00Z",
+                            )
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            bonus_path.write_text(
+                json.dumps(
+                    {
+                        "fastestGoalTeam": "DR Congo",
+                        "latestGoalTeam": "Belgium",
+                        "biggestWinningMarginTeam": ["France", "Spain"],
+                        "yellowCards": 62,
+                        "redCards": 2,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            self.write_official_results(official_results_path)
+
+            normalized = update_official_knockout_results.update_official_knockout_results(
+                input_path=input_path,
+                raw_output_path=raw_output_path,
+                normalized_output_path=normalized_output_path,
+                overrides_path=None,
+                official_results_path=official_results_path,
+                api_key="unused",
+                round_of_32_bonus_path=bonus_path,
+            )
+            merged = update_official_knockout_results.read_official_results(
+                official_results_path
+            )
+
+            expected = {
+                "extraTimeMatches": 0,
+                "penaltyMatches": 0,
+                "mostGoalsTeam": "Canada",
+                "totalGoals": 1,
+                "fastestGoalTeam": "DR Congo",
+                "latestGoalTeam": "Belgium",
+                "biggestWinningMarginTeam": ["France", "Spain"],
+                "yellowCards": 62,
+                "redCards": 2,
+            }
+            self.assertEqual(normalized["roundOf32BonusResults"], expected)
+            self.assertEqual(merged["roundOf32BonusResults"], expected)
+
     def match(
         self,
         *,
