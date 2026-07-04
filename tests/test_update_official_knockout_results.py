@@ -237,6 +237,44 @@ class UpdateOfficialKnockoutResultsTests(unittest.TestCase):
         self.assertIsNone(bonus["yellowCards"])
         self.assertEqual(bonus["fastestGoalTeam"], "")
 
+    def test_round_of_32_most_goals_bonus_preserves_tied_teams(self):
+        raw_data = {
+            "matches": [
+                self.match(
+                    source_id=1,
+                    stage="LAST_32",
+                    home="France",
+                    away="Sweden",
+                    winner="HOME_TEAM",
+                    full_time=(3, 0),
+                    utc_date="2026-06-29T19:00:00Z",
+                ),
+                self.match(
+                    source_id=2,
+                    stage="LAST_32",
+                    home="Spain",
+                    away="Austria",
+                    winner="HOME_TEAM",
+                    full_time=(3, 0),
+                    utc_date="2026-06-30T19:00:00Z",
+                ),
+                self.match(
+                    source_id=3,
+                    stage="LAST_32",
+                    home="Germany",
+                    away="Paraguay",
+                    winner="HOME_TEAM",
+                    full_time=(1, 0),
+                    utc_date="2026-07-01T19:00:00Z",
+                ),
+            ]
+        }
+
+        normalized = update_official_knockout_results.build_normalized_data(raw_data)
+        bonus = normalized["roundOf32BonusResults"]
+
+        self.assertEqual(bonus["mostGoalsTeam"], ["France", "Spain"])
+
     def test_writes_raw_normalized_and_merges_official_results(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)

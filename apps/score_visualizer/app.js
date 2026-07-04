@@ -1908,6 +1908,9 @@ function formatRoundOf32BonusAnswer(answer) {
   if (answer === null || answer === "" || answer === undefined) {
     return "Pending";
   }
+  if (Array.isArray(answer)) {
+    return answer.length ? answer.join(" / ") : "Pending";
+  }
   return String(answer);
 }
 
@@ -1950,6 +1953,9 @@ function bonusAnswerMatches(prediction, actual) {
   }
   if (typeof actual === "number") {
     return numericBonusAnswerMatches(predictedText, actual);
+  }
+  if (Array.isArray(actual)) {
+    return actual.some((value) => sameKnockoutTeam(predictedText, String(value)));
   }
   return sameKnockoutTeam(predictedText, String(actual));
 }

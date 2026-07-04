@@ -919,6 +919,9 @@ function bonusAnswerMatches(prediction, actual) {
   if (typeof actual === "number") {
     return numericBonusAnswerMatches(predictedText, actual);
   }
+  if (Array.isArray(actual)) {
+    return actual.some((value) => sameKnockoutTeam(predictedText, String(value)));
+  }
   return sameKnockoutTeam(predictedText, String(actual));
 }
 

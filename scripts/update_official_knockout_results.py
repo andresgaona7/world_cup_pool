@@ -589,7 +589,7 @@ def compute_round_of_32_bonus_results(matches: list[dict[str, Any]]) -> dict[str
     return results
 
 
-def most_goals_team(matches: list[dict[str, Any]]) -> str:
+def most_goals_team(matches: list[dict[str, Any]]) -> str | list[str]:
     totals: dict[str, int] = {}
     for match in matches:
         if match.get("homeTeam"):
@@ -604,7 +604,7 @@ def most_goals_team(matches: list[dict[str, Any]]) -> str:
         return ""
     best_score = max(totals.values())
     winners = sorted(team for team, total in totals.items() if total == best_score)
-    return winners[0] if len(winners) == 1 else ""
+    return winners[0] if len(winners) == 1 else winners
 
 
 def biggest_winning_margin_team(matches: list[dict[str, Any]]) -> str:
