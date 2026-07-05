@@ -91,6 +91,11 @@ If Football-Data reports a penalty shootout with a missing winner or tied
 `fullTime - regularTime - extraTime` and uses that derived penalty result to
 set the advancing team.
 
+For scoring and official-result comparisons, knockout `homeScore` and
+`awayScore` are regular time plus extra time when those fields are available.
+Penalty shootout goals stay in `homePenaltyScore` and `awayPenaltyScore`; they
+are not added to `homeScore` or `awayScore`.
+
 When Football-Data still cannot identify a knockout winner or shootout score,
 store the reviewed correction in
 `data/manual/official_knockout_overrides.json`. Overrides are keyed by pool

@@ -499,7 +499,7 @@ def normalize_match(match: dict[str, Any], stage: str, pool_match_id: str) -> di
     full_time = score_value(score, "fullTime")
     extra_time = score_value(score, "extraTime")
     penalties = penalty_score(score, regular_time, extra_time, full_time)
-    scoring_score = regular_time or full_time
+    scoring_score = official_score(regular_time, extra_time, full_time)
 
     if not pool_match_id or not home_team or not away_team:
         return {}
@@ -530,6 +530,21 @@ def normalize_match(match: dict[str, Any], stage: str, pool_match_id: str) -> di
         "referees": normalize_referees(match.get("referees")),
     }
     return normalized
+
+
+def official_score(
+    regular_time: dict[str, int | None] | None,
+    extra_time: dict[str, int | None] | None,
+    full_time: dict[str, int | None] | None,
+) -> dict[str, int | None] | None:
+    if regular_time:
+        home = optional_int(regular_time.get("home"))
+        away = optional_int(regular_time.get("away"))
+        if home is not None and away is not None:
+            extra_home = optional_int(extra_time.get("home") if extra_time else None) or 0
+            extra_away = optional_int(extra_time.get("away") if extra_time else None) or 0
+            return {"home": home + extra_home, "away": away + extra_away}
+    return full_time
 
 
 def normalize_team(value: Any) -> str:

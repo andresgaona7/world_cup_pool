@@ -383,7 +383,7 @@
       "sourceUpdatedAt": "2026-07-03T15:20:13Z",
       "homeTeam": "Belgium",
       "awayTeam": "Senegal",
-      "homeScore": 2,
+      "homeScore": 3,
       "awayScore": 2,
       "advancingTeam": "Belgium",
       "duration": "EXTRA_TIME",
@@ -499,8 +499,8 @@
       "sourceUpdatedAt": "2026-07-04T02:45:06Z",
       "homeTeam": "Argentina",
       "awayTeam": "Cape Verde Islands",
-      "homeScore": 1,
-      "awayScore": 1,
+      "homeScore": 3,
+      "awayScore": 2,
       "advancingTeam": "Argentina",
       "duration": "EXTRA_TIME",
       "homePenaltyScore": null,
@@ -770,7 +770,7 @@
       "France",
       "Spain"
     ],
-    "totalGoals": 38,
+    "totalGoals": 42,
     "fastestGoalTeam": "DR Congo",
     "latestGoalTeam": "Belgium",
     "biggestWinningMarginTeam": [

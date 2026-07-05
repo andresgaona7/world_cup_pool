@@ -1,7 +1,7 @@
 {
   "sourceName": "Football-Data.org matches",
   "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-  "generatedAt": "2026-07-04T08:02:50+00:00",
+  "generatedAt": "2026-07-05T04:00:52+00:00",
   "matches": [
     {
       "matchId": "73",
@@ -273,7 +273,7 @@
       "sourceUpdatedAt": "2026-07-03T15:20:13Z",
       "homeTeam": "Belgium",
       "awayTeam": "Senegal",
-      "homeScore": 2,
+      "homeScore": 3,
       "awayScore": 2,
       "advancingTeam": "Belgium",
       "duration": "EXTRA_TIME",
@@ -386,11 +386,11 @@
       "stage": "round_of_32",
       "status": "FINISHED",
       "utcDate": "2026-07-03T22:00:00Z",
-      "sourceUpdatedAt": "2026-07-04T02:45:06Z",
+      "sourceUpdatedAt": "2026-07-04T13:25:01Z",
       "homeTeam": "Argentina",
       "awayTeam": "Cape Verde Islands",
-      "homeScore": 1,
-      "awayScore": 1,
+      "homeScore": 3,
+      "awayScore": 2,
       "advancingTeam": "Argentina",
       "duration": "EXTRA_TIME",
       "homePenaltyScore": null,
@@ -415,7 +415,7 @@
       "stage": "round_of_32",
       "status": "FINISHED",
       "utcDate": "2026-07-04T01:30:00Z",
-      "sourceUpdatedAt": "2026-07-04T05:32:36Z",
+      "sourceUpdatedAt": "2026-07-04T08:25:02Z",
       "homeTeam": "Colombia",
       "awayTeam": "Ghana",
       "homeScore": 1,
@@ -471,47 +471,59 @@
       "matchId": "89",
       "sourceMatchId": 537375,
       "stage": "round_of_16",
-      "status": "TIMED",
+      "status": "FINISHED",
       "utcDate": "2026-07-04T21:00:00Z",
-      "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+      "sourceUpdatedAt": "2026-07-05T03:25:01Z",
       "homeTeam": "Paraguay",
       "awayTeam": "France",
-      "homeScore": null,
-      "awayScore": null,
-      "advancingTeam": "",
+      "homeScore": 0,
+      "awayScore": 1,
+      "advancingTeam": "France",
       "duration": "REGULAR",
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
-      "homeFullTimeScore": null,
-      "awayFullTimeScore": null,
+      "homeFullTimeScore": 0,
+      "awayFullTimeScore": 1,
       "homeRegularTimeScore": null,
       "awayRegularTimeScore": null,
       "homeExtraTimeScore": null,
       "awayExtraTimeScore": null,
-      "referees": []
+      "referees": [
+        {
+          "name": "Il'giz Tantashev",
+          "type": "REFEREE",
+          "nationality": "Uzbekistan"
+        }
+      ]
     },
     {
       "matchId": "90",
       "sourceMatchId": 537376,
       "stage": "round_of_16",
-      "status": "TIMED",
+      "status": "FINISHED",
       "utcDate": "2026-07-04T17:00:00Z",
-      "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+      "sourceUpdatedAt": "2026-07-05T03:25:01Z",
       "homeTeam": "Canada",
       "awayTeam": "Morocco",
-      "homeScore": null,
-      "awayScore": null,
-      "advancingTeam": "",
+      "homeScore": 0,
+      "awayScore": 3,
+      "advancingTeam": "Morocco",
       "duration": "REGULAR",
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
-      "homeFullTimeScore": null,
-      "awayFullTimeScore": null,
+      "homeFullTimeScore": 0,
+      "awayFullTimeScore": 3,
       "homeRegularTimeScore": null,
       "awayRegularTimeScore": null,
       "homeExtraTimeScore": null,
       "awayExtraTimeScore": null,
-      "referees": []
+      "referees": [
+        {
+          "name": "Michael Oliver",
+          "type": "REFEREE",
+          "nationality": "England"
+        }
+      ]
     },
     {
       "matchId": "91",
@@ -657,17 +669,18 @@
     "penaltyMatches": 3,
     "mostGoalsTeam": [
       "Argentina",
+      "Belgium",
       "France",
       "Spain"
     ],
-    "totalGoals": 38,
+    "totalGoals": 42,
     "fastestGoalTeam": "DR Congo",
     "latestGoalTeam": "Belgium",
     "biggestWinningMarginTeam": [
       "France",
       "Spain"
     ],
-    "yellowCards": 62,
+    "yellowCards": 36,
     "redCards": 2
   },
   "notes": [

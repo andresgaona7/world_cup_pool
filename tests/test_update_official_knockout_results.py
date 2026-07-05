@@ -77,6 +77,35 @@ class UpdateOfficialKnockoutResultsTests(unittest.TestCase):
         self.assertEqual(matches[3]["homePenaltyScore"], 5)
         self.assertEqual(matches[3]["awayPenaltyScore"], 4)
 
+    def test_uses_regular_plus_extra_time_as_official_score(self):
+        raw_data = {
+            "matches": [
+                self.match(
+                    source_id=537422,
+                    stage="LAST_32",
+                    home="Belgium",
+                    away="Senegal",
+                    winner="HOME_TEAM",
+                    full_time=(3, 2),
+                    regular_time=(2, 2),
+                    extra_time=(1, 0),
+                    duration="EXTRA_TIME",
+                    utc_date="2026-06-30T20:30:00Z",
+                )
+            ]
+        }
+
+        normalized = update_official_knockout_results.build_normalized_data(raw_data)
+        match = normalized["matches"][0]
+
+        self.assertEqual(match["matchId"], "82")
+        self.assertEqual(match["homeScore"], 3)
+        self.assertEqual(match["awayScore"], 2)
+        self.assertEqual(match["homeRegularTimeScore"], 2)
+        self.assertEqual(match["awayRegularTimeScore"], 2)
+        self.assertEqual(match["homeExtraTimeScore"], 1)
+        self.assertEqual(match["awayExtraTimeScore"], 0)
+
     def test_derives_shootout_winner_from_full_time_when_upstream_winner_is_missing(self):
         raw_data = {
             "matches": [

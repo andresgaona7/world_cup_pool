@@ -46,18 +46,20 @@ Base points by round:
 | 3rd place | 14 |
 | Final | 20 |
 
-Score mode:
+Score mode. For knockout matches that go to extra time, the official score is
+regular time plus extra time. Penalty shootout goals are tracked separately and
+do not count toward the official score.
 
-- Exact regulation score and correct advancing team on a match not decided by
+- Exact official score and correct advancing team on a match not decided by
   penalties: 2.0x base.
 - Exact penalty shootout score on a match decided by penalties: 3.0x base,
-  only when the regulation draw score and advancing team are also exact.
-- Predicted a penalty shootout and correct advancing team, but wrong regulation
+  only when the official draw score and advancing team are also exact.
+- Predicted a penalty shootout and correct advancing team, but wrong official
   draw score: 1.5x base.
-- Exact regulation draw and correct advancing team, but wrong or missing
+- Exact official draw and correct advancing team, but wrong or missing
   penalty shootout score: 2.0x base.
 - Correct advancing team but wrong score: 1.0x base.
-- Exact regulation draw but wrong advancing team: 0.5x base fallback.
+- Exact official draw but wrong advancing team: 0.5x base fallback.
 - Wrong advancing team with any other score: 0.
 
 Penalty shootout example:

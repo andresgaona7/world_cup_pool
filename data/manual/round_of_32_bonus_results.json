@@ -1,6 +1,7 @@
 {
   "mostGoalsTeam": [
     "Argentina",
+    "Belgium",
     "France",
     "Spain"
   ],
@@ -10,6 +11,6 @@
     "France",
     "Spain"
   ],
-  "yellowCards": 62,
+  "yellowCards": 36,
   "redCards": 2
 }
