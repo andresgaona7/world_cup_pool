@@ -201,6 +201,64 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
         self.assertNotIn("predictedAdvancingTeam", matches[2])
         self.assertEqual(matches[2]["ignoredFields"], ["homeScore", "awayScore"])
 
+    def test_extracts_visual_round_of_16_layout_by_fixture_pair(self):
+        cells = {
+            (50, 13): "Round of 16",
+            (50, 17): "Penalty",
+            (51, 13): "Canada",
+            (51, 14): "1",
+            (51, 15): "2",
+            (51, 16): "Morroco",
+            (52, 13): "Paraguay",
+            (52, 14): "0",
+            (52, 15): "3",
+            (52, 16): "France",
+            (53, 13): "USA",
+            (53, 14): "1",
+            (53, 15): "1",
+            (53, 16): "Belgium",
+            (53, 17): "3",
+            (53, 18): "4",
+            (54, 13): "Portugal",
+            (54, 14): "1",
+            (54, 15): "0",
+            (54, 16): "Spain",
+            (55, 13): "Brazil",
+            (55, 14): "1",
+            (55, 15): "2",
+            (55, 16): "Norway",
+            (56, 13): "Mexico",
+            (56, 14): "1",
+            (56, 15): "1",
+            (56, 16): "England",
+            (56, 17): "4",
+            (56, 18): "5",
+            (57, 13): "Switzerland",
+            (57, 14): "2",
+            (57, 15): "0",
+            (57, 16): "Colombia",
+            (58, 13): "Egypt",
+            (58, 14): "1",
+            (58, 15): "3",
+            (58, 16): "Argentina",
+        }
+
+        matches = build_knockout_predictions.extract_predictions(
+            cells,
+            default_stage="round_of_16",
+        )
+
+        self.assertEqual([match["matchId"] for match in matches], [str(match_id) for match_id in range(89, 97)])
+        self.assertEqual(matches[0]["homeTeam"], "Paraguay")
+        self.assertEqual(matches[0]["awayTeam"], "France")
+        self.assertEqual(matches[0]["predictedAdvancingTeam"], "France")
+        self.assertEqual(matches[1]["homeTeam"], "Canada")
+        self.assertEqual(matches[1]["awayTeam"], "Morroco")
+        self.assertEqual(matches[1]["predictedAdvancingTeam"], "Morroco")
+        self.assertEqual(matches[5]["matchId"], "94")
+        self.assertEqual(matches[5]["predictedAdvancingTeam"], "Belgium")
+        self.assertEqual(matches[5]["awayPenaltyScore"], 4)
+
     def test_extracts_round_of_32_bonus_answers_from_visual_layout(self):
         cells = {
             (36, 13): "Bonus questions",

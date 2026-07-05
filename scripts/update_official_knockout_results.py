@@ -329,7 +329,7 @@ def apply_match_override(match: dict[str, Any], override: dict[str, Any]) -> Non
         "homeExtraTimeScore",
         "awayExtraTimeScore",
     )
-    string_fields = ("advancingTeam", "duration", "status")
+    string_fields = ("homeTeam", "awayTeam", "advancingTeam", "duration", "status")
     for field in int_fields:
         if field in override:
             match[field] = optional_int(override.get(field))

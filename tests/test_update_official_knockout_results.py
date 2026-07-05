@@ -220,6 +220,39 @@ class UpdateOfficialKnockoutResultsTests(unittest.TestCase):
         self.assertEqual(match["awayPenaltyScore"], 3)
         self.assertEqual(match["advancingTeam"], "Morocco")
 
+    def test_applies_manual_home_away_team_override(self):
+        raw_data = {
+            "matches": [
+                self.match(
+                    source_id=537381,
+                    stage="LAST_16",
+                    home="Argentina",
+                    away="Egypt",
+                    winner=None,
+                    full_time=(None, None),
+                    utc_date="2026-07-07T16:00:00Z",
+                    status="TIMED",
+                )
+            ]
+        }
+        normalized = update_official_knockout_results.build_normalized_data(raw_data)
+
+        update_official_knockout_results.apply_manual_overrides(
+            normalized,
+            {
+                "matches": {
+                    "89": {
+                        "homeTeam": "Egypt",
+                        "awayTeam": "Argentina",
+                    }
+                }
+            },
+        )
+        match = normalized["matches"][0]
+
+        self.assertEqual(match["homeTeam"], "Egypt")
+        self.assertEqual(match["awayTeam"], "Argentina")
+
     def test_computes_reviewable_round_of_32_bonus_values_when_possible(self):
         raw_data = {
             "matches": [

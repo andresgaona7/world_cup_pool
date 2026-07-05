@@ -140,16 +140,17 @@ submitted picks. `scripts/build_pool_data.py` converts it into
 
 The knockout workbooks are the source of truth for knockout picks once those
 files exist. `scripts/build_knockout_predictions.py` currently accepts the
-visual Round of 32 workbook at `data/raw/round_of_32.xlsx` and the stage files
-in `data/raw/knockout_predictions/`: `round_of_16.xlsx`, `quarterfinals.xlsx`,
-`semifinals.xlsx`, and `final.xlsx`. It merges them into
+visual Round of 32 workbook at `data/raw/round_of_32.xlsx`, the visual Round of
+16 workbook at `data/raw/round_of_16.xlsx`, and the remaining stage files in
+`data/raw/knockout_predictions/`: `quarterfinals.xlsx`, `semifinals.xlsx`, and
+`final.xlsx`. It merges them into
 `data/generated/knockout_predictions.js`, which is loaded by the player picks
 and score pages. Until the workbooks are available, the builder writes a valid
 empty prediction artifact. The expected match counts are 16, 8, 4, 2, and 1,
 for 31 predicted matches total. Standard player sheets need a `Winner` or
 `Advancing team` column; `Mode`, `Home Score`, `Away Score`, and `Match`
-columns are optional. For the visual Round of 32 workbook, red result cells are
-treated as blank/NaN and the score/points column is ignored.
+columns are optional. For the visual Round of 32 and Round of 16 workbooks, red
+result cells are treated as blank/NaN and the score/points column is ignored.
 
 `scripts/build_consensus_predictions.py` reshapes `pool_data.js` into a
 consensus JSON export and the standalone `apps/consensus_predictions/index.html`.

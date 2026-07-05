@@ -29,7 +29,7 @@ const BRACKET_ROUNDS = [
       ["92", "Winner Match 79", "Winner Match 80"],
       ["93", "Winner Match 83", "Winner Match 84"],
       ["94", "Winner Match 81", "Winner Match 82"],
-      ["95", "Winner Match 86", "Winner Match 88"],
+      ["95", "Winner Match 88", "Winner Match 86"],
       ["96", "Winner Match 85", "Winner Match 87"],
     ],
   },

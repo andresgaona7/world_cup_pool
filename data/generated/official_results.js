@@ -625,8 +625,8 @@ window.OFFICIAL_RESULTS = {
       "status": "TIMED",
       "utcDate": "2026-07-07T16:00:00Z",
       "sourceUpdatedAt": "2026-07-04T07:44:48Z",
-      "homeTeam": "Argentina",
-      "awayTeam": "Egypt",
+      "homeTeam": "Egypt",
+      "awayTeam": "Argentina",
       "homeScore": null,
       "awayScore": null,
       "advancingTeam": "",
@@ -2504,6 +2504,783 @@ window.OFFICIAL_RESULTS = {
         "yellowCards": 62,
         "redCards": 2
       }
+    },
+    {
+      "key": "round_of_16",
+      "label": "After round of 16",
+      "shortLabel": "R16",
+      "stage": "round_of_16",
+      "completedAt": "2026-06-29T19:38:08+00:00",
+      "scenario": {
+        "groupResults": {
+          "A": [
+            "Mexico",
+            "South Africa",
+            "South Korea"
+          ],
+          "B": [
+            "Switzerland",
+            "Canada",
+            "Bosnia-Herzegovina"
+          ],
+          "C": [
+            "Brazil",
+            "Morocco",
+            "Scotland"
+          ],
+          "D": [
+            "United States",
+            "Australia",
+            "Paraguay"
+          ],
+          "E": [
+            "Germany",
+            "Ivory Coast",
+            "Ecuador"
+          ],
+          "F": [
+            "Netherlands",
+            "Japan",
+            "Sweden"
+          ],
+          "G": [
+            "Belgium",
+            "Egypt",
+            "Iran"
+          ],
+          "H": [
+            "Spain",
+            "Cape Verde Islands",
+            "Uruguay"
+          ],
+          "I": [
+            "France",
+            "Norway",
+            "Senegal"
+          ],
+          "J": [
+            "Argentina",
+            "Austria",
+            "Algeria"
+          ],
+          "K": [
+            "Colombia",
+            "Portugal",
+            "Congo DR"
+          ],
+          "L": [
+            "England",
+            "Croatia",
+            "Ghana"
+          ]
+        },
+        "bestThirds": [
+          "Congo DR",
+          "Sweden",
+          "Ghana",
+          "Ecuador",
+          "Bosnia-Herzegovina",
+          "Algeria",
+          "Paraguay",
+          "Senegal"
+        ],
+        "futures": {
+          "champion": "",
+          "runnerUp": "",
+          "topScorer": "Lionel Messi",
+          "topScorers": [
+            "Lionel Messi"
+          ],
+          "teamLastRounds": {
+            "South Korea": "group_stage",
+            "Czechia": "group_stage",
+            "Qatar": "group_stage",
+            "Scotland": "group_stage",
+            "Haiti": "group_stage",
+            "Türkiye": "group_stage",
+            "Curaçao": "group_stage",
+            "Tunisia": "group_stage",
+            "Iran": "group_stage",
+            "New Zealand": "group_stage",
+            "Uruguay": "group_stage",
+            "Saudi Arabia": "group_stage",
+            "Iraq": "group_stage",
+            "Jordan": "group_stage",
+            "Uzbekistan": "group_stage",
+            "Panama": "group_stage",
+            "France": "round_of_16",
+            "Argentina": "round_of_16",
+            "Norway": "round_of_16",
+            "Morocco": "round_of_16",
+            "Brazil": "round_of_16",
+            "Ecuador": "round_of_32",
+            "Spain": "round_of_16",
+            "England": "round_of_16"
+          }
+        }
+      },
+      "officialMatches": [
+        {
+          "matchId": "73",
+          "sourceMatchId": 537417,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-06-28T19:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "South Africa",
+          "awayTeam": "Canada",
+          "homeScore": 0,
+          "awayScore": 1,
+          "advancingTeam": "Canada",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 0,
+          "awayFullTimeScore": 1,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "João Pinheiro",
+              "type": "REFEREE",
+              "nationality": "Portugal"
+            }
+          ]
+        },
+        {
+          "matchId": "74",
+          "sourceMatchId": 537415,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-06-29T20:30:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "Germany",
+          "awayTeam": "Paraguay",
+          "homeScore": 1,
+          "awayScore": 1,
+          "advancingTeam": "Paraguay",
+          "duration": "PENALTY_SHOOTOUT",
+          "homePenaltyScore": 3,
+          "awayPenaltyScore": 4,
+          "homeFullTimeScore": 4,
+          "awayFullTimeScore": 5,
+          "homeRegularTimeScore": 1,
+          "awayRegularTimeScore": 1,
+          "homeExtraTimeScore": 0,
+          "awayExtraTimeScore": 0,
+          "referees": [
+            {
+              "name": "Jalal Jayed",
+              "type": "REFEREE",
+              "nationality": "Morocco"
+            }
+          ]
+        },
+        {
+          "matchId": "75",
+          "sourceMatchId": 537418,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-06-30T01:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "Netherlands",
+          "awayTeam": "Morocco",
+          "homeScore": 1,
+          "awayScore": 1,
+          "advancingTeam": "Morocco",
+          "duration": "PENALTY_SHOOTOUT",
+          "homePenaltyScore": 2,
+          "awayPenaltyScore": 3,
+          "homeFullTimeScore": 3,
+          "awayFullTimeScore": 4,
+          "homeRegularTimeScore": 1,
+          "awayRegularTimeScore": 1,
+          "homeExtraTimeScore": 0,
+          "awayExtraTimeScore": 0,
+          "referees": [
+            {
+              "name": "Wilton Sampaio",
+              "type": "REFEREE",
+              "nationality": "Brazil"
+            }
+          ]
+        },
+        {
+          "matchId": "76",
+          "sourceMatchId": 537423,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-06-29T17:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "Brazil",
+          "awayTeam": "Japan",
+          "homeScore": 2,
+          "awayScore": 1,
+          "advancingTeam": "Brazil",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 2,
+          "awayFullTimeScore": 1,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "Maurizio Mariani",
+              "type": "REFEREE",
+              "nationality": "Italy"
+            }
+          ]
+        },
+        {
+          "matchId": "77",
+          "sourceMatchId": 537416,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-06-30T21:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "France",
+          "awayTeam": "Sweden",
+          "homeScore": 3,
+          "awayScore": 0,
+          "advancingTeam": "France",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 3,
+          "awayFullTimeScore": 0,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "Danny Makkelie",
+              "type": "REFEREE",
+              "nationality": "Netherlands"
+            }
+          ]
+        },
+        {
+          "matchId": "78",
+          "sourceMatchId": 537424,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-06-30T17:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "Ivory Coast",
+          "awayTeam": "Norway",
+          "homeScore": 1,
+          "awayScore": 2,
+          "advancingTeam": "Norway",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 1,
+          "awayFullTimeScore": 2,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "Jesús Valenzuela",
+              "type": "REFEREE",
+              "nationality": "Venezuela"
+            }
+          ]
+        },
+        {
+          "matchId": "79",
+          "sourceMatchId": 537425,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-07-01T02:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "Mexico",
+          "awayTeam": "Ecuador",
+          "homeScore": 2,
+          "awayScore": 0,
+          "advancingTeam": "Mexico",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 2,
+          "awayFullTimeScore": 0,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "Slavko Vinčič",
+              "type": "REFEREE",
+              "nationality": "Slovenia"
+            }
+          ]
+        },
+        {
+          "matchId": "80",
+          "sourceMatchId": 537426,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-07-01T16:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "England",
+          "awayTeam": "Congo DR",
+          "homeScore": 2,
+          "awayScore": 1,
+          "advancingTeam": "England",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 2,
+          "awayFullTimeScore": 1,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "Adham Makhadmeh",
+              "type": "REFEREE",
+              "nationality": "Jordan"
+            }
+          ]
+        },
+        {
+          "matchId": "81",
+          "sourceMatchId": 537421,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-07-02T00:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "United States",
+          "awayTeam": "Bosnia-Herzegovina",
+          "homeScore": 2,
+          "awayScore": 0,
+          "advancingTeam": "United States",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 2,
+          "awayFullTimeScore": 0,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "Raphael Claus",
+              "type": "REFEREE",
+              "nationality": "Brazil"
+            }
+          ]
+        },
+        {
+          "matchId": "82",
+          "sourceMatchId": 537422,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-07-01T20:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "Belgium",
+          "awayTeam": "Senegal",
+          "homeScore": 3,
+          "awayScore": 2,
+          "advancingTeam": "Belgium",
+          "duration": "EXTRA_TIME",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 3,
+          "awayFullTimeScore": 2,
+          "homeRegularTimeScore": 2,
+          "awayRegularTimeScore": 2,
+          "homeExtraTimeScore": 1,
+          "awayExtraTimeScore": 0,
+          "referees": [
+            {
+              "name": "Said Martinez",
+              "type": "REFEREE",
+              "nationality": "Honduras"
+            }
+          ]
+        },
+        {
+          "matchId": "83",
+          "sourceMatchId": 537419,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-07-02T23:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "Portugal",
+          "awayTeam": "Croatia",
+          "homeScore": 2,
+          "awayScore": 1,
+          "advancingTeam": "Portugal",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 2,
+          "awayFullTimeScore": 1,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "Espen Eskås",
+              "type": "REFEREE",
+              "nationality": "Norway"
+            }
+          ]
+        },
+        {
+          "matchId": "84",
+          "sourceMatchId": 537420,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-07-02T19:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "Spain",
+          "awayTeam": "Austria",
+          "homeScore": 3,
+          "awayScore": 0,
+          "advancingTeam": "Spain",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 3,
+          "awayFullTimeScore": 0,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "Glenn Nyberg",
+              "type": "REFEREE",
+              "nationality": "Sweden"
+            }
+          ]
+        },
+        {
+          "matchId": "85",
+          "sourceMatchId": 537429,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-07-03T03:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "Switzerland",
+          "awayTeam": "Algeria",
+          "homeScore": 2,
+          "awayScore": 0,
+          "advancingTeam": "Switzerland",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 2,
+          "awayFullTimeScore": 0,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "Yael Falcón",
+              "type": "REFEREE",
+              "nationality": "Argentina"
+            }
+          ]
+        },
+        {
+          "matchId": "86",
+          "sourceMatchId": 537427,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-07-03T22:00:00Z",
+          "sourceUpdatedAt": "2026-07-04T13:25:01Z",
+          "homeTeam": "Argentina",
+          "awayTeam": "Cape Verde Islands",
+          "homeScore": 3,
+          "awayScore": 2,
+          "advancingTeam": "Argentina",
+          "duration": "EXTRA_TIME",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 3,
+          "awayFullTimeScore": 2,
+          "homeRegularTimeScore": 1,
+          "awayRegularTimeScore": 1,
+          "homeExtraTimeScore": 2,
+          "awayExtraTimeScore": 1,
+          "referees": [
+            {
+              "name": "Drew Fischer",
+              "type": "REFEREE",
+              "nationality": "Canada"
+            }
+          ]
+        },
+        {
+          "matchId": "87",
+          "sourceMatchId": 537430,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-07-04T01:30:00Z",
+          "sourceUpdatedAt": "2026-07-04T08:25:02Z",
+          "homeTeam": "Colombia",
+          "awayTeam": "Ghana",
+          "homeScore": 1,
+          "awayScore": 0,
+          "advancingTeam": "Colombia",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 1,
+          "awayFullTimeScore": 0,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "Clément Turpin",
+              "type": "REFEREE",
+              "nationality": "France"
+            }
+          ]
+        },
+        {
+          "matchId": "88",
+          "sourceMatchId": 537428,
+          "stage": "round_of_32",
+          "status": "FINISHED",
+          "utcDate": "2026-07-03T18:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T23:04:00Z",
+          "homeTeam": "Australia",
+          "awayTeam": "Egypt",
+          "homeScore": 1,
+          "awayScore": 1,
+          "advancingTeam": "Egypt",
+          "duration": "PENALTY_SHOOTOUT",
+          "homePenaltyScore": 2,
+          "awayPenaltyScore": 4,
+          "homeFullTimeScore": 3,
+          "awayFullTimeScore": 5,
+          "homeRegularTimeScore": 1,
+          "awayRegularTimeScore": 1,
+          "homeExtraTimeScore": 0,
+          "awayExtraTimeScore": 0,
+          "referees": [
+            {
+              "name": "Gustavo Tejera",
+              "type": "REFEREE",
+              "nationality": "Uruguay"
+            }
+          ]
+        },
+        {
+          "matchId": "89",
+          "sourceMatchId": 537375,
+          "stage": "round_of_16",
+          "status": "FINISHED",
+          "utcDate": "2026-07-04T21:00:00Z",
+          "sourceUpdatedAt": "2026-07-05T03:25:01Z",
+          "homeTeam": "Paraguay",
+          "awayTeam": "France",
+          "homeScore": 0,
+          "awayScore": 1,
+          "advancingTeam": "France",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 0,
+          "awayFullTimeScore": 1,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "Il'giz Tantashev",
+              "type": "REFEREE",
+              "nationality": "Uzbekistan"
+            }
+          ]
+        },
+        {
+          "matchId": "90",
+          "sourceMatchId": 537376,
+          "stage": "round_of_16",
+          "status": "FINISHED",
+          "utcDate": "2026-07-04T17:00:00Z",
+          "sourceUpdatedAt": "2026-07-05T03:25:01Z",
+          "homeTeam": "Canada",
+          "awayTeam": "Morocco",
+          "homeScore": 0,
+          "awayScore": 3,
+          "advancingTeam": "Morocco",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": 0,
+          "awayFullTimeScore": 3,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": [
+            {
+              "name": "Michael Oliver",
+              "type": "REFEREE",
+              "nationality": "England"
+            }
+          ]
+        },
+        {
+          "matchId": "91",
+          "sourceMatchId": 537377,
+          "stage": "round_of_16",
+          "status": "TIMED",
+          "utcDate": "2026-07-05T20:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "Brazil",
+          "awayTeam": "Norway",
+          "homeScore": null,
+          "awayScore": null,
+          "advancingTeam": "",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": null,
+          "awayFullTimeScore": null,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": []
+        },
+        {
+          "matchId": "92",
+          "sourceMatchId": 537378,
+          "stage": "round_of_16",
+          "status": "TIMED",
+          "utcDate": "2026-07-06T00:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "Mexico",
+          "awayTeam": "England",
+          "homeScore": null,
+          "awayScore": null,
+          "advancingTeam": "",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": null,
+          "awayFullTimeScore": null,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": []
+        },
+        {
+          "matchId": "93",
+          "sourceMatchId": 537379,
+          "stage": "round_of_16",
+          "status": "TIMED",
+          "utcDate": "2026-07-06T19:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "Portugal",
+          "awayTeam": "Spain",
+          "homeScore": null,
+          "awayScore": null,
+          "advancingTeam": "",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": null,
+          "awayFullTimeScore": null,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": []
+        },
+        {
+          "matchId": "94",
+          "sourceMatchId": 537380,
+          "stage": "round_of_16",
+          "status": "TIMED",
+          "utcDate": "2026-07-07T00:00:00Z",
+          "sourceUpdatedAt": "2026-07-03T15:20:13Z",
+          "homeTeam": "United States",
+          "awayTeam": "Belgium",
+          "homeScore": null,
+          "awayScore": null,
+          "advancingTeam": "",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": null,
+          "awayFullTimeScore": null,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": []
+        },
+        {
+          "matchId": "95",
+          "sourceMatchId": 537381,
+          "stage": "round_of_16",
+          "status": "TIMED",
+          "utcDate": "2026-07-07T16:00:00Z",
+          "sourceUpdatedAt": "2026-07-04T07:44:48Z",
+          "homeTeam": "Egypt",
+          "awayTeam": "Argentina",
+          "homeScore": null,
+          "awayScore": null,
+          "advancingTeam": "",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": null,
+          "awayFullTimeScore": null,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": []
+        },
+        {
+          "matchId": "96",
+          "sourceMatchId": 537382,
+          "stage": "round_of_16",
+          "status": "TIMED",
+          "utcDate": "2026-07-07T20:00:00Z",
+          "sourceUpdatedAt": "2026-07-04T07:45:34Z",
+          "homeTeam": "Switzerland",
+          "awayTeam": "Colombia",
+          "homeScore": null,
+          "awayScore": null,
+          "advancingTeam": "",
+          "duration": "REGULAR",
+          "homePenaltyScore": null,
+          "awayPenaltyScore": null,
+          "homeFullTimeScore": null,
+          "awayFullTimeScore": null,
+          "homeRegularTimeScore": null,
+          "awayRegularTimeScore": null,
+          "homeExtraTimeScore": null,
+          "awayExtraTimeScore": null,
+          "referees": []
+        }
+      ]
     }
   ],
   "overallStandings": [
@@ -3756,8 +4533,8 @@ window.OFFICIAL_RESULTS = {
       "status": "TIMED",
       "utcDate": "2026-07-07T16:00:00Z",
       "sourceUpdatedAt": "2026-07-04T07:44:48Z",
-      "homeTeam": "Argentina",
-      "awayTeam": "Egypt",
+      "homeTeam": "Egypt",
+      "awayTeam": "Argentina",
       "homeScore": null,
       "awayScore": null,
       "advancingTeam": "",
@@ -3818,7 +4595,7 @@ window.OFFICIAL_RESULTS = {
   "knockoutSource": {
     "sourceName": "Football-Data.org matches",
     "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-    "generatedAt": "2026-07-05T04:00:52+00:00",
+    "generatedAt": "2026-07-05T04:52:20+00:00",
     "rawPath": "data/raw/official/football_data_wc_matches_2026.json",
     "normalizedPath": "data/manual/official_knockout_results.json"
   }

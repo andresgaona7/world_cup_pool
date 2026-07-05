@@ -9,8 +9,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "stage": "round_of_16",
       "label": "Round of 16",
-      "path": "data/raw/knockout_predictions/round_of_16.xlsx",
-      "available": false
+      "path": "data/raw/round_of_16.xlsx",
+      "available": true
     },
     {
       "stage": "quarterfinal",
@@ -32,7 +32,8 @@ window.KNOCKOUT_PREDICTIONS = {
     }
   ],
   "generated_from": [
-    "data/raw/round_of_32.xlsx"
+    "data/raw/round_of_32.xlsx",
+    "data/raw/round_of_16.xlsx"
   ],
   "sourceName": "Generated knockout predictions",
   "stages": [
@@ -107,7 +108,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "name": "Amal",
       "sheets": {
-        "round_of_32": "Amal"
+        "round_of_32": "Amal",
+        "round_of_16": "Amal"
       },
       "matches": [
         {
@@ -275,21 +277,104 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 0,
           "awayScore": 2,
           "predictedAdvancingTeam": "Ghana"
+        },
+        {
+          "matchId": "89",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Paraguay",
+          "awayTeam": "France",
+          "homeScore": 0,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "90",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Canada",
+          "awayTeam": "Morocco",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Morocco"
+        },
+        {
+          "matchId": "91",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Brazil",
+          "awayTeam": "Norway",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Norway"
+        },
+        {
+          "matchId": "92",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Mexico",
+          "awayTeam": "England",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 4,
+          "awayPenaltyScore": 5,
+          "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "93",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Portugal",
+          "awayTeam": "Spain",
+          "homeScore": 1,
+          "awayScore": 0,
+          "predictedAdvancingTeam": "Portugal"
+        },
+        {
+          "matchId": "94",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "USA",
+          "awayTeam": "Belgium",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 3,
+          "awayPenaltyScore": 4,
+          "predictedAdvancingTeam": "Belgium"
+        },
+        {
+          "matchId": "95",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Egypt",
+          "awayTeam": "Argentina",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "96",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Switzerland",
+          "awayTeam": "Colombia",
+          "homeScore": 2,
+          "awayScore": 0,
+          "predictedAdvancingTeam": "Switzerland"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 16,
+        "matchCount": 24,
         "stageCounts": {
           "round_of_32": 16,
-          "round_of_16": 0,
+          "round_of_16": 8,
           "quarterfinal": 0,
           "semifinal": 0,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
           "final": 1
@@ -379,7 +464,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "name": "Daniel",
       "sheets": {
-        "round_of_32": "Daniel"
+        "round_of_32": "Daniel",
+        "round_of_16": "Daniel"
       },
       "matches": [
         {
@@ -551,21 +637,102 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 1,
           "predictedAdvancingTeam": "Colombia"
+        },
+        {
+          "matchId": "89",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Paraguay",
+          "awayTeam": "France",
+          "homeScore": 0,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "90",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Canada",
+          "awayTeam": "Morocco",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Morocco"
+        },
+        {
+          "matchId": "91",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Brazil",
+          "awayTeam": "Norway",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Brazil"
+        },
+        {
+          "matchId": "92",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Mexico",
+          "awayTeam": "England",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 3,
+          "awayPenaltyScore": 4,
+          "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "93",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Portugal",
+          "awayTeam": "Spain",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Spain"
+        },
+        {
+          "matchId": "94",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "USA",
+          "awayTeam": "Belgium",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "USA"
+        },
+        {
+          "matchId": "95",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Egypt",
+          "awayTeam": "Argentina",
+          "homeScore": 0,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "96",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Switzerland",
+          "awayTeam": "Colombia",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Colombia"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 16,
+        "matchCount": 24,
         "stageCounts": {
           "round_of_32": 16,
-          "round_of_16": 0,
+          "round_of_16": 8,
           "quarterfinal": 0,
           "semifinal": 0,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
           "final": 1
@@ -655,7 +822,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "name": "Elwebo AI",
       "sheets": {
-        "round_of_32": "Elwebo con AI-ChatGPT"
+        "round_of_32": "Elwebo con AI-ChatGPT",
+        "round_of_16": "Elwebo con AI-ChatGPT"
       },
       "matches": [
         {
@@ -821,21 +989,106 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 0,
           "predictedAdvancingTeam": "Colombia"
+        },
+        {
+          "matchId": "89",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Paraguay",
+          "awayTeam": "France",
+          "homeScore": 0,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "90",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Canada",
+          "awayTeam": "Morocco",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Morocco"
+        },
+        {
+          "matchId": "91",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Brazil",
+          "awayTeam": "Norway",
+          "homeScore": 3,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Brazil"
+        },
+        {
+          "matchId": "92",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Mexico",
+          "awayTeam": "England",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 5,
+          "awayPenaltyScore": 4,
+          "predictedAdvancingTeam": "Mexico"
+        },
+        {
+          "matchId": "93",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Portugal",
+          "awayTeam": "Spain",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Spain"
+        },
+        {
+          "matchId": "94",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "USA",
+          "awayTeam": "Belgium",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 4,
+          "awayPenaltyScore": 3,
+          "predictedAdvancingTeam": "USA"
+        },
+        {
+          "matchId": "95",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Switzerland",
+          "awayTeam": "TBD",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 4,
+          "awayPenaltyScore": 2,
+          "predictedAdvancingTeam": "Switzerland"
+        },
+        {
+          "matchId": "96",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Egypt",
+          "awayTeam": "TBD",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "TBD"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 16,
+        "matchCount": 24,
         "stageCounts": {
           "round_of_32": 16,
-          "round_of_16": 0,
+          "round_of_16": 8,
           "quarterfinal": 0,
           "semifinal": 0,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
           "final": 1
@@ -925,7 +1178,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "name": "Elwebo Lavenganza",
       "sheets": {
-        "round_of_32": "Elwebo Lavenganza"
+        "round_of_32": "Elwebo Lavenganza",
+        "round_of_16": "Elwebo Lavenganza"
       },
       "matches": [
         {
@@ -1091,21 +1345,100 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 0,
           "predictedAdvancingTeam": "Colombia"
+        },
+        {
+          "matchId": "89",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Paraguay",
+          "awayTeam": "France",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "90",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Canada",
+          "awayTeam": "Morocco",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Morocco"
+        },
+        {
+          "matchId": "91",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Brazil",
+          "awayTeam": "Norway",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Brazil"
+        },
+        {
+          "matchId": "92",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Mexico",
+          "awayTeam": "England",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "93",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Portugal",
+          "awayTeam": "Spain",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Spain"
+        },
+        {
+          "matchId": "94",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "USA",
+          "awayTeam": "Belgium",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "USA"
+        },
+        {
+          "matchId": "95",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Switzerland",
+          "awayTeam": "TBD",
+          "homeScore": 0,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "TBD"
+        },
+        {
+          "matchId": "96",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Egypt",
+          "awayTeam": "TBD",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "TBD"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 16,
+        "matchCount": 24,
         "stageCounts": {
           "round_of_32": 16,
-          "round_of_16": 0,
+          "round_of_16": 8,
           "quarterfinal": 0,
           "semifinal": 0,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
           "final": 1
@@ -1195,7 +1528,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "name": "Elwebo Tegusta",
       "sheets": {
-        "round_of_32": "Elwebo + Gemini"
+        "round_of_32": "Elwebo + Gemini",
+        "round_of_16": "Elwebo + Gemini"
       },
       "matches": [
         {
@@ -1365,21 +1699,102 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 3,
           "awayScore": 0,
           "predictedAdvancingTeam": "Colombia"
+        },
+        {
+          "matchId": "89",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Paraguay",
+          "awayTeam": "France",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "90",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Canada",
+          "awayTeam": "Morocco",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Morocco"
+        },
+        {
+          "matchId": "91",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Brazil",
+          "awayTeam": "Norway",
+          "homeScore": 3,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Brazil"
+        },
+        {
+          "matchId": "92",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Mexico",
+          "awayTeam": "England",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 3,
+          "awayPenaltyScore": 4,
+          "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "93",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Portugal",
+          "awayTeam": "Spain",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Spain"
+        },
+        {
+          "matchId": "94",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "USA",
+          "awayTeam": "Belgium",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "USA"
+        },
+        {
+          "matchId": "95",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Switzerland",
+          "awayTeam": "TBD",
+          "homeScore": 0,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "TBD"
+        },
+        {
+          "matchId": "96",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Egypt",
+          "awayTeam": "TBD",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "TBD"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 16,
+        "matchCount": 24,
         "stageCounts": {
           "round_of_32": 16,
-          "round_of_16": 0,
+          "round_of_16": 8,
           "quarterfinal": 0,
           "semifinal": 0,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
           "final": 1
@@ -1469,7 +1884,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "name": "Emi",
       "sheets": {
-        "round_of_32": "Emi"
+        "round_of_32": "Emi",
+        "round_of_16": "Emi"
       },
       "matches": [
         {
@@ -1633,21 +2049,100 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 1,
           "awayScore": 0,
           "predictedAdvancingTeam": "Colombia"
+        },
+        {
+          "matchId": "89",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Paraguay",
+          "awayTeam": "France",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "90",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Canada",
+          "awayTeam": "Morocco",
+          "homeScore": 0,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Morocco"
+        },
+        {
+          "matchId": "91",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Brazil",
+          "awayTeam": "Norway",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Brazil"
+        },
+        {
+          "matchId": "92",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Mexico",
+          "awayTeam": "England",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "93",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Portugal",
+          "awayTeam": "Spain",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Spain"
+        },
+        {
+          "matchId": "94",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "USA",
+          "awayTeam": "Belgium",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Belgium"
+        },
+        {
+          "matchId": "95",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Egypt",
+          "awayTeam": "Argentina",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "96",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Switzerland",
+          "awayTeam": "Colombia",
+          "homeScore": 0,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Colombia"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 16,
+        "matchCount": 24,
         "stageCounts": {
           "round_of_32": 16,
-          "round_of_16": 0,
+          "round_of_16": 8,
           "quarterfinal": 0,
           "semifinal": 0,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
           "final": 1
@@ -1737,7 +2232,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "name": "Irina",
       "sheets": {
-        "round_of_32": "Irina"
+        "round_of_32": "Irina",
+        "round_of_16": "Irina"
       },
       "matches": [
         {
@@ -1904,21 +2400,100 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 1,
           "predictedAdvancingTeam": "Colombia"
+        },
+        {
+          "matchId": "89",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Paraguay",
+          "awayTeam": "France",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "90",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Canada",
+          "awayTeam": "Morocco",
+          "homeScore": 3,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Canada"
+        },
+        {
+          "matchId": "91",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Brazil",
+          "awayTeam": "Norway",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Norway"
+        },
+        {
+          "matchId": "92",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Mexico",
+          "awayTeam": "England",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "93",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Portugal",
+          "awayTeam": "Spain",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Spain"
+        },
+        {
+          "matchId": "94",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "USA",
+          "awayTeam": "Belgium",
+          "homeScore": 3,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "USA"
+        },
+        {
+          "matchId": "95",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Egypt",
+          "awayTeam": "Argentina",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "96",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Switzerland",
+          "awayTeam": "Colombia",
+          "homeScore": 0,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Colombia"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 16,
+        "matchCount": 24,
         "stageCounts": {
           "round_of_32": 16,
-          "round_of_16": 0,
+          "round_of_16": 8,
           "quarterfinal": 0,
           "semifinal": 0,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
           "final": 1
@@ -2010,7 +2585,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "name": "Juan",
       "sheets": {
-        "round_of_32": "jjpro"
+        "round_of_32": "jjpro",
+        "round_of_16": "jjpro"
       },
       "matches": [
         {
@@ -2176,27 +2752,91 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 1,
           "predictedAdvancingTeam": "Colombia"
+        },
+        {
+          "matchId": "89",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Paraguay",
+          "awayTeam": "France"
+        },
+        {
+          "matchId": "90",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Canada",
+          "awayTeam": "Morocco"
+        },
+        {
+          "matchId": "91",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Brazil",
+          "awayTeam": "Norway"
+        },
+        {
+          "matchId": "92",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Mexico",
+          "awayTeam": "England"
+        },
+        {
+          "matchId": "93",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Portugal",
+          "awayTeam": "Spain"
+        },
+        {
+          "matchId": "94",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "USA",
+          "awayTeam": "Belgium"
+        },
+        {
+          "matchId": "95",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Switzerland",
+          "awayTeam": "TBD"
+        },
+        {
+          "matchId": "96",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Egypt",
+          "awayTeam": "TBD"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 16,
+        "matchCount": 24,
         "stageCounts": {
           "round_of_32": 16,
-          "round_of_16": 0,
+          "round_of_16": 8,
           "quarterfinal": 0,
           "semifinal": 0,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
           "final": 1
         },
         "duplicateMatchIds": [],
-        "incompleteMatchIds": []
+        "incompleteMatchIds": [
+          "89",
+          "90",
+          "91",
+          "92",
+          "93",
+          "94",
+          "95",
+          "96"
+        ]
       },
       "bonusAnswers": {
         "round_of_32": [
@@ -2280,7 +2920,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "name": "Lucho",
       "sheets": {
-        "round_of_32": "Llucho"
+        "round_of_32": "Llucho",
+        "round_of_16": "Llucho"
       },
       "matches": [
         {
@@ -2450,21 +3091,102 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 1,
           "predictedAdvancingTeam": "Colombia"
+        },
+        {
+          "matchId": "89",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Paraguay",
+          "awayTeam": "France",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "90",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Canada",
+          "awayTeam": "Morocco",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "Morocco"
+        },
+        {
+          "matchId": "91",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Brazil",
+          "awayTeam": "Norway",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 3,
+          "awayPenaltyScore": 4,
+          "predictedAdvancingTeam": "Norway"
+        },
+        {
+          "matchId": "92",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Mexico",
+          "awayTeam": "England",
+          "homeScore": 0,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "93",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Portugal",
+          "awayTeam": "Spain",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Portugal"
+        },
+        {
+          "matchId": "94",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "USA",
+          "awayTeam": "Belgium",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Belgium"
+        },
+        {
+          "matchId": "95",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Egypt",
+          "awayTeam": "Argentina",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "96",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Switzerland",
+          "awayTeam": "Colombia",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Colombia"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 16,
+        "matchCount": 24,
         "stageCounts": {
           "round_of_32": 16,
-          "round_of_16": 0,
+          "round_of_16": 8,
           "quarterfinal": 0,
           "semifinal": 0,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
           "final": 1
@@ -2554,7 +3276,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "name": "NoDorex (100% sure) 😎",
       "sheets": {
-        "round_of_32": "NoDorex"
+        "round_of_32": "NoDorex",
+        "round_of_16": "NoDorex"
       },
       "matches": [
         {
@@ -2723,21 +3446,104 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 3,
           "awayScore": 1,
           "predictedAdvancingTeam": "Colombia"
+        },
+        {
+          "matchId": "89",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Paraguay",
+          "awayTeam": "France",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "90",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Canada",
+          "awayTeam": "Morocco",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "Morocco"
+        },
+        {
+          "matchId": "91",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Brazil",
+          "awayTeam": "Norway",
+          "homeScore": 2,
+          "awayScore": 2,
+          "homePenaltyScore": 3,
+          "awayPenaltyScore": 5,
+          "predictedAdvancingTeam": "Norway"
+        },
+        {
+          "matchId": "92",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Mexico",
+          "awayTeam": "England",
+          "homeScore": 3,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Mexico"
+        },
+        {
+          "matchId": "93",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Portugal",
+          "awayTeam": "Spain",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "Spain"
+        },
+        {
+          "matchId": "94",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "USA",
+          "awayTeam": "Belgium",
+          "homeScore": 2,
+          "awayScore": 2,
+          "homePenaltyScore": 5,
+          "awayPenaltyScore": 3,
+          "predictedAdvancingTeam": "USA"
+        },
+        {
+          "matchId": "95",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Egypt",
+          "awayTeam": "Argentina",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "96",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Switzerland",
+          "awayTeam": "Colombia",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "Colombia"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 16,
+        "matchCount": 24,
         "stageCounts": {
           "round_of_32": 16,
-          "round_of_16": 0,
+          "round_of_16": 8,
           "quarterfinal": 0,
           "semifinal": 0,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
           "final": 1
@@ -2829,7 +3635,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "name": "paul",
       "sheets": {
-        "round_of_32": "paul"
+        "round_of_32": "paul",
+        "round_of_16": "paul"
       },
       "matches": [
         {
@@ -2996,21 +3803,102 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 3,
           "awayScore": 1,
           "predictedAdvancingTeam": "Colombia"
+        },
+        {
+          "matchId": "89",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Paraguay",
+          "awayTeam": "France",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "90",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Canada",
+          "awayTeam": "Morocco",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Morocco"
+        },
+        {
+          "matchId": "91",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Brazil",
+          "awayTeam": "Norway",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Brazil"
+        },
+        {
+          "matchId": "92",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Mexico",
+          "awayTeam": "England",
+          "homeScore": 1,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "93",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Portugal",
+          "awayTeam": "Spain",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 4,
+          "awayPenaltyScore": 5,
+          "predictedAdvancingTeam": "Spain"
+        },
+        {
+          "matchId": "94",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "USA",
+          "awayTeam": "Belgium",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "USA"
+        },
+        {
+          "matchId": "95",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Switzerland",
+          "awayTeam": "TBD",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "TBD"
+        },
+        {
+          "matchId": "96",
+          "stage": "round_of_16",
+          "mode": "score",
+          "homeTeam": "Egypt",
+          "awayTeam": "TBD",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "TBD"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 16,
+        "matchCount": 24,
         "stageCounts": {
           "round_of_32": 16,
-          "round_of_16": 0,
+          "round_of_16": 8,
           "quarterfinal": 0,
           "semifinal": 0,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
           "final": 1
