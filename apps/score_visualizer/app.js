@@ -912,7 +912,7 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
   const stageTotal = predictionPoints + stageScore.bonusQuestionPoints;
   const hasStageResults = stageRows.some((row) => row.hasResult);
   const basePoints = KNOCKOUT_BASE_POINTS[stage] || 0;
-  const collapsed = isPanelCollapsed(panelKey);
+  const collapsed = isPanelCollapsed(panelKey, stage === "round_of_32");
 
   return `
     <section class="panel knockout-stage-panel collapsible-panel ${collapsed ? "is-collapsed" : ""}" data-collapsible-panel data-collapsible-key="${escapeHtml(panelKey)}" data-collapsed="${collapsed ? "true" : "false"}">

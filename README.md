@@ -19,7 +19,12 @@ apps/knockout_bracket/      Static Wikipedia-style knockout bracket board.
 apps/score_visualizer/      Static leaderboard and scenario scorer.
 apps/score_timeline/        Static score-over-time graph.
 apps/consensus_predictions/ Standalone generated consensus visualization.
+apps/rules/                 Static scoring-rules page.
 apps/blog/                  Manual comment entries.
+apps/legacy/                Launcher for archived/support views.
+apps/round_of_32_consensus/ Generated Round of 32 consensus view.
+apps/round_of_16_consensus/ Generated Round of 16 consensus view.
+apps/third_places/          Legacy/support third-place standings view.
 archived_apps/              Older standalone app surfaces not published by default.
 public/                     Ignored GitHub Pages artifact from `make build-site`.
 docs/                       Scoring rules and data-flow notes.
@@ -31,10 +36,12 @@ docs/                       Scoring rules and data-flow notes.
 make build-pool-data
 make build-knockout-predictions
 make build-consensus-predictions
+make build-round-of-32-consensus
+make build-round-of-16-consensus
 make update-official-results
 make update-official-knockout-results
 make apply-manual-futures
-CHECKPOINT=group_md1 make create-official-checkpoint
+CHECKPOINT=round_of_16 make create-official-checkpoint
 make rebuild-official-checkpoints
 make build-site
 make test
@@ -46,10 +53,12 @@ Equivalent direct commands:
 python3 scripts/build_pool_data.py
 python3 scripts/build_knockout_predictions.py
 python3 scripts/build_consensus_predictions.py
+python3 scripts/build_round_of_32_consensus.py
+python3 scripts/build_round_of_16_consensus.py
 python3 scripts/update_official_results.py --transport "${OFFICIAL_RESULTS_TRANSPORT:-auto}"
 python3 scripts/update_official_knockout_results.py
 python3 scripts/apply_manual_futures.py
-python3 scripts/create_official_checkpoint.py group_md1
+python3 scripts/create_official_checkpoint.py round_of_16
 python3 scripts/create_official_checkpoint.py --rebuild-only
 make build-site
 python3 -m unittest discover -s tests
@@ -60,9 +69,9 @@ updater also supports `--api-key`, `--input`, `--output`, `--allow-empty`, and
 `--transport`. By default, the updater preserves the completed scoring fields
 already in `data/generated/official_results.js`, including group results, best
 thirds, provisional standings, timeline checkpoints, overall standings, futures,
-and the completed Round of 32 knockout matches, source metadata, and bonus
-answers. Use `--refresh-group-stage-results` only when you intend to replace the
-group-stage fields from Football-Data again; Round of 32 knockout data remains
+completed knockout matches, source metadata, and Round of 32 bonus answers.
+Use `--refresh-group-stage-results` only when you intend to replace the
+group-stage fields from Football-Data again; knockout match data remains
 preserved by this command.
 
 `make update-official-knockout-results` reads `FOOTBALL_DATA_API_KEY` when set.
@@ -105,7 +114,7 @@ Use the knockout updater after official knockout match records change, then run
 `make apply-manual-futures` if `data/manual/official_futures.json` has changed.
 If the update should become part of the score timeline, create or rebuild the
 matching checkpoint afterward, for example
-`CHECKPOINT=round_of_32 make create-official-checkpoint`. Run
+`CHECKPOINT=round_of_16 make create-official-checkpoint`. Run
 `make build-site` afterward when the ignored `public/` copy needs to match the
 committed files under `data/generated/`.
 
@@ -123,13 +132,13 @@ winner or shootout score, add the reviewed correction to
 
 ```bash
 make update-official-knockout-results
-CHECKPOINT=round_of_32 make create-official-checkpoint
+CHECKPOINT=round_of_16 make create-official-checkpoint
 make build-site
 ```
 
 Then verify the affected match in `data/manual/official_knockout_results.json`,
 `data/generated/official_results.js`, and
-`data/checkpoints/official_results/round_of_32.json`.
+`data/checkpoints/official_results/round_of_16.json`.
 
 ## Data Flow
 
@@ -141,19 +150,30 @@ submitted picks. `scripts/build_pool_data.py` converts it into
 The knockout workbooks are the source of truth for knockout picks once those
 files exist. `scripts/build_knockout_predictions.py` currently accepts the
 visual Round of 32 workbook at `data/raw/round_of_32.xlsx`, the visual Round of
-16 workbook at `data/raw/round_of_16.xlsx`, and the remaining stage files in
-`data/raw/knockout_predictions/`: `quarterfinals.xlsx`, `semifinals.xlsx`, and
-`final.xlsx`. It merges them into
+16 workbook at `data/raw/round_of_16.xlsx`, and optional remaining-stage files
+in `data/raw/knockout_predictions/`: `quarterfinals.xlsx`,
+`semifinals.xlsx`, and `final.xlsx`. It merges the workbooks that exist into
 `data/generated/knockout_predictions.js`, which is loaded by the player picks
-and score pages. Until the workbooks are available, the builder writes a valid
-empty prediction artifact. The expected match counts are 16, 8, 4, 2, and 1,
-for 31 predicted matches total. Standard player sheets need a `Winner` or
-`Advancing team` column; `Mode`, `Home Score`, `Away Score`, and `Match`
-columns are optional. For the visual Round of 32 and Round of 16 workbooks, red
-result cells are treated as blank/NaN and the score/points column is ignored.
+and score pages. The current active prediction workflow has moved from Round
+of 32 to Round of 16, so refresh `data/raw/round_of_16.xlsx` and run
+`make build-knockout-predictions` before scoring new Round of 16 picks. Until
+any workbook is available, the builder writes a valid empty prediction
+artifact. The expected match counts are 16, 8, 4, 2, and 1, for 31 predicted
+matches total. Standard player sheets need a `Winner` or `Advancing team`
+column; `Mode`, `Home Score`, `Away Score`, and `Match` columns are optional.
+For the visual Round of 32 and Round of 16 workbooks, red result cells are
+treated as blank/NaN and the score/points column is ignored.
 
 `scripts/build_consensus_predictions.py` reshapes `pool_data.js` into a
 consensus JSON export and the standalone `apps/consensus_predictions/index.html`.
+`scripts/build_round_of_32_consensus.py` generates
+`data/generated/round_of_32_consensus.json` and the standalone
+`apps/round_of_32_consensus/index.html` support view from the completed
+Round of 32 workbook data.
+`scripts/build_round_of_16_consensus.py` generates
+`data/generated/round_of_16_consensus.json` and the standalone
+`apps/round_of_16_consensus/index.html` support view from the current
+Round of 16 workbook data.
 
 `scripts/update_official_results.py` fetches Football-Data standings and writes
 `data/generated/official_results.js`, which is loaded by
@@ -203,7 +223,7 @@ Official score-timeline checkpoints are stored in
 reflects the current official results, create a checkpoint with:
 
 ```bash
-CHECKPOINT=group_md1 make create-official-checkpoint
+CHECKPOINT=round_of_16 make create-official-checkpoint
 ```
 
 Supported checkpoint keys are `group_md1`, `group_md2`, `group_md3`,
@@ -229,7 +249,15 @@ links to the static apps below, and each app can also be opened directly:
 - `apps/score_visualizer/index.html`
 - `apps/score_timeline/index.html`
 - `apps/consensus_predictions/index.html`
+- `apps/rules/index.html`
 - `apps/blog/index.html`
+
+Support and legacy views are linked from the Legacy page:
+
+- `apps/legacy/index.html`
+- `apps/round_of_32_consensus/index.html`
+- `apps/round_of_16_consensus/index.html`
+- `apps/third_places/index.html`
 
 Older standalone knockout reference pages live in `archived_apps/` so they do
 not appear as active app routes or get copied into `public/` by default.
@@ -269,12 +297,14 @@ Typical update flow:
 make build-pool-data
 make build-knockout-predictions
 make build-consensus-predictions
+make build-round-of-32-consensus
+make build-round-of-16-consensus
 make update-official-results
 make update-official-knockout-results
 # Review raw knockout data; if overrides changed, rerun the knockout updater.
 make update-official-knockout-results
 make apply-manual-futures
-CHECKPOINT=round_of_32 make create-official-checkpoint
+CHECKPOINT=round_of_16 make create-official-checkpoint
 make test
 make build-site
 git add data/generated data/checkpoints data/manual index.html styles.css apps docs scripts .github/workflows/pages.yml Makefile .gitignore README.md
