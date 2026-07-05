@@ -85,6 +85,15 @@ CHECKPOINTS: tuple[dict[str, Any], ...] = (
 )
 CHECKPOINTS_BY_KEY = {checkpoint["key"]: checkpoint for checkpoint in CHECKPOINTS}
 CHECKPOINT_ORDER = tuple(checkpoint["key"] for checkpoint in CHECKPOINTS)
+KNOCKOUT_STAGE_ORDER = {
+    "round_of_32": 1,
+    "round_of_16": 2,
+    "quarterfinal": 3,
+    "semifinal": 4,
+    "third_place_match": 5,
+    "final": 6,
+    "futures": 6,
+}
 OFFICIAL_RESULTS_RE = re.compile(
     r"^\s*window\.OFFICIAL_RESULTS\s*=\s*(?P<payload>\{.*\})\s*;\s*$",
     re.DOTALL,
@@ -235,9 +244,12 @@ def build_checkpoint(checkpoint_key: str, official_results: dict[str, Any]) -> d
             "bestThirds": best_thirds,
             "futures": normalize_futures(official_results.get("futures")),
         },
-        "officialMatches": normalize_matches(official_results.get("matches")),
+        "officialMatches": checkpoint_matches(
+            official_results.get("matches"),
+            metadata["stage"],
+        ),
     }
-    if metadata["stage"] == "round_of_32":
+    if includes_round_of_32_results(metadata["stage"]):
         checkpoint["roundOf32BonusResults"] = normalize_round_of_32_bonus_results(
             official_results.get("roundOf32BonusResults")
         )
@@ -294,6 +306,23 @@ def string_value(source: dict[str, Any], key: str) -> str:
 
 def normalize_matches(value: Any) -> list[Any]:
     return value if isinstance(value, list) else []
+
+
+def checkpoint_matches(value: Any, checkpoint_stage: str) -> list[Any]:
+    matches = normalize_matches(value)
+    cutoff = KNOCKOUT_STAGE_ORDER.get(checkpoint_stage)
+    if cutoff is None:
+        return []
+    return [
+        match
+        for match in matches
+        if isinstance(match, dict)
+        and KNOCKOUT_STAGE_ORDER.get(match.get("stage"), 0) <= cutoff
+    ]
+
+
+def includes_round_of_32_results(checkpoint_stage: str) -> bool:
+    return KNOCKOUT_STAGE_ORDER.get(checkpoint_stage, 0) >= KNOCKOUT_STAGE_ORDER["round_of_32"]
 
 
 def normalize_round_of_32_bonus_results(value: Any) -> dict[str, Any]:

@@ -24,6 +24,7 @@ const KNOCKOUT_BASE_POINTS = {
   third_place_match: 14,
   final: 20,
 };
+const KNOCKOUT_STAGE_ORDER = Object.fromEntries(Object.keys(KNOCKOUT_BASE_POINTS).map((stage, index) => [stage, index]));
 const KNOCKOUT_PERFECT_BONUS_STAGES = new Set(["round_of_32", "round_of_16", "quarterfinal", "semifinal"]);
 const KNOCKOUT_STAGE_MATCH_COUNTS = {
   round_of_32: 16,
@@ -355,7 +356,7 @@ function normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData = {}
   const stage = normalizeStage(checkpoint.stage || checkpoint.key || "group_stage");
   const roundOf32BonusResults =
     checkpoint.roundOf32BonusResults ||
-    (stage === "round_of_32" ? resultsData?.roundOf32BonusResults : {}) ||
+    (checkpointIncludesRoundOf32(stage) ? resultsData?.roundOf32BonusResults : {}) ||
     {};
   const includeFutures = Boolean(checkpoint.includeFutures || checkpoint.key === "futures" || stage === "futures");
   const includeBonuses = Boolean(checkpoint.includeBonuses || checkpoint.key === "bonuses" || stage === "bonuses");
@@ -375,6 +376,10 @@ function normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData = {}
     officialMatches,
     roundOf32BonusResults,
   };
+}
+
+function checkpointIncludesRoundOf32(stage) {
+  return (KNOCKOUT_STAGE_ORDER[stage] ?? -1) >= KNOCKOUT_STAGE_ORDER.round_of_32;
 }
 
 function mergePlannedCheckpoints(sourcePlayers, availableCheckpoints) {

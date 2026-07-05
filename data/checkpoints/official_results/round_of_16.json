@@ -773,5 +773,24 @@
       "awayExtraTimeScore": null,
       "referees": []
     }
-  ]
+  ],
+  "roundOf32BonusResults": {
+    "extraTimeMatches": 5,
+    "penaltyMatches": 3,
+    "mostGoalsTeam": [
+      "Argentina",
+      "Belgium",
+      "France",
+      "Spain"
+    ],
+    "totalGoals": 42,
+    "fastestGoalTeam": "DR Congo",
+    "latestGoalTeam": "Belgium",
+    "biggestWinningMarginTeam": [
+      "France",
+      "Spain"
+    ],
+    "yellowCards": 36,
+    "redCards": 2
+  }
 }

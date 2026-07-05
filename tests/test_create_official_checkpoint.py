@@ -132,6 +132,52 @@ class CreateOfficialCheckpointTests(unittest.TestCase):
                 checkpoint["roundOf32BonusResults"],
             )
 
+    def test_round_of_32_checkpoint_excludes_later_knockout_matches(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            official_path, checkpoint_dir = self.write_fixture(temp_dir)
+
+            create_official_checkpoint.create_or_rebuild_checkpoint(
+                checkpoint_key="round_of_32",
+                rebuild_only=False,
+                official_results_path=official_path,
+                checkpoint_dir=checkpoint_dir,
+            )
+
+            checkpoint_path = checkpoint_dir / "round_of_32.json"
+            checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(
+                [match["matchId"] for match in checkpoint["officialMatches"]],
+                ["73"],
+            )
+
+    def test_round_of_16_checkpoint_includes_round_of_32_and_round_of_16_matches(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            official_path, checkpoint_dir = self.write_fixture(temp_dir)
+
+            create_official_checkpoint.create_or_rebuild_checkpoint(
+                checkpoint_key="round_of_16",
+                rebuild_only=False,
+                official_results_path=official_path,
+                checkpoint_dir=checkpoint_dir,
+            )
+
+            checkpoint_path = checkpoint_dir / "round_of_16.json"
+            checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(
+                [match["matchId"] for match in checkpoint["officialMatches"]],
+                ["73", "89"],
+            )
+            self.assertEqual(
+                checkpoint["roundOf32BonusResults"],
+                {
+                    "extraTimeMatches": 0,
+                    "penaltyMatches": 0,
+                    "totalGoals": 4,
+                },
+            )
+
     def write_fixture(self, temp_dir):
         temp_path = Path(temp_dir)
         official_path = temp_path / "official_results.js"
@@ -140,7 +186,35 @@ class CreateOfficialCheckpointTests(unittest.TestCase):
             "sourceName": "Football-Data.org",
             "generatedAt": "2026-06-17T00:00:00+00:00",
             "lastCompletedMatchDate": "",
-            "matches": [{"stage": "GROUP_STAGE", "winner": "Mexico"}],
+            "matches": [
+                {
+                    "matchId": "73",
+                    "stage": "round_of_32",
+                    "homeTeam": "South Africa",
+                    "awayTeam": "Canada",
+                    "homeScore": 0,
+                    "awayScore": 1,
+                    "advancingTeam": "Canada",
+                },
+                {
+                    "matchId": "89",
+                    "stage": "round_of_16",
+                    "homeTeam": "Paraguay",
+                    "awayTeam": "France",
+                    "homeScore": 0,
+                    "awayScore": 1,
+                    "advancingTeam": "France",
+                },
+                {
+                    "matchId": "97",
+                    "stage": "quarterfinal",
+                    "homeTeam": "Canada",
+                    "awayTeam": "Brazil",
+                    "homeScore": None,
+                    "awayScore": None,
+                    "advancingTeam": "",
+                },
+            ],
             "groupResults": {"A": [], "B": []},
             "bestThirds": [],
             "futures": {
