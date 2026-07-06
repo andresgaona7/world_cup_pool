@@ -2772,42 +2772,60 @@ window.KNOCKOUT_PREDICTIONS = {
           "stage": "round_of_16",
           "mode": "score",
           "homeTeam": "Brazil",
-          "awayTeam": "Norway"
+          "awayTeam": "Norway",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Brazil"
         },
         {
           "matchId": "92",
           "stage": "round_of_16",
           "mode": "score",
           "homeTeam": "Mexico",
-          "awayTeam": "England"
+          "awayTeam": "England",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "England"
         },
         {
           "matchId": "93",
           "stage": "round_of_16",
           "mode": "score",
           "homeTeam": "Portugal",
-          "awayTeam": "Spain"
+          "awayTeam": "Spain",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Portugal"
         },
         {
           "matchId": "94",
           "stage": "round_of_16",
           "mode": "score",
           "homeTeam": "USA",
-          "awayTeam": "Belgium"
+          "awayTeam": "Belgium",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "USA"
         },
         {
           "matchId": "95",
           "stage": "round_of_16",
           "mode": "score",
-          "homeTeam": "Switzerland",
-          "awayTeam": "TBD"
+          "homeTeam": "Egypt",
+          "awayTeam": "Argentina",
+          "homeScore": 0,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Argentina"
         },
         {
           "matchId": "96",
           "stage": "round_of_16",
           "mode": "score",
-          "homeTeam": "Egypt",
-          "awayTeam": "TBD"
+          "homeTeam": "Switzerland",
+          "awayTeam": "Colombia",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Colombia"
         }
       ],
       "validation": {
@@ -2829,13 +2847,7 @@ window.KNOCKOUT_PREDICTIONS = {
         "duplicateMatchIds": [],
         "incompleteMatchIds": [
           "89",
-          "90",
-          "91",
-          "92",
-          "93",
-          "94",
-          "95",
-          "96"
+          "90"
         ]
       },
       "bonusAnswers": {

@@ -108,6 +108,7 @@ const KNOCKOUT_TEAM_ALIASES = {
   "democratic republic of the congo": "congo dr",
   morroco: "morocco",
   nederlands: "netherlands",
+  usa: "united states",
 };
 const COLORS = ["#0f7a63", "#255f9d", "#986800", "#9d3333", "#5b6b2f", "#7b4da8", "#007c89", "#c45113", "#42526e", "#0b604e", "#734222"];
 const SVG_NS = "http://www.w3.org/2000/svg";

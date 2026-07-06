@@ -65,6 +65,7 @@ const KNOCKOUT_TEAM_ALIASES = {
   "democratic republic of the congo": "congo dr",
   morroco: "morocco",
   nederlands: "netherlands",
+  usa: "united states",
 };
 const KNOCKOUT_STAGE_LABELS = {
   round_of_32: "Round of 32",

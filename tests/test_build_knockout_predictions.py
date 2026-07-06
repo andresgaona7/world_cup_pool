@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
+from zipfile import ZipFile
 
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts" / "build_knockout_predictions.py"
@@ -143,6 +144,35 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
         self.assertEqual(matches[0]["matchId"], "73")
         self.assertEqual(matches[-1]["matchId"], "88")
         self.assertEqual({match["stage"] for match in matches}, {"round_of_32"})
+
+    def test_read_sheet_paths_accepts_absolute_xlsx_relationship_targets(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workbook_path = Path(temp_dir) / "absolute_target.xlsx"
+            with ZipFile(workbook_path, "w") as archive:
+                archive.writestr(
+                    "xl/workbook.xml",
+                    """<?xml version="1.0" encoding="UTF-8"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <sheets>
+    <sheet name="jjpro" sheetId="1" r:id="rId1"/>
+  </sheets>
+</workbook>""",
+                )
+                archive.writestr(
+                    "xl/_rels/workbook.xml.rels",
+                    """<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1"
+    Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet"
+    Target="/xl/worksheets/sheet1.xml"/>
+</Relationships>""",
+                )
+
+            with ZipFile(workbook_path) as archive:
+                paths = build_knockout_predictions.read_sheet_paths(archive)
+
+        self.assertEqual(paths, [("jjpro", "xl/worksheets/sheet1.xml")])
 
     def test_extracts_visual_round_of_32_layout_and_ignores_red_cells(self):
         cells = {

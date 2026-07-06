@@ -314,8 +314,9 @@ def read_sheet_paths(archive: ZipFile) -> list[tuple[str, str]]:
     for sheet in workbook.findall("a:sheets/a:sheet", NS):
         rel_id = sheet.attrib[f"{{{REL_NS}}}id"]
         target = relation_targets[rel_id]
+        target = target.lstrip("/")
         if not target.startswith("xl/"):
-            target = f"xl/{target.lstrip('/')}"
+            target = f"xl/{target}"
         paths.append((sheet.attrib["name"], target))
     return paths
 

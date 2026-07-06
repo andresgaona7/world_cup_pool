@@ -56,6 +56,21 @@ class BrowserKnockoutMatchingTests(unittest.TestCase):
             with self.subTest(match_id=match_id):
                 self.assertIn(fixture_key(official_by_match_id[match_id], aliases), prediction_keys)
 
+    def test_score_visualizer_aliases_match_round_of_16_usa_fixture(self):
+        official = load_browser_payload("data/generated/official_results.js", "OFFICIAL_RESULTS")
+        predictions = load_browser_payload("data/generated/knockout_predictions.js", "KNOCKOUT_PREDICTIONS")
+        aliases = knockout_team_aliases("apps/score_visualizer/app.js")
+
+        official_by_match_id = {
+            match["matchId"]: match
+            for match in official["matches"]
+            if match.get("stage") == "round_of_16"
+        }
+        player_predictions = predictions["players"][0]["matches"]
+        prediction_keys = {fixture_key(match, aliases) for match in player_predictions}
+
+        self.assertIn(fixture_key(official_by_match_id["94"], aliases), prediction_keys)
+
     def test_public_knockout_alias_tables_match_source_apps(self):
         for app in ("score_visualizer", "score_timeline"):
             with self.subTest(app=app):
