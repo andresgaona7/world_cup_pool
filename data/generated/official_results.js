@@ -1,7 +1,7 @@
 window.OFFICIAL_RESULTS = {
   "sourceName": "Football-Data.org",
   "sourceUrl": "https://api.football-data.org/v4/competitions/WC/standings?season=2026",
-  "generatedAt": "2026-06-29T19:38:08+00:00",
+  "generatedAt": "2026-07-07T08:07:29+00:00",
   "lastCompletedMatchDate": "",
   "matches": [
     {
@@ -2422,7 +2422,7 @@ window.OFFICIAL_RESULTS = {
       "label": "After round of 16",
       "shortLabel": "R16",
       "stage": "round_of_16",
-      "completedAt": "2026-06-29T19:38:08+00:00",
+      "completedAt": "2026-07-07T08:07:29+00:00",
       "scenario": {
         "groupResults": {
           "A": [
@@ -4645,7 +4645,7 @@ window.OFFICIAL_RESULTS = {
   "knockoutSource": {
     "sourceName": "Football-Data.org matches",
     "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-    "generatedAt": "2026-07-07T07:57:41+00:00",
+    "generatedAt": "2026-07-07T08:07:51+00:00",
     "rawPath": "data/raw/official/football_data_wc_matches_2026.json",
     "normalizedPath": "data/manual/official_knockout_results.json"
   }
