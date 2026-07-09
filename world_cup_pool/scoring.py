@@ -120,7 +120,6 @@ def score_knockout_prediction(
     """Score one knockout prediction."""
 
     base_points = KNOCKOUT_BASE_POINTS[result.stage]
-    correct_advancing_team = prediction.predicted_advancing_team == result.advancing_team
 
     if prediction.mode != PredictionMode.SCORE:
         raise ValueError(f"Unsupported prediction mode: {prediction.mode}")
@@ -128,33 +127,66 @@ def score_knockout_prediction(
     if prediction.predicted_home_score is None or prediction.predicted_away_score is None:
         raise ValueError("Score-mode predictions require both home and away scores.")
 
+    multiplier = 0.0
+    predicted_advancing_team = _knockout_predicted_advancing_team(prediction, result)
+    if predicted_advancing_team == result.advancing_team:
+        multiplier += 1.0
+
     exact_score = (
         prediction.predicted_home_score == result.home_score
         and prediction.predicted_away_score == result.away_score
     )
-    predicted_penalties = prediction.predicted_home_score == prediction.predicted_away_score
-    decided_on_penalties = result.home_score == result.away_score and bool(result.advancing_team)
-    exact_penalty_score = (
-        decided_on_penalties
-        and result.home_penalty_score is not None
-        and result.away_penalty_score is not None
-        and prediction.predicted_home_penalty_score == result.home_penalty_score
-        and prediction.predicted_away_penalty_score == result.away_penalty_score
-    )
+    if exact_score:
+        multiplier += 1.0
 
-    if exact_score and correct_advancing_team and exact_penalty_score:
-        return base_points * 3.0
-    if exact_score and correct_advancing_team:
-        return base_points * 2.0
-    if correct_advancing_team:
-        if decided_on_penalties and predicted_penalties:
-            if exact_penalty_score:
-                return base_points * 2.0
-            return base_points * 1.5
-        return base_points
-    if decided_on_penalties and exact_score:
-        return base_points * 0.5
-    return 0.0
+    if _exact_knockout_penalty_score(prediction, result):
+        multiplier += 1.0
+
+    return base_points * multiplier
+
+
+def _knockout_predicted_advancing_team(
+    prediction: KnockoutPrediction,
+    result: KnockoutMatchResult,
+) -> str:
+    """Return the explicit knockout winner, or infer it from complete scores."""
+
+    if prediction.predicted_advancing_team:
+        return prediction.predicted_advancing_team
+    if prediction.predicted_home_score is None or prediction.predicted_away_score is None:
+        return ""
+    if prediction.predicted_home_score > prediction.predicted_away_score:
+        return result.home_team
+    if prediction.predicted_away_score > prediction.predicted_home_score:
+        return result.away_team
+    if (
+        prediction.predicted_home_penalty_score is None
+        or prediction.predicted_away_penalty_score is None
+        or prediction.predicted_home_penalty_score == prediction.predicted_away_penalty_score
+    ):
+        return ""
+    if prediction.predicted_home_penalty_score > prediction.predicted_away_penalty_score:
+        return result.home_team
+    return result.away_team
+
+
+def _exact_knockout_penalty_score(
+    prediction: KnockoutPrediction,
+    result: KnockoutMatchResult,
+) -> bool:
+    if (
+        result.home_penalty_score is None
+        or result.away_penalty_score is None
+        or prediction.predicted_home_penalty_score is None
+        or prediction.predicted_away_penalty_score is None
+    ):
+        return False
+    if (
+        prediction.predicted_home_penalty_score != result.home_penalty_score
+        or prediction.predicted_away_penalty_score != result.away_penalty_score
+    ):
+        return False
+    return _knockout_predicted_advancing_team(prediction, result) == result.advancing_team
 
 
 def score_knockout_predictions(

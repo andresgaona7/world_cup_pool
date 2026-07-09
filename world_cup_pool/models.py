@@ -40,7 +40,7 @@ class GroupResult:
 
 @dataclass(frozen=True)
 class KnockoutMatchResult:
-    """Official knockout result using regulation-time score plus advancing team."""
+    """Official knockout result using regular plus extra-time score."""
 
     match_id: str
     stage: Stage

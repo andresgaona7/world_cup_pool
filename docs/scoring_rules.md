@@ -50,17 +50,31 @@ Score mode. For knockout matches that go to extra time, the official score is
 regular time plus extra time. Penalty shootout goals are tracked separately and
 do not count toward the official score.
 
-- Exact official score and correct advancing team on a match not decided by
-  penalties: 2.0x base.
-- Exact penalty shootout score on a match decided by penalties: 3.0x base,
-  only when the official draw score and advancing team are also exact.
-- Predicted a penalty shootout and correct advancing team, but wrong official
-  draw score: 1.5x base.
-- Exact official draw and correct advancing team, but wrong or missing
-  penalty shootout score: 2.0x base.
-- Correct advancing team but wrong score: 1.0x base.
-- Exact official draw but wrong advancing team: 0.5x base fallback.
-- Wrong advancing team with any other score: 0.
+Each knockout prediction earns additive base multipliers:
+
+| Correct item | Multiplier |
+| --- | ---: |
+| Correct advancing team | 1.0x base |
+| Correct official match score | 1.0x base |
+| Correct penalty shootout score | 1.0x base |
+
+A non-draw official result can earn at most 2.0x base. A penalty-shootout result
+can earn at most 3.0x base. Penalty score credit is available only when the
+official match was decided on penalties, and the predicted penalty score must
+match in the correct team direction. For example, if Argentina officially wins
+5-4 on penalties, a prediction that says Spain advances 5-4 on penalties does
+not earn the penalty-score multiplier.
+
+Non-draw example:
+
+Official result: Argentina 2-1 Spain; Argentina advances.
+
+| Prediction | Multiplier |
+| --- | ---: |
+| 2-1, Argentina | 2.0x base |
+| 1-0, Argentina | 1.0x base |
+| 1-2, Spain | 0 |
+| 1-1, Argentina, 5-4 pens | 1.0x base |
 
 Penalty shootout example:
 
@@ -69,11 +83,11 @@ Official result: Argentina 1-1 Spain; Argentina advances 5-4 on penalties.
 | Prediction | Multiplier |
 | --- | ---: |
 | 1-1, Argentina, 5-4 pens | 3.0x base |
-| 1-1, Argentina, wrong or no penalty score | 2.0x base |
+| 1-1, Argentina, 4-3 pens | 2.0x base |
+| 1-1, Spain, 5-4 pens | 1.0x base |
 | 0-0, Argentina, 5-4 pens | 2.0x base |
-| 0-0, Argentina, wrong penalty score | 1.5x base |
-| 2-1, Argentina | 1.0x base |
-| 1-1, Spain | 0.5x base |
+| 0-0, Argentina, 4-3 pens | 1.0x base |
+| 0-0, Spain, 5-4 pens | 0 |
 
 ## Futures
 

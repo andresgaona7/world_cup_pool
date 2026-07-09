@@ -68,18 +68,34 @@
               match = 14, final = 20.</li>
             <li>For matches that go to extra time, the official score is regular time plus extra time. Penalty shootout
               goals are tracked separately and do not count toward that official score.</li>
-            <li>Score mode: exact official score and correct advancing team on a match not decided by penalties earns
-              2.0x base.</li>
-            <li>Score mode: exact penalty shootout score earns 3.0x base, only when the official draw score
-              and advancing team are also exact.</li>
-            <li>Score mode: predicted penalty shootout and correct advancing team with the wrong official draw score
-              earns 1.5x base.</li>
-            <li>Score mode: exact official draw and correct advancing team with a wrong or missing penalty shootout
-              score earns 2.0x base.</li>
-            <li>Score mode: correct advancing team with the wrong score earns 1.0x base.</li>
-            <li>Score mode: exact official draw but wrong advancing team earns a 0.5x base fallback.</li>
-            <li>Score mode: wrong advancing team with any other score earns 0.</li>
+            <li>Score mode is additive: correct advancing team earns 1.0x base, correct official match score earns
+              1.0x base, and correct penalty shootout score earns 1.0x base.</li>
+            <li>A non-draw official result can earn at most 2.0x base. A penalty-shootout result can earn at most
+              3.0x base.</li>
+            <li>Penalty score credit is available only when the official match was decided on penalties. The penalty
+              score must match in the correct team direction: if Argentina officially wins 5-4 on penalties, a
+              prediction that says Spain advances 5-4 does not earn the penalty-score multiplier.</li>
           </ul>
+          <div class="score-example" aria-label="Non-draw scoring example">
+            <div class="score-example-head">
+              <span>Example official result</span>
+              <strong>Argentina 2-1 Spain; Argentina advances</strong>
+            </div>
+            <dl class="score-example-list">
+              <div>
+                <dt>Prediction: 2-1, Argentina</dt>
+                <dd>2.0x base</dd>
+              </div>
+              <div>
+                <dt>Prediction: 1-0, Argentina</dt>
+                <dd>1.0x base</dd>
+              </div>
+              <div>
+                <dt>Prediction: 1-2, Spain</dt>
+                <dd>0.0x base</dd>
+              </div>
+            </dl>
+          </div>
           <div class="score-example" aria-label="Penalty shootout scoring example">
             <div class="score-example-head">
               <span>Example official result</span>
@@ -91,24 +107,24 @@
                 <dd>3.0x base</dd>
               </div>
               <div>
-                <dt>Prediction: 1-1, Argentina, wrong or no penalty score</dt>
+                <dt>Prediction: 1-1, Argentina, 4-3 pens</dt>
                 <dd>2.0x base</dd>
+              </div>
+              <div>
+                <dt>Prediction: 1-1, Spain, 5-4 pens</dt>
+                <dd>1.0x base</dd>
               </div>
               <div>
                 <dt>Prediction: 0-0, Argentina, 5-4 pens</dt>
                 <dd>2.0x base</dd>
               </div>
               <div>
-                <dt>Prediction: 0-0, Argentina, wrong penalty score</dt>
-                <dd>1.5x base</dd>
-              </div>
-              <div>
-                <dt>Prediction: 2-1, Argentina</dt>
+                <dt>Prediction: 0-0, Argentina, 4-3 pens</dt>
                 <dd>1.0x base</dd>
               </div>
               <div>
-                <dt>Prediction: 1-1, Spain</dt>
-                <dd>0.5x base</dd>
+                <dt>Prediction: 0-0, Spain, 5-4 pens</dt>
+                <dd>0.0x base</dd>
               </div>
             </dl>
           </div>

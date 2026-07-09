@@ -1207,31 +1207,18 @@ function knockoutComparisonRows(player) {
 }
 
 function knockoutMatchStatus(prediction, result, points) {
-  const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
-  const correctWinner = sameKnockoutTeam(prediction.winner, result.advancingTeam);
-  const predictedPenalties = prediction.homeScore !== null &&
-    prediction.awayScore !== null &&
-    prediction.homeScore === prediction.awayScore;
-  const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
-  const exactPenaltyScore = hasPenaltyScore(result) &&
-    prediction.homePenaltyScore === result.homePenaltyScore &&
-    prediction.awayPenaltyScore === result.awayPenaltyScore;
-  if (exactScore && correctWinner && exactPenaltyScore) {
-    return "Exact penalties";
+  const components = knockoutScoringComponents(prediction, result);
+  const earned = [];
+  if (components.correctAdvancingTeam) {
+    earned.push("Winner");
   }
-  if (exactScore && correctWinner) {
-    return "Exact";
+  if (components.exactScore) {
+    earned.push("Score");
   }
-  if (exactScore) {
-    return "Exact score";
+  if (components.exactPenaltyScore) {
+    earned.push("Penalties");
   }
-  if (correctWinner && decidedOnPenalties && predictedPenalties) {
-    return "Winner + penalties";
-  }
-  if (correctWinner) {
-    return "Winner";
-  }
-  return points > 0 ? "Partial" : "No match";
+  return earned.length ? earned.join(" + ") : (points > 0 ? "Partial" : "No match");
 }
 
 function knockoutPredictionIndex(predictions) {
@@ -1311,7 +1298,7 @@ function knockoutEarnedMultiplier(result, prediction, hasResult) {
 }
 
 function hasPenaltyScore(match) {
-  return match.homePenaltyScore !== null && match.awayPenaltyScore !== null;
+  return numberOrNull(match.homePenaltyScore) !== null && numberOrNull(match.awayPenaltyScore) !== null;
 }
 
 function hasExtraTime(match) {
@@ -1986,35 +1973,49 @@ function numericBonusAnswerMatches(prediction, actual) {
 
 function scoreKnockoutMatch(prediction, result) {
   const basePoints = KNOCKOUT_BASE_POINTS[result.stage] || 0;
-  const correctAdvancingTeam = sameKnockoutTeam(prediction.winner, result.advancingTeam);
+  const components = knockoutScoringComponents(prediction, result);
+  return basePoints * [
+    components.correctAdvancingTeam,
+    components.exactScore,
+    components.exactPenaltyScore,
+  ].filter(Boolean).length;
+}
 
+function knockoutScoringComponents(prediction, result) {
+  const predictedAdvancingTeam = knockoutPredictedAdvancingTeam(prediction, result);
   const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
-  const predictedPenalties = prediction.homeScore !== null &&
-    prediction.awayScore !== null &&
-    prediction.homeScore === prediction.awayScore;
-  const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
-  const exactPenaltyScore = hasPenaltyScore(result) &&
+  return {
+    correctAdvancingTeam: sameKnockoutTeam(predictedAdvancingTeam, result.advancingTeam),
+    exactScore,
+    exactPenaltyScore: exactKnockoutPenaltyScore(prediction, result, predictedAdvancingTeam),
+  };
+}
+
+function knockoutPredictedAdvancingTeam(prediction, result) {
+  if (prediction.winner) {
+    return prediction.winner;
+  }
+  if (prediction.homeScore === null || prediction.awayScore === null) {
+    return "";
+  }
+  if (prediction.homeScore > prediction.awayScore) {
+    return result.homeTeam;
+  }
+  if (prediction.awayScore > prediction.homeScore) {
+    return result.awayTeam;
+  }
+  if (!hasPenaltyScore(prediction) || prediction.homePenaltyScore === prediction.awayPenaltyScore) {
+    return "";
+  }
+  return prediction.homePenaltyScore > prediction.awayPenaltyScore ? result.homeTeam : result.awayTeam;
+}
+
+function exactKnockoutPenaltyScore(prediction, result, predictedAdvancingTeam) {
+  return hasPenaltyScore(result) &&
+    hasPenaltyScore(prediction) &&
     prediction.homePenaltyScore === result.homePenaltyScore &&
-    prediction.awayPenaltyScore === result.awayPenaltyScore;
-  if (exactScore && correctAdvancingTeam && exactPenaltyScore) {
-    return basePoints * 3;
-  }
-  if (exactScore && correctAdvancingTeam) {
-    return basePoints * 2;
-  }
-  if (correctAdvancingTeam) {
-    if (decidedOnPenalties && predictedPenalties) {
-      if (exactPenaltyScore) {
-        return basePoints * 2;
-      }
-      return basePoints * 1.5;
-    }
-    return basePoints;
-  }
-  if (decidedOnPenalties && exactScore) {
-    return basePoints * 0.5;
-  }
-  return 0;
+    prediction.awayPenaltyScore === result.awayPenaltyScore &&
+    sameKnockoutTeam(predictedAdvancingTeam, result.advancingTeam);
 }
 
 function playerBestThirdSet(player) {

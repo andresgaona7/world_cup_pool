@@ -129,11 +129,15 @@ const chartPanel = document.querySelector("#chartPanel");
 const leaderboardPanel = document.querySelector("#leaderboardPanel");
 const playerFocusSelect = document.querySelector("#playerFocusSelect");
 const selectedPlayerDetail = document.querySelector("#selectedPlayerDetail");
-let chartWidthScale = Number(chartWidthControl?.value || 100) / 100;
+let chartWidthRatio = chartWidthSliderRatio();
 let selectedPlayerIndex = playerFocusSelect?.value ? Number(playerFocusSelect.value) : null;
 
 chartWidthControl?.addEventListener("input", () => {
-  chartWidthScale = Number(chartWidthControl.value) / 100;
+  chartWidthRatio = chartWidthSliderRatio();
+  render();
+});
+
+window.addEventListener("resize", () => {
   render();
 });
 
@@ -956,40 +960,70 @@ function numericBonusAnswerMatches(prediction, actual) {
 
 function scoreKnockoutMatch(prediction, result) {
   const basePoints = KNOCKOUT_BASE_POINTS[result.stage] || 0;
-  const predictedAdvancingTeam = prediction.winner || prediction.advancingTeam || prediction.predictedAdvancingTeam || "";
-  const correctAdvancingTeam = sameKnockoutTeam(predictedAdvancingTeam, result.advancingTeam);
+  const components = knockoutScoringComponents(prediction, result);
+  return basePoints * [
+    components.correctAdvancingTeam,
+    components.exactScore,
+    components.exactPenaltyScore,
+  ].filter(Boolean).length;
+}
+
+function knockoutScoringComponents(prediction, result) {
   const predictedHomeScore = numberOrNull(prediction.homeScore);
   const predictedAwayScore = numberOrNull(prediction.awayScore);
-
   if (predictedHomeScore === null || predictedAwayScore === null) {
-    return 0;
+    return {
+      correctAdvancingTeam: false,
+      exactScore: false,
+      exactPenaltyScore: false,
+    };
   }
 
+  const predictedAdvancingTeam = knockoutPredictedAdvancingTeam(prediction, result);
   const exactScore = predictedHomeScore === result.homeScore && predictedAwayScore === result.awayScore;
-  const predictedPenalties = predictedHomeScore === predictedAwayScore;
-  const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
-  const exactPenaltyScore = hasPenaltyScore(result) &&
+  return {
+    correctAdvancingTeam: sameKnockoutTeam(predictedAdvancingTeam, result.advancingTeam),
+    exactScore,
+    exactPenaltyScore: exactKnockoutPenaltyScore(prediction, result, predictedAdvancingTeam),
+  };
+}
+
+function knockoutPredictedAdvancingTeam(prediction, result) {
+  const explicitWinner = prediction.winner || prediction.advancingTeam || prediction.predictedAdvancingTeam || "";
+  if (explicitWinner) {
+    return explicitWinner;
+  }
+
+  const predictedHomeScore = numberOrNull(prediction.homeScore);
+  const predictedAwayScore = numberOrNull(prediction.awayScore);
+  if (predictedHomeScore === null || predictedAwayScore === null) {
+    return "";
+  }
+  if (predictedHomeScore > predictedAwayScore) {
+    return result.homeTeam;
+  }
+  if (predictedAwayScore > predictedHomeScore) {
+    return result.awayTeam;
+  }
+
+  const predictedHomePenaltyScore = numberOrNull(prediction.homePenaltyScore);
+  const predictedAwayPenaltyScore = numberOrNull(prediction.awayPenaltyScore);
+  if (
+    predictedHomePenaltyScore === null ||
+    predictedAwayPenaltyScore === null ||
+    predictedHomePenaltyScore === predictedAwayPenaltyScore
+  ) {
+    return "";
+  }
+  return predictedHomePenaltyScore > predictedAwayPenaltyScore ? result.homeTeam : result.awayTeam;
+}
+
+function exactKnockoutPenaltyScore(prediction, result, predictedAdvancingTeam) {
+  return hasPenaltyScore(result) &&
+    hasPenaltyScore(prediction) &&
     numberOrNull(prediction.homePenaltyScore) === result.homePenaltyScore &&
-    numberOrNull(prediction.awayPenaltyScore) === result.awayPenaltyScore;
-  if (exactScore && correctAdvancingTeam && exactPenaltyScore) {
-    return basePoints * 3;
-  }
-  if (exactScore && correctAdvancingTeam) {
-    return basePoints * 2;
-  }
-  if (correctAdvancingTeam) {
-    if (decidedOnPenalties && predictedPenalties) {
-      if (exactPenaltyScore) {
-        return basePoints * 2;
-      }
-      return basePoints * 1.5;
-    }
-    return basePoints;
-  }
-  if (decidedOnPenalties && exactScore) {
-    return basePoints * 0.5;
-  }
-  return 0;
+    numberOrNull(prediction.awayPenaltyScore) === result.awayPenaltyScore &&
+    sameKnockoutTeam(predictedAdvancingTeam, result.advancingTeam);
 }
 
 function knockoutPredictionIndex(predictions) {
@@ -1035,7 +1069,7 @@ function canonicalKnockoutTeamName(value) {
 }
 
 function hasPenaltyScore(match) {
-  return match.homePenaltyScore !== null && match.awayPenaltyScore !== null;
+  return numberOrNull(match.homePenaltyScore) !== null && numberOrNull(match.awayPenaltyScore) !== null;
 }
 
 function actualTopScorers(futures) {
@@ -1224,10 +1258,9 @@ function renderSelectedPlayerDetail(series, checkpoint) {
 }
 
 function renderChart(series, sourceCheckpoints) {
-  const baseWidth = Math.max(760, sourceCheckpoints.length * 170 + 120);
-  const width = Math.round(baseWidth * chartWidthScale);
   const height = timelineChartHeight();
   const padding = { top: 26, right: 34, bottom: 78, left: 58 };
+  const width = timelineChartWidth(sourceCheckpoints.length, padding);
   const plotWidth = width - padding.left - padding.right;
   const plotHeight = height - padding.top - padding.bottom;
   const maxScore = Math.max(...series.flatMap((row) => row.points.map((point) => point.total || 0)), 1);
@@ -1335,6 +1368,47 @@ function renderChart(series, sourceCheckpoints) {
   selectedSeries.forEach(drawPoints);
 
   timelineChart.replaceChildren(svg);
+}
+
+function chartWidthSliderRatio() {
+  if (!chartWidthControl) {
+    return 0;
+  }
+  const min = Number(chartWidthControl.min || 0);
+  const max = Number(chartWidthControl.max || 100);
+  const value = Number(chartWidthControl.value || min);
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) {
+    return 0;
+  }
+  return Math.max(0, Math.min(1, (value - min) / (max - min)));
+}
+
+function timelineChartWidth(checkpointCount, padding) {
+  const visibleWidth = timelineChartVisibleWidth();
+  const count = Math.max(1, checkpointCount);
+  const visibleStagesAtMax = Math.min(3, count);
+  const visiblePlotWidth = Math.max(1, visibleWidth - padding.left - padding.right);
+  const zoomedPlotWidth = visibleStagesAtMax <= 1
+    ? visiblePlotWidth
+    : visiblePlotWidth * ((count - 1) / (visibleStagesAtMax - 1));
+  const zoomedWidth = Math.max(visibleWidth, zoomedPlotWidth + padding.left + padding.right);
+  return Math.round(visibleWidth + (zoomedWidth - visibleWidth) * chartWidthRatio);
+}
+
+function timelineChartVisibleWidth() {
+  const chartWrap = chartPanel?.querySelector?.(".chart-wrap");
+  const fallbackWidth = 760;
+  if (!chartWrap) {
+    return fallbackWidth;
+  }
+  const chartWrapStyles = typeof window.getComputedStyle === "function"
+    ? window.getComputedStyle(chartWrap)
+    : null;
+  const horizontalPadding = chartWrapStyles
+    ? (Number.parseFloat(chartWrapStyles.paddingLeft) || 0) + (Number.parseFloat(chartWrapStyles.paddingRight) || 0)
+    : 32;
+  const width = chartWrap.clientWidth - horizontalPadding;
+  return Math.max(1, Number.isFinite(width) ? width : fallbackWidth);
 }
 
 function timelineChartHeight() {

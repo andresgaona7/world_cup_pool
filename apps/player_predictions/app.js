@@ -368,68 +368,85 @@ function officialText(match) {
 
 function predictionStatus(prediction, result) {
   const points = scoreKnockoutPrediction(prediction, result);
-  const exactScore = numberOrNull(prediction.homeScore) === result.homeScore &&
-    numberOrNull(prediction.awayScore) === result.awayScore;
-  const predictedPenalties = numberOrNull(prediction.homeScore) !== null &&
-    numberOrNull(prediction.awayScore) !== null &&
-    numberOrNull(prediction.homeScore) === numberOrNull(prediction.awayScore);
-  const correctWinner = prediction.predictedAdvancingTeam === result.advancingTeam;
-  const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
-  const exactPenaltyScore = hasPenaltyScore(result) &&
-    numberOrNull(prediction.homePenaltyScore) === result.homePenaltyScore &&
-    numberOrNull(prediction.awayPenaltyScore) === result.awayPenaltyScore;
-  if (exactScore && correctWinner && exactPenaltyScore) {
-    return "Exact penalties";
+  const components = knockoutScoringComponents(prediction, result);
+  const earned = [];
+  if (components.correctAdvancingTeam) {
+    earned.push("Winner");
   }
-  if (exactScore && correctWinner) {
-    return "Exact";
+  if (components.exactScore) {
+    earned.push("Score");
   }
-  if (correctWinner && decidedOnPenalties && predictedPenalties) {
-    return "Winner + penalties";
+  if (components.exactPenaltyScore) {
+    earned.push("Penalties");
   }
-  if (correctWinner) {
-    return "Winner";
-  }
-  if (points > 0) {
-    return "Partial";
-  }
-  return "No match";
+  return earned.length ? earned.join(" + ") : (points > 0 ? "Partial" : "No match");
 }
 
 function scoreKnockoutPrediction(prediction, result) {
   const basePoints = KNOCKOUT_BASE_POINTS[result.stage] || 0;
+  const components = knockoutScoringComponents(prediction, result);
+  return basePoints * [
+    components.correctAdvancingTeam,
+    components.exactScore,
+    components.exactPenaltyScore,
+  ].filter(Boolean).length;
+}
+
+function knockoutScoringComponents(prediction, result) {
   const predictedHomeScore = numberOrNull(prediction.homeScore);
   const predictedAwayScore = numberOrNull(prediction.awayScore);
-  const exactScore = predictedHomeScore === result.homeScore && predictedAwayScore === result.awayScore;
-  const predictedPenalties = predictedHomeScore !== null &&
-    predictedAwayScore !== null &&
-    predictedHomeScore === predictedAwayScore;
-  const correctWinner = prediction.predictedAdvancingTeam === result.advancingTeam;
-  const decidedOnPenalties = result.homeScore === result.awayScore && Boolean(result.advancingTeam);
-  const exactPenaltyScore = decidedOnPenalties &&
-    hasPenaltyScore(result) &&
-    numberOrNull(prediction.homePenaltyScore) === result.homePenaltyScore &&
-    numberOrNull(prediction.awayPenaltyScore) === result.awayPenaltyScore;
+  if (predictedHomeScore === null || predictedAwayScore === null) {
+    return {
+      correctAdvancingTeam: false,
+      exactScore: false,
+      exactPenaltyScore: false,
+    };
+  }
 
-  if (exactScore && correctWinner && exactPenaltyScore) {
-    return basePoints * 3;
+  const predictedAdvancingTeam = knockoutPredictedAdvancingTeam(prediction, result);
+  const exactScore = predictedHomeScore === result.homeScore && predictedAwayScore === result.awayScore;
+  return {
+    correctAdvancingTeam: predictedAdvancingTeam === result.advancingTeam,
+    exactScore,
+    exactPenaltyScore: exactKnockoutPenaltyScore(prediction, result, predictedAdvancingTeam),
+  };
+}
+
+function knockoutPredictedAdvancingTeam(prediction, result) {
+  if (prediction.predictedAdvancingTeam) {
+    return prediction.predictedAdvancingTeam;
   }
-  if (exactScore && correctWinner) {
-    return basePoints * 2;
+
+  const predictedHomeScore = numberOrNull(prediction.homeScore);
+  const predictedAwayScore = numberOrNull(prediction.awayScore);
+  if (predictedHomeScore === null || predictedAwayScore === null) {
+    return "";
   }
-  if (correctWinner) {
-    if (decidedOnPenalties && predictedPenalties) {
-      if (exactPenaltyScore) {
-        return basePoints * 2;
-      }
-      return basePoints * 1.5;
-    }
-    return basePoints;
+  if (predictedHomeScore > predictedAwayScore) {
+    return result.homeTeam;
   }
-  if (decidedOnPenalties && exactScore) {
-    return basePoints * 0.5;
+  if (predictedAwayScore > predictedHomeScore) {
+    return result.awayTeam;
   }
-  return 0;
+
+  const predictedHomePenaltyScore = numberOrNull(prediction.homePenaltyScore);
+  const predictedAwayPenaltyScore = numberOrNull(prediction.awayPenaltyScore);
+  if (
+    predictedHomePenaltyScore === null ||
+    predictedAwayPenaltyScore === null ||
+    predictedHomePenaltyScore === predictedAwayPenaltyScore
+  ) {
+    return "";
+  }
+  return predictedHomePenaltyScore > predictedAwayPenaltyScore ? result.homeTeam : result.awayTeam;
+}
+
+function exactKnockoutPenaltyScore(prediction, result, predictedAdvancingTeam) {
+  return hasPenaltyScore(result) &&
+    hasPenaltyScore(prediction) &&
+    numberOrNull(prediction.homePenaltyScore) === result.homePenaltyScore &&
+    numberOrNull(prediction.awayPenaltyScore) === result.awayPenaltyScore &&
+    predictedAdvancingTeam === result.advancingTeam;
 }
 
 function knockoutScoreText(match) {
@@ -441,14 +458,14 @@ function knockoutScoreText(match) {
 }
 
 function hasPenaltyScore(match) {
-  return match.homePenaltyScore !== null && match.awayPenaltyScore !== null;
+  return numberOrNull(match.homePenaltyScore) !== null && numberOrNull(match.awayPenaltyScore) !== null;
 }
 
 function statusClass(status) {
-  if (status === "Exact" || status === "Exact penalties") {
+  if (status.includes("Winner") && status.includes("Score")) {
     return "result-cell result-exact";
   }
-  if (status === "Winner" || status === "Winner + penalties" || status === "Partial") {
+  if (status.includes("Winner") || status.includes("Score") || status.includes("Penalties") || status === "Partial") {
     return "result-cell result-partial";
   }
   if (status === "Pending") {

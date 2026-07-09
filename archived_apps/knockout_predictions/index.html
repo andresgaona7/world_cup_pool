@@ -34,13 +34,13 @@
     <section class="summary-grid" aria-label="Knockout prediction scoring">
       <article class="summary-card">
         <p class="eyebrow">Score mode</p>
-        <strong>Exact score plus winner</strong>
-        <span>Scores 2.0x base on non-penalty matches, or 1.5x base on penalty-decided matches.</span>
+        <strong>Additive scoring</strong>
+        <span>Correct advancing team, match score, and penalty score each add 1.0x base.</span>
       </article>
       <article class="summary-card">
         <p class="eyebrow">Penalty shootout</p>
-        <strong>Exact penalties</strong>
-        <span>Scores 3.0x base when the regulation draw, winner, and shootout score are exact.</span>
+        <strong>Directional penalties</strong>
+        <span>Penalty score credit requires matching numbers in the official winning direction.</span>
       </article>
       <article class="summary-card">
         <p class="eyebrow">Score mode</p>
@@ -87,25 +87,20 @@
         <article class="rule-section">
           <h3>Score mode</h3>
           <ul>
-            <li>Exact regulation score and correct advancing team on a match not decided by penalties: 2.0x base.</li>
-            <li>Exact penalty shootout score: 3.0x base, only when the regulation draw score and advancing team
-              are also exact.</li>
-            <li>Predicted penalty shootout and correct advancing team with the wrong regulation draw score: 1.5x
-              base.</li>
-            <li>Exact regulation draw and correct advancing team with a wrong or missing penalty shootout score: 2.0x
-              base.</li>
-            <li>Correct advancing team but wrong score: 1.0x base.</li>
-            <li>Regulation draw decided on penalties: 0.5x base fallback.</li>
-            <li>Wrong advancing team: 0.</li>
+            <li>Correct advancing team: 1.0x base.</li>
+            <li>Correct official match score: 1.0x base.</li>
+            <li>Correct penalty shootout score, in the official winning direction: 1.0x base.</li>
+            <li>Non-draw official results can earn up to 2.0x base.</li>
+            <li>Penalty-shootout official results can earn up to 3.0x base.</li>
           </ul>
           <h4>Example: Argentina 1-1 Spain; Argentina advances 5-4 on penalties</h4>
           <ul>
             <li>Prediction 1-1, Argentina, 5-4 pens: 3.0x base.</li>
-            <li>Prediction 1-1, Argentina, wrong or no penalty score: 2.0x base.</li>
+            <li>Prediction 1-1, Argentina, 4-3 pens: 2.0x base.</li>
             <li>Prediction 0-0, Argentina, 5-4 pens: 2.0x base.</li>
-            <li>Prediction 0-0, Argentina, wrong penalty score: 1.5x base.</li>
+            <li>Prediction 0-0, Argentina, 4-3 pens: 1.0x base.</li>
             <li>Prediction 2-1, Argentina: 1.0x base.</li>
-            <li>Prediction 1-1, Spain: 0.5x base.</li>
+            <li>Prediction 1-1, Spain, 5-4 pens: 1.0x base.</li>
           </ul>
         </article>
         <article class="rule-section">
