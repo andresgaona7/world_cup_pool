@@ -4661,21 +4661,21 @@ window.KNOCKOUT_PREDICTIONS = {
           "matchId": "95",
           "stage": "round_of_16",
           "mode": "score",
-          "homeTeam": "Switzerland",
-          "awayTeam": "TBD",
-          "homeScore": 0,
+          "homeTeam": "Egypt",
+          "awayTeam": "Argentina",
+          "homeScore": 1,
           "awayScore": 2,
-          "predictedAdvancingTeam": "TBD"
+          "predictedAdvancingTeam": "Argentina"
         },
         {
           "matchId": "96",
           "stage": "round_of_16",
           "mode": "score",
-          "homeTeam": "Egypt",
-          "awayTeam": "TBD",
-          "homeScore": 1,
+          "homeTeam": "Switzerland",
+          "awayTeam": "Colombia",
+          "homeScore": 0,
           "awayScore": 2,
-          "predictedAdvancingTeam": "TBD"
+          "predictedAdvancingTeam": "Colombia"
         },
         {
           "matchId": "97",

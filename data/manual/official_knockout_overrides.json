@@ -2,7 +2,14 @@
   "matches": {
     "95": {
       "homeTeam": "Egypt",
-      "awayTeam": "Argentina"
+      "awayTeam": "Argentina",
+      "homeScore": 2,
+      "awayScore": 3,
+      "homeFullTimeScore": 2,
+      "awayFullTimeScore": 3,
+      "homeRegularTimeScore": 2,
+      "awayRegularTimeScore": 3,
+      "advancingTeam": "Argentina"
     }
   }
 }

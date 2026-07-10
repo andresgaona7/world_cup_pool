@@ -1,7 +1,7 @@
 {
   "sourceName": "Football-Data.org matches",
   "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-  "generatedAt": "2026-07-10T04:23:46+00:00",
+  "generatedAt": "2026-07-10T11:03:00+00:00",
   "matches": [
     {
       "matchId": "73",
@@ -650,16 +650,16 @@
       "sourceUpdatedAt": "2026-07-09T05:20:10Z",
       "homeTeam": "Egypt",
       "awayTeam": "Argentina",
-      "homeScore": 3,
-      "awayScore": 2,
+      "homeScore": 2,
+      "awayScore": 3,
       "advancingTeam": "Argentina",
       "duration": "REGULAR",
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
-      "homeFullTimeScore": 3,
-      "awayFullTimeScore": 2,
-      "homeRegularTimeScore": null,
-      "awayRegularTimeScore": null,
+      "homeFullTimeScore": 2,
+      "awayFullTimeScore": 3,
+      "homeRegularTimeScore": 2,
+      "awayRegularTimeScore": 3,
       "homeExtraTimeScore": null,
       "awayExtraTimeScore": null,
       "referees": [
