@@ -1,0 +1,471 @@
+{
+  "metadata": {
+    "source_file": "data/generated/knockout_predictions.js",
+    "generated_from": [
+      "data/raw/round_of_32.xlsx",
+      "data/raw/round_of_16.xlsx",
+      "data/raw/quaterfinals.xlsx"
+    ],
+    "generated_at": "2026-07-10T04:23:45.845442+00:00",
+    "player_count": 11,
+    "match_count": 4
+  },
+  "matches": [
+    {
+      "matchId": "97",
+      "homeTeam": "France",
+      "awayTeam": "Morocco",
+      "picks": 11,
+      "missingPicks": 0,
+      "advancingTeamConsensus": [
+        {
+          "value": "France",
+          "votes": 6
+        },
+        {
+          "value": "Morocco",
+          "votes": 3
+        },
+        {
+          "value": "Blank",
+          "votes": 2
+        }
+      ],
+      "scoreConsensus": [
+        {
+          "value": "2-1",
+          "votes": 3
+        },
+        {
+          "value": "Blank",
+          "votes": 2
+        },
+        {
+          "value": "1-2",
+          "votes": 1
+        },
+        {
+          "value": "2-0",
+          "votes": 1
+        },
+        {
+          "value": "3-1",
+          "votes": 1
+        },
+        {
+          "value": "3-2",
+          "votes": 1
+        },
+        {
+          "value": "1-1",
+          "votes": 1
+        },
+        {
+          "value": "2-2",
+          "votes": 1
+        }
+      ],
+      "penaltyConsensus": [
+        {
+          "value": "3-4",
+          "votes": 1
+        },
+        {
+          "value": "3-5",
+          "votes": 1
+        }
+      ]
+    },
+    {
+      "matchId": "98",
+      "homeTeam": "Spain",
+      "awayTeam": "Belgium",
+      "picks": 11,
+      "missingPicks": 0,
+      "advancingTeamConsensus": [
+        {
+          "value": "Spain",
+          "votes": 7
+        },
+        {
+          "value": "Blank",
+          "votes": 2
+        },
+        {
+          "value": "Belgium",
+          "votes": 2
+        }
+      ],
+      "scoreConsensus": [
+        {
+          "value": "2-1",
+          "votes": 3
+        },
+        {
+          "value": "Blank",
+          "votes": 2
+        },
+        {
+          "value": "2-0",
+          "votes": 2
+        },
+        {
+          "value": "3-1",
+          "votes": 1
+        },
+        {
+          "value": "1-0",
+          "votes": 1
+        },
+        {
+          "value": "1-2",
+          "votes": 1
+        },
+        {
+          "value": "0-1",
+          "votes": 1
+        }
+      ],
+      "penaltyConsensus": []
+    },
+    {
+      "matchId": "99",
+      "homeTeam": "Norway",
+      "awayTeam": "England",
+      "picks": 11,
+      "missingPicks": 0,
+      "advancingTeamConsensus": [
+        {
+          "value": "England",
+          "votes": 6
+        },
+        {
+          "value": "Norway",
+          "votes": 3
+        },
+        {
+          "value": "Blank",
+          "votes": 2
+        }
+      ],
+      "scoreConsensus": [
+        {
+          "value": "1-2",
+          "votes": 3
+        },
+        {
+          "value": "Blank",
+          "votes": 2
+        },
+        {
+          "value": "2-2",
+          "votes": 2
+        },
+        {
+          "value": "2-1",
+          "votes": 1
+        },
+        {
+          "value": "2-3",
+          "votes": 1
+        },
+        {
+          "value": "0-1",
+          "votes": 1
+        },
+        {
+          "value": "1-1",
+          "votes": 1
+        }
+      ],
+      "penaltyConsensus": [
+        {
+          "value": "4-3",
+          "votes": 1
+        },
+        {
+          "value": "5-3",
+          "votes": 1
+        },
+        {
+          "value": "3-5",
+          "votes": 1
+        }
+      ]
+    },
+    {
+      "matchId": "100",
+      "homeTeam": "Argentina",
+      "awayTeam": "Switzerland",
+      "picks": 11,
+      "missingPicks": 0,
+      "advancingTeamConsensus": [
+        {
+          "value": "Argentina",
+          "votes": 9
+        },
+        {
+          "value": "Blank",
+          "votes": 2
+        }
+      ],
+      "scoreConsensus": [
+        {
+          "value": "Blank",
+          "votes": 2
+        },
+        {
+          "value": "1-0",
+          "votes": 2
+        },
+        {
+          "value": "1-1",
+          "votes": 2
+        },
+        {
+          "value": "2-1",
+          "votes": 2
+        },
+        {
+          "value": "2-0",
+          "votes": 1
+        },
+        {
+          "value": "3-0",
+          "votes": 1
+        },
+        {
+          "value": "3-1",
+          "votes": 1
+        }
+      ],
+      "penaltyConsensus": [
+        {
+          "value": "4-2",
+          "votes": 2
+        }
+      ]
+    }
+  ],
+  "advancing_teams": [
+    {
+      "value": "Argentina",
+      "votes": 9
+    },
+    {
+      "value": "Spain",
+      "votes": 7
+    },
+    {
+      "value": "France",
+      "votes": 6
+    },
+    {
+      "value": "England",
+      "votes": 6
+    },
+    {
+      "value": "Norway",
+      "votes": 3
+    },
+    {
+      "value": "Morocco",
+      "votes": 3
+    },
+    {
+      "value": "Belgium",
+      "votes": 2
+    }
+  ],
+  "bonus_questions": [
+    {
+      "question": "How many matches will go to extra time?",
+      "answers": [
+        {
+          "value": "2",
+          "votes": 6
+        },
+        {
+          "value": "Blank",
+          "votes": 3
+        },
+        {
+          "value": "1",
+          "votes": 2
+        }
+      ]
+    },
+    {
+      "question": "How many matches will be decided by penalties?",
+      "answers": [
+        {
+          "value": "1",
+          "votes": 4
+        },
+        {
+          "value": "Blank",
+          "votes": 3
+        },
+        {
+          "value": "0",
+          "votes": 2
+        },
+        {
+          "value": "2",
+          "votes": 2
+        }
+      ]
+    },
+    {
+      "question": "Which team will score the most goals?",
+      "answers": [
+        {
+          "value": "France",
+          "votes": 4
+        },
+        {
+          "value": "Blank",
+          "votes": 3
+        },
+        {
+          "value": "Argentina",
+          "votes": 2
+        },
+        {
+          "value": "Spain",
+          "votes": 1
+        },
+        {
+          "value": "England",
+          "votes": 1
+        }
+      ]
+    },
+    {
+      "question": "Total goals scored in the QF (no penalties)",
+      "answers": [
+        {
+          "value": "> 10",
+          "votes": 6
+        },
+        {
+          "value": "Blank",
+          "votes": 3
+        },
+        {
+          "value": "9 - 10",
+          "votes": 2
+        }
+      ]
+    },
+    {
+      "question": "Which team will score the fastest goal?",
+      "answers": [
+        {
+          "value": "Blank",
+          "votes": 3
+        },
+        {
+          "value": "France",
+          "votes": 3
+        },
+        {
+          "value": "Spain",
+          "votes": 2
+        },
+        {
+          "value": "Morocco",
+          "votes": 2
+        },
+        {
+          "value": "England",
+          "votes": 1
+        }
+      ]
+    },
+    {
+      "question": "Which team will score the latest goal?",
+      "answers": [
+        {
+          "value": "England",
+          "votes": 4
+        },
+        {
+          "value": "Blank",
+          "votes": 3
+        },
+        {
+          "value": "Argentina",
+          "votes": 3
+        },
+        {
+          "value": "Norway",
+          "votes": 1
+        }
+      ]
+    },
+    {
+      "question": "Team with the biggest winning margin?",
+      "answers": [
+        {
+          "value": "Spain",
+          "votes": 4
+        },
+        {
+          "value": "Blank",
+          "votes": 3
+        },
+        {
+          "value": "Argentina",
+          "votes": 3
+        },
+        {
+          "value": "France",
+          "votes": 1
+        }
+      ]
+    },
+    {
+      "question": "How many yellow cards will be shown?",
+      "answers": [
+        {
+          "value": "> 8",
+          "votes": 6
+        },
+        {
+          "value": "Blank",
+          "votes": 3
+        },
+        {
+          "value": "8",
+          "votes": 1
+        },
+        {
+          "value": "6",
+          "votes": 1
+        }
+      ]
+    },
+    {
+      "question": "How many red cards will be shown?",
+      "answers": [
+        {
+          "value": "1",
+          "votes": 5
+        },
+        {
+          "value": "Blank",
+          "votes": 3
+        },
+        {
+          "value": "2",
+          "votes": 2
+        },
+        {
+          "value": "0",
+          "votes": 1
+        }
+      ]
+    }
+  ]
+}

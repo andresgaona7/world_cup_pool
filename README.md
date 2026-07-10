@@ -24,6 +24,7 @@ apps/blog/                  Manual comment entries.
 apps/legacy/                Launcher for archived/support views.
 apps/round_of_32_consensus/ Generated Round of 32 consensus view.
 apps/round_of_16_consensus/ Generated Round of 16 consensus view.
+apps/quarterfinal_consensus/ Generated Quarterfinals consensus view.
 apps/third_places/          Legacy/support third-place standings view.
 archived_apps/              Older standalone app surfaces not published by default.
 public/                     Ignored GitHub Pages artifact from `make build-site`.
@@ -38,10 +39,11 @@ make build-knockout-predictions
 make build-consensus-predictions
 make build-round-of-32-consensus
 make build-round-of-16-consensus
+make build-quarterfinal-consensus
 make update-official-results
 make update-official-knockout-results
 make apply-manual-futures
-CHECKPOINT=round_of_16 make create-official-checkpoint
+CHECKPOINT=quarterfinal make create-official-checkpoint
 make rebuild-official-checkpoints
 make build-site
 make test
@@ -55,10 +57,11 @@ python3 scripts/build_knockout_predictions.py
 python3 scripts/build_consensus_predictions.py
 python3 scripts/build_round_of_32_consensus.py
 python3 scripts/build_round_of_16_consensus.py
+python3 scripts/build_quarterfinal_consensus.py
 python3 scripts/update_official_results.py --transport "${OFFICIAL_RESULTS_TRANSPORT:-auto}"
 python3 scripts/update_official_knockout_results.py
 python3 scripts/apply_manual_futures.py
-python3 scripts/create_official_checkpoint.py round_of_16
+python3 scripts/create_official_checkpoint.py quarterfinal
 python3 scripts/create_official_checkpoint.py --rebuild-only
 make build-site
 python3 -m unittest discover -s tests
@@ -114,7 +117,7 @@ Use the knockout updater after official knockout match records change, then run
 `make apply-manual-futures` if `data/manual/official_futures.json` has changed.
 If the update should become part of the score timeline, create or rebuild the
 matching checkpoint afterward, for example
-`CHECKPOINT=round_of_16 make create-official-checkpoint`. Run
+`CHECKPOINT=quarterfinal make create-official-checkpoint`. Run
 `make build-site` afterward when the ignored `public/` copy needs to match the
 committed files under `data/generated/`.
 
@@ -132,13 +135,13 @@ winner or shootout score, add the reviewed correction to
 
 ```bash
 make update-official-knockout-results
-CHECKPOINT=round_of_16 make create-official-checkpoint
+CHECKPOINT=quarterfinal make create-official-checkpoint
 make build-site
 ```
 
 Then verify the affected match in `data/manual/official_knockout_results.json`,
 `data/generated/official_results.js`, and
-`data/checkpoints/official_results/round_of_16.json`.
+`data/checkpoints/official_results/quarterfinal.json`.
 
 ## Data Flow
 
@@ -165,6 +168,14 @@ total. Standard player sheets need a `Winner` or `Advancing team` column;
 visual Round of 32, Round of 16, and quarterfinal workbooks, red result cells
 are treated as blank/NaN and the score/points column is ignored.
 
+The quarterfinal workbook currently uses the filename
+`data/raw/quaterfinals.xlsx`. The builder treats it as the `quarterfinal`
+stage, extracts four match picks per player, and collects the stage-specific
+bonus block under `bonusAnswers.quarterfinal`. The player-predictions page
+renders those picks in the Quarterfinals section and shows the quarterfinal
+bonus questions below that stage. Blank workbook bonus cells are preserved as
+blank answers in the generated browser data.
+
 `scripts/build_consensus_predictions.py` reshapes `pool_data.js` into a
 consensus JSON export and the standalone `apps/consensus_predictions/index.html`.
 `scripts/build_round_of_32_consensus.py` generates
@@ -175,6 +186,11 @@ Round of 32 workbook data.
 `data/generated/round_of_16_consensus.json` and the standalone
 `apps/round_of_16_consensus/index.html` support view from the current
 Round of 16 workbook data.
+`scripts/build_quarterfinal_consensus.py` generates
+`data/generated/quarterfinal_consensus.json` and the standalone
+`apps/quarterfinal_consensus/index.html` support view from the current
+quarterfinal workbook data, including match consensus, advancing-team
+consensus, and quarterfinal bonus-question consensus.
 
 `scripts/update_official_results.py` fetches Football-Data standings and writes
 `data/generated/official_results.js`, which is loaded by
@@ -224,7 +240,7 @@ Official score-timeline checkpoints are stored in
 reflects the current official results, create a checkpoint with:
 
 ```bash
-CHECKPOINT=round_of_16 make create-official-checkpoint
+CHECKPOINT=quarterfinal make create-official-checkpoint
 ```
 
 Supported checkpoint keys are `group_md1`, `group_md2`, `group_md3`,
@@ -300,12 +316,13 @@ make build-knockout-predictions
 make build-consensus-predictions
 make build-round-of-32-consensus
 make build-round-of-16-consensus
+make build-quarterfinal-consensus
 make update-official-results
 make update-official-knockout-results
 # Review raw knockout data; if overrides changed, rerun the knockout updater.
 make update-official-knockout-results
 make apply-manual-futures
-CHECKPOINT=round_of_16 make create-official-checkpoint
+CHECKPOINT=quarterfinal make create-official-checkpoint
 make test
 make build-site
 git add data/generated data/checkpoints data/manual index.html styles.css apps docs scripts .github/workflows/pages.yml Makefile .gitignore README.md

@@ -44,7 +44,7 @@ const KNOCKOUT_PERFECT_SCORE_BONUS_POINTS = {
   quarterfinal: 15,
   semifinal: 10,
 };
-const ROUND_OF_32_BONUS_QUESTION_POINTS = 2;
+const KNOCKOUT_BONUS_QUESTION_POINTS = 2;
 const ROUND_OF_32_BONUS_QUESTIONS = [
   "How many matches will go to extra time?",
   "How many matches will be decided by penalties?",
@@ -288,7 +288,10 @@ function normalizeKnockoutBonusAnswers(sourceData) {
   return new Map(
     (sourceData?.players || []).map((player) => [
       player.name || player.sheet || "",
-      player.bonusAnswers?.round_of_32 || player.roundOf32BonusAnswers || [],
+      {
+        ...player.bonusAnswers,
+        round_of_32: player.bonusAnswers?.round_of_32 || player.roundOf32BonusAnswers || [],
+      },
     ])
   );
 }
@@ -913,7 +916,7 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
   const stageTotal = predictionPoints + stageScore.bonusQuestionPoints;
   const hasStageResults = stageRows.some((row) => row.hasResult);
   const basePoints = KNOCKOUT_BASE_POINTS[stage] || 0;
-  const collapsed = isPanelCollapsed(panelKey, stage === "round_of_32");
+  const collapsed = isPanelCollapsed(panelKey, stage === "round_of_32" || stage === "round_of_16");
 
   return `
     <section class="panel knockout-stage-panel collapsible-panel ${collapsed ? "is-collapsed" : ""}" data-collapsible-panel data-collapsible-key="${escapeHtml(panelKey)}" data-collapsed="${collapsed ? "true" : "false"}">
@@ -985,26 +988,27 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
               </table>
             </div>
           </div>
-          ${stage === "round_of_32" ? roundOf32BonusQuestionsHtml(selectedPlayer) : ""}
+          ${stage === "quarterfinal" ? knockoutBonusQuestionsHtml(selectedPlayer, stage) : ""}
         </div>
       </div>
     </section>
   `;
 }
 
-function roundOf32BonusQuestionsHtml(selectedPlayer) {
-  const maxPoints = ROUND_OF_32_BONUS_QUESTIONS.length * ROUND_OF_32_BONUS_QUESTION_POINTS;
+function knockoutBonusQuestionsHtml(selectedPlayer, stage) {
+  const questions = knockoutBonusQuestions(stage);
+  const maxPoints = questions.length * KNOCKOUT_BONUS_QUESTION_POINTS;
   const answerByQuestion = new Map(
-    (knockoutBonusAnswersByPlayer.get(selectedPlayer?.name || "") || []).map((item) => [
+    (knockoutBonusAnswersForStage(selectedPlayer, stage)).map((item) => [
       canonicalBonusQuestion(item.question),
       item.answer || "Blank",
     ])
   );
   return `
-        <div class="comparison-block bonus-question-block" id="round-of-32-bonus">
+        <div class="comparison-block bonus-question-block" id="${escapeHtml(stage)}-bonus">
           <div class="bonus-question-head">
-            <h3>Round of 32 Bonus Questions</h3>
-            <span>${formatPoints(ROUND_OF_32_BONUS_QUESTION_POINTS)} pts each, ${formatPoints(maxPoints)} pts max</span>
+            <h3>${escapeHtml(knockoutStageLabel(stage))} Bonus Questions</h3>
+            <span>${formatPoints(KNOCKOUT_BONUS_QUESTION_POINTS)} pts each, ${formatPoints(maxPoints)} pts max</span>
           </div>
           <div class="table-wrap bonus-question-table">
             <table>
@@ -1017,15 +1021,15 @@ function roundOf32BonusQuestionsHtml(selectedPlayer) {
                 </tr>
               </thead>
               <tbody>
-                ${ROUND_OF_32_BONUS_QUESTIONS.map((question) => {
+                ${questions.map((question) => {
                   const playerAnswer = answerByQuestion.get(canonicalBonusQuestion(question)) || "Blank";
-                  const officialAnswer = officialRoundOf32BonusAnswer(question);
-                  const earnedPoints = roundOf32BonusQuestionPoints(playerAnswer, officialAnswer);
+                  const officialAnswer = officialKnockoutBonusAnswer(stage, question);
+                  const earnedPoints = knockoutBonusQuestionPoints(playerAnswer, officialAnswer);
                   return `
                     <tr>
                       <td>${escapeHtml(question)}</td>
                       <td>${escapeHtml(playerAnswer)}</td>
-                      <td class="official-answer">${escapeHtml(formatRoundOf32BonusAnswer(officialAnswer))}</td>
+                      <td class="official-answer">${escapeHtml(formatKnockoutBonusAnswer(officialAnswer))}</td>
                       <td class="points-answer total">${earnedPoints === null ? "Pending" : formatPoints(earnedPoints)}</td>
                     </tr>
                   `;
@@ -1033,14 +1037,28 @@ function roundOf32BonusQuestionsHtml(selectedPlayer) {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colspan="3">Round of 32 bonus questions total</td>
-                  <td class="total">${formatPoints(scoreRoundOf32BonusQuestions(selectedPlayer))}</td>
+                  <td colspan="3">${escapeHtml(knockoutStageLabel(stage))} bonus questions total</td>
+                  <td class="total">${formatPoints(scoreKnockoutBonusQuestions(selectedPlayer, stage))}</td>
                 </tr>
               </tfoot>
             </table>
           </div>
         </div>
   `;
+}
+
+function knockoutBonusQuestions(stage) {
+  for (const answersByStage of knockoutBonusAnswersByPlayer.values()) {
+    const answers = answersByStage?.[stage] || [];
+    if (answers.length) {
+      return answers.map((item) => item.question).filter(Boolean);
+    }
+  }
+  return stage === "round_of_32" ? ROUND_OF_32_BONUS_QUESTIONS : [];
+}
+
+function knockoutBonusAnswersForStage(player, stage) {
+  return knockoutBonusAnswersByPlayer.get(player?.name || "")?.[stage] || [];
 }
 
 function comparisonMetric(label, value) {
@@ -1851,7 +1869,7 @@ function scoreKnockoutStage(player, stage) {
 
   const perfectWinnersBonus = perfectWinnersPossible ? KNOCKOUT_PERFECT_WINNER_BONUS_POINTS[stage] : 0;
   const perfectScoresBonus = perfectScoresPossible ? KNOCKOUT_PERFECT_SCORE_BONUS_POINTS[stage] : 0;
-  const bonusQuestionPoints = stage === "round_of_32" ? scoreRoundOf32BonusQuestions(player) : 0;
+  const bonusQuestionPoints = stage === "quarterfinal" ? scoreKnockoutBonusQuestions(player, stage) : 0;
   return {
     points,
     bonus: perfectWinnersBonus + perfectScoresBonus + bonusQuestionPoints,
@@ -1861,19 +1879,26 @@ function scoreKnockoutStage(player, stage) {
   };
 }
 
-function scoreRoundOf32BonusQuestions(player) {
-  const answers = knockoutBonusAnswersByPlayer.get(player?.name || "") || [];
+function scoreKnockoutBonusQuestions(player, stage) {
+  const answers = knockoutBonusAnswersForStage(player, stage);
   return answers.reduce((total, item) => {
-    const earnedPoints = roundOf32BonusQuestionPoints(item.answer, officialRoundOf32BonusAnswer(item.question));
+    const earnedPoints = knockoutBonusQuestionPoints(item.answer, officialKnockoutBonusAnswer(stage, item.question));
     return total + (earnedPoints || 0);
   }, 0);
 }
 
-function roundOf32BonusQuestionPoints(playerAnswer, officialAnswer) {
+function knockoutBonusQuestionPoints(playerAnswer, officialAnswer) {
   if (officialAnswer === null || officialAnswer === "" || officialAnswer === undefined) {
     return null;
   }
-  return bonusAnswerMatches(playerAnswer, officialAnswer) ? ROUND_OF_32_BONUS_QUESTION_POINTS : 0;
+  return bonusAnswerMatches(playerAnswer, officialAnswer) ? KNOCKOUT_BONUS_QUESTION_POINTS : 0;
+}
+
+function officialKnockoutBonusAnswer(stage, question) {
+  if (stage === "round_of_32") {
+    return officialRoundOf32BonusAnswer(question);
+  }
+  return calculatedKnockoutBonusAnswer(stage, question);
 }
 
 function officialRoundOf32BonusAnswer(question) {
@@ -1892,7 +1917,68 @@ function officialRoundOf32BonusAnswer(question) {
   return values[key];
 }
 
-function formatRoundOf32BonusAnswer(answer) {
+function calculatedKnockoutBonusAnswer(stage, question) {
+  const stageMatches = officialKnockoutMatches.filter((match) => match.stage === stage);
+  const expectedMatchCount = KNOCKOUT_STAGE_MATCH_COUNTS[stage];
+  if (
+    !expectedMatchCount ||
+    stageMatches.length < expectedMatchCount ||
+    stageMatches.some((match) => match.homeScore === null || match.awayScore === null || !match.advancingTeam)
+  ) {
+    return null;
+  }
+
+  const key = canonicalBonusQuestion(question);
+  const teamGoals = new Map();
+  let totalGoals = 0;
+  let biggestMargin = -1;
+  let biggestMarginTeams = [];
+  let extraTimeMatches = 0;
+  let penaltyMatches = 0;
+
+  stageMatches.forEach((match) => {
+    const homeScore = numberOrNull(match.homeScore) || 0;
+    const awayScore = numberOrNull(match.awayScore) || 0;
+    totalGoals += homeScore + awayScore;
+    teamGoals.set(match.homeTeam, (teamGoals.get(match.homeTeam) || 0) + homeScore);
+    teamGoals.set(match.awayTeam, (teamGoals.get(match.awayTeam) || 0) + awayScore);
+
+    const margin = Math.abs(homeScore - awayScore);
+    const marginTeam = homeScore > awayScore ? match.homeTeam : match.awayTeam;
+    if (margin > biggestMargin) {
+      biggestMargin = margin;
+      biggestMarginTeams = [marginTeam];
+    } else if (margin === biggestMargin) {
+      biggestMarginTeams.push(marginTeam);
+    }
+
+    if (String(match.duration || "").toUpperCase() === "EXTRA_TIME") {
+      extraTimeMatches += 1;
+    }
+    if (match.homePenaltyScore !== null && match.homePenaltyScore !== undefined && match.awayPenaltyScore !== null && match.awayPenaltyScore !== undefined) {
+      penaltyMatches += 1;
+    }
+  });
+
+  const maxGoals = Math.max(...teamGoals.values());
+  const mostGoalsTeams = [...teamGoals.entries()]
+    .filter(([, goals]) => goals === maxGoals)
+    .map(([team]) => team);
+  const values = {
+    extra_time_matches: extraTimeMatches,
+    penalty_matches: penaltyMatches,
+    most_goals_team: mostGoalsTeams,
+    total_goals: totalGoals,
+    fastest_goal_team: null,
+    latest_goal_team: null,
+    biggest_winning_margin_team: biggestMarginTeams,
+    yellow_cards: null,
+    red_cards: null,
+  };
+  return values[key];
+}
+
+function formatKnockoutBonusAnswer(answer) {
   if (answer === null || answer === "" || answer === undefined) {
     return "Pending";
   }

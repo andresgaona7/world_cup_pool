@@ -1,8 +1,118 @@
 {
-  "sourceName": "Football-Data.org matches",
-  "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-  "generatedAt": "2026-07-10T04:23:46+00:00",
-  "matches": [
+  "key": "quarterfinal",
+  "label": "After quarterfinals",
+  "shortLabel": "QF",
+  "stage": "quarterfinal",
+  "completedAt": "2026-07-07T08:07:29+00:00",
+  "scenario": {
+    "groupResults": {
+      "A": [
+        "Mexico",
+        "South Africa",
+        "South Korea"
+      ],
+      "B": [
+        "Switzerland",
+        "Canada",
+        "Bosnia-Herzegovina"
+      ],
+      "C": [
+        "Brazil",
+        "Morocco",
+        "Scotland"
+      ],
+      "D": [
+        "United States",
+        "Australia",
+        "Paraguay"
+      ],
+      "E": [
+        "Germany",
+        "Ivory Coast",
+        "Ecuador"
+      ],
+      "F": [
+        "Netherlands",
+        "Japan",
+        "Sweden"
+      ],
+      "G": [
+        "Belgium",
+        "Egypt",
+        "Iran"
+      ],
+      "H": [
+        "Spain",
+        "Cape Verde Islands",
+        "Uruguay"
+      ],
+      "I": [
+        "France",
+        "Norway",
+        "Senegal"
+      ],
+      "J": [
+        "Argentina",
+        "Austria",
+        "Algeria"
+      ],
+      "K": [
+        "Colombia",
+        "Portugal",
+        "Congo DR"
+      ],
+      "L": [
+        "England",
+        "Croatia",
+        "Ghana"
+      ]
+    },
+    "bestThirds": [
+      "Congo DR",
+      "Sweden",
+      "Ghana",
+      "Ecuador",
+      "Bosnia-Herzegovina",
+      "Algeria",
+      "Paraguay",
+      "Senegal"
+    ],
+    "futures": {
+      "champion": "",
+      "runnerUp": "",
+      "topScorer": "Lionel Messi",
+      "topScorers": [
+        "Lionel Messi"
+      ],
+      "teamLastRounds": {
+        "South Korea": "group_stage",
+        "Czechia": "group_stage",
+        "Qatar": "group_stage",
+        "Scotland": "group_stage",
+        "Haiti": "group_stage",
+        "Türkiye": "group_stage",
+        "Curaçao": "group_stage",
+        "Tunisia": "group_stage",
+        "Iran": "group_stage",
+        "New Zealand": "group_stage",
+        "Uruguay": "group_stage",
+        "Saudi Arabia": "group_stage",
+        "Iraq": "group_stage",
+        "Jordan": "group_stage",
+        "Uzbekistan": "group_stage",
+        "Panama": "group_stage",
+        "France": "quarterfinal",
+        "Argentina": "quarterfinal",
+        "Norway": "quarterfinal",
+        "Morocco": "quarterfinal",
+        "Brazil": "round_of_16",
+        "Ecuador": "round_of_32",
+        "Spain": "quarterfinal",
+        "England": "quarterfinal"
+      }
+    }
+  },
+  "officialMatches": [
     {
       "matchId": "73",
       "sourceMatchId": 537417,
@@ -816,12 +926,5 @@
     ],
     "yellowCards": 36,
     "redCards": 2
-  },
-  "notes": [
-    "Football-Data supplies teams, score, winner, stage, status, duration, and referee metadata.",
-    "Penalty, extra-time, and regular-time sub-scores are included only when the upstream score object exposes them.",
-    "Cards and fastest/latest goal teams are not present in this endpoint and should be reviewed manually.",
-    "Applied manual knockout override(s) for match ID(s): 95.",
-    "Applied reviewed Round of 32 bonus-question answer(s) from data/manual/round_of_32_bonus_results.json."
-  ]
+  }
 }
