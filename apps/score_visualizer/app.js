@@ -988,7 +988,7 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
               </table>
             </div>
           </div>
-          ${stage === "quarterfinal" ? knockoutBonusQuestionsHtml(selectedPlayer, stage) : ""}
+          ${stage === "round_of_32" ? knockoutBonusQuestionsHtml(selectedPlayer, stage) : ""}
         </div>
       </div>
     </section>
@@ -1761,7 +1761,7 @@ function scoreAllPlayers() {
       );
       const futuresScore = scoreFutures(player);
       const firstRound = group + bestThirds;
-      const total = firstRound + knockoutScore.points + knockoutScore.bonus + futuresScore.points + futuresScore.bonus;
+      const total = firstRound + knockoutScore.points + knockoutScore.bonus;
       return {
         playerIndex,
         name: player.name,
@@ -1772,7 +1772,7 @@ function scoreAllPlayers() {
         knockout: knockoutScore.points + knockoutScore.bonus,
         knockoutStages,
         futures: futuresScore.points,
-        bonus: knockoutScore.bonus + futuresScore.bonus,
+        bonus: knockoutScore.bonus,
         total,
       };
     })
@@ -1869,7 +1869,7 @@ function scoreKnockoutStage(player, stage) {
 
   const perfectWinnersBonus = perfectWinnersPossible ? KNOCKOUT_PERFECT_WINNER_BONUS_POINTS[stage] : 0;
   const perfectScoresBonus = perfectScoresPossible ? KNOCKOUT_PERFECT_SCORE_BONUS_POINTS[stage] : 0;
-  const bonusQuestionPoints = stage === "quarterfinal" ? scoreKnockoutBonusQuestions(player, stage) : 0;
+  const bonusQuestionPoints = stage === "round_of_32" ? scoreKnockoutBonusQuestions(player, stage) : 0;
   return {
     points,
     bonus: perfectWinnersBonus + perfectScoresBonus + bonusQuestionPoints,

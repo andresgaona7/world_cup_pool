@@ -895,7 +895,7 @@ window.OFFICIAL_RESULTS = {
       "Jordan": "group_stage",
       "Uzbekistan": "group_stage",
       "Panama": "group_stage",
-      "France": "quarterfinal",
+      "France": "semifinal",
       "Argentina": "quarterfinal",
       "Norway": "quarterfinal",
       "Morocco": "quarterfinal",
@@ -1628,28 +1628,47 @@ window.OFFICIAL_RESULTS = {
           ]
         },
         "bestThirds": [
-          "Japan",
-          "Belgium",
           "Congo DR",
-          "Morocco",
-          "Qatar",
-          "Spain",
-          "Czechia",
-          "Ecuador"
+          "Sweden",
+          "Ghana",
+          "Ecuador",
+          "Bosnia-Herzegovina",
+          "Algeria",
+          "Paraguay",
+          "Senegal"
         ],
         "futures": {
           "champion": "",
           "runnerUp": "",
           "topScorer": "Lionel Messi",
+          "topScorers": [
+            "Lionel Messi"
+          ],
           "teamLastRounds": {
-            "France": "group_stage",
-            "Argentina": "group_stage",
-            "Norway": "group_stage",
-            "Morocco": "group_stage",
-            "England": "group_stage",
-            "Ecuador": "group_stage",
-            "Spain": "group_stage",
-            "Brazil": "group_stage"
+            "South Korea": "group_stage",
+            "Czechia": "group_stage",
+            "Qatar": "group_stage",
+            "Scotland": "group_stage",
+            "Haiti": "group_stage",
+            "Türkiye": "group_stage",
+            "Curaçao": "group_stage",
+            "Tunisia": "group_stage",
+            "Iran": "group_stage",
+            "New Zealand": "group_stage",
+            "Uruguay": "group_stage",
+            "Saudi Arabia": "group_stage",
+            "Iraq": "group_stage",
+            "Jordan": "group_stage",
+            "Uzbekistan": "group_stage",
+            "Panama": "group_stage",
+            "France": "semifinal",
+            "Argentina": "quarterfinal",
+            "Norway": "quarterfinal",
+            "Morocco": "quarterfinal",
+            "Brazil": "round_of_16",
+            "Ecuador": "round_of_32",
+            "Spain": "quarterfinal",
+            "England": "quarterfinal"
           }
         }
       },
@@ -1725,20 +1744,48 @@ window.OFFICIAL_RESULTS = {
           ]
         },
         "bestThirds": [
+          "Congo DR",
           "Sweden",
-          "Scotland",
-          "Croatia",
-          "Paraguay",
+          "Ghana",
+          "Ecuador",
+          "Bosnia-Herzegovina",
           "Algeria",
-          "Cape Verde Islands",
-          "Belgium",
-          "Czechia"
+          "Paraguay",
+          "Senegal"
         ],
         "futures": {
           "champion": "",
           "runnerUp": "",
-          "topScorer": "",
-          "teamLastRounds": {}
+          "topScorer": "Lionel Messi",
+          "topScorers": [
+            "Lionel Messi"
+          ],
+          "teamLastRounds": {
+            "South Korea": "group_stage",
+            "Czechia": "group_stage",
+            "Qatar": "group_stage",
+            "Scotland": "group_stage",
+            "Haiti": "group_stage",
+            "Türkiye": "group_stage",
+            "Curaçao": "group_stage",
+            "Tunisia": "group_stage",
+            "Iran": "group_stage",
+            "New Zealand": "group_stage",
+            "Uruguay": "group_stage",
+            "Saudi Arabia": "group_stage",
+            "Iraq": "group_stage",
+            "Jordan": "group_stage",
+            "Uzbekistan": "group_stage",
+            "Panama": "group_stage",
+            "France": "semifinal",
+            "Argentina": "quarterfinal",
+            "Norway": "quarterfinal",
+            "Morocco": "quarterfinal",
+            "Brazil": "round_of_16",
+            "Ecuador": "round_of_32",
+            "Spain": "quarterfinal",
+            "England": "quarterfinal"
+          }
         }
       },
       "officialMatches": []
@@ -1815,8 +1862,8 @@ window.OFFICIAL_RESULTS = {
         "bestThirds": [
           "Congo DR",
           "Sweden",
-          "Ecuador",
           "Ghana",
+          "Ecuador",
           "Bosnia-Herzegovina",
           "Algeria",
           "Paraguay",
@@ -1826,6 +1873,9 @@ window.OFFICIAL_RESULTS = {
           "champion": "",
           "runnerUp": "",
           "topScorer": "Lionel Messi",
+          "topScorers": [
+            "Lionel Messi"
+          ],
           "teamLastRounds": {
             "South Korea": "group_stage",
             "Czechia": "group_stage",
@@ -1843,14 +1893,14 @@ window.OFFICIAL_RESULTS = {
             "Jordan": "group_stage",
             "Uzbekistan": "group_stage",
             "Panama": "group_stage",
-            "France": "round_of_32",
-            "Argentina": "round_of_32",
-            "Norway": "round_of_32",
-            "Morocco": "round_of_32",
-            "Brazil": "round_of_32",
+            "France": "semifinal",
+            "Argentina": "quarterfinal",
+            "Norway": "quarterfinal",
+            "Morocco": "quarterfinal",
+            "Brazil": "round_of_16",
             "Ecuador": "round_of_32",
-            "Spain": "round_of_32",
-            "England": "round_of_32"
+            "Spain": "quarterfinal",
+            "England": "quarterfinal"
           }
         }
       },
@@ -1959,14 +2009,14 @@ window.OFFICIAL_RESULTS = {
             "Jordan": "group_stage",
             "Uzbekistan": "group_stage",
             "Panama": "group_stage",
-            "France": "round_of_16",
-            "Argentina": "round_of_16",
-            "Norway": "round_of_16",
-            "Morocco": "round_of_16",
+            "France": "semifinal",
+            "Argentina": "quarterfinal",
+            "Norway": "quarterfinal",
+            "Morocco": "quarterfinal",
             "Brazil": "round_of_16",
             "Ecuador": "round_of_32",
-            "Spain": "round_of_16",
-            "England": "round_of_16"
+            "Spain": "quarterfinal",
+            "England": "quarterfinal"
           }
         }
       },
@@ -2559,7 +2609,7 @@ window.OFFICIAL_RESULTS = {
             "Jordan": "group_stage",
             "Uzbekistan": "group_stage",
             "Panama": "group_stage",
-            "France": "quarterfinal",
+            "France": "semifinal",
             "Argentina": "quarterfinal",
             "Norway": "quarterfinal",
             "Morocco": "quarterfinal",
@@ -3391,7 +3441,7 @@ window.OFFICIAL_RESULTS = {
             "Jordan": "group_stage",
             "Uzbekistan": "group_stage",
             "Panama": "group_stage",
-            "France": "quarterfinal",
+            "France": "semifinal",
             "Argentina": "quarterfinal",
             "Norway": "quarterfinal",
             "Morocco": "quarterfinal",
