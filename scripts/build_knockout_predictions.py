@@ -15,6 +15,7 @@ RAW_DIR = ROOT / "data" / "raw" / "knockout_predictions"
 OUTPUT_PATH = ROOT / "data" / "generated" / "knockout_predictions.js"
 ROUND_OF_32_FALLBACK_PATH = ROOT / "data" / "raw" / "round_of_32.xlsx"
 ROUND_OF_16_FALLBACK_PATH = ROOT / "data" / "raw" / "round_of_16.xlsx"
+QUARTERFINAL_FALLBACK_PATH = ROOT / "data" / "raw" / "quaterfinals.xlsx"
 
 MAIN_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -44,7 +45,9 @@ WORKBOOK_PATHS = {
     "round_of_16": ROUND_OF_16_FALLBACK_PATH
     if ROUND_OF_16_FALLBACK_PATH.exists()
     else RAW_DIR / "round_of_16.xlsx",
-    "quarterfinal": RAW_DIR / "quarterfinals.xlsx",
+    "quarterfinal": QUARTERFINAL_FALLBACK_PATH
+    if QUARTERFINAL_FALLBACK_PATH.exists()
+    else RAW_DIR / "quarterfinals.xlsx",
     "semifinal": RAW_DIR / "semifinals.xlsx",
     "final": RAW_DIR / "final.xlsx",
 }
@@ -652,22 +655,36 @@ def extract_bonus_answers(
     ignored_cells: set[tuple[int, int]] | None = None,
 ) -> dict[str, list[dict[str, str]]]:
     ignored_cells = ignored_cells or set()
-    bonus_heading = find_heading(cells, "bonus questions")
-    if not bonus_heading:
+    bonus_headings = find_headings(cells, "bonus questions", allow_prefix=True)
+    if not bonus_headings:
         return {}
 
-    heading_row, heading_column = bonus_heading
-    answers = []
-    for row in range(heading_row + 1, heading_row + 1 + ROUND_OF_32_BONUS_QUESTION_ROWS):
-        question = canonical_bonus_question(clean_text(cells.get((row, heading_column), "")))
-        if not question:
-            continue
-        answer = cell_text(cells, row, heading_column + 4, ignored_cells=ignored_cells)
-        answer_payload = {"question": question, "answer": answer}
-        if (row, heading_column + 4) in ignored_cells:
-            answer_payload["ignored"] = True
-        answers.append(answer_payload)
-    return {"round_of_32": answers} if answers else {}
+    max_row = max((row for row, _column in cells), default=0)
+    max_column = max((column for _row, column in cells), default=0)
+    stage_by_row = stage_headings(cells, max_row, max_column)
+    answers_by_stage = {}
+
+    for heading_row, heading_column in bonus_headings:
+        stage = nearest_stage(heading_row, stage_by_row) or "round_of_32"
+        answers = []
+        for row in range(
+            heading_row + 1,
+            heading_row + 1 + ROUND_OF_32_BONUS_QUESTION_ROWS,
+        ):
+            question = canonical_bonus_question(
+                clean_text(cells.get((row, heading_column), ""))
+            )
+            if not question:
+                continue
+            answer = cell_text(cells, row, heading_column + 4, ignored_cells=ignored_cells)
+            answer_payload = {"question": question, "answer": answer}
+            if (row, heading_column + 4) in ignored_cells:
+                answer_payload["ignored"] = True
+            answers.append(answer_payload)
+        if answers:
+            answers_by_stage[stage] = answers
+
+    return answers_by_stage
 
 
 def canonical_bonus_question(question: str) -> str:
@@ -792,11 +809,24 @@ def find_heading(
     cells: dict[tuple[int, int], str],
     heading: str,
 ) -> tuple[int, int] | None:
+    headings = find_headings(cells, heading)
+    return headings[0] if headings else None
+
+
+def find_headings(
+    cells: dict[tuple[int, int], str],
+    heading: str,
+    allow_prefix: bool = False,
+) -> list[tuple[int, int]]:
     target = normalize_header(heading)
+    headings = []
     for (row, column), value in sorted(cells.items()):
-        if normalize_header(value) == target:
-            return row, column
-    return None
+        normalized_value = normalize_header(value)
+        if normalized_value == target or (
+            allow_prefix and normalized_value.startswith(target)
+        ):
+            headings.append((row, column))
+    return headings
 
 
 def stage_headings(

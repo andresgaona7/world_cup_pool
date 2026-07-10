@@ -341,6 +341,44 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
             },
         )
 
+    def test_extracts_bonus_answers_for_each_visual_stage(self):
+        cells = {
+            (18, 13): "Round of 32",
+            (36, 13): "Bonus questions",
+            (37, 13): "How many matches will go to extra time?",
+            (37, 17): "5 - 8",
+            (63, 13): "Quarter finals",
+            (69, 13): "Bonus questions ( ? points each )",
+            (70, 13): "How many matches will go to extra time?",
+            (70, 17): "2",
+            (71, 13): "Which team will score the most goals?",
+            (71, 17): "Spain",
+        }
+
+        answers = build_knockout_predictions.extract_bonus_answers(cells)
+
+        self.assertEqual(
+            answers,
+            {
+                "round_of_32": [
+                    {
+                        "question": "How many matches will go to extra time?",
+                        "answer": "5 - 8",
+                    },
+                ],
+                "quarterfinal": [
+                    {
+                        "question": "How many matches will go to extra time?",
+                        "answer": "2",
+                    },
+                    {
+                        "question": "Which team will score the most goals?",
+                        "answer": "Spain",
+                    },
+                ],
+            },
+        )
+
     def test_merges_player_predictions_across_stage_workbooks(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)

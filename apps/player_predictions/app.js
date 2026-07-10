@@ -241,17 +241,18 @@ function knockoutStageContent(stage, matches, knockoutPlayer) {
   wrap.append(table);
 
   const content = [count, wrap];
-  if (stage.stage === "round_of_32") {
-    const bonusAnswers = roundOf32BonusAnswersTable(knockoutPlayer);
-    if (bonusAnswers) {
-      content.push(bonusAnswers);
-    }
+  const bonusAnswers = bonusAnswersTable(knockoutPlayer, stage.stage);
+  if (bonusAnswers) {
+    content.push(bonusAnswers);
   }
   return content;
 }
 
-function roundOf32BonusAnswersTable(knockoutPlayer) {
-  const answers = knockoutPlayer?.bonusAnswers?.round_of_32 || knockoutPlayer?.roundOf32BonusAnswers || [];
+function bonusAnswersTable(knockoutPlayer, stage) {
+  const answers =
+    knockoutPlayer?.bonusAnswers?.[stage] ||
+    (stage === "round_of_32" ? knockoutPlayer?.roundOf32BonusAnswers : []) ||
+    [];
   if (!answers.length) {
     return null;
   }

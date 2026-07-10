@@ -150,19 +150,20 @@ submitted picks. `scripts/build_pool_data.py` converts it into
 The knockout workbooks are the source of truth for knockout picks once those
 files exist. `scripts/build_knockout_predictions.py` currently accepts the
 visual Round of 32 workbook at `data/raw/round_of_32.xlsx`, the visual Round of
-16 workbook at `data/raw/round_of_16.xlsx`, and optional remaining-stage files
-in `data/raw/knockout_predictions/`: `quarterfinals.xlsx`,
-`semifinals.xlsx`, and `final.xlsx`. It merges the workbooks that exist into
+16 workbook at `data/raw/round_of_16.xlsx`, the visual quarterfinal workbook at
+`data/raw/quaterfinals.xlsx`, and optional remaining-stage files in
+`data/raw/knockout_predictions/`: `quarterfinals.xlsx`, `semifinals.xlsx`, and
+`final.xlsx`. It merges the workbooks that exist into
 `data/generated/knockout_predictions.js`, which is loaded by the player picks
 and score pages. The current active prediction workflow has moved from Round
-of 32 to Round of 16, so refresh `data/raw/round_of_16.xlsx` and run
-`make build-knockout-predictions` before scoring new Round of 16 picks. Until
-any workbook is available, the builder writes a valid empty prediction
-artifact. The expected match counts are 16, 8, 4, 2, and 1, for 31 predicted
-matches total. Standard player sheets need a `Winner` or `Advancing team`
-column; `Mode`, `Home Score`, `Away Score`, and `Match` columns are optional.
-For the visual Round of 32 and Round of 16 workbooks, red result cells are
-treated as blank/NaN and the score/points column is ignored.
+of 16 to Quarterfinals, so refresh `data/raw/quaterfinals.xlsx` and run
+`make build-knockout-predictions` before scoring new quarterfinal picks. Until
+any workbook is available, the builder writes a valid empty prediction artifact.
+The expected match counts are 16, 8, 4, 2, and 1, for 31 predicted matches
+total. Standard player sheets need a `Winner` or `Advancing team` column;
+`Mode`, `Home Score`, `Away Score`, and `Match` columns are optional. For the
+visual Round of 32, Round of 16, and quarterfinal workbooks, red result cells
+are treated as blank/NaN and the score/points column is ignored.
 
 `scripts/build_consensus_predictions.py` reshapes `pool_data.js` into a
 consensus JSON export and the standalone `apps/consensus_predictions/index.html`.
