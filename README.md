@@ -113,6 +113,12 @@ store the reviewed correction in
 `data/manual/official_knockout_overrides.json`. Overrides are keyed by pool
 match ID and are applied during `make update-official-knockout-results`.
 
+Quarterfinal bonus-question answers that are unavailable from Football-Data
+can be entered in `data/manual/quarterfinal_bonus_results.json`. Keep unknown
+numeric answers as `null` and unknown team answers as an empty string. The
+knockout updater preserves reviewed values from this file and exposes them to
+the Score Visualizer as `quarterfinalBonusResults`.
+
 Use the knockout updater after official knockout match records change, then run
 `make apply-manual-futures` if `data/manual/official_futures.json` has changed.
 If the update should become part of the score timeline, create or rebuild the

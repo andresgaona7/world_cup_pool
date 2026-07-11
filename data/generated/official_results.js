@@ -4228,6 +4228,17 @@ window.OFFICIAL_RESULTS = {
         ],
         "yellowCards": 36,
         "redCards": 2
+      },
+      "quarterfinalBonusResults": {
+        "extraTimeMatches": null,
+        "penaltyMatches": null,
+        "mostGoalsTeam": "",
+        "totalGoals": null,
+        "fastestGoalTeam": "",
+        "latestGoalTeam": "",
+        "biggestWinningMarginTeam": "",
+        "yellowCards": null,
+        "redCards": null
       }
     }
   ],
@@ -5683,8 +5694,19 @@ window.OFFICIAL_RESULTS = {
   "knockoutSource": {
     "sourceName": "Football-Data.org matches",
     "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-    "generatedAt": "2026-07-11T03:25:51+00:00",
+    "generatedAt": "2026-07-11T04:20:30+00:00",
     "rawPath": "data/raw/official/football_data_wc_matches_2026.json",
     "normalizedPath": "data/manual/official_knockout_results.json"
+  },
+  "quarterfinalBonusResults": {
+    "extraTimeMatches": null,
+    "penaltyMatches": null,
+    "mostGoalsTeam": "",
+    "totalGoals": null,
+    "fastestGoalTeam": "",
+    "latestGoalTeam": "",
+    "biggestWinningMarginTeam": "",
+    "yellowCards": null,
+    "redCards": null
   }
 };

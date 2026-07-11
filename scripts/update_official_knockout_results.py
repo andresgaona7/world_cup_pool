@@ -29,6 +29,7 @@ DEFAULT_RAW_OUTPUT_PATH = (
 DEFAULT_NORMALIZED_OUTPUT_PATH = ROOT / "data" / "manual" / "official_knockout_results.json"
 DEFAULT_OVERRIDES_PATH = ROOT / "data" / "manual" / "official_knockout_overrides.json"
 DEFAULT_ROUND_OF_32_BONUS_PATH = ROOT / "data" / "manual" / "round_of_32_bonus_results.json"
+DEFAULT_QUARTERFINAL_BONUS_PATH = ROOT / "data" / "manual" / "quarterfinal_bonus_results.json"
 DEFAULT_OFFICIAL_RESULTS_PATH = ROOT / "data" / "generated" / "official_results.js"
 OFFICIAL_RESULTS_RE = re.compile(
     r"^\s*window\.OFFICIAL_RESULTS\s*=\s*(?P<payload>\{.*\})\s*;\s*$",
@@ -100,6 +101,7 @@ ROUND_OF_32_BONUS_DEFAULTS = {
     "yellowCards": None,
     "redCards": None,
 }
+QUARTERFINAL_BONUS_DEFAULTS = dict(ROUND_OF_32_BONUS_DEFAULTS)
 
 
 class FetchHTTPError(RuntimeError):
@@ -116,6 +118,7 @@ def main() -> None:
         normalized_output_path=args.normalized_output,
         overrides_path=args.overrides,
         round_of_32_bonus_path=args.round_of_32_bonus,
+        quarterfinal_bonus_path=args.quarterfinal_bonus,
         official_results_path=args.official_results,
         api_key=args.api_key or environ.get(API_KEY_ENV) or DEFAULT_API_KEY,
         merge_official_results=not args.no_merge,
@@ -188,6 +191,16 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--quarterfinal-bonus",
+        type=Path,
+        default=DEFAULT_QUARTERFINAL_BONUS_PATH,
+        help=(
+            "Manual quarterfinal bonus-question answers that should survive "
+            "Football-Data refreshes. "
+            f"Defaults to {DEFAULT_QUARTERFINAL_BONUS_PATH.relative_to(ROOT)} if present."
+        ),
+    )
+    parser.add_argument(
         "--no-merge",
         action="store_true",
         help="Save raw and normalized JSON without updating data/generated/official_results.js.",
@@ -204,6 +217,7 @@ def update_official_knockout_results(
     official_results_path: Path,
     api_key: str,
     round_of_32_bonus_path: Path | None = None,
+    quarterfinal_bonus_path: Path | None = None,
     merge_official_results: bool = True,
 ) -> dict[str, Any]:
     raw_data = read_source(input_path, api_key)
@@ -216,6 +230,14 @@ def update_official_knockout_results(
         read_round_of_32_bonus_results(round_of_32_bonus_path),
         round_of_32_bonus_path,
     )
+    apply_stage_bonus_results(
+        normalized,
+        "quarterfinalBonusResults",
+        QUARTERFINAL_BONUS_DEFAULTS,
+        read_bonus_results(quarterfinal_bonus_path),
+        quarterfinal_bonus_path,
+        "quarterfinal",
+    )
     write_json(normalized_output_path, normalized)
 
     if merge_official_results:
@@ -223,6 +245,7 @@ def update_official_knockout_results(
         official_results["officialMatches"] = normalized["matches"]
         official_results["matches"] = normalized["matches"]
         official_results["roundOf32BonusResults"] = normalized["roundOf32BonusResults"]
+        official_results["quarterfinalBonusResults"] = normalized["quarterfinalBonusResults"]
         official_results["knockoutSource"] = {
             "sourceName": normalized["sourceName"],
             "sourceUrl": normalized["sourceUrl"],
@@ -245,6 +268,10 @@ def read_manual_overrides(path: Path | None) -> dict[str, Any]:
 
 
 def read_round_of_32_bonus_results(path: Path | None) -> dict[str, Any]:
+    return read_bonus_results(path)
+
+
+def read_bonus_results(path: Path | None) -> dict[str, Any]:
     if path is None or not path.exists():
         return {}
     data = json.loads(path.read_text(encoding="utf-8"))
@@ -283,6 +310,27 @@ def apply_round_of_32_bonus_results(
         normalized.setdefault("notes", []).append(
             "Applied reviewed Round of 32 bonus-question answer(s) from "
             f"{source_label}."
+        )
+
+
+def apply_stage_bonus_results(
+    normalized: dict[str, Any],
+    result_key: str,
+    defaults: dict[str, Any],
+    bonus_results: dict[str, Any],
+    source_path: Path | None,
+    stage_label: str,
+) -> None:
+    current = normalized.setdefault(result_key, dict(defaults))
+    if not isinstance(current, dict):
+        current = dict(defaults)
+        normalized[result_key] = current
+    reviewed = {key: value for key, value in bonus_results.items() if key in defaults}
+    current.update(reviewed)
+    if reviewed:
+        source_label = display_path(source_path) if source_path is not None else "manual bonus file"
+        normalized.setdefault("notes", []).append(
+            f"Applied reviewed {stage_label} bonus-question answer(s) from {source_label}."
         )
 
 
@@ -369,6 +417,7 @@ def build_normalized_data(raw_data: dict[str, Any]) -> dict[str, Any]:
         "generatedAt": datetime.now(UTC).isoformat(timespec="seconds"),
         "matches": knockout_matches,
         "roundOf32BonusResults": round_of_32_bonus,
+        "quarterfinalBonusResults": dict(QUARTERFINAL_BONUS_DEFAULTS),
         "notes": [
             "Football-Data supplies teams, score, winner, stage, status, duration, and referee metadata.",
             "Penalty, extra-time, and regular-time sub-scores are included only when the upstream score object exposes them.",

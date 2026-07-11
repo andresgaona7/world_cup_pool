@@ -932,5 +932,16 @@
     ],
     "yellowCards": 36,
     "redCards": 2
+  },
+  "quarterfinalBonusResults": {
+    "extraTimeMatches": null,
+    "penaltyMatches": null,
+    "mostGoalsTeam": "",
+    "totalGoals": null,
+    "fastestGoalTeam": "",
+    "latestGoalTeam": "",
+    "biggestWinningMarginTeam": "",
+    "yellowCards": null,
+    "redCards": null
   }
 }

@@ -78,6 +78,7 @@ PRESERVED_KNOCKOUT_FIELDS = (
     "matches",
     "officialMatches",
     "roundOf32BonusResults",
+    "quarterfinalBonusResults",
     "knockoutSource",
 )
 

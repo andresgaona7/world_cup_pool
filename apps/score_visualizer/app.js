@@ -100,6 +100,7 @@ const knockoutBonusAnswersByPlayer = normalizeKnockoutBonusAnswers(knockoutData)
 const officialScenario = normalizeOfficialScenario(players, officialData);
 const scenario = officialScenario;
 const officialRoundOf32BonusResults = officialData?.roundOf32BonusResults || {};
+const officialQuarterfinalBonusResults = officialData?.quarterfinalBonusResults || {};
 const officialKnockoutMatches = latestOfficialKnockoutMatches(officialData);
 const officialKnockoutDisplayMatches = latestOfficialKnockoutDisplayMatches(officialData);
 const collapsedPanels = new Map();
@@ -1901,7 +1902,29 @@ function officialKnockoutBonusAnswer(stage, question) {
   if (stage === "round_of_32") {
     return officialRoundOf32BonusAnswer(question);
   }
+  if (stage === "quarterfinal") {
+    return officialQuarterfinalBonusAnswer(question);
+  }
   return calculatedKnockoutBonusAnswer(stage, question);
+}
+
+function officialQuarterfinalBonusAnswer(question) {
+  const key = canonicalBonusQuestion(question);
+  const values = {
+    extra_time_matches: officialQuarterfinalBonusResults.extraTimeMatches,
+    penalty_matches: officialQuarterfinalBonusResults.penaltyMatches,
+    most_goals_team: officialQuarterfinalBonusResults.mostGoalsTeam,
+    total_goals: officialQuarterfinalBonusResults.totalGoals,
+    fastest_goal_team: officialQuarterfinalBonusResults.fastestGoalTeam,
+    latest_goal_team: officialQuarterfinalBonusResults.latestGoalTeam,
+    biggest_winning_margin_team: officialQuarterfinalBonusResults.biggestWinningMarginTeam,
+    yellow_cards: officialQuarterfinalBonusResults.yellowCards,
+    red_cards: officialQuarterfinalBonusResults.redCards,
+  };
+  const reviewedAnswer = values[key];
+  return reviewedAnswer === null || reviewedAnswer === undefined || reviewedAnswer === ""
+    ? calculatedKnockoutBonusAnswer("quarterfinal", question)
+    : reviewedAnswer;
 }
 
 function officialRoundOf32BonusAnswer(question) {

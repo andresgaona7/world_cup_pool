@@ -1,7 +1,7 @@
 {
   "sourceName": "Football-Data.org matches",
   "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-  "generatedAt": "2026-07-11T03:25:51+00:00",
+  "generatedAt": "2026-07-11T04:20:30+00:00",
   "matches": [
     {
       "matchId": "73",
@@ -823,11 +823,23 @@
     "yellowCards": 36,
     "redCards": 2
   },
+  "quarterfinalBonusResults": {
+    "extraTimeMatches": null,
+    "penaltyMatches": null,
+    "mostGoalsTeam": "",
+    "totalGoals": null,
+    "fastestGoalTeam": "",
+    "latestGoalTeam": "",
+    "biggestWinningMarginTeam": "",
+    "yellowCards": null,
+    "redCards": null
+  },
   "notes": [
     "Football-Data supplies teams, score, winner, stage, status, duration, and referee metadata.",
     "Penalty, extra-time, and regular-time sub-scores are included only when the upstream score object exposes them.",
     "Cards and fastest/latest goal teams are not present in this endpoint and should be reviewed manually.",
     "Applied manual knockout override(s) for match ID(s): 95.",
-    "Applied reviewed Round of 32 bonus-question answer(s) from data/manual/round_of_32_bonus_results.json."
+    "Applied reviewed Round of 32 bonus-question answer(s) from data/manual/round_of_32_bonus_results.json.",
+    "Applied reviewed quarterfinal bonus-question answer(s) from data/manual/quarterfinal_bonus_results.json."
   ]
 }
