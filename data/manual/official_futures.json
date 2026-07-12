@@ -8,11 +8,11 @@
   "teamLastRounds": {
     "Ecuador": "round_of_32",
     "Brazil": "round_of_16",
-    "France": "semifinal",
     "Norway": "quarterfinal",
     "Morocco": "quarterfinal",
-    "England": "quarterfinal",
-    "Spain": "quarterfinal",
-    "Argentina": "quarterfinal"
+    "France": "semifinal",
+    "England": "semifinal",
+    "Spain": "semifinal",
+    "Argentina": "semifinal"
   }
 }

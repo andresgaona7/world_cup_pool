@@ -1,11 +1,14 @@
 {
-  "extraTimeMatches": null,
-  "penaltyMatches": null,
-  "mostGoalsTeam": "",
-  "totalGoals": null,
-  "fastestGoalTeam": "",
-  "latestGoalTeam": "",
-  "biggestWinningMarginTeam": "",
-  "yellowCards": null,
-  "redCards": null
+  "extraTimeMatches": 2,
+  "penaltyMatches": 0,
+  "mostGoalsTeam": "Argentina",
+  "totalGoals": 12,
+  "fastestGoalTeam": "Argentina",
+  "latestGoalTeam": "Argentina",
+  "biggestWinningMarginTeam": [
+    "France",
+    "Argentina"
+  ],
+  "yellowCards": 10,
+  "redCards": 1
 }

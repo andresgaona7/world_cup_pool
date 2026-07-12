@@ -44,7 +44,7 @@ const KNOCKOUT_PERFECT_SCORE_BONUS_POINTS = {
   quarterfinal: 15,
   semifinal: 10,
 };
-const ROUND_OF_32_BONUS_QUESTION_POINTS = 2;
+const KNOCKOUT_BONUS_QUESTION_POINTS = 2;
 const KNOCKOUT_STAGE_LABELS = {
   round_of_32: "Round of 32",
   round_of_16: "Round of 16",
@@ -277,7 +277,10 @@ function normalizeKnockoutBonusAnswers(sourceData) {
   return new Map(
     (sourceData?.players || []).map((player) => [
       player.name || player.sheet || "",
-      player.bonusAnswers?.round_of_32 || player.roundOf32BonusAnswers || [],
+      {
+        ...player.bonusAnswers,
+        round_of_32: player.bonusAnswers?.round_of_32 || player.roundOf32BonusAnswers || [],
+      },
     ])
   );
 }
@@ -293,6 +296,7 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
     scenario: emptyScenario(sourcePlayers),
     officialMatches: [],
     roundOf32BonusResults: {},
+    quarterfinalBonusResults: {},
   };
   const declared = (resultsData?.timelineCheckpoints || [])
     .map((checkpoint) => normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData))
@@ -316,6 +320,7 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
       scenario: fallbackScenario,
       officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
       roundOf32BonusResults: resultsData?.roundOf32BonusResults || {},
+      quarterfinalBonusResults: resultsData?.quarterfinalBonusResults || {},
     }
     : null;
   if (fallbackCheckpoint) {
@@ -363,6 +368,10 @@ function normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData = {}
     checkpoint.roundOf32BonusResults ||
     (checkpointIncludesRoundOf32(stage) ? resultsData?.roundOf32BonusResults : {}) ||
     {};
+  const quarterfinalBonusResults =
+    checkpoint.quarterfinalBonusResults ||
+    (checkpointIncludesQuarterfinal(stage) ? resultsData?.quarterfinalBonusResults : {}) ||
+    {};
   const includeFutures = Boolean(checkpoint.includeFutures || checkpoint.key === "futures" || stage === "futures");
   const includeBonuses = Boolean(checkpoint.includeBonuses || checkpoint.key === "bonuses" || stage === "bonuses");
   const includesFutures = includeFutures || includeBonuses;
@@ -380,11 +389,16 @@ function normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData = {}
     scenario,
     officialMatches,
     roundOf32BonusResults,
+    quarterfinalBonusResults,
   };
 }
 
 function checkpointIncludesRoundOf32(stage) {
   return (KNOCKOUT_STAGE_ORDER[stage] ?? -1) >= KNOCKOUT_STAGE_ORDER.round_of_32;
+}
+
+function checkpointIncludesQuarterfinal(stage) {
+  return (KNOCKOUT_STAGE_ORDER[stage] ?? -1) >= KNOCKOUT_STAGE_ORDER.quarterfinal;
 }
 
 function mergePlannedCheckpoints(sourcePlayers, availableCheckpoints) {
@@ -732,10 +746,14 @@ function scoreAllPlayersForCheckpoint(sourcePlayers, checkpoint) {
     .map((player, playerIndex) => {
       const group = scoreGroups(player, checkpoint.scenario);
       const bestThirds = scoreBestThirds(player, checkpoint.scenario);
-      const knockout = scoreKnockout(player, checkpoint.officialMatches || [], checkpoint.roundOf32BonusResults || {});
+      const bonusResults = {
+        round_of_32: checkpoint.roundOf32BonusResults || {},
+        quarterfinal: checkpoint.quarterfinalBonusResults || {},
+      };
+      const knockout = scoreKnockout(player, checkpoint.officialMatches || [], bonusResults);
       const knockoutStages = Object.fromEntries(
         LEADERBOARD_KNOCKOUT_STAGES.map((stage) => {
-          const stageScore = scoreKnockoutStage(player, stage, checkpoint.officialMatches || [], checkpoint.roundOf32BonusResults || {});
+          const stageScore = scoreKnockoutStage(player, stage, checkpoint.officialMatches || [], bonusResults);
           return [stage, stageScore.points + stageScore.bonus];
         })
       );
@@ -800,10 +818,10 @@ function scoreBestThirds(player, scenario) {
   return player.bestThirds.filter((pick) => actual.has(pick.team)).length * BEST_THIRD_TEAM_POINTS;
 }
 
-function scoreKnockout(player, officialMatches, roundOf32BonusResults = {}) {
+function scoreKnockout(player, officialMatches, bonusResults = {}) {
   const resultMatches = officialMatches.filter((match) => match.stage in KNOCKOUT_BASE_POINTS);
   const stageScores = Object.keys(KNOCKOUT_BASE_POINTS).map((stage) =>
-    scoreKnockoutStage(player, stage, resultMatches, roundOf32BonusResults)
+    scoreKnockoutStage(player, stage, resultMatches, bonusResults)
   );
   const points = stageScores.reduce((total, stageScore) => total + stageScore.points, 0);
   const bonus = stageScores.reduce((total, stageScore) => total + stageScore.bonus, 0);
@@ -811,7 +829,7 @@ function scoreKnockout(player, officialMatches, roundOf32BonusResults = {}) {
   return { points, bonus };
 }
 
-function scoreKnockoutStage(player, stage, officialMatches, roundOf32BonusResults = {}) {
+function scoreKnockoutStage(player, stage, officialMatches, bonusResults = {}) {
   const predictions = knockoutPredictionsByPlayer.get(player.name) || [];
   const predictionIndex = knockoutPredictionIndex(predictions);
   const stageMatches = officialMatches.filter((match) => match.stage === stage);
@@ -848,44 +866,55 @@ function scoreKnockoutStage(player, stage, officialMatches, roundOf32BonusResult
 
   const perfectWinnersBonus = perfectWinnersPossible ? KNOCKOUT_PERFECT_WINNER_BONUS_POINTS[stage] : 0;
   const perfectScoresBonus = perfectScoresPossible ? KNOCKOUT_PERFECT_SCORE_BONUS_POINTS[stage] : 0;
-  const bonusQuestionPoints = stage === "round_of_32" ? scoreRoundOf32BonusQuestions(player, roundOf32BonusResults) : 0;
+  const bonusQuestionPoints = ["round_of_32", "quarterfinal"].includes(stage)
+    ? scoreKnockoutBonusQuestions(player, stage, bonusResults[stage] || {}, stageMatches)
+    : 0;
   return {
     points,
     bonus: perfectWinnersBonus + perfectScoresBonus + bonusQuestionPoints,
   };
 }
 
-function scoreRoundOf32BonusQuestions(player, roundOf32BonusResults = {}) {
-  const answers = knockoutBonusAnswersByPlayer.get(player?.name || "") || [];
+function scoreKnockoutBonusQuestions(player, stage, officialResults = {}, stageMatches = []) {
+  const answers = knockoutBonusAnswersByPlayer.get(player?.name || "")?.[stage] || [];
   return answers.reduce((total, item) => {
-    const earnedPoints = roundOf32BonusQuestionPoints(
+    const earnedPoints = knockoutBonusQuestionPoints(
       item.answer,
-      officialRoundOf32BonusAnswer(item.question, roundOf32BonusResults)
+      officialKnockoutBonusAnswer(item.question, officialResults, stageMatches)
     );
     return total + (earnedPoints || 0);
   }, 0);
 }
 
-function roundOf32BonusQuestionPoints(playerAnswer, officialAnswer) {
+function knockoutBonusQuestionPoints(playerAnswer, officialAnswer) {
   if (officialAnswer === null || officialAnswer === "" || officialAnswer === undefined) {
     return null;
   }
-  return bonusAnswerMatches(playerAnswer, officialAnswer) ? ROUND_OF_32_BONUS_QUESTION_POINTS : 0;
+  return bonusAnswerMatches(playerAnswer, officialAnswer) ? KNOCKOUT_BONUS_QUESTION_POINTS : 0;
 }
 
-function officialRoundOf32BonusAnswer(question, roundOf32BonusResults = {}) {
+function officialKnockoutBonusAnswer(question, officialResults = {}, stageMatches = []) {
   const key = canonicalBonusQuestion(question);
   const values = {
-    extra_time_matches: roundOf32BonusResults.extraTimeMatches,
-    penalty_matches: roundOf32BonusResults.penaltyMatches,
-    most_goals_team: roundOf32BonusResults.mostGoalsTeam,
-    total_goals: roundOf32BonusResults.totalGoals,
-    fastest_goal_team: roundOf32BonusResults.fastestGoalTeam,
-    latest_goal_team: roundOf32BonusResults.latestGoalTeam,
-    biggest_winning_margin_team: roundOf32BonusResults.biggestWinningMarginTeam,
-    yellow_cards: roundOf32BonusResults.yellowCards,
-    red_cards: roundOf32BonusResults.redCards,
+    extra_time_matches: officialResults.extraTimeMatches,
+    penalty_matches: officialResults.penaltyMatches,
+    most_goals_team: officialResults.mostGoalsTeam,
+    total_goals: officialResults.totalGoals,
+    fastest_goal_team: officialResults.fastestGoalTeam,
+    latest_goal_team: officialResults.latestGoalTeam,
+    biggest_winning_margin_team: officialResults.biggestWinningMarginTeam,
+    yellow_cards: officialResults.yellowCards,
+    red_cards: officialResults.redCards,
   };
+  if (values[key] !== null && values[key] !== "" && values[key] !== undefined) {
+    return values[key];
+  }
+  if (key === "extra_time_matches") {
+    return stageMatches.filter((match) => String(match.duration || "").toUpperCase() === "EXTRA_TIME").length;
+  }
+  if (key === "penalty_matches") {
+    return stageMatches.filter((match) => match.homePenaltyScore != null && match.awayPenaltyScore != null).length;
+  }
   return values[key];
 }
 
