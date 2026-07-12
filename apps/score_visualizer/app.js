@@ -914,8 +914,9 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
   const panelKey = `knockout-${stage}`;
   const stageRows = rows.filter((row) => row.stage === stage);
   const stageScore = scoreKnockoutStage(selectedPlayer, stage);
-  const predictionPoints = stageScore.points + stageScore.perfectWinnersBonus + stageScore.perfectScoresBonus;
-  const stageTotal = predictionPoints + stageScore.bonusQuestionPoints;
+  const predictionPoints = stageScore.points;
+  const bonusPoints = stageScore.perfectWinnersBonus + stageScore.perfectScoresBonus;
+  const stageTotal = predictionPoints + bonusPoints + stageScore.bonusQuestionPoints;
   const hasStageResults = stageRows.some((row) => row.hasResult);
   const basePoints = KNOCKOUT_BASE_POINTS[stage] || 0;
   const collapsed = isPanelCollapsed(panelKey, stage === "round_of_32" || stage === "round_of_16");
@@ -939,6 +940,8 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
             ${comparisonMetricHtml("Base point", `${formatPoints(basePoints)} pts`)}
             <span class="comparison-operator">|</span>
             ${comparisonMetricHtml("Prediction points", `${formatPoints(predictionPoints)} pts`)}
+            <span class="comparison-operator">+</span>
+            ${comparisonMetricHtml("Bonus points", `${formatPoints(bonusPoints)} pts`)}
             <span class="comparison-operator">+</span>
             ${comparisonMetricHtml("Bonus questions points", `${formatPoints(stageScore.bonusQuestionPoints)} pts`)}
             <span class="comparison-operator">=</span>
