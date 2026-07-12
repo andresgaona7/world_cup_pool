@@ -34,10 +34,10 @@ const KNOCKOUT_STAGE_MATCH_COUNTS = {
   semifinal: 2,
 };
 const KNOCKOUT_PERFECT_WINNER_BONUS_POINTS = {
-  round_of_32: 25,
+  round_of_32: 40,
   round_of_16: 25,
-  quarterfinal: 25,
-  semifinal: 25,
+  quarterfinal: 15,
+  semifinal: 10,
 };
 const KNOCKOUT_PERFECT_SCORE_BONUS_POINTS = {
   round_of_32: 40,

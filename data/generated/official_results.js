@@ -940,7 +940,8 @@ window.OFFICIAL_RESULTS = {
     "runnerUp": "",
     "topScorer": "Lionel Messi",
     "topScorers": [
-      "Lionel Messi"
+      "Lionel Messi",
+      "Kylian Mbappe"
     ],
     "teamLastRounds": {
       "South Korea": "group_stage",
@@ -960,13 +961,13 @@ window.OFFICIAL_RESULTS = {
       "Uzbekistan": "group_stage",
       "Panama": "group_stage",
       "France": "semifinal",
-      "Argentina": "quarterfinal",
+      "Argentina": "semifinal",
       "Norway": "quarterfinal",
       "Morocco": "quarterfinal",
       "Brazil": "round_of_16",
       "Ecuador": "round_of_32",
-      "Spain": "quarterfinal",
-      "England": "quarterfinal"
+      "Spain": "semifinal",
+      "England": "semifinal"
     }
   },
   "provisionalGroupStandings": {
@@ -3436,7 +3437,8 @@ window.OFFICIAL_RESULTS = {
           "runnerUp": "",
           "topScorer": "Lionel Messi",
           "topScorers": [
-            "Lionel Messi"
+            "Lionel Messi",
+            "Kylian Mbappe"
           ],
           "teamLastRounds": {
             "South Korea": "group_stage",
@@ -3456,13 +3458,13 @@ window.OFFICIAL_RESULTS = {
             "Uzbekistan": "group_stage",
             "Panama": "group_stage",
             "France": "semifinal",
-            "Argentina": "quarterfinal",
+            "Argentina": "semifinal",
             "Norway": "quarterfinal",
             "Morocco": "quarterfinal",
             "Brazil": "round_of_16",
             "Ecuador": "round_of_32",
-            "Spain": "quarterfinal",
-            "England": "quarterfinal"
+            "Spain": "semifinal",
+            "England": "semifinal"
           }
         }
       },
@@ -4300,8 +4302,8 @@ window.OFFICIAL_RESULTS = {
         "redCards": 2
       },
       "quarterfinalBonusResults": {
-        "extraTimeMatches": null,
-        "penaltyMatches": null,
+        "extraTimeMatches": 2,
+        "penaltyMatches": 0,
         "mostGoalsTeam": "Argentina",
         "totalGoals": 12,
         "fastestGoalTeam": "Argentina",
@@ -5825,13 +5827,13 @@ window.OFFICIAL_RESULTS = {
   "knockoutSource": {
     "sourceName": "Football-Data.org matches",
     "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-    "generatedAt": "2026-07-12T13:09:56+00:00",
+    "generatedAt": "2026-07-12T13:30:42+00:00",
     "rawPath": "data/raw/official/football_data_wc_matches_2026.json",
     "normalizedPath": "data/manual/official_knockout_results.json"
   },
   "quarterfinalBonusResults": {
-    "extraTimeMatches": null,
-    "penaltyMatches": null,
+    "extraTimeMatches": 2,
+    "penaltyMatches": 0,
     "mostGoalsTeam": "Argentina",
     "totalGoals": 12,
     "fastestGoalTeam": "Argentina",

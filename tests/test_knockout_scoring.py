@@ -19,10 +19,10 @@ class KnockoutScoringTests(unittest.TestCase):
         self.assertEqual(
             KNOCKOUT_PERFECT_WINNER_BONUS_POINTS,
             {
-                Stage.ROUND_OF_32: 25.0,
+                Stage.ROUND_OF_32: 40.0,
                 Stage.ROUND_OF_16: 25.0,
-                Stage.QUARTERFINAL: 25.0,
-                Stage.SEMIFINAL: 25.0,
+                Stage.QUARTERFINAL: 15.0,
+                Stage.SEMIFINAL: 10.0,
             },
         )
         self.assertEqual(
@@ -410,8 +410,8 @@ class KnockoutScoringTests(unittest.TestCase):
         points, bonuses, details = score_knockout_predictions(predictions, results)
 
         self.assertEqual(points, 80.0)
-        self.assertEqual(bonuses, 40.0)
-        self.assertEqual(details["bonus:perfect_knockout_winners:quarterfinal"], 25.0)
+        self.assertEqual(bonuses, 30.0)
+        self.assertEqual(details["bonus:perfect_knockout_winners:quarterfinal"], 15.0)
         self.assertEqual(details["bonus:perfect_knockout_scores:quarterfinal"], 15.0)
 
     def test_perfect_knockout_stage_bonus_waits_for_complete_stage(self):

@@ -82,7 +82,8 @@
       "runnerUp": "",
       "topScorer": "Lionel Messi",
       "topScorers": [
-        "Lionel Messi"
+        "Lionel Messi",
+        "Kylian Mbappe"
       ],
       "teamLastRounds": {
         "South Korea": "group_stage",
@@ -102,13 +103,13 @@
         "Uzbekistan": "group_stage",
         "Panama": "group_stage",
         "France": "semifinal",
-        "Argentina": "quarterfinal",
+        "Argentina": "semifinal",
         "Norway": "quarterfinal",
         "Morocco": "quarterfinal",
         "Brazil": "round_of_16",
         "Ecuador": "round_of_32",
-        "Spain": "quarterfinal",
-        "England": "quarterfinal"
+        "Spain": "semifinal",
+        "England": "semifinal"
       }
     }
   },
@@ -946,8 +947,8 @@
     "redCards": 2
   },
   "quarterfinalBonusResults": {
-    "extraTimeMatches": null,
-    "penaltyMatches": null,
+    "extraTimeMatches": 2,
+    "penaltyMatches": 0,
     "mostGoalsTeam": "Argentina",
     "totalGoals": 12,
     "fastestGoalTeam": "Argentina",

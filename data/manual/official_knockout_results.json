@@ -1,7 +1,7 @@
 {
   "sourceName": "Football-Data.org matches",
   "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-  "generatedAt": "2026-07-12T13:09:56+00:00",
+  "generatedAt": "2026-07-12T13:30:42+00:00",
   "matches": [
     {
       "matchId": "73",
@@ -882,8 +882,8 @@
     "redCards": 2
   },
   "quarterfinalBonusResults": {
-    "extraTimeMatches": null,
-    "penaltyMatches": null,
+    "extraTimeMatches": 2,
+    "penaltyMatches": 0,
     "mostGoalsTeam": "Argentina",
     "totalGoals": 12,
     "fastestGoalTeam": "Argentina",

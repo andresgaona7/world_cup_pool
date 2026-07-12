@@ -124,7 +124,7 @@ points and do not scale with the Round of 32 match value.
 
 | Bonus | Round of 32 | Round of 16 | Quarterfinal | Semifinal |
 | --- | ---: | ---: | ---: | ---: |
-| Perfect knockout winners | 25 | 25 | 25 | 25 |
+| Perfect knockout winners | 40 | 25 | 15 | 10 |
 | Perfect knockout scores | 40 | 25 | 15 | 10 |
 
 Perfect knockout bonuses are calculated separately once each eligible knockout
