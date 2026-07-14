@@ -32,18 +32,14 @@ const KNOCKOUT_STAGE_MATCH_COUNTS = {
   quarterfinal: 4,
   semifinal: 2,
 };
-const KNOCKOUT_PERFECT_WINNER_BONUS_POINTS = {
-  round_of_32: 40,
-  round_of_16: 25,
-  quarterfinal: 15,
-  semifinal: 10,
+const KNOCKOUT_PERFECT_BONUS_BASE_POINTS = {
+  round_of_32: KNOCKOUT_BASE_POINTS.round_of_32,
+  round_of_16: KNOCKOUT_BASE_POINTS.round_of_16,
+  quarterfinal: KNOCKOUT_BASE_POINTS.quarterfinal,
+  semifinal: KNOCKOUT_BASE_POINTS.semifinal,
 };
-const KNOCKOUT_PERFECT_SCORE_BONUS_POINTS = {
-  round_of_32: 40,
-  round_of_16: 25,
-  quarterfinal: 15,
-  semifinal: 10,
-};
+const KNOCKOUT_PERFECT_WINNER_BONUS_POINTS = KNOCKOUT_PERFECT_BONUS_BASE_POINTS;
+const KNOCKOUT_PERFECT_SCORE_BONUS_POINTS = KNOCKOUT_PERFECT_BONUS_BASE_POINTS;
 const KNOCKOUT_BONUS_QUESTION_POINTS = 2;
 const KNOCKOUT_STAGE_LABELS = {
   round_of_32: "Round of 32",
