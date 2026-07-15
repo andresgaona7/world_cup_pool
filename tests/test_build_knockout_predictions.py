@@ -7,7 +7,8 @@ from unittest.mock import patch
 from zipfile import ZipFile
 
 
-MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts" / "build_knockout_predictions.py"
+ROOT = Path(__file__).resolve().parents[1]
+MODULE_PATH = ROOT / "scripts" / "build_knockout_predictions.py"
 SPEC = importlib.util.spec_from_file_location("build_knockout_predictions", MODULE_PATH)
 build_knockout_predictions = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None
@@ -15,6 +16,47 @@ SPEC.loader.exec_module(build_knockout_predictions)
 
 
 class BuildKnockoutPredictionsTests(unittest.TestCase):
+    REVIEWED_QUARTERFINAL_PREDICTIONS = {
+        "Amal": {
+            "matches": [
+                ("97", None, None, None),
+                ("98", 2, 1, "Spain"),
+                ("99", 1, 0, "Norway"),
+                ("100", 2, 0, "Argentina"),
+            ],
+            "bonus_answers": [
+                "0",
+                "0",
+                "Argentina",
+                "6 - 8",
+                "Norway",
+                "Belgium",
+                "Argentina",
+                "",
+                "4",
+            ],
+        },
+        "Irina": {
+            "matches": [
+                ("97", None, None, None),
+                ("98", 2, 1, "Spain"),
+                ("99", 3, 2, "Norway"),
+                ("100", 2, 1, "Argentina"),
+            ],
+            "bonus_answers": [
+                "2",
+                "0",
+                "Norway",
+                "9 - 10",
+                "Norway",
+                "England",
+                "France",
+                "5",
+                "1",
+            ],
+        },
+    }
+
     def test_missing_workbook_writes_empty_generated_artifact(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             workbook_path = Path(temp_dir) / "missing.xlsx"
@@ -521,6 +563,52 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
 
         self.assertFalse(validation["complete"])
         self.assertEqual(validation["incompleteMatchIds"], ["73"])
+
+    def test_reviewed_amal_and_irina_quarterfinal_predictions_are_preserved(self):
+        workbook_data = build_knockout_predictions.build_knockout_data(
+            {"quarterfinal": build_knockout_predictions.QUARTERFINAL_FALLBACK_PATH}
+        )
+        browser_text = (ROOT / "data/generated/knockout_predictions.js").read_text(
+            encoding="utf-8"
+        )
+        browser_data = json.loads(
+            browser_text.removeprefix("window.KNOCKOUT_PREDICTIONS = ").removesuffix(
+                ";\n"
+            )
+        )
+
+        for source_name, data in (
+            ("quarterfinal workbook", workbook_data),
+            ("generated browser payload", browser_data),
+        ):
+            players = {player["name"]: player for player in data["players"]}
+            for player_name, expected in self.REVIEWED_QUARTERFINAL_PREDICTIONS.items():
+                with self.subTest(source=source_name, player=player_name):
+                    player = players[player_name]
+                    matches = [
+                        match
+                        for match in player["matches"]
+                        if match["stage"] == "quarterfinal"
+                    ]
+                    actual_matches = [
+                        (
+                            match["matchId"],
+                            match.get("homeScore"),
+                            match.get("awayScore"),
+                            match.get("predictedAdvancingTeam"),
+                        )
+                        for match in matches
+                    ]
+                    actual_bonus_answers = [
+                        answer["answer"]
+                        for answer in player["bonusAnswers"]["quarterfinal"]
+                    ]
+
+                    self.assertEqual(actual_matches, expected["matches"])
+                    self.assertEqual(
+                        actual_bonus_answers,
+                        expected["bonus_answers"],
+                    )
 
 
 if __name__ == "__main__":

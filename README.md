@@ -247,7 +247,7 @@ After editing champion, runner-up, top scorer, or team last-round values, run
 `python3 scripts/apply_manual_futures.py` to merge those values into
 `data/generated/official_results.js`. Valid `teamLastRounds` values are
 `group_stage`, `round_of_32`, `round_of_16`, `quarterfinal`, `semifinal`,
-`third_place_match`, `runner_up`, and `champion`.
+`final`, `runner_up`, and `champion`.
 
 Official score-timeline checkpoints are stored in
 `data/checkpoints/official_results/`. After `data/generated/official_results.js`
@@ -336,7 +336,7 @@ make update-official-knockout-results
 # Review raw knockout data; if overrides changed, rerun the knockout updater.
 make update-official-knockout-results
 make apply-manual-futures
-CHECKPOINT=quarterfinal make create-official-checkpoint
+CHECKPOINT=semifinal make create-official-checkpoint
 make test
 make build-site
 git add data/generated data/checkpoints data/manual index.html styles.css apps docs scripts .github/workflows/pages.yml Makefile .gitignore README.md

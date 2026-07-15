@@ -7,7 +7,7 @@
       "data/raw/quaterfinals.xlsx",
       "data/raw/semifinals.xlsx"
     ],
-    "generated_at": "2026-07-15T02:41:45.970915+00:00",
+    "generated_at": "2026-07-15T02:54:45.465153+00:00",
     "stage": "quarterfinal",
     "stage_label": "Quarterfinals",
     "player_count": 11,
@@ -88,11 +88,7 @@
       "advancingTeamConsensus": [
         {
           "value": "Spain",
-          "votes": 7
-        },
-        {
-          "value": "Blank",
-          "votes": 2
+          "votes": 9
         },
         {
           "value": "Belgium",
@@ -102,11 +98,7 @@
       "scoreConsensus": [
         {
           "value": "2-1",
-          "votes": 3
-        },
-        {
-          "value": "Blank",
-          "votes": 2
+          "votes": 5
         },
         {
           "value": "2-0",
@@ -144,11 +136,7 @@
         },
         {
           "value": "Norway",
-          "votes": 3
-        },
-        {
-          "value": "Blank",
-          "votes": 2
+          "votes": 5
         }
       ],
       "scoreConsensus": [
@@ -157,12 +145,12 @@
           "votes": 3
         },
         {
-          "value": "Blank",
+          "value": "2-2",
           "votes": 2
         },
         {
-          "value": "2-2",
-          "votes": 2
+          "value": "1-0",
+          "votes": 1
         },
         {
           "value": "2-1",
@@ -170,6 +158,10 @@
         },
         {
           "value": "2-3",
+          "votes": 1
+        },
+        {
+          "value": "3-2",
           "votes": 1
         },
         {
@@ -205,16 +197,16 @@
       "advancingTeamConsensus": [
         {
           "value": "Argentina",
-          "votes": 9
-        },
-        {
-          "value": "Blank",
-          "votes": 2
+          "votes": 11
         }
       ],
       "scoreConsensus": [
         {
-          "value": "Blank",
+          "value": "2-1",
+          "votes": 3
+        },
+        {
+          "value": "2-0",
           "votes": 2
         },
         {
@@ -224,14 +216,6 @@
         {
           "value": "1-1",
           "votes": 2
-        },
-        {
-          "value": "2-1",
-          "votes": 2
-        },
-        {
-          "value": "2-0",
-          "votes": 1
         },
         {
           "value": "3-0",
@@ -253,11 +237,11 @@
   "advancing_teams": [
     {
       "value": "Argentina",
-      "votes": 9
+      "votes": 11
     },
     {
       "value": "Spain",
-      "votes": 7
+      "votes": 9
     },
     {
       "value": "France",
@@ -269,7 +253,7 @@
     },
     {
       "value": "Norway",
-      "votes": 3
+      "votes": 5
     },
     {
       "value": "Morocco",
@@ -286,15 +270,19 @@
       "answers": [
         {
           "value": "2",
-          "votes": 6
-        },
-        {
-          "value": "Blank",
-          "votes": 3
+          "votes": 7
         },
         {
           "value": "1",
           "votes": 2
+        },
+        {
+          "value": "0",
+          "votes": 1
+        },
+        {
+          "value": "Blank",
+          "votes": 1
         }
       ]
     },
@@ -302,20 +290,20 @@
       "question": "How many matches will be decided by penalties?",
       "answers": [
         {
+          "value": "0",
+          "votes": 4
+        },
+        {
           "value": "1",
           "votes": 4
         },
         {
-          "value": "Blank",
-          "votes": 3
-        },
-        {
-          "value": "0",
-          "votes": 2
-        },
-        {
           "value": "2",
           "votes": 2
+        },
+        {
+          "value": "Blank",
+          "votes": 1
         }
       ]
     },
@@ -327,12 +315,8 @@
           "votes": 4
         },
         {
-          "value": "Blank",
-          "votes": 3
-        },
-        {
           "value": "Argentina",
-          "votes": 2
+          "votes": 3
         },
         {
           "value": "Spain",
@@ -340,6 +324,14 @@
         },
         {
           "value": "England",
+          "votes": 1
+        },
+        {
+          "value": "Norway",
+          "votes": 1
+        },
+        {
+          "value": "Blank",
           "votes": 1
         }
       ]
@@ -352,12 +344,16 @@
           "votes": 6
         },
         {
-          "value": "Blank",
+          "value": "9 - 10",
           "votes": 3
         },
         {
-          "value": "9 - 10",
-          "votes": 2
+          "value": "6 - 8",
+          "votes": 1
+        },
+        {
+          "value": "Blank",
+          "votes": 1
         }
       ]
     },
@@ -365,12 +361,12 @@
       "question": "Which team will score the fastest goal?",
       "answers": [
         {
-          "value": "Blank",
+          "value": "France",
           "votes": 3
         },
         {
-          "value": "France",
-          "votes": 3
+          "value": "Norway",
+          "votes": 2
         },
         {
           "value": "Spain",
@@ -379,6 +375,10 @@
         {
           "value": "Morocco",
           "votes": 2
+        },
+        {
+          "value": "Blank",
+          "votes": 1
         },
         {
           "value": "England",
@@ -391,18 +391,22 @@
       "answers": [
         {
           "value": "England",
-          "votes": 4
-        },
-        {
-          "value": "Blank",
-          "votes": 3
+          "votes": 5
         },
         {
           "value": "Argentina",
           "votes": 3
         },
         {
+          "value": "Belgium",
+          "votes": 1
+        },
+        {
           "value": "Norway",
+          "votes": 1
+        },
+        {
+          "value": "Blank",
           "votes": 1
         }
       ]
@@ -411,19 +415,19 @@
       "question": "Team with the biggest winning margin?",
       "answers": [
         {
+          "value": "Argentina",
+          "votes": 4
+        },
+        {
           "value": "Spain",
           "votes": 4
         },
         {
-          "value": "Blank",
-          "votes": 3
-        },
-        {
-          "value": "Argentina",
-          "votes": 3
-        },
-        {
           "value": "France",
+          "votes": 2
+        },
+        {
+          "value": "Blank",
           "votes": 1
         }
       ]
@@ -437,7 +441,11 @@
         },
         {
           "value": "Blank",
-          "votes": 3
+          "votes": 2
+        },
+        {
+          "value": "5",
+          "votes": 1
         },
         {
           "value": "8",
@@ -454,18 +462,22 @@
       "answers": [
         {
           "value": "1",
-          "votes": 5
-        },
-        {
-          "value": "Blank",
-          "votes": 3
+          "votes": 6
         },
         {
           "value": "2",
           "votes": 2
         },
         {
+          "value": "4",
+          "votes": 1
+        },
+        {
           "value": "0",
+          "votes": 1
+        },
+        {
+          "value": "Blank",
           "votes": 1
         }
       ]

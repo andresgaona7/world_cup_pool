@@ -32,6 +32,7 @@ class ApplyManualFuturesTests(unittest.TestCase):
                 "teamLastRounds": {
                     "Mexico": "group_stage",
                     "Ecuador": "quarterfinal",
+                    "France": "final",
                     "Spain": "champion",
                     "Argentina": "runner_up",
                 },
@@ -105,6 +106,20 @@ class ApplyManualFuturesTests(unittest.TestCase):
             manual_path, official_path = self.write_fixture(temp_dir)
             manual = json.loads(manual_path.read_text(encoding="utf-8"))
             manual["teamLastRounds"]["Ecuador"] = "quarter_final"
+            manual_path.write_text(json.dumps(manual), encoding="utf-8")
+
+            with self.assertRaises(ValueError):
+                apply_manual_futures.apply_manual_futures(
+                    manual_futures_path=manual_path,
+                    manual_fair_play_path=temp_dir_path(temp_dir) / "official_fair_play.json",
+                    official_results_path=official_path,
+                )
+
+    def test_rejects_third_place_match_round_key(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manual_path, official_path = self.write_fixture(temp_dir)
+            manual = json.loads(manual_path.read_text(encoding="utf-8"))
+            manual["teamLastRounds"]["France"] = "third_place_match"
             manual_path.write_text(json.dumps(manual), encoding="utf-8")
 
             with self.assertRaises(ValueError):
@@ -231,6 +246,7 @@ class ApplyManualFuturesTests(unittest.TestCase):
                     "topScorer": "Kylian Mbappe",
                     "teamLastRounds": {
                         "Ecuador": "quarterfinal",
+                        "France": "final",
                         "Spain": "champion",
                         "Argentina": "runner_up",
                     },

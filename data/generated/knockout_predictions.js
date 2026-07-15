@@ -378,21 +378,30 @@ window.KNOCKOUT_PREDICTIONS = {
           "stage": "quarterfinal",
           "mode": "score",
           "homeTeam": "Spain",
-          "awayTeam": "Belgium"
+          "awayTeam": "Belgium",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Spain"
         },
         {
           "matchId": "99",
           "stage": "quarterfinal",
           "mode": "score",
           "homeTeam": "Norway",
-          "awayTeam": "England"
+          "awayTeam": "England",
+          "homeScore": 1,
+          "awayScore": 0,
+          "predictedAdvancingTeam": "Norway"
         },
         {
           "matchId": "100",
           "stage": "quarterfinal",
           "mode": "score",
           "homeTeam": "Argentina",
-          "awayTeam": "Switzerland"
+          "awayTeam": "Switzerland",
+          "homeScore": 2,
+          "awayScore": 0,
+          "predictedAdvancingTeam": "Argentina"
         },
         {
           "matchId": "101",
@@ -433,10 +442,7 @@ window.KNOCKOUT_PREDICTIONS = {
         },
         "duplicateMatchIds": [],
         "incompleteMatchIds": [
-          "97",
-          "98",
-          "99",
-          "100"
+          "97"
         ]
       },
       "bonusAnswers": {
@@ -481,31 +487,31 @@ window.KNOCKOUT_PREDICTIONS = {
         "quarterfinal": [
           {
             "question": "How many matches will go to extra time?",
-            "answer": ""
+            "answer": "0"
           },
           {
             "question": "How many matches will be decided by penalties?",
-            "answer": ""
+            "answer": "0"
           },
           {
             "question": "Which team will score the most goals?",
-            "answer": ""
+            "answer": "Argentina"
           },
           {
             "question": "Total goals scored in the QF (no penalties)",
-            "answer": ""
+            "answer": "6 - 8"
           },
           {
             "question": "Which team will score the fastest goal?",
-            "answer": ""
+            "answer": "Norway"
           },
           {
             "question": "Which team will score the latest goal?",
-            "answer": ""
+            "answer": "Belgium"
           },
           {
             "question": "Team with the biggest winning margin?",
-            "answer": ""
+            "answer": "Argentina"
           },
           {
             "question": "How many yellow cards will be shown?",
@@ -513,7 +519,7 @@ window.KNOCKOUT_PREDICTIONS = {
           },
           {
             "question": "How many red cards will be shown?",
-            "answer": ""
+            "answer": "4"
           }
         ],
         "semifinal": [
@@ -3320,21 +3326,30 @@ window.KNOCKOUT_PREDICTIONS = {
           "stage": "quarterfinal",
           "mode": "score",
           "homeTeam": "Spain",
-          "awayTeam": "Belgium"
+          "awayTeam": "Belgium",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Spain"
         },
         {
           "matchId": "99",
           "stage": "quarterfinal",
           "mode": "score",
           "homeTeam": "Norway",
-          "awayTeam": "England"
+          "awayTeam": "England",
+          "homeScore": 3,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Norway"
         },
         {
           "matchId": "100",
           "stage": "quarterfinal",
           "mode": "score",
           "homeTeam": "Argentina",
-          "awayTeam": "Switzerland"
+          "awayTeam": "Switzerland",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Argentina"
         },
         {
           "matchId": "101",
@@ -3374,10 +3389,7 @@ window.KNOCKOUT_PREDICTIONS = {
         "duplicateMatchIds": [],
         "incompleteMatchIds": [
           "75",
-          "97",
-          "98",
-          "99",
-          "100"
+          "97"
         ]
       },
       "bonusAnswers": {
@@ -3422,39 +3434,39 @@ window.KNOCKOUT_PREDICTIONS = {
         "quarterfinal": [
           {
             "question": "How many matches will go to extra time?",
-            "answer": ""
+            "answer": "2"
           },
           {
             "question": "How many matches will be decided by penalties?",
-            "answer": ""
+            "answer": "0"
           },
           {
             "question": "Which team will score the most goals?",
-            "answer": ""
+            "answer": "Norway"
           },
           {
             "question": "Total goals scored in the QF (no penalties)",
-            "answer": ""
+            "answer": "9 - 10"
           },
           {
             "question": "Which team will score the fastest goal?",
-            "answer": ""
+            "answer": "Norway"
           },
           {
             "question": "Which team will score the latest goal?",
-            "answer": ""
+            "answer": "England"
           },
           {
             "question": "Team with the biggest winning margin?",
-            "answer": ""
+            "answer": "France"
           },
           {
             "question": "How many yellow cards will be shown?",
-            "answer": ""
+            "answer": "5"
           },
           {
             "question": "How many red cards will be shown?",
-            "answer": ""
+            "answer": "1"
           }
         ],
         "semifinal": [

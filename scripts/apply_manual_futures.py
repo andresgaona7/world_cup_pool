@@ -60,7 +60,7 @@ ROUND_KEYS = {
     "round_of_16",
     "quarterfinal",
     "semifinal",
-    "third_place_match",
+    "final",
     "runner_up",
     "champion",
 }
