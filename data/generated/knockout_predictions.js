@@ -2387,9 +2387,9 @@ window.KNOCKOUT_PREDICTIONS = {
           "mode": "score",
           "homeTeam": "France",
           "awayTeam": "Spain",
-          "homeScore": 3,
-          "awayScore": 2,
-          "predictedAdvancingTeam": "France"
+          "homeScore": 2,
+          "awayScore": 3,
+          "predictedAdvancingTeam": "Spain"
         },
         {
           "matchId": "102",
