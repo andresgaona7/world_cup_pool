@@ -1,11 +1,15 @@
-const data = JSON.parse(document.querySelector("#quarterfinal-consensus-data").textContent);
+const dataNode = document.querySelector(
+  "#quarterfinal-consensus-data, #semifinal-consensus-data"
+);
+const data = JSON.parse(dataNode.textContent);
 const consensus = data.consensus;
 const playerCount = consensus.metadata.player_count;
+const stageLabel = consensus.metadata.stage_label || "Knockout";
 
 document.querySelector("#metrics").replaceChildren(
   metric("Players", playerCount),
   metric("Matches", consensus.metadata.match_count),
-  metric("Source", "Quarterfinal workbook")
+  metric("Source", `${stageLabel} workbook`)
 );
 
 document.querySelector("#matchGrid").replaceChildren(

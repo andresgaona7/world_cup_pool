@@ -1,4 +1,4 @@
-.PHONY: build-pool-data build-knockout-predictions build-consensus-predictions build-round-of-32-consensus build-round-of-16-consensus build-quarterfinal-consensus update-official-results update-official-knockout-results apply-manual-futures create-official-checkpoint rebuild-official-checkpoints build-site test
+.PHONY: build-pool-data build-knockout-predictions build-consensus-predictions build-round-of-32-consensus build-round-of-16-consensus build-quarterfinal-consensus build-semifinal-consensus update-official-results update-official-knockout-results apply-manual-futures create-official-checkpoint rebuild-official-checkpoints build-site test
 
 build-pool-data:
 	python3 scripts/build_pool_data.py
@@ -17,6 +17,9 @@ build-round-of-16-consensus:
 
 build-quarterfinal-consensus:
 	python3 scripts/build_quarterfinal_consensus.py
+
+build-semifinal-consensus:
+	python3 scripts/build_semifinal_consensus.py
 
 update-official-results:
 	python3 scripts/update_official_results.py --transport "$${OFFICIAL_RESULTS_TRANSPORT:-auto}"
@@ -39,7 +42,7 @@ build-site:
 	cp index.html styles.css theme.js .nojekyll public/
 	cp -R apps public/
 	cp -R static public/
-	cp data/generated/consensus_predictions.json data/generated/knockout_predictions.js data/generated/official_results.js data/generated/pool_data.js data/generated/round_of_32_consensus.json data/generated/round_of_16_consensus.json data/generated/quarterfinal_consensus.json public/data/generated/
+	cp data/generated/consensus_predictions.json data/generated/knockout_predictions.js data/generated/official_results.js data/generated/pool_data.js data/generated/round_of_32_consensus.json data/generated/round_of_16_consensus.json data/generated/quarterfinal_consensus.json data/generated/semifinal_consensus.json public/data/generated/
 
 test:
 	python3 -m unittest discover -s tests

@@ -22,6 +22,9 @@ data/raw/semifinals.xlsx
 data/raw/knockout_predictions/final.xlsx
   -> scripts/build_knockout_predictions.py
   -> data/generated/knockout_predictions.js
+  -> scripts/build_semifinal_consensus.py
+  -> data/generated/semifinal_consensus.json
+  -> apps/semifinal_consensus/index.html
   -> apps/player_predictions/index.html
   -> apps/score_visualizer/index.html
   -> apps/score_timeline/index.html

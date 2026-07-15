@@ -25,6 +25,7 @@ apps/legacy/                Launcher for archived/support views.
 apps/round_of_32_consensus/ Generated Round of 32 consensus view.
 apps/round_of_16_consensus/ Generated Round of 16 consensus view.
 apps/quarterfinal_consensus/ Generated Quarterfinals consensus view.
+apps/semifinal_consensus/   Generated Semifinals consensus view.
 apps/third_places/          Legacy/support third-place standings view.
 archived_apps/              Older standalone app surfaces not published by default.
 public/                     Ignored GitHub Pages artifact from `make build-site`.
@@ -40,6 +41,7 @@ make build-consensus-predictions
 make build-round-of-32-consensus
 make build-round-of-16-consensus
 make build-quarterfinal-consensus
+make build-semifinal-consensus
 make update-official-results
 make update-official-knockout-results
 make apply-manual-futures
@@ -58,6 +60,7 @@ python3 scripts/build_consensus_predictions.py
 python3 scripts/build_round_of_32_consensus.py
 python3 scripts/build_round_of_16_consensus.py
 python3 scripts/build_quarterfinal_consensus.py
+python3 scripts/build_semifinal_consensus.py
 python3 scripts/update_official_results.py --transport "${OFFICIAL_RESULTS_TRANSPORT:-auto}"
 python3 scripts/update_official_knockout_results.py
 python3 scripts/apply_manual_futures.py
@@ -198,6 +201,10 @@ Round of 16 workbook data.
 `apps/quarterfinal_consensus/index.html` support view from the current
 quarterfinal workbook data, including match consensus, advancing-team
 consensus, and quarterfinal bonus-question consensus.
+`scripts/build_semifinal_consensus.py` generates
+`data/generated/semifinal_consensus.json` and the standalone
+`apps/semifinal_consensus/index.html` support view from the current semifinal
+workbook data, including match, advancing-team, and bonus-question consensus.
 
 `scripts/update_official_results.py` fetches Football-Data standings and writes
 `data/generated/official_results.js`, which is loaded by

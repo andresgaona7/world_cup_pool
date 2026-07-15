@@ -21,6 +21,7 @@ VISUALIZATION_PATH = APP_DIR / "index.html"
 STAGE = "quarterfinal"
 STAGE_LABEL = "Quarterfinals"
 DATA_SCRIPT_ID = "quarterfinal-consensus-data"
+ASSET_PREFIX = ""
 
 COUNTRY_ALIASES = {
     "bosnia": "Bosnia-Herzegovina",
@@ -68,6 +69,8 @@ def build_consensus(knockout_data: dict) -> dict:
             "source_file": str(SOURCE_PATH.relative_to(ROOT)),
             "generated_from": knockout_data.get("generated_from", []),
             "generated_at": datetime.now(timezone.utc).isoformat(),
+            "stage": STAGE,
+            "stage_label": STAGE_LABEL,
             "player_count": player_count,
             "match_count": len(match_ids),
         },
@@ -223,7 +226,7 @@ def render_visualization(consensus: dict) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>World Cup Pool {STAGE_LABEL} Consensus</title>
   <script src="../../theme.js"></script>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="{ASSET_PREFIX}styles.css">
 </head>
 
 <body>
@@ -282,7 +285,7 @@ def render_visualization(consensus: dict) -> str:
   </main>
 
   <script id="{DATA_SCRIPT_ID}" type="application/json">{data_script}</script>
-  <script src="app.js"></script>
+  <script src="{ASSET_PREFIX}app.js"></script>
 </body>
 
 </html>

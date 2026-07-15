@@ -4,9 +4,12 @@
     "generated_from": [
       "data/raw/round_of_32.xlsx",
       "data/raw/round_of_16.xlsx",
-      "data/raw/quaterfinals.xlsx"
+      "data/raw/quaterfinals.xlsx",
+      "data/raw/semifinals.xlsx"
     ],
-    "generated_at": "2026-07-11T03:20:07.690107+00:00",
+    "generated_at": "2026-07-15T02:41:45.970915+00:00",
+    "stage": "quarterfinal",
+    "stage_label": "Quarterfinals",
     "player_count": 11,
     "match_count": 4
   },
@@ -85,7 +88,11 @@
       "advancingTeamConsensus": [
         {
           "value": "Spain",
-          "votes": 9
+          "votes": 7
+        },
+        {
+          "value": "Blank",
+          "votes": 2
         },
         {
           "value": "Belgium",
@@ -95,7 +102,11 @@
       "scoreConsensus": [
         {
           "value": "2-1",
-          "votes": 5
+          "votes": 3
+        },
+        {
+          "value": "Blank",
+          "votes": 2
         },
         {
           "value": "2-0",
@@ -133,7 +144,11 @@
         },
         {
           "value": "Norway",
-          "votes": 5
+          "votes": 3
+        },
+        {
+          "value": "Blank",
+          "votes": 2
         }
       ],
       "scoreConsensus": [
@@ -142,12 +157,12 @@
           "votes": 3
         },
         {
-          "value": "2-2",
+          "value": "Blank",
           "votes": 2
         },
         {
-          "value": "1-0",
-          "votes": 1
+          "value": "2-2",
+          "votes": 2
         },
         {
           "value": "2-1",
@@ -155,10 +170,6 @@
         },
         {
           "value": "2-3",
-          "votes": 1
-        },
-        {
-          "value": "3-2",
           "votes": 1
         },
         {
@@ -194,16 +205,16 @@
       "advancingTeamConsensus": [
         {
           "value": "Argentina",
-          "votes": 11
+          "votes": 9
+        },
+        {
+          "value": "Blank",
+          "votes": 2
         }
       ],
       "scoreConsensus": [
         {
-          "value": "2-1",
-          "votes": 3
-        },
-        {
-          "value": "2-0",
+          "value": "Blank",
           "votes": 2
         },
         {
@@ -213,6 +224,14 @@
         {
           "value": "1-1",
           "votes": 2
+        },
+        {
+          "value": "2-1",
+          "votes": 2
+        },
+        {
+          "value": "2-0",
+          "votes": 1
         },
         {
           "value": "3-0",
@@ -234,11 +253,11 @@
   "advancing_teams": [
     {
       "value": "Argentina",
-      "votes": 11
+      "votes": 9
     },
     {
       "value": "Spain",
-      "votes": 9
+      "votes": 7
     },
     {
       "value": "France",
@@ -250,7 +269,7 @@
     },
     {
       "value": "Norway",
-      "votes": 5
+      "votes": 3
     },
     {
       "value": "Morocco",
@@ -267,19 +286,15 @@
       "answers": [
         {
           "value": "2",
-          "votes": 7
+          "votes": 6
+        },
+        {
+          "value": "Blank",
+          "votes": 3
         },
         {
           "value": "1",
           "votes": 2
-        },
-        {
-          "value": "0",
-          "votes": 1
-        },
-        {
-          "value": "Blank",
-          "votes": 1
         }
       ]
     },
@@ -287,20 +302,20 @@
       "question": "How many matches will be decided by penalties?",
       "answers": [
         {
-          "value": "0",
-          "votes": 4
-        },
-        {
           "value": "1",
           "votes": 4
         },
         {
-          "value": "2",
+          "value": "Blank",
+          "votes": 3
+        },
+        {
+          "value": "0",
           "votes": 2
         },
         {
-          "value": "Blank",
-          "votes": 1
+          "value": "2",
+          "votes": 2
         }
       ]
     },
@@ -312,8 +327,12 @@
           "votes": 4
         },
         {
-          "value": "Argentina",
+          "value": "Blank",
           "votes": 3
+        },
+        {
+          "value": "Argentina",
+          "votes": 2
         },
         {
           "value": "Spain",
@@ -321,14 +340,6 @@
         },
         {
           "value": "England",
-          "votes": 1
-        },
-        {
-          "value": "Norway",
-          "votes": 1
-        },
-        {
-          "value": "Blank",
           "votes": 1
         }
       ]
@@ -341,16 +352,12 @@
           "votes": 6
         },
         {
-          "value": "9 - 10",
+          "value": "Blank",
           "votes": 3
         },
         {
-          "value": "6 - 8",
-          "votes": 1
-        },
-        {
-          "value": "Blank",
-          "votes": 1
+          "value": "9 - 10",
+          "votes": 2
         }
       ]
     },
@@ -358,12 +365,12 @@
       "question": "Which team will score the fastest goal?",
       "answers": [
         {
-          "value": "France",
+          "value": "Blank",
           "votes": 3
         },
         {
-          "value": "Norway",
-          "votes": 2
+          "value": "France",
+          "votes": 3
         },
         {
           "value": "Spain",
@@ -372,10 +379,6 @@
         {
           "value": "Morocco",
           "votes": 2
-        },
-        {
-          "value": "Blank",
-          "votes": 1
         },
         {
           "value": "England",
@@ -388,22 +391,18 @@
       "answers": [
         {
           "value": "England",
-          "votes": 5
+          "votes": 4
+        },
+        {
+          "value": "Blank",
+          "votes": 3
         },
         {
           "value": "Argentina",
           "votes": 3
         },
         {
-          "value": "Belgium",
-          "votes": 1
-        },
-        {
           "value": "Norway",
-          "votes": 1
-        },
-        {
-          "value": "Blank",
           "votes": 1
         }
       ]
@@ -412,19 +411,19 @@
       "question": "Team with the biggest winning margin?",
       "answers": [
         {
-          "value": "Argentina",
-          "votes": 4
-        },
-        {
           "value": "Spain",
           "votes": 4
         },
         {
-          "value": "France",
-          "votes": 2
+          "value": "Blank",
+          "votes": 3
         },
         {
-          "value": "Blank",
+          "value": "Argentina",
+          "votes": 3
+        },
+        {
+          "value": "France",
           "votes": 1
         }
       ]
@@ -438,11 +437,7 @@
         },
         {
           "value": "Blank",
-          "votes": 2
-        },
-        {
-          "value": "5",
-          "votes": 1
+          "votes": 3
         },
         {
           "value": "8",
@@ -459,22 +454,18 @@
       "answers": [
         {
           "value": "1",
-          "votes": 6
+          "votes": 5
+        },
+        {
+          "value": "Blank",
+          "votes": 3
         },
         {
           "value": "2",
           "votes": 2
         },
         {
-          "value": "4",
-          "votes": 1
-        },
-        {
           "value": "0",
-          "votes": 1
-        },
-        {
-          "value": "Blank",
           "votes": 1
         }
       ]
