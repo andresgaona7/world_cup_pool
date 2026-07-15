@@ -25,10 +25,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Run regression tests
-        run: make test
       - name: Build public artifact
         run: make build-site
+      - name: Run regression tests
+        run: make test
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
