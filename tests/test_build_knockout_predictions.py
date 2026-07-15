@@ -379,6 +379,49 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
             },
         )
 
+    def test_extracts_hyphenated_semifinal_layout_and_bonus_answers(self):
+        cells = {
+            (7, 3): "Semi final",
+            (8, 3): "Unrelated future answer",
+            (8, 6): "4",
+            (9, 3): "Quarter final",
+            (9, 6): "4",
+            (83, 13): "Semi-finals2",
+            (83, 17): "Penalty",
+            (84, 13): "France",
+            (84, 14): "2",
+            (84, 15): "1",
+            (84, 16): "Spain",
+            (85, 13): "England",
+            (85, 14): "1",
+            (85, 15): "1",
+            (85, 16): "Argentina",
+            (85, 17): "4",
+            (85, 18): "3",
+            (87, 13): "Bonus questions ( ? points each )",
+            (88, 13): "How many matches will go to extra time?",
+            (88, 17): "1",
+            (89, 13): "Total goals scored in the QF (no penalties)",
+            (89, 17): "4 - 5",
+        }
+
+        matches = build_knockout_predictions.extract_predictions(
+            cells,
+            default_stage="semifinal",
+        )
+        answers = build_knockout_predictions.extract_bonus_answers(cells)
+
+        self.assertEqual([match["matchId"] for match in matches], ["101", "102"])
+        self.assertEqual(matches[0]["predictedAdvancingTeam"], "France")
+        self.assertEqual(matches[1]["predictedAdvancingTeam"], "England")
+        self.assertEqual(
+            answers["semifinal"],
+            [
+                {"question": "How many matches will go to extra time?", "answer": "1"},
+                {"question": "Total goals scored in the SF (no penalties)", "answer": "4 - 5"},
+            ],
+        )
+
     def test_merges_player_predictions_across_stage_workbooks(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)

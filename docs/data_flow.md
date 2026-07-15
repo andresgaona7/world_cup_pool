@@ -11,18 +11,19 @@ data/raw/group_stage_and_future_predictions.xlsx
 
 Knockout predictions follow the same raw-workbook to generated-browser-data
 pattern. Each knockout round is submitted as a separate workbook. Those source
-workbooks are not available yet, so the builder currently writes an empty
-artifact that keeps the static apps loadable:
+workbooks are merged into one browser artifact. The active visual workbook
+paths are:
 
 ```text
-data/raw/knockout_predictions/round_of_32.xlsx
-data/raw/knockout_predictions/round_of_16.xlsx
-data/raw/knockout_predictions/quarterfinals.xlsx
-data/raw/knockout_predictions/semifinals.xlsx
+data/raw/round_of_32.xlsx
+data/raw/round_of_16.xlsx
+data/raw/quaterfinals.xlsx
+data/raw/semifinals.xlsx
 data/raw/knockout_predictions/final.xlsx
   -> scripts/build_knockout_predictions.py
   -> data/generated/knockout_predictions.js
-  -> index.html
+  -> apps/player_predictions/index.html
+  -> apps/score_visualizer/index.html
   -> apps/score_timeline/index.html
 ```
 

@@ -16,6 +16,7 @@ OUTPUT_PATH = ROOT / "data" / "generated" / "knockout_predictions.js"
 ROUND_OF_32_FALLBACK_PATH = ROOT / "data" / "raw" / "round_of_32.xlsx"
 ROUND_OF_16_FALLBACK_PATH = ROOT / "data" / "raw" / "round_of_16.xlsx"
 QUARTERFINAL_FALLBACK_PATH = ROOT / "data" / "raw" / "quaterfinals.xlsx"
+SEMIFINAL_FALLBACK_PATH = ROOT / "data" / "raw" / "semifinals.xlsx"
 
 MAIN_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -48,7 +49,9 @@ WORKBOOK_PATHS = {
     "quarterfinal": QUARTERFINAL_FALLBACK_PATH
     if QUARTERFINAL_FALLBACK_PATH.exists()
     else RAW_DIR / "quarterfinals.xlsx",
-    "semifinal": RAW_DIR / "semifinals.xlsx",
+    "semifinal": SEMIFINAL_FALLBACK_PATH
+    if SEMIFINAL_FALLBACK_PATH.exists()
+    else RAW_DIR / "semifinals.xlsx",
     "final": RAW_DIR / "final.xlsx",
 }
 
@@ -94,6 +97,9 @@ STAGE_ALIASES = {
     "semifinals": "semifinal",
     "semi final": "semifinal",
     "semi finals": "semifinal",
+    "semi-final": "semifinal",
+    "semi-finals": "semifinal",
+    "semi-finals2": "semifinal",
     "final": "final",
 }
 
@@ -190,6 +196,12 @@ def build_knockout_data(paths: dict[str, Path] | Path) -> dict[str, object]:
                 sheet["cells"],
                 ignored_cells=sheet.get("ignored_cells", set()),
             )
+            if stage:
+                bonus_answers = {
+                    bonus_stage: answers
+                    for bonus_stage, answers in bonus_answers.items()
+                    if bonus_stage == stage
+                }
             for bonus_stage, answers in bonus_answers.items():
                 player["bonusAnswers"][bonus_stage] = answers
 
@@ -672,7 +684,8 @@ def extract_bonus_answers(
             heading_row + 1 + ROUND_OF_32_BONUS_QUESTION_ROWS,
         ):
             question = canonical_bonus_question(
-                clean_text(cells.get((row, heading_column), ""))
+                clean_text(cells.get((row, heading_column), "")),
+                stage=stage,
             )
             if not question:
                 continue
@@ -687,8 +700,13 @@ def extract_bonus_answers(
     return answers_by_stage
 
 
-def canonical_bonus_question(question: str) -> str:
-    return ROUND_OF_32_BONUS_QUESTION_ALIASES.get(question, question)
+def canonical_bonus_question(question: str, stage: str = "") -> str:
+    canonical = ROUND_OF_32_BONUS_QUESTION_ALIASES.get(question, question)
+    if stage == "semifinal" and normalize_header(canonical).startswith(
+        "total goals scored in the qf"
+    ):
+        return re.sub(r"\bQF\b", "SF", canonical, flags=re.IGNORECASE)
+    return canonical
 
 
 def predicted_advancing_team(
@@ -793,6 +811,12 @@ def find_visual_stage_heading(
         for (row, column), value in sorted(cells.items())
         if normalize_stage(value) == stage
     ]
+    candidates.sort(
+        key=lambda position: normalize_header(
+            cells.get((position[0], position[1] + 4), "")
+        )
+        != "penalty"
+    )
     for row, column in candidates:
         fixture_rows = 0
         for offset in range(1, len(match_ids) + 1):

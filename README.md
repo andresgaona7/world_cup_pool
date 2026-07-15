@@ -160,13 +160,13 @@ The knockout workbooks are the source of truth for knockout picks once those
 files exist. `scripts/build_knockout_predictions.py` currently accepts the
 visual Round of 32 workbook at `data/raw/round_of_32.xlsx`, the visual Round of
 16 workbook at `data/raw/round_of_16.xlsx`, the visual quarterfinal workbook at
-`data/raw/quaterfinals.xlsx`, and optional remaining-stage files in
-`data/raw/knockout_predictions/`: `quarterfinals.xlsx`, `semifinals.xlsx`, and
-`final.xlsx`. It merges the workbooks that exist into
-`data/generated/knockout_predictions.js`, which is loaded by the player picks
-and score pages. The current active prediction workflow has moved from Round
-of 16 to Quarterfinals, so refresh `data/raw/quaterfinals.xlsx` and run
-`make build-knockout-predictions` before scoring new quarterfinal picks. Until
+`data/raw/quaterfinals.xlsx`, the visual semifinal workbook at
+`data/raw/semifinals.xlsx`, and an optional final-stage file at
+`data/raw/knockout_predictions/final.xlsx`. It merges the workbooks that exist
+into `data/generated/knockout_predictions.js`, which is loaded by the player
+picks and score pages. The current active prediction workflow has moved to the
+Semifinals, so refresh `data/raw/semifinals.xlsx` and run
+`make build-knockout-predictions` before scoring new semifinal picks. Until
 any workbook is available, the builder writes a valid empty prediction artifact.
 The expected match counts are 16, 8, 4, 2, and 1, for 31 predicted matches
 total. Standard player sheets need a `Winner` or `Advancing team` column;
@@ -176,11 +176,12 @@ are treated as blank/NaN and the score/points column is ignored.
 
 The quarterfinal workbook currently uses the filename
 `data/raw/quaterfinals.xlsx`. The builder treats it as the `quarterfinal`
-stage, extracts four match picks per player, and collects the stage-specific
-bonus block under `bonusAnswers.quarterfinal`. The player-predictions page
-renders those picks in the Quarterfinals section and shows the quarterfinal
-bonus questions below that stage. Blank workbook bonus cells are preserved as
-blank answers in the generated browser data.
+stage. The semifinal workbook uses `data/raw/semifinals.xlsx` and is treated as
+the `semifinal` stage. Each visual workbook contributes only its own stage's
+matches and bonus block, under `bonusAnswers.<stage>`. The player-predictions
+page renders the picks and bonus questions in the matching stage section.
+Blank workbook bonus cells are preserved as blank answers in the generated
+browser data.
 
 `scripts/build_consensus_predictions.py` reshapes `pool_data.js` into a
 consensus JSON export and the standalone `apps/consensus_predictions/index.html`.

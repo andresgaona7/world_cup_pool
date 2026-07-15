@@ -26,7 +26,7 @@ const KNOCKOUT_BASE_POINTS = {
 };
 const KNOCKOUT_STAGE_ORDER = Object.fromEntries(Object.keys(KNOCKOUT_BASE_POINTS).map((stage, index) => [stage, index]));
 const KNOCKOUT_PERFECT_BONUS_STAGES = new Set(["round_of_32", "round_of_16", "quarterfinal", "semifinal"]);
-const KNOCKOUT_BONUS_QUESTION_STAGES = new Set(["round_of_32", "quarterfinal"]);
+const KNOCKOUT_BONUS_QUESTION_STAGES = new Set(["round_of_32", "quarterfinal", "semifinal"]);
 const KNOCKOUT_STAGE_MATCH_COUNTS = {
   round_of_32: 16,
   round_of_16: 8,

@@ -21,8 +21,8 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "stage": "semifinal",
       "label": "Semifinals",
-      "path": "data/raw/knockout_predictions/semifinals.xlsx",
-      "available": false
+      "path": "data/raw/semifinals.xlsx",
+      "available": true
     },
     {
       "stage": "final",
@@ -34,7 +34,8 @@ window.KNOCKOUT_PREDICTIONS = {
   "generated_from": [
     "data/raw/round_of_32.xlsx",
     "data/raw/round_of_16.xlsx",
-    "data/raw/quaterfinals.xlsx"
+    "data/raw/quaterfinals.xlsx",
+    "data/raw/semifinals.xlsx"
   ],
   "sourceName": "Generated knockout predictions",
   "stages": [
@@ -111,7 +112,8 @@ window.KNOCKOUT_PREDICTIONS = {
       "sheets": {
         "round_of_32": "Amal",
         "round_of_16": "Amal",
-        "quarterfinal": "Amal"
+        "quarterfinal": "Amal",
+        "semifinal": "Amal"
       },
       "matches": [
         {
@@ -376,50 +378,65 @@ window.KNOCKOUT_PREDICTIONS = {
           "stage": "quarterfinal",
           "mode": "score",
           "homeTeam": "Spain",
-          "awayTeam": "Belgium",
-          "homeScore": 2,
-          "awayScore": 1,
-          "predictedAdvancingTeam": "Spain"
+          "awayTeam": "Belgium"
         },
         {
           "matchId": "99",
           "stage": "quarterfinal",
           "mode": "score",
           "homeTeam": "Norway",
-          "awayTeam": "England",
-          "homeScore": 1,
-          "awayScore": 0,
-          "predictedAdvancingTeam": "Norway"
+          "awayTeam": "England"
         },
         {
           "matchId": "100",
           "stage": "quarterfinal",
           "mode": "score",
           "homeTeam": "Argentina",
-          "awayTeam": "Switzerland",
+          "awayTeam": "Switzerland"
+        },
+        {
+          "matchId": "101",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "Spain",
           "homeScore": 2,
-          "awayScore": 0,
-          "predictedAdvancingTeam": "Argentina"
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "102",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "England",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 2,
+          "homePenaltyScore": 4,
+          "awayPenaltyScore": 3,
+          "predictedAdvancingTeam": "England"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 28,
+        "matchCount": 30,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
-          "semifinal": 0,
+          "semifinal": 2,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "semifinal": 2,
           "final": 1
         },
         "duplicateMatchIds": [],
         "incompleteMatchIds": [
-          "97"
+          "97",
+          "98",
+          "99",
+          "100"
         ]
       },
       "bonusAnswers": {
@@ -464,31 +481,31 @@ window.KNOCKOUT_PREDICTIONS = {
         "quarterfinal": [
           {
             "question": "How many matches will go to extra time?",
-            "answer": "0"
+            "answer": ""
           },
           {
             "question": "How many matches will be decided by penalties?",
-            "answer": "0"
+            "answer": ""
           },
           {
             "question": "Which team will score the most goals?",
-            "answer": "Argentina"
+            "answer": ""
           },
           {
             "question": "Total goals scored in the QF (no penalties)",
-            "answer": "6 - 8"
+            "answer": ""
           },
           {
             "question": "Which team will score the fastest goal?",
-            "answer": "Norway"
+            "answer": ""
           },
           {
             "question": "Which team will score the latest goal?",
-            "answer": "Belgium"
+            "answer": ""
           },
           {
             "question": "Team with the biggest winning margin?",
-            "answer": "Argentina"
+            "answer": ""
           },
           {
             "question": "How many yellow cards will be shown?",
@@ -496,7 +513,45 @@ window.KNOCKOUT_PREDICTIONS = {
           },
           {
             "question": "How many red cards will be shown?",
-            "answer": "4"
+            "answer": ""
+          }
+        ],
+        "semifinal": [
+          {
+            "question": "How many matches will go to extra time?",
+            "answer": "1.0"
+          },
+          {
+            "question": "How many matches will be decided by penalties?",
+            "answer": "1.0"
+          },
+          {
+            "question": "Which team will score the most goals?",
+            "answer": "France"
+          },
+          {
+            "question": "Total goals scored in the SF (no penalties)",
+            "answer": "4 - 5"
+          },
+          {
+            "question": "Which team will score the fastest goal?",
+            "answer": "France"
+          },
+          {
+            "question": "Which team will score the latest goal?",
+            "answer": "England"
+          },
+          {
+            "question": "Team with the biggest winning margin?",
+            "answer": "France"
+          },
+          {
+            "question": "How many yellow cards will be shown?",
+            "answer": "4.0"
+          },
+          {
+            "question": "How many red cards will be shown?",
+            "answer": "0.0"
           }
         ]
       },
@@ -544,7 +599,8 @@ window.KNOCKOUT_PREDICTIONS = {
       "sheets": {
         "round_of_32": "Daniel",
         "round_of_16": "Daniel",
-        "quarterfinal": "Daniel"
+        "quarterfinal": "Daniel",
+        "semifinal": "Daniel"
       },
       "matches": [
         {
@@ -840,21 +896,42 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 1,
           "awayScore": 0,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "101",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "Spain",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 4,
+          "awayPenaltyScore": 3,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "102",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "England",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "England"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 28,
+        "matchCount": 30,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
-          "semifinal": 0,
+          "semifinal": 2,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "semifinal": 2,
           "final": 1
         },
         "duplicateMatchIds": [],
@@ -936,6 +1013,44 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "1.0"
           }
+        ],
+        "semifinal": [
+          {
+            "question": "How many matches will go to extra time?",
+            "answer": "1.0"
+          },
+          {
+            "question": "How many matches will be decided by penalties?",
+            "answer": "1.0"
+          },
+          {
+            "question": "Which team will score the most goals?",
+            "answer": "England"
+          },
+          {
+            "question": "Total goals scored in the SF (no penalties)",
+            "answer": "4 - 5"
+          },
+          {
+            "question": "Which team will score the fastest goal?",
+            "answer": "England"
+          },
+          {
+            "question": "Which team will score the latest goal?",
+            "answer": "Spain"
+          },
+          {
+            "question": "Team with the biggest winning margin?",
+            "answer": "England"
+          },
+          {
+            "question": "How many yellow cards will be shown?",
+            "answer": "7.0"
+          },
+          {
+            "question": "How many red cards will be shown?",
+            "answer": "0.0"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -982,7 +1097,8 @@ window.KNOCKOUT_PREDICTIONS = {
       "sheets": {
         "round_of_32": "Elwebo con AI-ChatGPT",
         "round_of_16": "Elwebo con AI-ChatGPT",
-        "quarterfinal": "Elwebo con AI-ChatGPT"
+        "quarterfinal": "Elwebo con AI-ChatGPT",
+        "semifinal": "Elwebo con AI-ChatGPT"
       },
       "matches": [
         {
@@ -1276,21 +1392,42 @@ window.KNOCKOUT_PREDICTIONS = {
           "homePenaltyScore": 4,
           "awayPenaltyScore": 2,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "101",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "Spain",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "102",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "England",
+          "awayTeam": "Argentina",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 3,
+          "awayPenaltyScore": 4,
+          "predictedAdvancingTeam": "Argentina"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 28,
+        "matchCount": 30,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
-          "semifinal": 0,
+          "semifinal": 2,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "semifinal": 2,
           "final": 1
         },
         "duplicateMatchIds": [],
@@ -1372,6 +1509,44 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "0.0"
           }
+        ],
+        "semifinal": [
+          {
+            "question": "How many matches will go to extra time?",
+            "answer": "2.0"
+          },
+          {
+            "question": "How many matches will be decided by penalties?",
+            "answer": "1.0"
+          },
+          {
+            "question": "Which team will score the most goals?",
+            "answer": "France"
+          },
+          {
+            "question": "Total goals scored in the SF (no penalties)",
+            "answer": "4 - 5"
+          },
+          {
+            "question": "Which team will score the fastest goal?",
+            "answer": "France"
+          },
+          {
+            "question": "Which team will score the latest goal?",
+            "answer": "France"
+          },
+          {
+            "question": "Team with the biggest winning margin?",
+            "answer": "France"
+          },
+          {
+            "question": "How many yellow cards will be shown?",
+            "answer": "> 8"
+          },
+          {
+            "question": "How many red cards will be shown?",
+            "answer": "0.0"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -1418,7 +1593,8 @@ window.KNOCKOUT_PREDICTIONS = {
       "sheets": {
         "round_of_32": "Elwebo Lavenganza",
         "round_of_16": "Elwebo Lavenganza",
-        "quarterfinal": "Elwebo Lavenganza"
+        "quarterfinal": "Elwebo Lavenganza",
+        "semifinal": "Elwebo Lavenganza"
       },
       "matches": [
         {
@@ -1706,21 +1882,40 @@ window.KNOCKOUT_PREDICTIONS = {
           "homePenaltyScore": 4,
           "awayPenaltyScore": 2,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "101",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "Spain",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Spain"
+        },
+        {
+          "matchId": "102",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "England",
+          "awayTeam": "Argentina",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Argentina"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 28,
+        "matchCount": 30,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
-          "semifinal": 0,
+          "semifinal": 2,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "semifinal": 2,
           "final": 1
         },
         "duplicateMatchIds": [],
@@ -1802,6 +1997,44 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "1.0"
           }
+        ],
+        "semifinal": [
+          {
+            "question": "How many matches will go to extra time?",
+            "answer": "1.0"
+          },
+          {
+            "question": "How many matches will be decided by penalties?",
+            "answer": "0.0"
+          },
+          {
+            "question": "Which team will score the most goals?",
+            "answer": "Spain"
+          },
+          {
+            "question": "Total goals scored in the SF (no penalties)",
+            "answer": "6 - 7"
+          },
+          {
+            "question": "Which team will score the fastest goal?",
+            "answer": "France"
+          },
+          {
+            "question": "Which team will score the latest goal?",
+            "answer": "Argentina"
+          },
+          {
+            "question": "Team with the biggest winning margin?",
+            "answer": "Spain"
+          },
+          {
+            "question": "How many yellow cards will be shown?",
+            "answer": "> 8"
+          },
+          {
+            "question": "How many red cards will be shown?",
+            "answer": "1.0"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -1848,7 +2081,8 @@ window.KNOCKOUT_PREDICTIONS = {
       "sheets": {
         "round_of_32": "Elwebo + Gemini",
         "round_of_16": "Elwebo + Gemini",
-        "quarterfinal": "Elwebo + Gemini"
+        "quarterfinal": "Elwebo + Gemini",
+        "semifinal": "Elwebo + Gemini"
       },
       "matches": [
         {
@@ -2140,21 +2374,42 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 1,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "101",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "Spain",
+          "homeScore": 3,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "102",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "England",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 2,
+          "homePenaltyScore": 3,
+          "awayPenaltyScore": 4,
+          "predictedAdvancingTeam": "Argentina"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 28,
+        "matchCount": 30,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
-          "semifinal": 0,
+          "semifinal": 2,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "semifinal": 2,
           "final": 1
         },
         "duplicateMatchIds": [],
@@ -2236,6 +2491,44 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "1.0"
           }
+        ],
+        "semifinal": [
+          {
+            "question": "How many matches will go to extra time?",
+            "answer": "1.0"
+          },
+          {
+            "question": "How many matches will be decided by penalties?",
+            "answer": "1.0"
+          },
+          {
+            "question": "Which team will score the most goals?",
+            "answer": "France"
+          },
+          {
+            "question": "Total goals scored in the SF (no penalties)",
+            "answer": "> 7"
+          },
+          {
+            "question": "Which team will score the fastest goal?",
+            "answer": "France"
+          },
+          {
+            "question": "Which team will score the latest goal?",
+            "answer": "England"
+          },
+          {
+            "question": "Team with the biggest winning margin?",
+            "answer": "France"
+          },
+          {
+            "question": "How many yellow cards will be shown?",
+            "answer": "> 8"
+          },
+          {
+            "question": "How many red cards will be shown?",
+            "answer": "1.0"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -2282,7 +2575,8 @@ window.KNOCKOUT_PREDICTIONS = {
       "sheets": {
         "round_of_32": "Emi",
         "round_of_16": "Emi",
-        "quarterfinal": "Emi"
+        "quarterfinal": "Emi",
+        "semifinal": "Emi"
       },
       "matches": [
         {
@@ -2566,21 +2860,40 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 1,
           "awayScore": 0,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "101",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "Spain",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "102",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "England",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "England"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 28,
+        "matchCount": 30,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
-          "semifinal": 0,
+          "semifinal": 2,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "semifinal": 2,
           "final": 1
         },
         "duplicateMatchIds": [],
@@ -2662,6 +2975,44 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "1.0"
           }
+        ],
+        "semifinal": [
+          {
+            "question": "How many matches will go to extra time?",
+            "answer": "1.0"
+          },
+          {
+            "question": "How many matches will be decided by penalties?",
+            "answer": "0.0"
+          },
+          {
+            "question": "Which team will score the most goals?",
+            "answer": "France"
+          },
+          {
+            "question": "Total goals scored in the SF (no penalties)",
+            "answer": "6 - 7"
+          },
+          {
+            "question": "Which team will score the fastest goal?",
+            "answer": "France"
+          },
+          {
+            "question": "Which team will score the latest goal?",
+            "answer": "Argentina"
+          },
+          {
+            "question": "Team with the biggest winning margin?",
+            "answer": "France"
+          },
+          {
+            "question": "How many yellow cards will be shown?",
+            "answer": "> 8"
+          },
+          {
+            "question": "How many red cards will be shown?",
+            "answer": "0.0"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -2708,7 +3059,8 @@ window.KNOCKOUT_PREDICTIONS = {
       "sheets": {
         "round_of_32": "Irina",
         "round_of_16": "Irina",
-        "quarterfinal": "Irina"
+        "quarterfinal": "Irina",
+        "semifinal": "Irina"
       },
       "matches": [
         {
@@ -2968,51 +3320,64 @@ window.KNOCKOUT_PREDICTIONS = {
           "stage": "quarterfinal",
           "mode": "score",
           "homeTeam": "Spain",
-          "awayTeam": "Belgium",
-          "homeScore": 2,
-          "awayScore": 1,
-          "predictedAdvancingTeam": "Spain"
+          "awayTeam": "Belgium"
         },
         {
           "matchId": "99",
           "stage": "quarterfinal",
           "mode": "score",
           "homeTeam": "Norway",
-          "awayTeam": "England",
-          "homeScore": 3,
-          "awayScore": 2,
-          "predictedAdvancingTeam": "Norway"
+          "awayTeam": "England"
         },
         {
           "matchId": "100",
           "stage": "quarterfinal",
           "mode": "score",
           "homeTeam": "Argentina",
-          "awayTeam": "Switzerland",
+          "awayTeam": "Switzerland"
+        },
+        {
+          "matchId": "101",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "Spain",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Spain"
+        },
+        {
+          "matchId": "102",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "England",
+          "awayTeam": "Argentina",
           "homeScore": 2,
-          "awayScore": 1,
+          "awayScore": 3,
           "predictedAdvancingTeam": "Argentina"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 28,
+        "matchCount": 30,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
-          "semifinal": 0,
+          "semifinal": 2,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "semifinal": 2,
           "final": 1
         },
         "duplicateMatchIds": [],
         "incompleteMatchIds": [
           "75",
-          "97"
+          "97",
+          "98",
+          "99",
+          "100"
         ]
       },
       "bonusAnswers": {
@@ -3057,39 +3422,77 @@ window.KNOCKOUT_PREDICTIONS = {
         "quarterfinal": [
           {
             "question": "How many matches will go to extra time?",
-            "answer": "2"
+            "answer": ""
           },
           {
             "question": "How many matches will be decided by penalties?",
-            "answer": "0"
+            "answer": ""
           },
           {
             "question": "Which team will score the most goals?",
-            "answer": "Norway"
+            "answer": ""
           },
           {
             "question": "Total goals scored in the QF (no penalties)",
-            "answer": "9 - 10"
+            "answer": ""
           },
           {
             "question": "Which team will score the fastest goal?",
-            "answer": "Norway"
+            "answer": ""
           },
           {
             "question": "Which team will score the latest goal?",
-            "answer": "England"
+            "answer": ""
           },
           {
             "question": "Team with the biggest winning margin?",
-            "answer": "France"
+            "answer": ""
           },
           {
             "question": "How many yellow cards will be shown?",
-            "answer": "5"
+            "answer": ""
           },
           {
             "question": "How many red cards will be shown?",
-            "answer": "1"
+            "answer": ""
+          }
+        ],
+        "semifinal": [
+          {
+            "question": "How many matches will go to extra time?",
+            "answer": "1.0"
+          },
+          {
+            "question": "How many matches will be decided by penalties?",
+            "answer": "1.0"
+          },
+          {
+            "question": "Which team will score the most goals?",
+            "answer": "Argentina"
+          },
+          {
+            "question": "Total goals scored in the SF (no penalties)",
+            "answer": "6 - 7"
+          },
+          {
+            "question": "Which team will score the fastest goal?",
+            "answer": "England"
+          },
+          {
+            "question": "Which team will score the latest goal?",
+            "answer": "Spain"
+          },
+          {
+            "question": "Team with the biggest winning margin?",
+            "answer": "Argentina"
+          },
+          {
+            "question": "How many yellow cards will be shown?",
+            "answer": "6.0"
+          },
+          {
+            "question": "How many red cards will be shown?",
+            "answer": "3.0"
           }
         ]
       },
@@ -3137,7 +3540,8 @@ window.KNOCKOUT_PREDICTIONS = {
       "sheets": {
         "round_of_32": "jjpro",
         "round_of_16": "jjpro",
-        "quarterfinal": "jjpro"
+        "quarterfinal": "jjpro",
+        "semifinal": "jjpro"
       },
       "matches": [
         {
@@ -3417,21 +3821,40 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 0,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "101",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "Spain",
+          "homeScore": 3,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "102",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "England",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "England"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 28,
+        "matchCount": 30,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
-          "semifinal": 0,
+          "semifinal": 2,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "semifinal": 2,
           "final": 1
         },
         "duplicateMatchIds": [],
@@ -3516,6 +3939,44 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": ""
           }
+        ],
+        "semifinal": [
+          {
+            "question": "How many matches will go to extra time?",
+            "answer": "0.0"
+          },
+          {
+            "question": "How many matches will be decided by penalties?",
+            "answer": "0.0"
+          },
+          {
+            "question": "Which team will score the most goals?",
+            "answer": "France"
+          },
+          {
+            "question": "Total goals scored in the SF (no penalties)",
+            "answer": "2 - 3"
+          },
+          {
+            "question": "Which team will score the fastest goal?",
+            "answer": "France"
+          },
+          {
+            "question": "Which team will score the latest goal?",
+            "answer": "England"
+          },
+          {
+            "question": "Team with the biggest winning margin?",
+            "answer": "France"
+          },
+          {
+            "question": "How many yellow cards will be shown?",
+            "answer": "5.0"
+          },
+          {
+            "question": "How many red cards will be shown?",
+            "answer": "0.0"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -3562,7 +4023,8 @@ window.KNOCKOUT_PREDICTIONS = {
       "sheets": {
         "round_of_32": "Llucho",
         "round_of_16": "Llucho",
-        "quarterfinal": "Llucho"
+        "quarterfinal": "Llucho",
+        "semifinal": "Llucho"
       },
       "matches": [
         {
@@ -3856,21 +4318,42 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 1,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "101",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "Spain",
+          "homeScore": 3,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "102",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "England",
+          "awayTeam": "Argentina",
+          "homeScore": 1,
+          "awayScore": 1,
+          "homePenaltyScore": 4,
+          "awayPenaltyScore": 3,
+          "predictedAdvancingTeam": "England"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 28,
+        "matchCount": 30,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
-          "semifinal": 0,
+          "semifinal": 2,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "semifinal": 2,
           "final": 1
         },
         "duplicateMatchIds": [],
@@ -3952,6 +4435,44 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "1.0"
           }
+        ],
+        "semifinal": [
+          {
+            "question": "How many matches will go to extra time?",
+            "answer": "1.0"
+          },
+          {
+            "question": "How many matches will be decided by penalties?",
+            "answer": "1.0"
+          },
+          {
+            "question": "Which team will score the most goals?",
+            "answer": "France"
+          },
+          {
+            "question": "Total goals scored in the SF (no penalties)",
+            "answer": "6 - 7"
+          },
+          {
+            "question": "Which team will score the fastest goal?",
+            "answer": "France"
+          },
+          {
+            "question": "Which team will score the latest goal?",
+            "answer": "France"
+          },
+          {
+            "question": "Team with the biggest winning margin?",
+            "answer": "France"
+          },
+          {
+            "question": "How many yellow cards will be shown?",
+            "answer": "3.0"
+          },
+          {
+            "question": "How many red cards will be shown?",
+            "answer": "0.0"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -3998,7 +4519,8 @@ window.KNOCKOUT_PREDICTIONS = {
       "sheets": {
         "round_of_32": "NoDorex",
         "round_of_16": "NoDorex",
-        "quarterfinal": "NoDorex"
+        "quarterfinal": "NoDorex",
+        "semifinal": "NoDorex"
       },
       "matches": [
         {
@@ -4295,21 +4817,40 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 3,
           "awayScore": 0,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "101",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "Spain",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "102",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "England",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "England"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 28,
+        "matchCount": 30,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
-          "semifinal": 0,
+          "semifinal": 2,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "semifinal": 2,
           "final": 1
         },
         "duplicateMatchIds": [],
@@ -4393,6 +4934,44 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "2.0"
           }
+        ],
+        "semifinal": [
+          {
+            "question": "How many matches will go to extra time?",
+            "answer": "0.0"
+          },
+          {
+            "question": "How many matches will be decided by penalties?",
+            "answer": "0.0"
+          },
+          {
+            "question": "Which team will score the most goals?",
+            "answer": "France"
+          },
+          {
+            "question": "Total goals scored in the SF (no penalties)",
+            "answer": "6 - 7"
+          },
+          {
+            "question": "Which team will score the fastest goal?",
+            "answer": "France"
+          },
+          {
+            "question": "Which team will score the latest goal?",
+            "answer": "Argentina"
+          },
+          {
+            "question": "Team with the biggest winning margin?",
+            "answer": "France"
+          },
+          {
+            "question": "How many yellow cards will be shown?",
+            "answer": "3.0"
+          },
+          {
+            "question": "How many red cards will be shown?",
+            "answer": "1.0"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -4439,7 +5018,8 @@ window.KNOCKOUT_PREDICTIONS = {
       "sheets": {
         "round_of_32": "paul",
         "round_of_16": "paul",
-        "quarterfinal": "paul"
+        "quarterfinal": "paul",
+        "semifinal": "paul"
       },
       "matches": [
         {
@@ -4730,21 +5310,40 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 3,
           "awayScore": 1,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "101",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "Spain",
+          "homeScore": 3,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "102",
+          "stage": "semifinal",
+          "mode": "score",
+          "homeTeam": "England",
+          "awayTeam": "Argentina",
+          "homeScore": 3,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "England"
         }
       ],
       "validation": {
         "complete": false,
         "expectedMatchCount": 31,
-        "matchCount": 28,
+        "matchCount": 30,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
-          "semifinal": 0,
+          "semifinal": 2,
           "final": 0
         },
         "missingOrExtraByStage": {
-          "semifinal": 2,
           "final": 1
         },
         "duplicateMatchIds": [],
@@ -4827,6 +5426,44 @@ window.KNOCKOUT_PREDICTIONS = {
           {
             "question": "How many red cards will be shown?",
             "answer": "2.0"
+          }
+        ],
+        "semifinal": [
+          {
+            "question": "How many matches will go to extra time?",
+            "answer": "1.0"
+          },
+          {
+            "question": "How many matches will be decided by penalties?",
+            "answer": "0.0"
+          },
+          {
+            "question": "Which team will score the most goals?",
+            "answer": "France"
+          },
+          {
+            "question": "Total goals scored in the SF (no penalties)",
+            "answer": "> 7"
+          },
+          {
+            "question": "Which team will score the fastest goal?",
+            "answer": "France"
+          },
+          {
+            "question": "Which team will score the latest goal?",
+            "answer": "Argentina"
+          },
+          {
+            "question": "Team with the biggest winning margin?",
+            "answer": "France"
+          },
+          {
+            "question": "How many yellow cards will be shown?",
+            "answer": "3.0"
+          },
+          {
+            "question": "How many red cards will be shown?",
+            "answer": "1.0"
           }
         ]
       },
