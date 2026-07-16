@@ -294,6 +294,7 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
     officialMatches: [],
     roundOf32BonusResults: {},
     quarterfinalBonusResults: {},
+    semifinalBonusResults: {},
   };
   const declared = (resultsData?.timelineCheckpoints || [])
     .map((checkpoint) => normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData))
@@ -318,6 +319,7 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
       officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
       roundOf32BonusResults: resultsData?.roundOf32BonusResults || {},
       quarterfinalBonusResults: resultsData?.quarterfinalBonusResults || {},
+      semifinalBonusResults: resultsData?.semifinalBonusResults || {},
     }
     : null;
   if (fallbackCheckpoint) {
@@ -335,6 +337,8 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
       scenario: fallbackScenario,
       officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
       roundOf32BonusResults: resultsData?.roundOf32BonusResults || {},
+      quarterfinalBonusResults: resultsData?.quarterfinalBonusResults || {},
+      semifinalBonusResults: resultsData?.semifinalBonusResults || {},
     });
     fallbackCheckpoints.push({
       key: "bonuses",
@@ -348,6 +352,8 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
       scenario: fallbackScenario,
       officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
       roundOf32BonusResults: resultsData?.roundOf32BonusResults || {},
+      quarterfinalBonusResults: resultsData?.quarterfinalBonusResults || {},
+      semifinalBonusResults: resultsData?.semifinalBonusResults || {},
     });
   }
 
@@ -369,6 +375,10 @@ function normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData = {}
     checkpoint.quarterfinalBonusResults ||
     (checkpointIncludesQuarterfinal(stage) ? resultsData?.quarterfinalBonusResults : {}) ||
     {};
+  const semifinalBonusResults =
+    checkpoint.semifinalBonusResults ||
+    (checkpointIncludesSemifinal(stage) ? resultsData?.semifinalBonusResults : {}) ||
+    {};
   const includeFutures = Boolean(checkpoint.includeFutures || checkpoint.key === "futures" || stage === "futures");
   const includeBonuses = Boolean(checkpoint.includeBonuses || checkpoint.key === "bonuses" || stage === "bonuses");
   const includesFutures = includeFutures || includeBonuses;
@@ -387,6 +397,7 @@ function normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData = {}
     officialMatches,
     roundOf32BonusResults,
     quarterfinalBonusResults,
+    semifinalBonusResults,
   };
 }
 
@@ -396,6 +407,10 @@ function checkpointIncludesRoundOf32(stage) {
 
 function checkpointIncludesQuarterfinal(stage) {
   return (KNOCKOUT_STAGE_ORDER[stage] ?? -1) >= KNOCKOUT_STAGE_ORDER.quarterfinal;
+}
+
+function checkpointIncludesSemifinal(stage) {
+  return (KNOCKOUT_STAGE_ORDER[stage] ?? -1) >= KNOCKOUT_STAGE_ORDER.semifinal;
 }
 
 function mergePlannedCheckpoints(sourcePlayers, availableCheckpoints) {
@@ -746,6 +761,7 @@ function scoreAllPlayersForCheckpoint(sourcePlayers, checkpoint) {
       const bonusResults = {
         round_of_32: checkpoint.roundOf32BonusResults || {},
         quarterfinal: checkpoint.quarterfinalBonusResults || {},
+        semifinal: checkpoint.semifinalBonusResults || {},
       };
       const knockout = scoreKnockout(player, checkpoint.officialMatches || [], bonusResults);
       const knockoutStages = Object.fromEntries(
@@ -863,7 +879,7 @@ function scoreKnockoutStage(player, stage, officialMatches, bonusResults = {}) {
 
   const perfectWinnersBonus = perfectWinnersPossible ? KNOCKOUT_PERFECT_WINNER_BONUS_POINTS[stage] : 0;
   const perfectScoresBonus = perfectScoresPossible ? KNOCKOUT_PERFECT_SCORE_BONUS_POINTS[stage] : 0;
-  const bonusQuestionPoints = ["round_of_32", "quarterfinal"].includes(stage)
+  const bonusQuestionPoints = ["round_of_32", "quarterfinal", "semifinal"].includes(stage)
     ? scoreKnockoutBonusQuestions(player, stage, bonusResults[stage] || {}, stageMatches)
     : 0;
   return {

@@ -257,6 +257,10 @@ def build_checkpoint(checkpoint_key: str, official_results: dict[str, Any]) -> d
         checkpoint["quarterfinalBonusResults"] = normalize_bonus_results(
             official_results.get("quarterfinalBonusResults")
         )
+    if includes_semifinal_results(metadata["stage"]):
+        checkpoint["semifinalBonusResults"] = normalize_bonus_results(
+            official_results.get("semifinalBonusResults")
+        )
     if metadata.get("includeFutures"):
         checkpoint["includeFutures"] = True
     return checkpoint
@@ -335,6 +339,10 @@ def normalize_round_of_32_bonus_results(value: Any) -> dict[str, Any]:
 
 def includes_quarterfinal_results(checkpoint_stage: str) -> bool:
     return KNOCKOUT_STAGE_ORDER.get(checkpoint_stage, 0) >= KNOCKOUT_STAGE_ORDER["quarterfinal"]
+
+
+def includes_semifinal_results(checkpoint_stage: str) -> bool:
+    return KNOCKOUT_STAGE_ORDER.get(checkpoint_stage, 0) >= KNOCKOUT_STAGE_ORDER["semifinal"]
 
 
 def normalize_bonus_results(value: Any) -> dict[str, Any]:

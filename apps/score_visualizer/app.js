@@ -98,6 +98,7 @@ const officialScenario = normalizeOfficialScenario(players, officialData);
 const scenario = officialScenario;
 const officialRoundOf32BonusResults = officialData?.roundOf32BonusResults || {};
 const officialQuarterfinalBonusResults = officialData?.quarterfinalBonusResults || {};
+const officialSemifinalBonusResults = officialData?.semifinalBonusResults || {};
 const officialKnockoutMatches = latestOfficialKnockoutMatches(officialData);
 const officialKnockoutDisplayMatches = latestOfficialKnockoutDisplayMatches(officialData);
 const collapsedPanels = new Map();
@@ -1908,6 +1909,9 @@ function officialKnockoutBonusAnswer(stage, question) {
   if (stage === "quarterfinal") {
     return officialQuarterfinalBonusAnswer(question);
   }
+  if (stage === "semifinal") {
+    return officialSemifinalBonusAnswer(question);
+  }
   return calculatedKnockoutBonusAnswer(stage, question);
 }
 
@@ -1927,6 +1931,25 @@ function officialQuarterfinalBonusAnswer(question) {
   const reviewedAnswer = values[key];
   return reviewedAnswer === null || reviewedAnswer === undefined || reviewedAnswer === ""
     ? calculatedKnockoutBonusAnswer("quarterfinal", question)
+    : reviewedAnswer;
+}
+
+function officialSemifinalBonusAnswer(question) {
+  const key = canonicalBonusQuestion(question);
+  const values = {
+    extra_time_matches: officialSemifinalBonusResults.extraTimeMatches,
+    penalty_matches: officialSemifinalBonusResults.penaltyMatches,
+    most_goals_team: officialSemifinalBonusResults.mostGoalsTeam,
+    total_goals: officialSemifinalBonusResults.totalGoals,
+    fastest_goal_team: officialSemifinalBonusResults.fastestGoalTeam,
+    latest_goal_team: officialSemifinalBonusResults.latestGoalTeam,
+    biggest_winning_margin_team: officialSemifinalBonusResults.biggestWinningMarginTeam,
+    yellow_cards: officialSemifinalBonusResults.yellowCards,
+    red_cards: officialSemifinalBonusResults.redCards,
+  };
+  const reviewedAnswer = values[key];
+  return reviewedAnswer === null || reviewedAnswer === undefined || reviewedAnswer === ""
+    ? calculatedKnockoutBonusAnswer("semifinal", question)
     : reviewedAnswer;
 }
 
