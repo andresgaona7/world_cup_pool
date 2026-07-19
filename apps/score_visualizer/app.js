@@ -952,7 +952,10 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
   const hasStageResults = stageRows.some((row) => row.hasResult);
   const collapsed = isPanelCollapsed(
     panelKey,
-    stage === "round_of_32" || stage === "round_of_16" || stage === "quarterfinal"
+    stage === "round_of_32" ||
+      stage === "round_of_16" ||
+      stage === "quarterfinal" ||
+      stage === "semifinal"
   );
 
   return `
