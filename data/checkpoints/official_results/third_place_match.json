@@ -1,8 +1,118 @@
 {
-  "sourceName": "Football-Data.org matches",
-  "sourceUrl": "https://api.football-data.org/v4/competitions/WC/matches?season=2026",
-  "generatedAt": "2026-07-19T08:24:55+00:00",
-  "matches": [
+  "key": "third_place_match",
+  "label": "After 3rd place",
+  "shortLabel": "3rd",
+  "stage": "third_place_match",
+  "completedAt": "2026-07-19T08:24:48+00:00",
+  "scenario": {
+    "groupResults": {
+      "A": [
+        "Mexico",
+        "South Africa",
+        "South Korea"
+      ],
+      "B": [
+        "Switzerland",
+        "Canada",
+        "Bosnia-Herzegovina"
+      ],
+      "C": [
+        "Brazil",
+        "Morocco",
+        "Scotland"
+      ],
+      "D": [
+        "United States",
+        "Australia",
+        "Paraguay"
+      ],
+      "E": [
+        "Germany",
+        "Ivory Coast",
+        "Ecuador"
+      ],
+      "F": [
+        "Netherlands",
+        "Japan",
+        "Sweden"
+      ],
+      "G": [
+        "Belgium",
+        "Egypt",
+        "Iran"
+      ],
+      "H": [
+        "Spain",
+        "Cape Verde Islands",
+        "Uruguay"
+      ],
+      "I": [
+        "France",
+        "Norway",
+        "Senegal"
+      ],
+      "J": [
+        "Argentina",
+        "Austria",
+        "Algeria"
+      ],
+      "K": [
+        "Colombia",
+        "Portugal",
+        "Congo DR"
+      ],
+      "L": [
+        "England",
+        "Croatia",
+        "Ghana"
+      ]
+    },
+    "bestThirds": [
+      "Congo DR",
+      "Sweden",
+      "Ghana",
+      "Ecuador",
+      "Bosnia-Herzegovina",
+      "Algeria",
+      "Paraguay",
+      "Senegal"
+    ],
+    "futures": {
+      "champion": "",
+      "runnerUp": "",
+      "topScorer": "Kylian Mbappe",
+      "topScorers": [
+        "Kylian Mbappe"
+      ],
+      "teamLastRounds": {
+        "South Korea": "group_stage",
+        "Czechia": "group_stage",
+        "Qatar": "group_stage",
+        "Scotland": "group_stage",
+        "Haiti": "group_stage",
+        "Türkiye": "group_stage",
+        "Curaçao": "group_stage",
+        "Tunisia": "group_stage",
+        "Iran": "group_stage",
+        "New Zealand": "group_stage",
+        "Uruguay": "group_stage",
+        "Saudi Arabia": "group_stage",
+        "Iraq": "group_stage",
+        "Jordan": "group_stage",
+        "Uzbekistan": "group_stage",
+        "Panama": "group_stage",
+        "France": "semifinal",
+        "Argentina": "final",
+        "Norway": "quarterfinal",
+        "Morocco": "quarterfinal",
+        "Brazil": "round_of_16",
+        "Ecuador": "round_of_32",
+        "Spain": "final",
+        "England": "semifinal"
+      }
+    }
+  },
+  "officialMatches": [
     {
       "matchId": "73",
       "sourceMatchId": 537417,
@@ -901,29 +1011,6 @@
           "nationality": "Venezuela"
         }
       ]
-    },
-    {
-      "matchId": "104",
-      "sourceMatchId": 537390,
-      "stage": "final",
-      "status": "TIMED",
-      "utcDate": "2026-07-19T19:00:00Z",
-      "sourceUpdatedAt": "2026-07-19T05:20:05Z",
-      "homeTeam": "Spain",
-      "awayTeam": "Argentina",
-      "homeScore": null,
-      "awayScore": null,
-      "advancingTeam": "",
-      "duration": "REGULAR",
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeFullTimeScore": null,
-      "awayFullTimeScore": null,
-      "homeRegularTimeScore": null,
-      "awayRegularTimeScore": null,
-      "homeExtraTimeScore": null,
-      "awayExtraTimeScore": null,
-      "referees": []
     }
   ],
   "roundOf32BonusResults": {
@@ -972,14 +1059,5 @@
     "biggestWinningMarginTeam": "Spain",
     "yellowCards": 8,
     "redCards": 0
-  },
-  "notes": [
-    "Football-Data supplies teams, score, winner, stage, status, duration, and referee metadata.",
-    "Penalty, extra-time, and regular-time sub-scores are included only when the upstream score object exposes them.",
-    "Cards and fastest/latest goal teams are not present in this endpoint and should be reviewed manually.",
-    "Applied manual knockout override(s) for match ID(s): 95.",
-    "Applied reviewed Round of 32 bonus-question answer(s) from data/manual/round_of_32_bonus_results.json.",
-    "Applied reviewed quarterfinal bonus-question answer(s) from data/manual/quarterfinal_bonus_results.json.",
-    "Applied reviewed semifinal bonus-question answer(s) from data/manual/semifinal_bonus_results.json."
-  ]
+  }
 }
