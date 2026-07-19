@@ -8,7 +8,7 @@
       "data/raw/semifinals.xlsx",
       "data/raw/finals.xlsx"
     ],
-    "generated_at": "2026-07-19T08:04:02.139329+00:00",
+    "generated_at": "2026-07-19T08:21:54.990405+00:00",
     "stage": "finals",
     "stage_label": "Finals",
     "player_count": 11,
@@ -118,22 +118,14 @@
       "answers": [
         {
           "value": "Lamine Yamal",
-          "votes": 3
+          "votes": 4
         },
         {
           "value": "Mikel Oyarzabal",
-          "votes": 3
-        },
-        {
-          "value": "Oyarzabal",
-          "votes": 1
+          "votes": 4
         },
         {
           "value": "Spain",
-          "votes": 1
-        },
-        {
-          "value": "Yamal",
           "votes": 1
         },
         {
@@ -141,7 +133,7 @@
           "votes": 1
         },
         {
-          "value": "messi",
+          "value": "Lionel Messi",
           "votes": 1
         }
       ]
@@ -150,39 +142,15 @@
       "question": "Which match will have more total goals: third-place or final?",
       "answers": [
         {
-          "value": "Third place",
-          "votes": 3
+          "value": "Third-place match",
+          "votes": 8
         },
         {
           "value": "Final",
-          "votes": 1
+          "votes": 2
         },
         {
-          "value": "Thirdplace",
-          "votes": 1
-        },
-        {
-          "value": "Third-Place",
-          "votes": 1
-        },
-        {
-          "value": "Third Place",
-          "votes": 1
-        },
-        {
-          "value": "Third",
-          "votes": 1
-        },
-        {
-          "value": "Third-place",
-          "votes": 1
-        },
-        {
-          "value": "Same",
-          "votes": 1
-        },
-        {
-          "value": "final",
+          "value": "Same number of goals",
           "votes": 1
         }
       ]
@@ -191,20 +159,12 @@
       "question": "Who will win the Golden Boot?",
       "answers": [
         {
-          "value": "Mbappe",
+          "value": "Kylian Mbappé",
           "votes": 6
         },
         {
-          "value": "Messi",
-          "votes": 3
-        },
-        {
           "value": "Lionel Messi",
-          "votes": 1
-        },
-        {
-          "value": "messi",
-          "votes": 1
+          "votes": 5
         }
       ]
     },
@@ -212,8 +172,8 @@
       "question": "Who will be the MVP of World cup?",
       "answers": [
         {
-          "value": "Messi",
-          "votes": 6
+          "value": "Lionel Messi",
+          "votes": 8
         },
         {
           "value": "Rodri",
@@ -221,14 +181,6 @@
         },
         {
           "value": "Vozinha",
-          "votes": 1
-        },
-        {
-          "value": "Lionel Messi",
-          "votes": 1
-        },
-        {
-          "value": "messi",
           "votes": 1
         }
       ]

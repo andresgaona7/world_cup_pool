@@ -500,8 +500,24 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
             build_knockout_predictions.extract_bonus_answers(cells)["final"],
             [
                 {"question": "How many goals will be scored in the Final?", "answer": "3"},
-                {"question": "Which player will score the first goal in the Final?", "answer": "Mbappe"},
+                {"question": "Which player will score the first goal in the Final?", "answer": "Kylian Mbappé"},
             ],
+        )
+
+    def test_standardizes_final_bonus_answer_variants(self):
+        normalize = build_knockout_predictions.normalize_final_bonus_answer
+
+        self.assertEqual(normalize("How many goals will be scored in the Final?", "3.0"), "3")
+        self.assertEqual(normalize("Which player will score the first goal in the Final?", "Yamal"), "Lamine Yamal")
+        self.assertEqual(normalize("Who will win the Golden Boot?", "Mbappe"), "Kylian Mbappé")
+        self.assertEqual(normalize("Who will be the MVP of World cup?", "messi"), "Lionel Messi")
+        self.assertEqual(
+            normalize("Which match will have more total goals: third-place or final?", "Thirdplace"),
+            "Third-place match",
+        )
+        self.assertEqual(
+            normalize("Which match will have more total goals: third-place or final?", "Same"),
+            "Same number of goals",
         )
 
     def test_merges_player_predictions_across_stage_workbooks(self):

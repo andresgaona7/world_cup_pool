@@ -790,12 +790,52 @@ def extract_final_bonus_answers(
         question = clean_text(cells.get((row, heading_column), ""))
         if not question:
             continue
-        answer = cell_text(cells, row, heading_column + 4, ignored_cells=ignored_cells)
+        answer = normalize_final_bonus_answer(
+            question,
+            cell_text(cells, row, heading_column + 4, ignored_cells=ignored_cells),
+        )
         payload = {"question": question, "answer": answer}
         if (row, heading_column + 4) in ignored_cells:
             payload["ignored"] = True
         answers.append(payload)
     return answers
+
+
+def normalize_final_bonus_answer(question: str, answer: str) -> str:
+    """Return consistent display labels for equivalent Finals bonus answers."""
+    cleaned = clean_text(answer)
+    question_key = normalize_header(question)
+    answer_key = normalize_header(re.sub(r"[-_]+", " ", cleaned))
+
+    if "how many goals" in question_key and re.fullmatch(r"-?\d+\.0", cleaned):
+        return str(int(float(cleaned)))
+
+    if "which match will have more total goals" in question_key:
+        if answer_key.startswith("third"):
+            return "Third-place match"
+        if answer_key == "final":
+            return "Final"
+        if answer_key == "same":
+            return "Same number of goals"
+
+    person_aliases = {
+        "yamal": "Lamine Yamal",
+        "lamine yamal": "Lamine Yamal",
+        "oyarzabal": "Mikel Oyarzabal",
+        "mikel oyarzabal": "Mikel Oyarzabal",
+        "messi": "Lionel Messi",
+        "lionel messi": "Lionel Messi",
+        "mbappe": "Kylian Mbappé",
+        "kylian mbappe": "Kylian Mbappé",
+    }
+    if (
+        "first goal in the final" in question_key
+        or "golden boot" in question_key
+        or "mvp of world cup" in question_key
+    ):
+        return person_aliases.get(answer_key, cleaned)
+
+    return cleaned
 
 
 def canonical_bonus_question(question: str, stage: str = "") -> str:

@@ -592,7 +592,7 @@ window.KNOCKOUT_PREDICTIONS = {
         "final": [
           {
             "question": "How many goals will be scored in the Final?",
-            "answer": "3.0"
+            "answer": "3"
           },
           {
             "question": "Which player will score the first goal in the Final?",
@@ -604,7 +604,7 @@ window.KNOCKOUT_PREDICTIONS = {
           },
           {
             "question": "Who will win the Golden Boot?",
-            "answer": "Mbappe"
+            "answer": "Kylian Mbappé"
           },
           {
             "question": "Who will be the MVP of World cup?",
@@ -1132,23 +1132,23 @@ window.KNOCKOUT_PREDICTIONS = {
         "final": [
           {
             "question": "How many goals will be scored in the Final?",
-            "answer": "3.0"
+            "answer": "3"
           },
           {
             "question": "Which player will score the first goal in the Final?",
-            "answer": "Oyarzabal"
+            "answer": "Mikel Oyarzabal"
           },
           {
             "question": "Which match will have more total goals: third-place or final?",
-            "answer": "Thirdplace"
+            "answer": "Third-place match"
           },
           {
             "question": "Who will win the Golden Boot?",
-            "answer": "Mbappe"
+            "answer": "Kylian Mbappé"
           },
           {
             "question": "Who will be the MVP of World cup?",
-            "answer": "Messi"
+            "answer": "Lionel Messi"
           }
         ]
       },
@@ -1670,7 +1670,7 @@ window.KNOCKOUT_PREDICTIONS = {
         "final": [
           {
             "question": "How many goals will be scored in the Final?",
-            "answer": "3.0"
+            "answer": "3"
           },
           {
             "question": "Which player will score the first goal in the Final?",
@@ -1678,11 +1678,11 @@ window.KNOCKOUT_PREDICTIONS = {
           },
           {
             "question": "Which match will have more total goals: third-place or final?",
-            "answer": "Third place"
+            "answer": "Third-place match"
           },
           {
             "question": "Who will win the Golden Boot?",
-            "answer": "Messi"
+            "answer": "Lionel Messi"
           },
           {
             "question": "Who will be the MVP of World cup?",
@@ -2200,7 +2200,7 @@ window.KNOCKOUT_PREDICTIONS = {
         "final": [
           {
             "question": "How many goals will be scored in the Final?",
-            "answer": "3.0"
+            "answer": "3"
           },
           {
             "question": "Which player will score the first goal in the Final?",
@@ -2208,15 +2208,15 @@ window.KNOCKOUT_PREDICTIONS = {
           },
           {
             "question": "Which match will have more total goals: third-place or final?",
-            "answer": "Third place"
+            "answer": "Third-place match"
           },
           {
             "question": "Who will win the Golden Boot?",
-            "answer": "Mbappe"
+            "answer": "Kylian Mbappé"
           },
           {
             "question": "Who will be the MVP of World cup?",
-            "answer": "Messi"
+            "answer": "Lionel Messi"
           }
         ]
       },
@@ -2736,7 +2736,7 @@ window.KNOCKOUT_PREDICTIONS = {
         "final": [
           {
             "question": "How many goals will be scored in the Final?",
-            "answer": "3.0"
+            "answer": "3"
           },
           {
             "question": "Which player will score the first goal in the Final?",
@@ -2744,11 +2744,11 @@ window.KNOCKOUT_PREDICTIONS = {
           },
           {
             "question": "Which match will have more total goals: third-place or final?",
-            "answer": "Third place"
+            "answer": "Third-place match"
           },
           {
             "question": "Who will win the Golden Boot?",
-            "answer": "Mbappe"
+            "answer": "Kylian Mbappé"
           },
           {
             "question": "Who will be the MVP of World cup?",
@@ -3262,7 +3262,7 @@ window.KNOCKOUT_PREDICTIONS = {
         "final": [
           {
             "question": "How many goals will be scored in the Final?",
-            "answer": "3.0"
+            "answer": "3"
           },
           {
             "question": "Which player will score the first goal in the Final?",
@@ -3270,7 +3270,7 @@ window.KNOCKOUT_PREDICTIONS = {
           },
           {
             "question": "Which match will have more total goals: third-place or final?",
-            "answer": "Third-Place"
+            "answer": "Third-place match"
           },
           {
             "question": "Who will win the Golden Boot?",
@@ -3791,7 +3791,7 @@ window.KNOCKOUT_PREDICTIONS = {
         "final": [
           {
             "question": "How many goals will be scored in the Final?",
-            "answer": "3.0"
+            "answer": "3"
           },
           {
             "question": "Which player will score the first goal in the Final?",
@@ -3799,15 +3799,15 @@ window.KNOCKOUT_PREDICTIONS = {
           },
           {
             "question": "Which match will have more total goals: third-place or final?",
-            "answer": "Third Place"
+            "answer": "Third-place match"
           },
           {
             "question": "Who will win the Golden Boot?",
-            "answer": "Mbappe"
+            "answer": "Kylian Mbappé"
           },
           {
             "question": "Who will be the MVP of World cup?",
-            "answer": "Messi"
+            "answer": "Lionel Messi"
           }
         ]
       },
@@ -4318,7 +4318,7 @@ window.KNOCKOUT_PREDICTIONS = {
         "final": [
           {
             "question": "How many goals will be scored in the Final?",
-            "answer": "3.0"
+            "answer": "3"
           },
           {
             "question": "Which player will score the first goal in the Final?",
@@ -4326,15 +4326,15 @@ window.KNOCKOUT_PREDICTIONS = {
           },
           {
             "question": "Which match will have more total goals: third-place or final?",
-            "answer": "Third"
+            "answer": "Third-place match"
           },
           {
             "question": "Who will win the Golden Boot?",
-            "answer": "Messi"
+            "answer": "Lionel Messi"
           },
           {
             "question": "Who will be the MVP of World cup?",
-            "answer": "Messi"
+            "answer": "Lionel Messi"
           }
         ]
       },
@@ -4856,23 +4856,23 @@ window.KNOCKOUT_PREDICTIONS = {
         "final": [
           {
             "question": "How many goals will be scored in the Final?",
-            "answer": "3.0"
+            "answer": "3"
           },
           {
             "question": "Which player will score the first goal in the Final?",
-            "answer": "Yamal"
+            "answer": "Lamine Yamal"
           },
           {
             "question": "Which match will have more total goals: third-place or final?",
-            "answer": "Third-place"
+            "answer": "Third-place match"
           },
           {
             "question": "Who will win the Golden Boot?",
-            "answer": "Mbappe"
+            "answer": "Kylian Mbappé"
           },
           {
             "question": "Who will be the MVP of World cup?",
-            "answer": "Messi"
+            "answer": "Lionel Messi"
           }
         ]
       },
@@ -5397,7 +5397,7 @@ window.KNOCKOUT_PREDICTIONS = {
         "final": [
           {
             "question": "How many goals will be scored in the Final?",
-            "answer": "3.0"
+            "answer": "3"
           },
           {
             "question": "Which player will score the first goal in the Final?",
@@ -5405,15 +5405,15 @@ window.KNOCKOUT_PREDICTIONS = {
           },
           {
             "question": "Which match will have more total goals: third-place or final?",
-            "answer": "Same"
+            "answer": "Same number of goals"
           },
           {
             "question": "Who will win the Golden Boot?",
-            "answer": "Messi"
+            "answer": "Lionel Messi"
           },
           {
             "question": "Who will be the MVP of World cup?",
-            "answer": "Messi"
+            "answer": "Lionel Messi"
           }
         ]
       },
@@ -5932,23 +5932,23 @@ window.KNOCKOUT_PREDICTIONS = {
         "final": [
           {
             "question": "How many goals will be scored in the Final?",
-            "answer": "3.0"
+            "answer": "3"
           },
           {
             "question": "Which player will score the first goal in the Final?",
-            "answer": "messi"
+            "answer": "Lionel Messi"
           },
           {
             "question": "Which match will have more total goals: third-place or final?",
-            "answer": "final"
+            "answer": "Final"
           },
           {
             "question": "Who will win the Golden Boot?",
-            "answer": "messi"
+            "answer": "Lionel Messi"
           },
           {
             "question": "Who will be the MVP of World cup?",
-            "answer": "messi"
+            "answer": "Lionel Messi"
           }
         ]
       },
