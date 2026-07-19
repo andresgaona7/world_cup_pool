@@ -7,6 +7,7 @@ const KNOCKOUT_STAGE_ORDER = [
   "round_of_16",
   "quarterfinal",
   "semifinal",
+  "third_place_match",
   "final",
 ];
 const KNOCKOUT_BASE_POINTS = {
@@ -14,6 +15,7 @@ const KNOCKOUT_BASE_POINTS = {
   round_of_16: 6,
   quarterfinal: 10,
   semifinal: 16,
+  third_place_match: 14,
   final: 20,
 };
 const officialMatchesById = new Map(
@@ -34,8 +36,8 @@ const knockoutStageTargets = {
   round_of_16: document.querySelector("#knockoutRoundOf16"),
   quarterfinal: document.querySelector("#knockoutQuarterfinal"),
   semifinal: document.querySelector("#knockoutSemifinal"),
-  final: document.querySelector("#knockoutFinal"),
 };
+const knockoutFinalsTarget = document.querySelector("#knockoutFinals");
 const sections = document.querySelectorAll(".section");
 
 playerSelect.addEventListener("change", (event) => {
@@ -185,6 +187,23 @@ function renderKnockoutPredictions(player) {
     }
     target.replaceChildren(...knockoutStageContent(stage, matches, knockoutPlayer));
   });
+  renderFinalsPredictions(stages, matches, knockoutPlayer);
+}
+
+function renderFinalsPredictions(stages, matches, knockoutPlayer) {
+  const finalsStages = stages.filter((stage) =>
+    stage.stage === "third_place_match" || stage.stage === "final"
+  );
+  knockoutFinalsTarget.replaceChildren(
+    ...finalsStages.map((stage) => {
+      const section = document.createElement("section");
+      section.className = "knockout-substage";
+      const title = document.createElement("h4");
+      title.textContent = stage.label;
+      section.append(title, ...knockoutStageContent(stage, matches, knockoutPlayer));
+      return section;
+    })
+  );
 }
 
 function knockoutStageContent(stage, matches, knockoutPlayer) {
@@ -302,12 +321,18 @@ function renderKnockoutError() {
       "Knockout prediction data failed to load. Confirm data/generated/knockout_predictions.js is included in the GitHub Pages artifact.";
     target.replaceChildren(message);
   });
+  const finalsMessage = document.createElement("p");
+  finalsMessage.className = "empty-note";
+  finalsMessage.textContent =
+    "Knockout prediction data failed to load. Confirm data/generated/knockout_predictions.js is included in the GitHub Pages artifact.";
+  knockoutFinalsTarget.replaceChildren(finalsMessage);
 }
 
 function clearKnockoutStages() {
   Object.values(knockoutStageTargets).forEach((target) => {
     target.replaceChildren();
   });
+  knockoutFinalsTarget.replaceChildren();
 }
 
 function knockoutStages() {

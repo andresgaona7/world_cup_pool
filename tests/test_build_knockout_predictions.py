@@ -124,6 +124,7 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
             ("Round of 16", "round_of_16"),
             ("Quaterfinals", "quarterfinal"),
             ("Semifinals", "semifinal"),
+            ("Third-place match", "third_place_match"),
             ("Final", "final"),
         ):
             cells[(row, 1)] = heading
@@ -144,7 +145,7 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
         matches = build_knockout_predictions.extract_predictions(cells)
         validation = build_knockout_predictions.validate_predictions(matches)
 
-        self.assertEqual(len(matches), 31)
+        self.assertEqual(len(matches), 32)
         self.assertEqual(matches[0]["matchId"], "73")
         self.assertEqual(matches[0]["stage"], "round_of_32")
         self.assertEqual(matches[-1]["matchId"], "104")
@@ -157,6 +158,7 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
                 "round_of_16": 8,
                 "quarterfinal": 4,
                 "semifinal": 2,
+                "third_place_match": 1,
                 "final": 1,
             },
         )
@@ -461,6 +463,44 @@ class BuildKnockoutPredictionsTests(unittest.TestCase):
             [
                 {"question": "How many matches will go to extra time?", "answer": "1"},
                 {"question": "Total goals scored in the SF (no penalties)", "answer": "4 - 5"},
+            ],
+        )
+
+    def test_extracts_visual_finals_layout_as_third_place_and_final(self):
+        cells = {
+            (101, 13): "Finals",
+            (101, 17): "Penalty",
+            (102, 13): "France",
+            (102, 14): "2",
+            (102, 15): "1",
+            (102, 16): "England",
+            (103, 13): "Spain",
+            (103, 14): "1",
+            (103, 15): "1",
+            (103, 16): "Argentina",
+            (103, 17): "4",
+            (103, 18): "3",
+            (105, 13): "How many goals will be scored in the Final?",
+            (105, 17): "3",
+            (106, 13): "Which player will score the first goal in the Final?",
+            (106, 17): "Mbappe",
+        }
+
+        matches = build_knockout_predictions.extract_predictions(cells, default_stage="final")
+
+        self.assertEqual([match["matchId"] for match in matches], ["103", "104"])
+        self.assertEqual([match["stage"] for match in matches], ["third_place_match", "final"])
+        self.assertEqual(matches[0]["homeTeam"], "France")
+        self.assertEqual(matches[0]["awayTeam"], "England")
+        self.assertEqual(matches[0]["predictedAdvancingTeam"], "France")
+        self.assertEqual(matches[1]["homeTeam"], "Spain")
+        self.assertEqual(matches[1]["awayTeam"], "Argentina")
+        self.assertEqual(matches[1]["predictedAdvancingTeam"], "Spain")
+        self.assertEqual(
+            build_knockout_predictions.extract_bonus_answers(cells)["final"],
+            [
+                {"question": "How many goals will be scored in the Final?", "answer": "3"},
+                {"question": "Which player will score the first goal in the Final?", "answer": "Mbappe"},
             ],
         )
 

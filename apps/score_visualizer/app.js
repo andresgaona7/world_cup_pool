@@ -26,7 +26,7 @@ const KNOCKOUT_BASE_POINTS = {
 };
 const KNOCKOUT_STAGE_ORDER = Object.fromEntries(Object.keys(KNOCKOUT_BASE_POINTS).map((stage, index) => [stage, index]));
 const KNOCKOUT_PERFECT_BONUS_STAGES = new Set(["round_of_32", "round_of_16", "quarterfinal", "semifinal"]);
-const KNOCKOUT_BONUS_QUESTION_STAGES = new Set(["round_of_32", "quarterfinal", "semifinal"]);
+const KNOCKOUT_BONUS_QUESTION_STAGES = new Set(["round_of_32", "quarterfinal", "semifinal", "final"]);
 const KNOCKOUT_STAGE_MATCH_COUNTS = {
   round_of_32: 16,
   round_of_16: 8,
@@ -100,7 +100,7 @@ const officialRoundOf32BonusResults = officialData?.roundOf32BonusResults || {};
 const officialQuarterfinalBonusResults = officialData?.quarterfinalBonusResults || {};
 const officialSemifinalBonusResults = officialData?.semifinalBonusResults || {};
 const officialKnockoutMatches = latestOfficialKnockoutMatches(officialData);
-const officialKnockoutDisplayMatches = latestOfficialKnockoutDisplayMatches(officialData);
+const officialKnockoutDisplayMatches = latestOfficialKnockoutDisplayMatches(officialData, knockoutData);
 const collapsedPanels = new Map();
 let comparisonPlayerIndex = initialComparisonPlayerIndex();
 
@@ -339,7 +339,7 @@ function latestOfficialKnockoutMatches(resultsData) {
   });
 }
 
-function latestOfficialKnockoutDisplayMatches(resultsData) {
+function latestOfficialKnockoutDisplayMatches(resultsData, predictionData) {
   const matchesById = new Map();
   [
     ...(resultsData?.officialMatches || []),
@@ -355,10 +355,45 @@ function latestOfficialKnockoutDisplayMatches(resultsData) {
     )
     .forEach((match) => matchesById.set(match.matchId, match));
 
+  knockoutPredictionFixtures(predictionData).forEach((match) => {
+    if (!matchesById.has(match.matchId)) {
+      matchesById.set(match.matchId, match);
+    }
+  });
+
   return [...matchesById.values()].sort((a, b) => {
     const stageDiff = (KNOCKOUT_STAGE_ORDER[a.stage] || 0) - (KNOCKOUT_STAGE_ORDER[b.stage] || 0);
     return stageDiff || Number(a.matchId) - Number(b.matchId);
   });
+}
+
+function knockoutPredictionFixtures(predictionData) {
+  const fixturesById = new Map();
+  (predictionData?.players || []).forEach((player) => {
+    (player.matches || []).forEach((prediction) => {
+      const match = normalizeOfficialKnockoutMatch(prediction);
+      if (
+        match.matchId &&
+        match.stage in KNOCKOUT_BASE_POINTS &&
+        match.homeTeam &&
+        match.awayTeam &&
+        !fixturesById.has(match.matchId)
+      ) {
+        fixturesById.set(match.matchId, {
+          ...match,
+          homeScore: null,
+          awayScore: null,
+          homePenaltyScore: null,
+          awayPenaltyScore: null,
+          homeExtraTimeScore: null,
+          awayExtraTimeScore: null,
+          duration: "",
+          advancingTeam: "",
+        });
+      }
+    });
+  });
+  return [...fixturesById.values()];
 }
 
 function normalizeOfficialKnockoutMatch(match) {
@@ -902,21 +937,19 @@ function renderKnockoutComparison() {
 
   const selectedPlayer = players[comparisonPlayerIndex] || players[0];
   const rows = knockoutComparisonRows(selectedPlayer);
+  const standaloneStages = Object.keys(KNOCKOUT_BASE_POINTS).filter(
+    (stage) => stage !== "third_place_match" && stage !== "final"
+  );
 
-  knockoutStagePanels.innerHTML = Object.keys(KNOCKOUT_BASE_POINTS)
+  knockoutStagePanels.innerHTML = standaloneStages
     .map((stage) => knockoutStagePanelHtml(stage, rows, selectedPlayer))
-    .join("");
+    .join("") + knockoutFinalsPanelHtml(rows, selectedPlayer);
 }
 
 function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
   const panelKey = `knockout-${stage}`;
   const stageRows = rows.filter((row) => row.stage === stage);
-  const stageScore = scoreKnockoutStage(selectedPlayer, stage);
-  const predictionPoints = stageScore.points;
-  const bonusPoints = stageScore.perfectWinnersBonus + stageScore.perfectScoresBonus;
-  const stageTotal = predictionPoints + bonusPoints + stageScore.bonusQuestionPoints;
   const hasStageResults = stageRows.some((row) => row.hasResult);
-  const basePoints = KNOCKOUT_BASE_POINTS[stage] || 0;
   const collapsed = isPanelCollapsed(
     panelKey,
     stage === "round_of_32" || stage === "round_of_16" || stage === "quarterfinal"
@@ -936,6 +969,57 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
         </div>
       </div>
       <div class="collapsible-body">
+        ${knockoutStageBodyHtml(stage, rows, selectedPlayer)}
+      </div>
+    </section>
+  `;
+}
+
+function knockoutFinalsPanelHtml(rows, selectedPlayer) {
+  const stages = ["third_place_match", "final"];
+  const panelKey = "knockout-finals";
+  const hasResults = stages.some((stage) =>
+    rows.some((row) => row.stage === stage && row.hasResult)
+  );
+  const collapsed = isPanelCollapsed(panelKey, false);
+
+  return `
+    <section class="panel knockout-stage-panel finals-stage-panel collapsible-panel ${collapsed ? "is-collapsed" : ""}" data-collapsible-panel data-collapsible-key="${panelKey}" data-collapsed="${collapsed ? "true" : "false"}">
+      <div class="panel-head">
+        <div>
+          <h2>Finals</h2>
+        </div>
+        <div class="panel-actions">
+          <span class="rule-pill ${hasResults ? "" : "pending"}">${hasResults ? "Official results" : "Pending results"}</span>
+          <button class="collapse-toggle" type="button" aria-expanded="${collapsed ? "false" : "true"}">
+            <span class="collapse-toggle-label">${collapsed ? "Show" : "Hide"}</span>
+          </button>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        ${stages.map((stage) => `
+          <section class="finals-substage">
+            <div class="finals-substage-title">
+              <h3>${escapeHtml(knockoutStageLabel(stage))}</h3>
+              <span>Match ${stage === "third_place_match" ? "103" : "104"}</span>
+            </div>
+            ${knockoutStageBodyHtml(stage, rows, selectedPlayer)}
+          </section>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function knockoutStageBodyHtml(stage, rows, selectedPlayer) {
+  const stageRows = rows.filter((row) => row.stage === stage);
+  const stageScore = scoreKnockoutStage(selectedPlayer, stage);
+  const predictionPoints = stageScore.points;
+  const bonusPoints = stageScore.perfectWinnersBonus + stageScore.perfectScoresBonus;
+  const stageTotal = predictionPoints + bonusPoints + stageScore.bonusQuestionPoints;
+  const basePoints = KNOCKOUT_BASE_POINTS[stage] || 0;
+
+  return `
         <div class="comparison-summary">
           <div class="comparison-equation-row">
             ${comparisonMetricHtml("Base point", `${formatPoints(basePoints)} pts`)}
@@ -996,8 +1080,6 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
           </div>
           ${KNOCKOUT_BONUS_QUESTION_STAGES.has(stage) ? knockoutBonusQuestionsHtml(selectedPlayer, stage) : ""}
         </div>
-      </div>
-    </section>
   `;
 }
 
@@ -1912,6 +1994,9 @@ function officialKnockoutBonusAnswer(stage, question) {
   if (stage === "semifinal") {
     return officialSemifinalBonusAnswer(question);
   }
+  if (stage === "final") {
+    return null;
+  }
   return calculatedKnockoutBonusAnswer(stage, question);
 }
 
@@ -2042,6 +2127,21 @@ function formatKnockoutBonusAnswer(answer) {
 
 function canonicalBonusQuestion(question) {
   const text = String(question || "").toLowerCase();
+  if (text.includes("which match") && text.includes("third-place") && text.includes("final")) {
+    return "finals_higher_scoring_match";
+  }
+  if (text.includes("how many goals") && text.includes("final")) {
+    return "final_total_goals";
+  }
+  if (text.includes("first goal") && text.includes("final")) {
+    return "final_first_scorer";
+  }
+  if (text.includes("golden boot")) {
+    return "golden_boot";
+  }
+  if (text.includes("mvp") && text.includes("world cup")) {
+    return "world_cup_mvp";
+  }
   if (text.includes("extra time") && !text.includes("latest goal")) {
     return "extra_time_matches";
   }

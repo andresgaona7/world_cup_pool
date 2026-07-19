@@ -19,7 +19,7 @@ data/raw/round_of_32.xlsx
 data/raw/round_of_16.xlsx
 data/raw/quaterfinals.xlsx
 data/raw/semifinals.xlsx
-data/raw/knockout_predictions/final.xlsx
+data/raw/finals.xlsx
   -> scripts/build_knockout_predictions.py
   -> data/generated/knockout_predictions.js
   -> scripts/build_semifinal_consensus.py
@@ -38,6 +38,7 @@ Expected knockout workbook layout:
 | Round of 16 | 8 |
 | Quarterfinals | 4 |
 | Semifinals | 2 |
+| Third-place match | 1 |
 | Final | 1 |
 
 Each stage workbook should contain one sheet per player, with one row per

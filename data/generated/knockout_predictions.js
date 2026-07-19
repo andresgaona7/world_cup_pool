@@ -27,15 +27,16 @@ window.KNOCKOUT_PREDICTIONS = {
     {
       "stage": "final",
       "label": "Final",
-      "path": "data/raw/knockout_predictions/final.xlsx",
-      "available": false
+      "path": "data/raw/finals.xlsx",
+      "available": true
     }
   ],
   "generated_from": [
     "data/raw/round_of_32.xlsx",
     "data/raw/round_of_16.xlsx",
     "data/raw/quaterfinals.xlsx",
-    "data/raw/semifinals.xlsx"
+    "data/raw/semifinals.xlsx",
+    "data/raw/finals.xlsx"
   ],
   "sourceName": "Generated knockout predictions",
   "stages": [
@@ -98,6 +99,14 @@ window.KNOCKOUT_PREDICTIONS = {
       "expectedMatchCount": 2
     },
     {
+      "stage": "third_place_match",
+      "label": "Third-place match",
+      "matchIds": [
+        "103"
+      ],
+      "expectedMatchCount": 1
+    },
+    {
       "stage": "final",
       "label": "Final",
       "matchIds": [
@@ -113,7 +122,8 @@ window.KNOCKOUT_PREDICTIONS = {
         "round_of_32": "Amal",
         "round_of_16": "Amal",
         "quarterfinal": "Amal",
-        "semifinal": "Amal"
+        "semifinal": "Amal",
+        "final": "Amal"
       },
       "matches": [
         {
@@ -424,22 +434,41 @@ window.KNOCKOUT_PREDICTIONS = {
           "homePenaltyScore": 4,
           "awayPenaltyScore": 3,
           "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "103",
+          "stage": "third_place_match",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "England",
+          "homeScore": 0,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "104",
+          "stage": "final",
+          "mode": "score",
+          "homeTeam": "Spain",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Spain"
         }
       ],
       "validation": {
         "complete": false,
-        "expectedMatchCount": 31,
-        "matchCount": 30,
+        "expectedMatchCount": 32,
+        "matchCount": 32,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
-          "final": 0
-        },
-        "missingOrExtraByStage": {
+          "third_place_match": 1,
           "final": 1
         },
+        "missingOrExtraByStage": {},
         "duplicateMatchIds": [],
         "incompleteMatchIds": [
           "97"
@@ -559,6 +588,28 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "0.0"
           }
+        ],
+        "final": [
+          {
+            "question": "How many goals will be scored in the Final?",
+            "answer": "3.0"
+          },
+          {
+            "question": "Which player will score the first goal in the Final?",
+            "answer": "Lamine Yamal"
+          },
+          {
+            "question": "Which match will have more total goals: third-place or final?",
+            "answer": "Final"
+          },
+          {
+            "question": "Who will win the Golden Boot?",
+            "answer": "Mbappe"
+          },
+          {
+            "question": "Who will be the MVP of World cup?",
+            "answer": "Vozinha"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -606,7 +657,8 @@ window.KNOCKOUT_PREDICTIONS = {
         "round_of_32": "Daniel",
         "round_of_16": "Daniel",
         "quarterfinal": "Daniel",
-        "semifinal": "Daniel"
+        "semifinal": "Daniel",
+        "final": "Daniel"
       },
       "matches": [
         {
@@ -924,22 +976,41 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 1,
           "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "103",
+          "stage": "third_place_match",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "England",
+          "homeScore": 3,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "104",
+          "stage": "final",
+          "mode": "score",
+          "homeTeam": "Spain",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Spain"
         }
       ],
       "validation": {
-        "complete": false,
-        "expectedMatchCount": 31,
-        "matchCount": 30,
+        "complete": true,
+        "expectedMatchCount": 32,
+        "matchCount": 32,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
-          "final": 0
-        },
-        "missingOrExtraByStage": {
+          "third_place_match": 1,
           "final": 1
         },
+        "missingOrExtraByStage": {},
         "duplicateMatchIds": [],
         "incompleteMatchIds": []
       },
@@ -1057,6 +1128,28 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "0.0"
           }
+        ],
+        "final": [
+          {
+            "question": "How many goals will be scored in the Final?",
+            "answer": "3.0"
+          },
+          {
+            "question": "Which player will score the first goal in the Final?",
+            "answer": "Oyarzabal"
+          },
+          {
+            "question": "Which match will have more total goals: third-place or final?",
+            "answer": "Thirdplace"
+          },
+          {
+            "question": "Who will win the Golden Boot?",
+            "answer": "Mbappe"
+          },
+          {
+            "question": "Who will be the MVP of World cup?",
+            "answer": "Messi"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -1104,7 +1197,8 @@ window.KNOCKOUT_PREDICTIONS = {
         "round_of_32": "Elwebo con AI-ChatGPT",
         "round_of_16": "Elwebo con AI-ChatGPT",
         "quarterfinal": "Elwebo con AI-ChatGPT",
-        "semifinal": "Elwebo con AI-ChatGPT"
+        "semifinal": "Elwebo con AI-ChatGPT",
+        "final": "Elwebo con AI-ChatGPT"
       },
       "matches": [
         {
@@ -1420,22 +1514,41 @@ window.KNOCKOUT_PREDICTIONS = {
           "homePenaltyScore": 3,
           "awayPenaltyScore": 4,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "103",
+          "stage": "third_place_match",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "England",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "104",
+          "stage": "final",
+          "mode": "score",
+          "homeTeam": "Spain",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Spain"
         }
       ],
       "validation": {
-        "complete": false,
-        "expectedMatchCount": 31,
-        "matchCount": 30,
+        "complete": true,
+        "expectedMatchCount": 32,
+        "matchCount": 32,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
-          "final": 0
-        },
-        "missingOrExtraByStage": {
+          "third_place_match": 1,
           "final": 1
         },
+        "missingOrExtraByStage": {},
         "duplicateMatchIds": [],
         "incompleteMatchIds": []
       },
@@ -1553,6 +1666,28 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "0.0"
           }
+        ],
+        "final": [
+          {
+            "question": "How many goals will be scored in the Final?",
+            "answer": "3.0"
+          },
+          {
+            "question": "Which player will score the first goal in the Final?",
+            "answer": "Mikel Oyarzabal"
+          },
+          {
+            "question": "Which match will have more total goals: third-place or final?",
+            "answer": "Third place"
+          },
+          {
+            "question": "Who will win the Golden Boot?",
+            "answer": "Messi"
+          },
+          {
+            "question": "Who will be the MVP of World cup?",
+            "answer": "Rodri"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -1600,7 +1735,8 @@ window.KNOCKOUT_PREDICTIONS = {
         "round_of_32": "Elwebo Lavenganza",
         "round_of_16": "Elwebo Lavenganza",
         "quarterfinal": "Elwebo Lavenganza",
-        "semifinal": "Elwebo Lavenganza"
+        "semifinal": "Elwebo Lavenganza",
+        "final": "Elwebo Lavenganza"
       },
       "matches": [
         {
@@ -1908,22 +2044,41 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 1,
           "awayScore": 2,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "103",
+          "stage": "third_place_match",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "England",
+          "homeScore": 3,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "104",
+          "stage": "final",
+          "mode": "score",
+          "homeTeam": "Spain",
+          "awayTeam": "Argentina",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Argentina"
         }
       ],
       "validation": {
-        "complete": false,
-        "expectedMatchCount": 31,
-        "matchCount": 30,
+        "complete": true,
+        "expectedMatchCount": 32,
+        "matchCount": 32,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
-          "final": 0
-        },
-        "missingOrExtraByStage": {
+          "third_place_match": 1,
           "final": 1
         },
+        "missingOrExtraByStage": {},
         "duplicateMatchIds": [],
         "incompleteMatchIds": []
       },
@@ -2041,6 +2196,28 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "1.0"
           }
+        ],
+        "final": [
+          {
+            "question": "How many goals will be scored in the Final?",
+            "answer": "3.0"
+          },
+          {
+            "question": "Which player will score the first goal in the Final?",
+            "answer": "Mikel Oyarzabal"
+          },
+          {
+            "question": "Which match will have more total goals: third-place or final?",
+            "answer": "Third place"
+          },
+          {
+            "question": "Who will win the Golden Boot?",
+            "answer": "Mbappe"
+          },
+          {
+            "question": "Who will be the MVP of World cup?",
+            "answer": "Messi"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -2088,7 +2265,8 @@ window.KNOCKOUT_PREDICTIONS = {
         "round_of_32": "Elwebo + Gemini",
         "round_of_16": "Elwebo + Gemini",
         "quarterfinal": "Elwebo + Gemini",
-        "semifinal": "Elwebo + Gemini"
+        "semifinal": "Elwebo + Gemini",
+        "final": "Elwebo + Gemini"
       },
       "matches": [
         {
@@ -2402,22 +2580,41 @@ window.KNOCKOUT_PREDICTIONS = {
           "homePenaltyScore": 3,
           "awayPenaltyScore": 4,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "103",
+          "stage": "third_place_match",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "England",
+          "homeScore": 3,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "104",
+          "stage": "final",
+          "mode": "score",
+          "homeTeam": "Spain",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Spain"
         }
       ],
       "validation": {
-        "complete": false,
-        "expectedMatchCount": 31,
-        "matchCount": 30,
+        "complete": true,
+        "expectedMatchCount": 32,
+        "matchCount": 32,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
-          "final": 0
-        },
-        "missingOrExtraByStage": {
+          "third_place_match": 1,
           "final": 1
         },
+        "missingOrExtraByStage": {},
         "duplicateMatchIds": [],
         "incompleteMatchIds": []
       },
@@ -2535,6 +2732,28 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "1.0"
           }
+        ],
+        "final": [
+          {
+            "question": "How many goals will be scored in the Final?",
+            "answer": "3.0"
+          },
+          {
+            "question": "Which player will score the first goal in the Final?",
+            "answer": "Mikel Oyarzabal"
+          },
+          {
+            "question": "Which match will have more total goals: third-place or final?",
+            "answer": "Third place"
+          },
+          {
+            "question": "Who will win the Golden Boot?",
+            "answer": "Mbappe"
+          },
+          {
+            "question": "Who will be the MVP of World cup?",
+            "answer": "Rodri"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -2582,7 +2801,8 @@ window.KNOCKOUT_PREDICTIONS = {
         "round_of_32": "Emi",
         "round_of_16": "Emi",
         "quarterfinal": "Emi",
-        "semifinal": "Emi"
+        "semifinal": "Emi",
+        "final": "Emi"
       },
       "matches": [
         {
@@ -2886,22 +3106,41 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 1,
           "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "103",
+          "stage": "third_place_match",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "England",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "104",
+          "stage": "final",
+          "mode": "score",
+          "homeTeam": "Spain",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Spain"
         }
       ],
       "validation": {
-        "complete": false,
-        "expectedMatchCount": 31,
-        "matchCount": 30,
+        "complete": true,
+        "expectedMatchCount": 32,
+        "matchCount": 32,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
-          "final": 0
-        },
-        "missingOrExtraByStage": {
+          "third_place_match": 1,
           "final": 1
         },
+        "missingOrExtraByStage": {},
         "duplicateMatchIds": [],
         "incompleteMatchIds": []
       },
@@ -3019,6 +3258,28 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "0.0"
           }
+        ],
+        "final": [
+          {
+            "question": "How many goals will be scored in the Final?",
+            "answer": "3.0"
+          },
+          {
+            "question": "Which player will score the first goal in the Final?",
+            "answer": "Lamine Yamal"
+          },
+          {
+            "question": "Which match will have more total goals: third-place or final?",
+            "answer": "Third-Place"
+          },
+          {
+            "question": "Who will win the Golden Boot?",
+            "answer": "Lionel Messi"
+          },
+          {
+            "question": "Who will be the MVP of World cup?",
+            "answer": "Lionel Messi"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -3066,7 +3327,8 @@ window.KNOCKOUT_PREDICTIONS = {
         "round_of_32": "Irina",
         "round_of_16": "Irina",
         "quarterfinal": "Irina",
-        "semifinal": "Irina"
+        "semifinal": "Irina",
+        "final": "Irina"
       },
       "matches": [
         {
@@ -3370,22 +3632,41 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 3,
           "predictedAdvancingTeam": "Argentina"
+        },
+        {
+          "matchId": "103",
+          "stage": "third_place_match",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "England",
+          "homeScore": 3,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "104",
+          "stage": "final",
+          "mode": "score",
+          "homeTeam": "Spain",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Spain"
         }
       ],
       "validation": {
         "complete": false,
-        "expectedMatchCount": 31,
-        "matchCount": 30,
+        "expectedMatchCount": 32,
+        "matchCount": 32,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
-          "final": 0
-        },
-        "missingOrExtraByStage": {
+          "third_place_match": 1,
           "final": 1
         },
+        "missingOrExtraByStage": {},
         "duplicateMatchIds": [],
         "incompleteMatchIds": [
           "75",
@@ -3506,6 +3787,28 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "3.0"
           }
+        ],
+        "final": [
+          {
+            "question": "How many goals will be scored in the Final?",
+            "answer": "3.0"
+          },
+          {
+            "question": "Which player will score the first goal in the Final?",
+            "answer": "Lamine Yamal"
+          },
+          {
+            "question": "Which match will have more total goals: third-place or final?",
+            "answer": "Third Place"
+          },
+          {
+            "question": "Who will win the Golden Boot?",
+            "answer": "Mbappe"
+          },
+          {
+            "question": "Who will be the MVP of World cup?",
+            "answer": "Messi"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -3553,7 +3856,8 @@ window.KNOCKOUT_PREDICTIONS = {
         "round_of_32": "jjpro",
         "round_of_16": "jjpro",
         "quarterfinal": "jjpro",
-        "semifinal": "jjpro"
+        "semifinal": "jjpro",
+        "final": "jjpro"
       },
       "matches": [
         {
@@ -3853,22 +4157,43 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 1,
           "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "103",
+          "stage": "third_place_match",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "England",
+          "homeScore": 2,
+          "awayScore": 2,
+          "homePenaltyScore": 4,
+          "awayPenaltyScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "104",
+          "stage": "final",
+          "mode": "score",
+          "homeTeam": "Spain",
+          "awayTeam": "Argentina",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "Spain"
         }
       ],
       "validation": {
         "complete": false,
-        "expectedMatchCount": 31,
-        "matchCount": 30,
+        "expectedMatchCount": 32,
+        "matchCount": 32,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
-          "final": 0
-        },
-        "missingOrExtraByStage": {
+          "third_place_match": 1,
           "final": 1
         },
+        "missingOrExtraByStage": {},
         "duplicateMatchIds": [],
         "incompleteMatchIds": [
           "89",
@@ -3989,6 +4314,28 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "0.0"
           }
+        ],
+        "final": [
+          {
+            "question": "How many goals will be scored in the Final?",
+            "answer": "3.0"
+          },
+          {
+            "question": "Which player will score the first goal in the Final?",
+            "answer": "Spain"
+          },
+          {
+            "question": "Which match will have more total goals: third-place or final?",
+            "answer": "Third"
+          },
+          {
+            "question": "Who will win the Golden Boot?",
+            "answer": "Messi"
+          },
+          {
+            "question": "Who will be the MVP of World cup?",
+            "answer": "Messi"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -4036,7 +4383,8 @@ window.KNOCKOUT_PREDICTIONS = {
         "round_of_32": "Llucho",
         "round_of_16": "Llucho",
         "quarterfinal": "Llucho",
-        "semifinal": "Llucho"
+        "semifinal": "Llucho",
+        "final": "Llucho"
       },
       "matches": [
         {
@@ -4352,22 +4700,41 @@ window.KNOCKOUT_PREDICTIONS = {
           "homePenaltyScore": 4,
           "awayPenaltyScore": 3,
           "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "103",
+          "stage": "third_place_match",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "England",
+          "homeScore": 3,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "104",
+          "stage": "final",
+          "mode": "score",
+          "homeTeam": "Spain",
+          "awayTeam": "Argentina",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Argentina"
         }
       ],
       "validation": {
-        "complete": false,
-        "expectedMatchCount": 31,
-        "matchCount": 30,
+        "complete": true,
+        "expectedMatchCount": 32,
+        "matchCount": 32,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
-          "final": 0
-        },
-        "missingOrExtraByStage": {
+          "third_place_match": 1,
           "final": 1
         },
+        "missingOrExtraByStage": {},
         "duplicateMatchIds": [],
         "incompleteMatchIds": []
       },
@@ -4485,6 +4852,28 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "0.0"
           }
+        ],
+        "final": [
+          {
+            "question": "How many goals will be scored in the Final?",
+            "answer": "3.0"
+          },
+          {
+            "question": "Which player will score the first goal in the Final?",
+            "answer": "Yamal"
+          },
+          {
+            "question": "Which match will have more total goals: third-place or final?",
+            "answer": "Third-place"
+          },
+          {
+            "question": "Who will win the Golden Boot?",
+            "answer": "Mbappe"
+          },
+          {
+            "question": "Who will be the MVP of World cup?",
+            "answer": "Messi"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -4532,7 +4921,8 @@ window.KNOCKOUT_PREDICTIONS = {
         "round_of_32": "NoDorex",
         "round_of_16": "NoDorex",
         "quarterfinal": "NoDorex",
-        "semifinal": "NoDorex"
+        "semifinal": "NoDorex",
+        "final": "NoDorex"
       },
       "matches": [
         {
@@ -4849,22 +5239,41 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 2,
           "awayScore": 1,
           "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "103",
+          "stage": "third_place_match",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "England",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "104",
+          "stage": "final",
+          "mode": "score",
+          "homeTeam": "Spain",
+          "awayTeam": "Argentina",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Argentina"
         }
       ],
       "validation": {
         "complete": false,
-        "expectedMatchCount": 31,
-        "matchCount": 30,
+        "expectedMatchCount": 32,
+        "matchCount": 32,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
-          "final": 0
-        },
-        "missingOrExtraByStage": {
+          "third_place_match": 1,
           "final": 1
         },
+        "missingOrExtraByStage": {},
         "duplicateMatchIds": [],
         "incompleteMatchIds": [
           "77"
@@ -4984,6 +5393,28 @@ window.KNOCKOUT_PREDICTIONS = {
             "question": "How many red cards will be shown?",
             "answer": "1.0"
           }
+        ],
+        "final": [
+          {
+            "question": "How many goals will be scored in the Final?",
+            "answer": "3.0"
+          },
+          {
+            "question": "Which player will score the first goal in the Final?",
+            "answer": "Lautaro"
+          },
+          {
+            "question": "Which match will have more total goals: third-place or final?",
+            "answer": "Same"
+          },
+          {
+            "question": "Who will win the Golden Boot?",
+            "answer": "Messi"
+          },
+          {
+            "question": "Who will be the MVP of World cup?",
+            "answer": "Messi"
+          }
         ]
       },
       "roundOf32BonusAnswers": [
@@ -5031,7 +5462,8 @@ window.KNOCKOUT_PREDICTIONS = {
         "round_of_32": "paul",
         "round_of_16": "paul",
         "quarterfinal": "paul",
-        "semifinal": "paul"
+        "semifinal": "paul",
+        "final": "paul"
       },
       "matches": [
         {
@@ -5342,22 +5774,41 @@ window.KNOCKOUT_PREDICTIONS = {
           "homeScore": 3,
           "awayScore": 2,
           "predictedAdvancingTeam": "England"
+        },
+        {
+          "matchId": "103",
+          "stage": "third_place_match",
+          "mode": "score",
+          "homeTeam": "France",
+          "awayTeam": "England",
+          "homeScore": 2,
+          "awayScore": 1,
+          "predictedAdvancingTeam": "France"
+        },
+        {
+          "matchId": "104",
+          "stage": "final",
+          "mode": "score",
+          "homeTeam": "Spain",
+          "awayTeam": "Argentina",
+          "homeScore": 1,
+          "awayScore": 2,
+          "predictedAdvancingTeam": "Argentina"
         }
       ],
       "validation": {
         "complete": false,
-        "expectedMatchCount": 31,
-        "matchCount": 30,
+        "expectedMatchCount": 32,
+        "matchCount": 32,
         "stageCounts": {
           "round_of_32": 16,
           "round_of_16": 8,
           "quarterfinal": 4,
           "semifinal": 2,
-          "final": 0
-        },
-        "missingOrExtraByStage": {
+          "third_place_match": 1,
           "final": 1
         },
+        "missingOrExtraByStage": {},
         "duplicateMatchIds": [],
         "incompleteMatchIds": [
           "75"
@@ -5476,6 +5927,28 @@ window.KNOCKOUT_PREDICTIONS = {
           {
             "question": "How many red cards will be shown?",
             "answer": "1.0"
+          }
+        ],
+        "final": [
+          {
+            "question": "How many goals will be scored in the Final?",
+            "answer": "3.0"
+          },
+          {
+            "question": "Which player will score the first goal in the Final?",
+            "answer": "messi"
+          },
+          {
+            "question": "Which match will have more total goals: third-place or final?",
+            "answer": "final"
+          },
+          {
+            "question": "Who will win the Golden Boot?",
+            "answer": "messi"
+          },
+          {
+            "question": "Who will be the MVP of World cup?",
+            "answer": "messi"
           }
         ]
       },

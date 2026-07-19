@@ -547,6 +547,31 @@ td {
   gap: 22px;
 }
 
+.finals-substage + .finals-substage {
+  border-top: 2px solid var(--line);
+}
+
+.finals-substage-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--soft);
+  border-bottom: 1px solid var(--line);
+}
+
+.finals-substage-title h3 {
+  margin: 0;
+}
+
+.finals-substage-title span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 .rule-pill.pending {
   background: var(--gold-soft);
   color: var(--gold);

@@ -340,6 +340,19 @@ table {
   font-weight: 800;
 }
 
+.knockout-substage + .knockout-substage {
+  border-top: 2px solid var(--line);
+}
+
+.knockout-substage > h4 {
+  margin: 0;
+  padding: 11px 12px;
+  background: var(--soft);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 850;
+}
+
 .knockout-table-wrap {
   overflow-x: auto;
 }

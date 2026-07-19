@@ -17,6 +17,7 @@ ROUND_OF_32_FALLBACK_PATH = ROOT / "data" / "raw" / "round_of_32.xlsx"
 ROUND_OF_16_FALLBACK_PATH = ROOT / "data" / "raw" / "round_of_16.xlsx"
 QUARTERFINAL_FALLBACK_PATH = ROOT / "data" / "raw" / "quaterfinals.xlsx"
 SEMIFINAL_FALLBACK_PATH = ROOT / "data" / "raw" / "semifinals.xlsx"
+FINALS_FALLBACK_PATH = ROOT / "data" / "raw" / "finals.xlsx"
 
 MAIN_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -28,6 +29,7 @@ STAGE_MATCH_IDS = {
     "round_of_16": tuple(str(match_id) for match_id in range(89, 97)),
     "quarterfinal": ("97", "98", "99", "100"),
     "semifinal": ("101", "102"),
+    "third_place_match": ("103",),
     "final": ("104",),
 }
 
@@ -36,6 +38,7 @@ STAGE_LABELS = {
     "round_of_16": "Round of 16",
     "quarterfinal": "Quarterfinals",
     "semifinal": "Semifinals",
+    "third_place_match": "Third-place match",
     "final": "Final",
 }
 
@@ -52,7 +55,9 @@ WORKBOOK_PATHS = {
     "semifinal": SEMIFINAL_FALLBACK_PATH
     if SEMIFINAL_FALLBACK_PATH.exists()
     else RAW_DIR / "semifinals.xlsx",
-    "final": RAW_DIR / "final.xlsx",
+    "final": FINALS_FALLBACK_PATH
+    if FINALS_FALLBACK_PATH.exists()
+    else RAW_DIR / "final.xlsx",
 }
 
 VISUAL_STAGE_PAIR_MATCH_IDS = {
@@ -100,7 +105,12 @@ STAGE_ALIASES = {
     "semi-final": "semifinal",
     "semi-finals": "semifinal",
     "semi-finals2": "semifinal",
+    "third place": "third_place_match",
+    "third-place": "third_place_match",
+    "third place match": "third_place_match",
+    "third-place match": "third_place_match",
     "final": "final",
+    "finals": "final",
 }
 
 HEADER_ALIASES = {
@@ -412,6 +422,13 @@ def extract_predictions(
         return predictions
 
     if default_stage and default_stage != "round_of_32":
+        if default_stage == "final":
+            visual_predictions = extract_visual_finals_predictions(
+                cells,
+                ignored_cells=ignored_cells,
+            )
+            if visual_predictions:
+                return visual_predictions
         visual_predictions = extract_visual_stage_predictions(
             cells,
             default_stage,
@@ -622,6 +639,63 @@ def extract_visual_stage_predictions(
     return sorted(predictions, key=lambda match: match_sort_key(str(match.get("matchId", ""))))
 
 
+def extract_visual_finals_predictions(
+    cells: dict[tuple[int, int], str],
+    ignored_cells: set[tuple[int, int]] | None = None,
+) -> list[dict[str, object]]:
+    """Extract match 103 followed by match 104 from the Finals card."""
+    ignored_cells = ignored_cells or set()
+    heading = find_visual_stage_heading(cells, "final", expected_rows=2)
+    if not heading:
+        return []
+
+    heading_row, heading_column = heading
+    matches = []
+    for offset, (stage, match_id) in enumerate(
+        (("third_place_match", "103"), ("final", "104")),
+        start=1,
+    ):
+        row = heading_row + offset
+        home_team = clean_text(cells.get((row, heading_column), ""))
+        away_team = clean_text(cells.get((row, heading_column + 3), ""))
+        if not home_team and not away_team:
+            continue
+        home_score = optional_int(cell_text(cells, row, heading_column + 1, ignored_cells=ignored_cells))
+        away_score = optional_int(cell_text(cells, row, heading_column + 2, ignored_cells=ignored_cells))
+        home_penalty_score = optional_int(cell_text(cells, row, heading_column + 4, ignored_cells=ignored_cells))
+        away_penalty_score = optional_int(cell_text(cells, row, heading_column + 5, ignored_cells=ignored_cells))
+        prediction = {
+            "matchId": match_id,
+            "stage": stage,
+            "mode": "score",
+            "homeTeam": home_team,
+            "awayTeam": away_team,
+        }
+        for key, value in (
+            ("homeScore", home_score),
+            ("awayScore", away_score),
+            ("homePenaltyScore", home_penalty_score),
+            ("awayPenaltyScore", away_penalty_score),
+        ):
+            if value is not None:
+                prediction[key] = value
+        ignored_fields = ignored_visual_stage_fields(row, heading_column, ignored_cells)
+        if ignored_fields:
+            prediction["ignoredFields"] = ignored_fields
+        advancing_team = predicted_advancing_team(
+            home_team,
+            away_team,
+            home_score,
+            away_score,
+            home_penalty_score,
+            away_penalty_score,
+        )
+        if advancing_team:
+            prediction["predictedAdvancingTeam"] = advancing_team
+        matches.append(prediction)
+    return sorted(matches, key=lambda match: match_sort_key(str(match["matchId"])))
+
+
 def ignored_round_of_32_fields(
     row: int,
     heading_column: int,
@@ -668,8 +742,9 @@ def extract_bonus_answers(
 ) -> dict[str, list[dict[str, str]]]:
     ignored_cells = ignored_cells or set()
     bonus_headings = find_headings(cells, "bonus questions", allow_prefix=True)
+    final_answers = extract_final_bonus_answers(cells, ignored_cells)
     if not bonus_headings:
-        return {}
+        return {"final": final_answers} if final_answers else {}
 
     max_row = max((row for row, _column in cells), default=0)
     max_column = max((column for _row, column in cells), default=0)
@@ -697,7 +772,30 @@ def extract_bonus_answers(
         if answers:
             answers_by_stage[stage] = answers
 
+    if final_answers:
+        answers_by_stage["final"] = final_answers
     return answers_by_stage
+
+
+def extract_final_bonus_answers(
+    cells: dict[tuple[int, int], str],
+    ignored_cells: set[tuple[int, int]],
+) -> list[dict[str, str]]:
+    heading = find_visual_stage_heading(cells, "final", expected_rows=2)
+    if not heading:
+        return []
+    heading_row, heading_column = heading
+    answers = []
+    for row in range(heading_row + 4, heading_row + 9):
+        question = clean_text(cells.get((row, heading_column), ""))
+        if not question:
+            continue
+        answer = cell_text(cells, row, heading_column + 4, ignored_cells=ignored_cells)
+        payload = {"question": question, "answer": answer}
+        if (row, heading_column + 4) in ignored_cells:
+            payload["ignored"] = True
+        answers.append(payload)
+    return answers
 
 
 def canonical_bonus_question(question: str, stage: str = "") -> str:
@@ -802,6 +900,7 @@ def find_visual_round_of_32_heading(
 def find_visual_stage_heading(
     cells: dict[tuple[int, int], str],
     stage: str,
+    expected_rows: int | None = None,
 ) -> tuple[int, int] | None:
     match_ids = STAGE_MATCH_IDS.get(stage, ())
     if not match_ids:
@@ -819,12 +918,13 @@ def find_visual_stage_heading(
     )
     for row, column in candidates:
         fixture_rows = 0
-        for offset in range(1, len(match_ids) + 1):
+        required_rows = expected_rows or len(match_ids)
+        for offset in range(1, required_rows + 1):
             home_team = clean_text(cells.get((row + offset, column), ""))
             away_team = clean_text(cells.get((row + offset, column + 3), ""))
             if home_team and away_team:
                 fixture_rows += 1
-        if fixture_rows >= len(match_ids):
+        if fixture_rows >= required_rows:
             return row, column
     return None
 

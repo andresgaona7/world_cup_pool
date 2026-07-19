@@ -1,5 +1,5 @@
 const dataNode = document.querySelector(
-  "#quarterfinal-consensus-data, #semifinal-consensus-data"
+  "#quarterfinal-consensus-data, #semifinal-consensus-data, #finals-consensus-data"
 );
 const data = JSON.parse(dataNode.textContent);
 const consensus = data.consensus;
