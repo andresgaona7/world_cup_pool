@@ -42,6 +42,7 @@ TEAM_NAME_ALIASES = {
     "democratic republic of congo": "congo dr",
     "democratic republic of the congo": "congo dr",
     "turkey": "turkiye",
+    "espana": "spain",
 }
 
 

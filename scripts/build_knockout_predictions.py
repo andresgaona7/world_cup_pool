@@ -83,6 +83,7 @@ TEAM_ALIASES = {
     "cabo verde": "Cape Verde Islands",
     "cape verde": "Cape Verde Islands",
     "dr congo": "Congo DR",
+    "espana": "Spain",
 }
 
 STAGE_ALIASES = {

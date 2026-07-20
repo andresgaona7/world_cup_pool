@@ -106,6 +106,7 @@ const KNOCKOUT_TEAM_ALIASES = {
   morroco: "morocco",
   nederlands: "netherlands",
   usa: "united states",
+  espana: "spain",
 };
 const COLORS = ["#0f7a63", "#255f9d", "#986800", "#9d3333", "#5b6b2f", "#7b4da8", "#007c89", "#c45113", "#42526e", "#0b604e", "#734222"];
 const SVG_NS = "http://www.w3.org/2000/svg";
@@ -295,6 +296,7 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
     roundOf32BonusResults: {},
     quarterfinalBonusResults: {},
     semifinalBonusResults: {},
+    finalBonusResults: {},
   };
   const declared = (resultsData?.timelineCheckpoints || [])
     .map((checkpoint) => normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData))
@@ -320,6 +322,7 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
       roundOf32BonusResults: resultsData?.roundOf32BonusResults || {},
       quarterfinalBonusResults: resultsData?.quarterfinalBonusResults || {},
       semifinalBonusResults: resultsData?.semifinalBonusResults || {},
+      finalBonusResults: resultsData?.finalBonusResults || {},
     }
     : null;
   if (fallbackCheckpoint) {
@@ -339,6 +342,7 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
       roundOf32BonusResults: resultsData?.roundOf32BonusResults || {},
       quarterfinalBonusResults: resultsData?.quarterfinalBonusResults || {},
       semifinalBonusResults: resultsData?.semifinalBonusResults || {},
+      finalBonusResults: resultsData?.finalBonusResults || {},
     });
     fallbackCheckpoints.push({
       key: "bonuses",
@@ -354,6 +358,7 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
       roundOf32BonusResults: resultsData?.roundOf32BonusResults || {},
       quarterfinalBonusResults: resultsData?.quarterfinalBonusResults || {},
       semifinalBonusResults: resultsData?.semifinalBonusResults || {},
+      finalBonusResults: resultsData?.finalBonusResults || {},
     });
   }
 
@@ -379,6 +384,10 @@ function normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData = {}
     checkpoint.semifinalBonusResults ||
     (checkpointIncludesSemifinal(stage) ? resultsData?.semifinalBonusResults : {}) ||
     {};
+  const finalBonusResults =
+    checkpoint.finalBonusResults ||
+    (checkpointIncludesFinal(stage) ? resultsData?.finalBonusResults : {}) ||
+    {};
   const includeFutures = Boolean(checkpoint.includeFutures || checkpoint.key === "futures" || stage === "futures");
   const includeBonuses = Boolean(checkpoint.includeBonuses || checkpoint.key === "bonuses" || stage === "bonuses");
   const includesFutures = includeFutures || includeBonuses;
@@ -398,6 +407,7 @@ function normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData = {}
     roundOf32BonusResults,
     quarterfinalBonusResults,
     semifinalBonusResults,
+    finalBonusResults,
   };
 }
 
@@ -411,6 +421,10 @@ function checkpointIncludesQuarterfinal(stage) {
 
 function checkpointIncludesSemifinal(stage) {
   return (KNOCKOUT_STAGE_ORDER[stage] ?? -1) >= KNOCKOUT_STAGE_ORDER.semifinal;
+}
+
+function checkpointIncludesFinal(stage) {
+  return (KNOCKOUT_STAGE_ORDER[stage] ?? -1) >= KNOCKOUT_STAGE_ORDER.final;
 }
 
 function mergePlannedCheckpoints(sourcePlayers, availableCheckpoints) {
@@ -762,6 +776,7 @@ function scoreAllPlayersForCheckpoint(sourcePlayers, checkpoint) {
         round_of_32: checkpoint.roundOf32BonusResults || {},
         quarterfinal: checkpoint.quarterfinalBonusResults || {},
         semifinal: checkpoint.semifinalBonusResults || {},
+        final: checkpoint.finalBonusResults || {},
       };
       const knockout = scoreKnockout(player, checkpoint.officialMatches || [], bonusResults);
       const knockoutStages = Object.fromEntries(
@@ -786,7 +801,7 @@ function scoreAllPlayersForCheckpoint(sourcePlayers, checkpoint) {
         futures: futuresScore.points,
         bonus,
         includedBonus: bonus,
-        displayedTotal: firstRound + knockout.points + knockout.bonus,
+        displayedTotal: total,
         total,
       };
     })
@@ -879,7 +894,7 @@ function scoreKnockoutStage(player, stage, officialMatches, bonusResults = {}) {
 
   const perfectWinnersBonus = perfectWinnersPossible ? KNOCKOUT_PERFECT_WINNER_BONUS_POINTS[stage] : 0;
   const perfectScoresBonus = perfectScoresPossible ? KNOCKOUT_PERFECT_SCORE_BONUS_POINTS[stage] : 0;
-  const bonusQuestionPoints = ["round_of_32", "quarterfinal", "semifinal"].includes(stage)
+  const bonusQuestionPoints = ["round_of_32", "quarterfinal", "semifinal", "final"].includes(stage)
     ? scoreKnockoutBonusQuestions(player, stage, bonusResults[stage] || {}, stageMatches)
     : 0;
   return {
@@ -893,7 +908,7 @@ function scoreKnockoutBonusQuestions(player, stage, officialResults = {}, stageM
   return answers.reduce((total, item) => {
     const earnedPoints = knockoutBonusQuestionPoints(
       item.answer,
-      officialKnockoutBonusAnswer(item.question, officialResults, stageMatches)
+      officialKnockoutBonusAnswer(stage, item.question, officialResults, stageMatches)
     );
     return total + (earnedPoints || 0);
   }, 0);
@@ -906,9 +921,14 @@ function knockoutBonusQuestionPoints(playerAnswer, officialAnswer) {
   return bonusAnswerMatches(playerAnswer, officialAnswer) ? KNOCKOUT_BONUS_QUESTION_POINTS : 0;
 }
 
-function officialKnockoutBonusAnswer(question, officialResults = {}, stageMatches = []) {
+function officialKnockoutBonusAnswer(stage, question, officialResults = {}, stageMatches = []) {
   const key = canonicalBonusQuestion(question);
   const values = {
+    final_total_goals: officialResults.finalTotalGoals,
+    final_first_scorer: officialResults.finalFirstScorer,
+    finals_higher_scoring_match: officialResults.higherScoringMatch,
+    golden_boot: officialResults.goldenBoot,
+    world_cup_mvp: officialResults.worldCupMvp,
     extra_time_matches: officialResults.extraTimeMatches,
     penalty_matches: officialResults.penaltyMatches,
     most_goals_team: officialResults.mostGoalsTeam,
@@ -922,17 +942,35 @@ function officialKnockoutBonusAnswer(question, officialResults = {}, stageMatche
   if (values[key] !== null && values[key] !== "" && values[key] !== undefined) {
     return values[key];
   }
-  if (key === "extra_time_matches") {
+  const stageIsComplete =
+    KNOCKOUT_STAGE_MATCH_COUNTS[stage] !== undefined &&
+    stageMatches.length === KNOCKOUT_STAGE_MATCH_COUNTS[stage];
+  if (stageIsComplete && key === "extra_time_matches") {
     return stageMatches.filter((match) => String(match.duration || "").toUpperCase() === "EXTRA_TIME").length;
   }
-  if (key === "penalty_matches") {
+  if (stageIsComplete && key === "penalty_matches") {
     return stageMatches.filter((match) => match.homePenaltyScore != null && match.awayPenaltyScore != null).length;
   }
-  return values[key];
+  return stageIsComplete ? values[key] : null;
 }
 
 function canonicalBonusQuestion(question) {
   const text = String(question || "").toLowerCase();
+  if (text.includes("which match") && text.includes("third-place") && text.includes("final")) {
+    return "finals_higher_scoring_match";
+  }
+  if (text.includes("how many goals") && text.includes("final")) {
+    return "final_total_goals";
+  }
+  if (text.includes("first goal") && text.includes("final")) {
+    return "final_first_scorer";
+  }
+  if (text.includes("golden boot")) {
+    return "golden_boot";
+  }
+  if (text.includes("mvp") && text.includes("world cup")) {
+    return "world_cup_mvp";
+  }
   if (text.includes("extra time") && !text.includes("latest goal")) {
     return "extra_time_matches";
   }

@@ -261,6 +261,10 @@ def build_checkpoint(checkpoint_key: str, official_results: dict[str, Any]) -> d
         checkpoint["semifinalBonusResults"] = normalize_bonus_results(
             official_results.get("semifinalBonusResults")
         )
+    if metadata["stage"] in {"final", "futures"}:
+        checkpoint["finalBonusResults"] = normalize_bonus_results(
+            official_results.get("finalBonusResults")
+        )
     if metadata.get("includeFutures"):
         checkpoint["includeFutures"] = True
     return checkpoint

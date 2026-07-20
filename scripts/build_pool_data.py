@@ -45,6 +45,8 @@ GRID_ROWS = range(11, 31)
 BEST_THIRD_ROWS = range(28, 31)
 BEST_THIRD_PAIRS = ((3, 4), (5, 6), (7, 8))
 COUNTRY_ALIASES = {
+    "argentina": "Argentina",
+    "brazil": "Brazil",
     "bosnia": "Bosnia-Herzegovina",
     "bosnia and herzegovina": "Bosnia-Herzegovina",
     "bosnia-herzegovina": "Bosnia-Herzegovina",
@@ -57,6 +59,16 @@ COUNTRY_ALIASES = {
     "turkey": "Türkiye",
     "turkiye": "Türkiye",
     "türkiye": "Türkiye",
+    "espana": "Spain",
+    "españa": "Spain",
+    "ecuador": "Ecuador",
+    "england": "England",
+    "france": "France",
+    "morocco": "Morocco",
+    "netherlands": "Netherlands",
+    "norway": "Norway",
+    "portugal": "Portugal",
+    "spain": "Spain",
 }
 PLAYER_ALIASES = {
     "k mbappe": "Kylian Mbappe",
@@ -188,6 +200,7 @@ def clean_text(value: object) -> str:
 
 def normalize_country(value: object) -> str:
     text = clean_text(value)
+    text = re.sub(r"[\U0001F1E6-\U0001F1FF]", "", text).strip()
     return COUNTRY_ALIASES.get(text.lower(), text)
 
 

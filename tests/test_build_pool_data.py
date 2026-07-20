@@ -29,6 +29,12 @@ class BuildPoolDataTests(unittest.TestCase):
         self.assertEqual(build_pool_data.normalize_country("Turkiye"), "Türkiye")
         self.assertEqual(build_pool_data.normalize_country("Türkiye"), "Türkiye")
 
+    def test_normalize_country_translates_spanish_and_removes_flag_emoji(self):
+        self.assertEqual(build_pool_data.normalize_country("España"), "Spain")
+        self.assertEqual(build_pool_data.normalize_country("Espana"), "Spain")
+        self.assertEqual(build_pool_data.normalize_country("Portugal 🇵🇹"), "Portugal")
+        self.assertEqual(build_pool_data.normalize_country("france"), "France")
+
     def test_normalize_country_uses_official_congo_dr_name(self):
         self.assertEqual(build_pool_data.normalize_country("DR Congo"), "Congo DR")
         self.assertEqual(build_pool_data.normalize_country("Congo DR"), "Congo DR")

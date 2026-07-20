@@ -1,6 +1,6 @@
 {
-  "champion": "",
-  "runnerUp": "",
+  "champion": "Spain",
+  "runnerUp": "Argentina",
   "topScorer": "Kylian Mbappe",
   "topScorers": [
     "Kylian Mbappe"
@@ -12,7 +12,7 @@
     "Morocco": "quarterfinal",
     "France": "semifinal",
     "England": "semifinal",
-    "Spain": "final",
-    "Argentina": "final"
+    "Spain": "champion",
+    "Argentina": "runner_up"
   }
 }

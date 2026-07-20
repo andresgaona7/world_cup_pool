@@ -1252,7 +1252,7 @@ window.POOL_DATA = {
         },
         "champion": {
           "label": "Winner team",
-          "value": "España"
+          "value": "Spain"
         },
         "runner_up": {
           "label": "Runner-up",
@@ -1562,11 +1562,11 @@ window.POOL_DATA = {
         },
         "champion": {
           "label": "Winner team",
-          "value": "España"
+          "value": "Spain"
         },
         "runner_up": {
           "label": "Runner-up",
-          "value": "france"
+          "value": "France"
         },
         "favorite_team": {
           "label": "Favorite team",
@@ -2182,15 +2182,15 @@ window.POOL_DATA = {
         },
         "champion": {
           "label": "Winner team",
-          "value": "Portugal 🇵🇹"
+          "value": "Portugal"
         },
         "runner_up": {
           "label": "Runner-up",
-          "value": "Netherlands 🇳🇱"
+          "value": "Netherlands"
         },
         "favorite_team": {
           "label": "Favorite team",
-          "value": "Ecuador 🇪🇨"
+          "value": "Ecuador"
         },
         "favorite_team_round": {
           "label": "Favorite team last round",

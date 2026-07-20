@@ -43,6 +43,8 @@ TEAM_NAME_ALIASES = {
     "Turkey": "Türkiye",
     "Turkiye": "Türkiye",
     "Tutkey": "Türkiye",
+    "Espana": "Spain",
+    "España": "Spain",
 }
 PLAYER_NAME_ALIASES = {
     "k mbappe": "Kylian Mbappe",

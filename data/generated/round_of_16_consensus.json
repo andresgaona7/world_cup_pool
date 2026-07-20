@@ -4,9 +4,11 @@
     "generated_from": [
       "data/raw/round_of_32.xlsx",
       "data/raw/round_of_16.xlsx",
-      "data/raw/quaterfinals.xlsx"
+      "data/raw/quaterfinals.xlsx",
+      "data/raw/semifinals.xlsx",
+      "data/raw/finals.xlsx"
     ],
-    "generated_at": "2026-07-10T11:02:37.204075+00:00",
+    "generated_at": "2026-07-20T08:15:56.977425+00:00",
     "player_count": 11,
     "match_count": 8
   },

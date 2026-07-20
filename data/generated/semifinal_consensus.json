@@ -5,9 +5,10 @@
       "data/raw/round_of_32.xlsx",
       "data/raw/round_of_16.xlsx",
       "data/raw/quaterfinals.xlsx",
-      "data/raw/semifinals.xlsx"
+      "data/raw/semifinals.xlsx",
+      "data/raw/finals.xlsx"
     ],
-    "generated_at": "2026-07-15T03:17:42.566042+00:00",
+    "generated_at": "2026-07-20T08:15:57.103044+00:00",
     "stage": "semifinal",
     "stage_label": "Semifinals",
     "player_count": 11,
@@ -23,11 +24,11 @@
       "advancingTeamConsensus": [
         {
           "value": "France",
-          "votes": 8
+          "votes": 9
         },
         {
           "value": "Spain",
-          "votes": 3
+          "votes": 2
         }
       ],
       "scoreConsensus": [
@@ -40,19 +41,15 @@
           "votes": 2
         },
         {
+          "value": "3-2",
+          "votes": 2
+        },
+        {
           "value": "3-1",
           "votes": 2
         },
         {
           "value": "1-1",
-          "votes": 1
-        },
-        {
-          "value": "2-3",
-          "votes": 1
-        },
-        {
-          "value": "3-2",
           "votes": 1
         }
       ],
@@ -120,7 +117,7 @@
   "advancing_teams": [
     {
       "value": "France",
-      "votes": 8
+      "votes": 9
     },
     {
       "value": "England",
@@ -132,7 +129,7 @@
     },
     {
       "value": "Spain",
-      "votes": 3
+      "votes": 2
     }
   ],
   "bonus_questions": [

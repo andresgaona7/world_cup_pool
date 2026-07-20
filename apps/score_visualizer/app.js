@@ -64,6 +64,8 @@ const KNOCKOUT_TEAM_ALIASES = {
   morroco: "morocco",
   nederlands: "netherlands",
   usa: "united states",
+  espana: "spain",
+  "españa": "spain",
 };
 const KNOCKOUT_STAGE_LABELS = {
   round_of_32: "Round of 32",
@@ -99,6 +101,7 @@ const scenario = officialScenario;
 const officialRoundOf32BonusResults = officialData?.roundOf32BonusResults || {};
 const officialQuarterfinalBonusResults = officialData?.quarterfinalBonusResults || {};
 const officialSemifinalBonusResults = officialData?.semifinalBonusResults || {};
+const officialFinalBonusResults = officialData?.finalBonusResults || {};
 const officialKnockoutMatches = latestOfficialKnockoutMatches(officialData);
 const officialKnockoutDisplayMatches = latestOfficialKnockoutDisplayMatches(officialData, knockoutData);
 const collapsedPanels = new Map();
@@ -1998,9 +2001,21 @@ function officialKnockoutBonusAnswer(stage, question) {
     return officialSemifinalBonusAnswer(question);
   }
   if (stage === "final") {
-    return null;
+    return officialFinalBonusAnswer(question);
   }
   return calculatedKnockoutBonusAnswer(stage, question);
+}
+
+function officialFinalBonusAnswer(question) {
+  const key = canonicalBonusQuestion(question);
+  const values = {
+    final_total_goals: officialFinalBonusResults.finalTotalGoals,
+    final_first_scorer: officialFinalBonusResults.finalFirstScorer,
+    finals_higher_scoring_match: officialFinalBonusResults.higherScoringMatch,
+    golden_boot: officialFinalBonusResults.goldenBoot,
+    world_cup_mvp: officialFinalBonusResults.worldCupMvp,
+  };
+  return values[key];
 }
 
 function officialQuarterfinalBonusAnswer(question) {

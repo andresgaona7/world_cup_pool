@@ -59,6 +59,8 @@ TEAM_NAME_ALIASES = {
     "Turkey": "Türkiye",
     "Turkiye": "Türkiye",
     "Tutkey": "Türkiye",
+    "Espana": "Spain",
+    "España": "Spain",
 }
 GROUP_SIZE = 4
 GROUP_STAGE_GAMES = 3
@@ -80,6 +82,7 @@ PRESERVED_KNOCKOUT_FIELDS = (
     "roundOf32BonusResults",
     "quarterfinalBonusResults",
     "semifinalBonusResults",
+    "finalBonusResults",
     "knockoutSource",
 )
 

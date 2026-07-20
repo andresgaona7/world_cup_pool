@@ -5,9 +5,10 @@
       "data/raw/round_of_32.xlsx",
       "data/raw/round_of_16.xlsx",
       "data/raw/quaterfinals.xlsx",
-      "data/raw/semifinals.xlsx"
+      "data/raw/semifinals.xlsx",
+      "data/raw/finals.xlsx"
     ],
-    "generated_at": "2026-07-15T02:54:45.465153+00:00",
+    "generated_at": "2026-07-20T08:15:57.045768+00:00",
     "stage": "quarterfinal",
     "stage_label": "Quarterfinals",
     "player_count": 11,
