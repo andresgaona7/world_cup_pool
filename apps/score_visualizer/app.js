@@ -110,8 +110,6 @@ let comparisonPlayerIndex = initialComparisonPlayerIndex();
 const leaderboardTable = document.querySelector("#leaderboardTable");
 const rulesGrid = document.querySelector("#rulesGrid");
 const playerSelect = document.querySelector("#playerSelect");
-const leaderboardScenarioStatus = document.querySelector("#leaderboardScenarioStatus");
-const comparisonStatus = document.querySelector("#comparisonStatus");
 const comparisonSummary = document.querySelector("#comparisonSummary");
 const futuresSummary = document.querySelector("#futuresSummary");
 const groupComparisonTable = document.querySelector("#groupComparisonTable");
@@ -760,12 +758,8 @@ function renderRules() {
 
 function renderComparison() {
   const comparisonScenario = scenario;
-  const hasComparisonData = hasScenarioData(comparisonScenario);
   const selectedPlayer = players[comparisonPlayerIndex] || players[0];
-  const resultLabel = "Official result";
-  comparisonStatus.textContent = "Official results";
-  comparisonStatus.classList.toggle("pending", !hasComparisonData);
-
+  const resultLabel = "Result";
   const groupRows = GROUP_IDS.map((groupId) => groupComparisonRow(groupId, selectedPlayer, comparisonScenario));
   const qualifierMatches = groupRows.reduce((total, row) => total + row.qualifierMatches, 0);
   const exactAdvancingPositions = groupRows.reduce((total, row) => total + row.exactAdvancingPositions, 0);
@@ -853,7 +847,7 @@ function renderComparison() {
   bestThirdComparisonTable.innerHTML = `
     <thead>
       <tr>
-        <th>Official results</th>
+        <th>Result</th>
         <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
         <th>Overlap result</th>
         <th>Points</th>
@@ -907,7 +901,7 @@ function renderComparison() {
     <thead>
       <tr>
         <th>Rule</th>
-        <th>Official results</th>
+        <th>Result</th>
         <th>${escapeHtml(selectedPlayer?.name || "Player")} prediction</th>
         <th>Result</th>
         <th>Points</th>
@@ -968,7 +962,7 @@ function knockoutStagePanelHtml(stage, rows, selectedPlayer) {
           <h2>${escapeHtml(knockoutStageLabel(stage))}</h2>
         </div>
         <div class="panel-actions">
-          <span class="rule-pill ${hasStageResults ? "" : "pending"}">${hasStageResults ? "Official results" : "Pending results"}</span>
+          ${hasStageResults ? "" : '<span class="rule-pill pending">Pending results</span>'}
           <button class="collapse-toggle" type="button" aria-expanded="${collapsed ? "false" : "true"}">
             <span class="collapse-toggle-label">${collapsed ? "Show" : "Hide"}</span>
           </button>
@@ -987,7 +981,7 @@ function knockoutFinalsPanelHtml(rows, selectedPlayer) {
   const hasResults = stages.some((stage) =>
     rows.some((row) => row.stage === stage && row.hasResult)
   );
-  const collapsed = isPanelCollapsed(panelKey, false);
+  const collapsed = isPanelCollapsed(panelKey, true);
 
   return `
     <section class="panel knockout-stage-panel finals-stage-panel collapsible-panel ${collapsed ? "is-collapsed" : ""}" data-collapsible-panel data-collapsible-key="${panelKey}" data-collapsed="${collapsed ? "true" : "false"}">
@@ -996,7 +990,7 @@ function knockoutFinalsPanelHtml(rows, selectedPlayer) {
           <h2>Finals</h2>
         </div>
         <div class="panel-actions">
-          <span class="rule-pill ${hasResults ? "" : "pending"}">${hasResults ? "Official results" : "Pending results"}</span>
+          ${hasResults ? "" : '<span class="rule-pill pending">Pending results</span>'}
           <button class="collapse-toggle" type="button" aria-expanded="${collapsed ? "false" : "true"}">
             <span class="collapse-toggle-label">${collapsed ? "Show" : "Hide"}</span>
           </button>
@@ -1785,7 +1779,6 @@ function chart(title, rows, maxVotes) {
 
 function renderLeaderboard() {
   document.querySelector(".empty-state")?.remove();
-  leaderboardScenarioStatus.textContent = "Official results";
   const rows = scoreAllPlayers();
 
   if (!rows.length) {

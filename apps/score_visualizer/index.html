@@ -33,37 +33,48 @@
   <main class="page">
 
 
-    <section class="panel leaderboard-panel">
+    <section class="panel leaderboard-panel collapsible-panel" data-collapsible-panel data-collapsible-key="leaderboard" data-collapsed="false">
       <div class="panel-head">
         <div>
           <p class="eyebrow">Leaderboard</p>
           <h2>Score</h2>
         </div>
-        <span class="rule-pill" id="leaderboardScenarioStatus">Official results</span>
+        <div class="panel-actions">
+          <button class="collapse-toggle" type="button" aria-expanded="true">
+            <span class="collapse-toggle-label">Hide</span>
+          </button>
+        </div>
       </div>
-      <div class="leaderboard-warning" role="note" aria-label="Timeline scoring notice">
-        <span class="warning-mark" aria-hidden="true">!</span>
-        <p>Futures scores are shown separately, but they are not added to the official leaderboard total yet.
-        </p>
-      </div>
-      <div class="table-wrap">
-        <table id="leaderboardTable"></table>
+      <div class="collapsible-body">
+        <div class="leaderboard-warning" role="note" aria-label="Timeline scoring notice">
+          <span class="warning-mark" aria-hidden="true">!</span>
+          <p>Futures scores are shown separately, but they are not added to the official leaderboard total yet.
+          </p>
+        </div>
+        <div class="table-wrap">
+          <table id="leaderboardTable"></table>
+        </div>
       </div>
     </section>
 
-    <section class="panel selector-panel" aria-labelledby="selectorTitle">
+    <section class="panel selector-panel collapsible-panel" aria-labelledby="selectorTitle" data-collapsible-panel data-collapsible-key="player-selector" data-collapsed="false">
       <div class="panel-head">
         <div>
           <h2 id="selectorTitle">Player Selector</h2>
         </div>
+        <button class="collapse-toggle" type="button" aria-expanded="true">
+          <span class="collapse-toggle-label">Hide</span>
+        </button>
       </div>
-      <div class="selector-body">
-        <label class="player-select-control" for="playerSelect">
-          <span>Player</span>
-          <select id="playerSelect">
-            <option value="0">Loading players...</option>
-          </select>
-        </label>
+      <div class="collapsible-body">
+        <div class="selector-body">
+          <label class="player-select-control" for="playerSelect">
+            <span>Player</span>
+            <select id="playerSelect">
+              <option value="0">Loading players...</option>
+            </select>
+          </label>
+        </div>
       </div>
     </section>
 
@@ -73,7 +84,6 @@
           <h2>First Round</h2>
         </div>
         <div class="panel-actions">
-          <span class="rule-pill" id="comparisonStatus">Pending results</span>
           <button class="collapse-toggle" type="button" aria-expanded="false">
             <span class="collapse-toggle-label">Show</span>
           </button>
@@ -100,13 +110,13 @@
 
     <div id="knockoutStagePanels" class="knockout-stage-panels"></div>
 
-    <section class="panel futures-comparison-panel collapsible-panel" data-collapsible-panel data-collapsible-key="futures">
+    <section class="panel futures-comparison-panel collapsible-panel is-collapsed" data-collapsible-panel data-collapsible-key="futures" data-collapsed="true">
       <div class="panel-head">
         <div>
           <h2>Futures Comparison</h2>
         </div>
-        <button class="collapse-toggle" type="button" aria-expanded="true">
-          <span class="collapse-toggle-label">Hide</span>
+        <button class="collapse-toggle" type="button" aria-expanded="false">
+          <span class="collapse-toggle-label">Show</span>
         </button>
       </div>
       <div class="collapsible-body">

@@ -1300,18 +1300,20 @@ function renderMetrics(officialRows) {
   const thirdPlace = officialRows[2];
 
   metrics.replaceChildren(
-    officialRankMetric("Leader", leader),
-    officialRankMetric("Runner-up", runnerUp),
-    officialRankMetric("Third place", thirdPlace)
+    officialRankMetric("Leader", leader, 1),
+    officialRankMetric("Runner-up", runnerUp, 2),
+    officialRankMetric("Third place", thirdPlace, 3)
   );
 }
 
-function officialRankMetric(label, row) {
-  return metric(
+function officialRankMetric(label, row, rank) {
+  const node = metric(
     label,
     row ? `${row.icon} ${row.name}` : "None",
     row ? `${formatNormalizedScore(row.combined)} official score` : "0.000 official score"
   );
+  node.classList.add("podium-card", `podium-rank-${rank}`);
+  return node;
 }
 
 function metric(label, value, detail) {
@@ -1709,7 +1711,7 @@ function renderCombinedLeaderboard(combinedRows) {
     </thead>
     <tbody>
       ${combinedRows.map((row, index) => `
-        <tr>
+        <tr class="${index < 3 ? `podium-row podium-rank-${index + 1}` : ""}">
           <td class="rank">${index + 1}</td>
           <td class="player-cell combined-player-cell" style="border-left-color: ${escapeHtml(playerColor(row.playerIndex))}">
             <span class="player-icon" aria-hidden="true">${escapeHtml(row.icon)}</span>

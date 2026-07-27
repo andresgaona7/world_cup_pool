@@ -282,6 +282,10 @@ select {
   display: none;
 }
 
+.collapsible-panel.is-collapsed .panel-head {
+  border-bottom: 0;
+}
+
 .muted {
   color: var(--muted);
   font-size: 13px;

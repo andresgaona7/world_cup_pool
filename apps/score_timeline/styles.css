@@ -11,6 +11,12 @@
   --blue: #255f9d;
   --gold: #986800;
   --gold-soft: #f5ead0;
+  --podium-gold: #ad7d00;
+  --podium-gold-soft: #fff2bd;
+  --podium-silver: #748191;
+  --podium-silver-soft: #e9edf2;
+  --podium-bronze: #9a572c;
+  --podium-bronze-soft: #f3ddcc;
 }
 
 * {
@@ -444,6 +450,12 @@ th {
   --blue: #7eb6f6;
   --gold: #f2c76b;
   --gold-soft: #3d3020;
+  --podium-gold: #f2c75c;
+  --podium-gold-soft: #3b3117;
+  --podium-silver: #c3ccd6;
+  --podium-silver-soft: #29323c;
+  --podium-bronze: #e2a273;
+  --podium-bronze-soft: #3a291f;
 }
 
 .theme-toggle {
@@ -503,4 +515,49 @@ th {
 
 :root[data-theme="dark"] .chart-dot {
   stroke: var(--surface);
+}
+
+.metric.podium-rank-1 {
+  border-color: var(--podium-gold);
+  background: var(--podium-gold-soft);
+  box-shadow: inset 0 4px 0 var(--podium-gold);
+}
+
+.metric.podium-rank-2 {
+  border-color: var(--podium-silver);
+  background: var(--podium-silver-soft);
+  box-shadow: inset 0 4px 0 var(--podium-silver);
+}
+
+.metric.podium-rank-3 {
+  border-color: var(--podium-bronze);
+  background: var(--podium-bronze-soft);
+  box-shadow: inset 0 4px 0 var(--podium-bronze);
+}
+
+#combinedLeaderboardPanel tbody tr.podium-rank-1 td {
+  background: var(--podium-gold-soft);
+}
+
+#combinedLeaderboardPanel tbody tr.podium-rank-2 td {
+  background: var(--podium-silver-soft);
+}
+
+#combinedLeaderboardPanel tbody tr.podium-rank-3 td {
+  background: var(--podium-bronze-soft);
+}
+
+.podium-rank-1 .rank,
+.podium-rank-1 .total {
+  color: var(--podium-gold);
+}
+
+.podium-rank-2 .rank,
+.podium-rank-2 .total {
+  color: var(--podium-silver);
+}
+
+.podium-rank-3 .rank,
+.podium-rank-3 .total {
+  color: var(--podium-bronze);
 }
