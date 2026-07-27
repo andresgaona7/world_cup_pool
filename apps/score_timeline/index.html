@@ -57,11 +57,24 @@
       <div class="panel-head">
         <div>
           <!-- <p class="eyebrow">Checkpoint Detail</p> -->
-          <h2>Leaderboard and Legend</h2>
+          <h2>Asian Leaderboard</h2>
         </div>
+        <button class="panel-toggle" type="button" data-minimize-panel="leaderboardPanel" aria-controls="asianLeaderboardContent" aria-expanded="true">Minimize</button>
       </div>
-      <div class="table-wrap">
+      <div class="table-wrap panel-body" id="asianLeaderboardContent">
         <table id="leaderboardTable"></table>
+      </div>
+    </section>
+
+    <section class="panel leaderboard-panel" id="europeanLeaderboardPanel">
+      <div class="panel-head">
+        <div>
+          <h2>European Leaderboard</h2>
+        </div>
+        <button class="panel-toggle" type="button" data-minimize-panel="europeanLeaderboardPanel" aria-controls="europeanLeaderboardContent" aria-expanded="true">Minimize</button>
+      </div>
+      <div class="table-wrap panel-body" id="europeanLeaderboardContent">
+        <table id="europeanLeaderboardTable"></table>
       </div>
     </section>
   </main>

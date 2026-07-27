@@ -157,6 +157,35 @@ body {
   line-height: 1.2;
 }
 
+.panel-toggle {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 10px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.panel-toggle:hover,
+.panel-toggle:focus {
+  border-color: var(--accent);
+  color: var(--accent);
+  outline: none;
+}
+
+.panel.is-minimized .panel-head {
+  border-bottom: 0;
+}
+
+.panel.is-minimized .panel-body {
+  display: none;
+}
+
 .rule-pill {
   display: inline-flex;
   align-items: center;
@@ -405,6 +434,7 @@ th {
 
 :root[data-theme="dark"] select,
 :root[data-theme="dark"] input,
+:root[data-theme="dark"] .panel-toggle,
 :root[data-theme="dark"] .metric,
 :root[data-theme="dark"] .panel,
 :root[data-theme="dark"] .empty-state,

@@ -51,6 +51,29 @@ const KNOCKOUT_STAGE_LABELS = {
   final: "Final",
 };
 const LEADERBOARD_KNOCKOUT_STAGES = Object.keys(KNOCKOUT_BASE_POINTS);
+const EUROPEAN_LEADERBOARD_COLUMNS = [
+  ["total", "Total"],
+  ["groupStage", "Groups stage"],
+  ["roundOf32", "Round of 32"],
+  ["roundOf16", "Round of 16"],
+  ["quarterfinals", "Quarter finals"],
+  ["semifinals", "Semi finals"],
+  ["finals", "Finals"],
+  ["bonusQuestions", "Bonus questions"],
+];
+const EUROPEAN_LEADERBOARD_ROWS = [
+  { playerIndex: 0, name: "Elwebo + Gemini", total: 271, groupStage: 35, roundOf32: 82, roundOf16: 30, quarterfinals: 58, semifinals: 16, finals: 26, bonusQuestions: 24 },
+  { playerIndex: 8, name: "Emi", total: 270, groupStage: 32, roundOf32: 78, roundOf16: 36, quarterfinals: 72, semifinals: 6, finals: 22, bonusQuestions: 24 },
+  { playerIndex: 1, name: "Amal", total: 230, groupStage: 28, roundOf32: 60, roundOf16: 48, quarterfinals: 36, semifinals: 4, finals: 36, bonusQuestions: 18 },
+  { playerIndex: 10, name: "Elwebo con AI-ChatGPT", total: 225, groupStage: 27, roundOf32: 66, roundOf16: 30, quarterfinals: 54, semifinals: 20, finals: 24, bonusQuestions: 4 },
+  { playerIndex: 4, name: "Elwebo Lavenganza", total: 224, groupStage: 28, roundOf32: 58, roundOf16: 30, quarterfinals: 38, semifinals: 56, finals: 4, bonusQuestions: 10 },
+  { playerIndex: 2, name: "Daniel", total: 218, groupStage: 30, roundOf32: 76, roundOf16: 30, quarterfinals: 38, semifinals: 6, finals: 24, bonusQuestions: 14 },
+  { playerIndex: 9, name: "Irina", total: 208, groupStage: 18, roundOf32: 38, roundOf16: 36, quarterfinals: 38, semifinals: 34, finals: 24, bonusQuestions: 20 },
+  { playerIndex: 5, name: "paul", total: 201, groupStage: 23, roundOf32: 62, roundOf16: 30, quarterfinals: 68, semifinals: 4, finals: 0, bonusQuestions: 14 },
+  { playerIndex: 6, name: "Llucho", total: 183, groupStage: 29, roundOf32: 78, roundOf16: 36, quarterfinals: 30, semifinals: 2, finals: 4, bonusQuestions: 4 },
+  { playerIndex: 3, name: "jjpro", total: 181, groupStage: 23, roundOf32: 70, roundOf16: 12, quarterfinals: 40, semifinals: 6, finals: 22, bonusQuestions: 8 },
+  { playerIndex: 7, name: "NoDorex", total: 124, groupStage: 12, roundOf32: 42, roundOf16: 30, quarterfinals: 30, semifinals: 6, finals: 0, bonusQuestions: 4 },
+];
 
 const STAGES = [
   ["group_stage", "Group stage"],
@@ -122,6 +145,7 @@ const checkpointStatus = document.querySelector("#checkpointStatus");
 const timelineChart = document.querySelector("#timelineChart");
 const timelineTooltip = document.querySelector("#timelineTooltip");
 const leaderboardTable = document.querySelector("#leaderboardTable");
+const europeanLeaderboardTable = document.querySelector("#europeanLeaderboardTable");
 const chartWidthControl = document.querySelector("#chartWidthControl");
 const chartPanel = document.querySelector("#chartPanel");
 const leaderboardPanel = document.querySelector("#leaderboardPanel");
@@ -144,7 +168,12 @@ playerFocusSelect?.addEventListener("change", () => {
   render();
 });
 
+document.querySelectorAll("[data-minimize-panel]").forEach((button) => {
+  button.addEventListener("click", () => togglePanel(button));
+});
+
 populatePlayerFocusSelect();
+renderEuropeanLeaderboard();
 render();
 
 function render() {
@@ -757,7 +786,7 @@ function buildTimelineSeries(sourcePlayers, sourceCheckpoints) {
       player,
       playerIndex,
       emoji: emojiForPlayer(player),
-      color: COLORS[playerIndex % COLORS.length],
+      color: playerColor(playerIndex),
       points,
       latest: availablePoints[availablePoints.length - 1],
     };
@@ -1620,6 +1649,42 @@ function renderLeaderboard(rows, series) {
   `;
 }
 
+function renderEuropeanLeaderboard() {
+  if (!europeanLeaderboardTable) {
+    return;
+  }
+
+  europeanLeaderboardTable.innerHTML = `
+    <thead>
+      <tr>
+        <th class="rank">#</th>
+        <th>Player</th>
+        ${EUROPEAN_LEADERBOARD_COLUMNS.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join("")}
+      </tr>
+    </thead>
+    <tbody>
+      ${EUROPEAN_LEADERBOARD_ROWS.map((row, index) => `
+        <tr>
+          <td class="rank">${index + 1}</td>
+          <td class="player-cell" style="border-left-color: ${escapeHtml(playerColor(row.playerIndex))}"><strong class="player-name">${escapeHtml(row.name)}</strong></td>
+          ${EUROPEAN_LEADERBOARD_COLUMNS.map(([key]) => `<td class="${key === "total" ? "total" : ""}">${formatPoints(row[key])}</td>`).join("")}
+        </tr>
+      `).join("")}
+    </tbody>
+  `;
+}
+
+function togglePanel(button) {
+  const panel = document.getElementById(button.dataset.minimizePanel);
+  if (!panel) {
+    return;
+  }
+
+  const isMinimized = panel.classList.toggle("is-minimized");
+  button.setAttribute("aria-expanded", String(!isMinimized));
+  button.textContent = isMinimized ? "Expand" : "Minimize";
+}
+
 function leaderboardDisplayRows(rows) {
   return [...rows].sort(
     (a, b) => b.displayedTotal - a.displayedTotal || a.name.localeCompare(b.name)
@@ -1628,6 +1693,10 @@ function leaderboardDisplayRows(rows) {
 
 function knockoutStageLabel(stageKey) {
   return KNOCKOUT_STAGE_LABELS[stageKey] || stageKey;
+}
+
+function playerColor(playerIndex) {
+  return COLORS[playerIndex % COLORS.length];
 }
 
 function emojiForPlayer(player) {
