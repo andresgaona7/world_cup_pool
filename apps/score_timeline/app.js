@@ -189,10 +189,11 @@ function render() {
   const series = buildTimelineSeries(players, checkpoints);
   const selectedCheckpoint = checkpoints[selectedCheckpointIndex];
   const selectedRows = scoreAllPlayersForCheckpoint(players, selectedCheckpoint);
+  const officialRows = buildOfficialLeaderboardRows(selectedRows);
 
   checkpointStatus.textContent = checkpointStatusLabel(selectedCheckpoint);
-  renderMetrics(series, selectedRows);
-  renderCombinedLeaderboard(selectedRows);
+  renderMetrics(officialRows);
+  renderCombinedLeaderboard(officialRows);
   renderLeaderboard(selectedRows, series);
   renderChart(series, checkpoints);
   renderSelectedPlayerDetail(series, selectedCheckpoint);
@@ -1293,23 +1294,24 @@ function lastRoundPoints(predicted, actual, pointValues) {
   return 0;
 }
 
-function renderMetrics(series, selectedRows) {
-  const displayRows = leaderboardDisplayRows(selectedRows);
-  const leader = displayRows[0];
-  const runnerUp = displayRows[1];
-  const thirdPlace = displayRows[2];
-  const availableCheckpointsCount = checkpoints.filter((checkpoint) => checkpoint.isAvailable).length;
+function renderMetrics(officialRows) {
+  const leader = officialRows[0];
+  const runnerUp = officialRows[1];
+  const thirdPlace = officialRows[2];
 
   metrics.replaceChildren(
-    rankMetric("Leader", leader),
-    rankMetric("Runner-up", runnerUp),
-    rankMetric("Third place", thirdPlace),
-    metric("Checkpoints", `${availableCheckpointsCount} / ${checkpoints.length}`, "Available / planned")
+    officialRankMetric("Leader", leader),
+    officialRankMetric("Runner-up", runnerUp),
+    officialRankMetric("Third place", thirdPlace)
   );
 }
 
-function rankMetric(label, row) {
-  return metric(label, row ? row.name : "None", row ? `${formatPoints(row.displayedTotal)} pts` : "0 pts");
+function officialRankMetric(label, row) {
+  return metric(
+    label,
+    row ? `${row.icon} ${row.name}` : "None",
+    row ? `${formatNormalizedScore(row.combined)} official score` : "0.000 official score"
+  );
 }
 
 function metric(label, value, detail) {
@@ -1655,15 +1657,11 @@ function renderLeaderboard(rows, series) {
   `;
 }
 
-function renderCombinedLeaderboard(asianRows) {
-  if (!combinedLeaderboardTable) {
-    return;
-  }
-
+function buildOfficialLeaderboardRows(asianRows) {
   const europeanRowsByPlayerIndex = new Map(
     EUROPEAN_LEADERBOARD_ROWS.map((row) => [row.playerIndex, row])
   );
-  const combinedRows = asianRows
+  return asianRows
     .map((asianRow) => {
       const europeanRow = europeanRowsByPlayerIndex.get(asianRow.playerIndex);
       if (!europeanRow) {
@@ -1692,6 +1690,12 @@ function renderCombinedLeaderboard(asianRows) {
     })
     .filter(Boolean)
     .sort((a, b) => b.combined - a.combined || a.name.localeCompare(b.name));
+}
+
+function renderCombinedLeaderboard(combinedRows) {
+  if (!combinedLeaderboardTable) {
+    return;
+  }
 
   combinedLeaderboardTable.innerHTML = `
     <thead>

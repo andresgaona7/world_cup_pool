@@ -31,33 +31,12 @@
   </header>
 
   <main class="page">
-    <section class="metrics" id="metrics" aria-label="Timeline summary"></section>
-
-    <section class="panel chart-panel" id="chartPanel">
-      <div class="panel-head">
-        <div>
-          <p class="eyebrow">Official Checkpoints</p>
-          <h2>Scores Timeline</h2>
-        </div>
-        <div class="chart-actions">
-          <label class="range-control" for="chartWidthControl">
-            <span>Width</span>
-            <input id="chartWidthControl" type="range" min="0" max="100" value="0" step="5">
-          </label>
-          <span class="rule-pill" id="checkpointStatus">Pending results</span>
-        </div>
-      </div>
-      <div class="chart-wrap">
-        <div id="timelineChart" class="timeline-chart" aria-live="polite"></div>
-        <div id="timelineTooltip" class="tooltip" hidden></div>
-      </div>
-    </section>
+    <section class="metrics" id="metrics" aria-label="Official leaderboard podium"></section>
 
     <div class="official-leaderboard-block">
       <section class="panel leaderboard-panel combined-leaderboard-panel" id="combinedLeaderboardPanel">
         <div class="panel-head">
           <div>
-            <p class="eyebrow">50% Asian + 50% European</p>
             <h2>Official Leaderboard</h2>
           </div>
           <button class="panel-toggle" type="button" data-minimize-panel="combinedLeaderboardPanel" aria-controls="combinedLeaderboardContent" aria-expanded="true">Minimize</button>
@@ -69,25 +48,53 @@
       <p class="scoring-note">Scoring: (Asian points ÷ 1,128 × 0.5) + (European points ÷ 790 × 0.5). Each leaderboard contributes up to 50% of the official score.</p>
     </div>
 
-    <section class="panel leaderboard-panel is-minimized" id="leaderboardPanel">
+    <section class="panel group-panel asian-section" id="asianSectionPanel" aria-labelledby="asianSectionTitle">
       <div class="panel-head">
         <div>
-          <!-- <p class="eyebrow">Checkpoint Detail</p> -->
-          <h2>Asian Leaderboard</h2>
+          <h2 id="asianSectionTitle">Asian Leaderboard</h2>
         </div>
-        <button class="panel-toggle" type="button" data-minimize-panel="leaderboardPanel" aria-controls="asianLeaderboardContent" aria-expanded="false">Expand</button>
+        <button class="panel-toggle" type="button" data-minimize-panel="asianSectionPanel" aria-controls="asianSectionContent" aria-expanded="true">Minimize</button>
       </div>
-      <div class="table-wrap panel-body" id="asianLeaderboardContent">
-        <table id="leaderboardTable"></table>
+      <div class="group-panel-body panel-body" id="asianSectionContent">
+        <section class="panel chart-panel" id="chartPanel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Official Checkpoints</p>
+              <h2>Score Timeline</h2>
+            </div>
+            <div class="chart-actions">
+              <label class="range-control" for="chartWidthControl">
+                <span>Width</span>
+                <input id="chartWidthControl" type="range" min="0" max="100" value="0" step="5">
+              </label>
+              <span class="rule-pill" id="checkpointStatus">Pending results</span>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <div id="timelineChart" class="timeline-chart" aria-live="polite"></div>
+            <div id="timelineTooltip" class="tooltip" hidden></div>
+          </div>
+        </section>
+
+        <section class="panel leaderboard-panel" id="leaderboardPanel">
+          <div class="panel-head">
+            <div>
+              <h2>Leaderboard</h2>
+            </div>
+          </div>
+          <div class="table-wrap panel-body" id="asianLeaderboardContent">
+            <table id="leaderboardTable"></table>
+          </div>
+        </section>
       </div>
     </section>
 
-    <section class="panel leaderboard-panel is-minimized" id="europeanLeaderboardPanel">
+    <section class="panel leaderboard-panel" id="europeanLeaderboardPanel">
       <div class="panel-head">
         <div>
           <h2>European Leaderboard</h2>
         </div>
-        <button class="panel-toggle" type="button" data-minimize-panel="europeanLeaderboardPanel" aria-controls="europeanLeaderboardContent" aria-expanded="false">Expand</button>
+        <button class="panel-toggle" type="button" data-minimize-panel="europeanLeaderboardPanel" aria-controls="europeanLeaderboardContent" aria-expanded="true">Minimize</button>
       </div>
       <div class="table-wrap panel-body" id="europeanLeaderboardContent">
         <table id="europeanLeaderboardTable"></table>

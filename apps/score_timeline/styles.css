@@ -108,7 +108,7 @@ body {
 
 .metrics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -160,6 +160,17 @@ body {
 .official-leaderboard-block {
   display: grid;
   gap: 8px;
+}
+
+.group-panel > .panel-head {
+  background: var(--soft);
+}
+
+.group-panel-body {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+  background: var(--soft);
 }
 
 .scoring-note {
@@ -388,6 +399,10 @@ th {
 }
 
 @media (max-width: 760px) {
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+
   .site-nav {
     justify-content: flex-start;
   }
