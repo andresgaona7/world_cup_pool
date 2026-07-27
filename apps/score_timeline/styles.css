@@ -157,6 +157,18 @@ body {
   line-height: 1.2;
 }
 
+.official-leaderboard-block {
+  display: grid;
+  gap: 8px;
+}
+
+.scoring-note {
+  margin: 0 4px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .panel-toggle {
   min-height: 34px;
   border: 1px solid var(--line);
@@ -339,6 +351,26 @@ th {
 
 .player-name {
   white-space: nowrap;
+}
+
+.combined-player-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.player-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  min-width: 28px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.combined-total {
+  font-size: 16px;
 }
 
 .total {

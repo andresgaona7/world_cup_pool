@@ -51,6 +51,9 @@ const KNOCKOUT_STAGE_LABELS = {
   final: "Final",
 };
 const LEADERBOARD_KNOCKOUT_STAGES = Object.keys(KNOCKOUT_BASE_POINTS);
+const ASIAN_MAX_POSSIBLE_POINTS = 1128;
+const EUROPEAN_MAX_POSSIBLE_POINTS = 790;
+const LEADERBOARD_NORMALIZED_WEIGHT = 0.5;
 const EUROPEAN_LEADERBOARD_COLUMNS = [
   ["total", "Total"],
   ["groupStage", "Groups stage"],
@@ -62,17 +65,17 @@ const EUROPEAN_LEADERBOARD_COLUMNS = [
   ["bonusQuestions", "Bonus questions"],
 ];
 const EUROPEAN_LEADERBOARD_ROWS = [
-  { playerIndex: 0, name: "Elwebo + Gemini", total: 271, groupStage: 35, roundOf32: 82, roundOf16: 30, quarterfinals: 58, semifinals: 16, finals: 26, bonusQuestions: 24 },
-  { playerIndex: 8, name: "Emi", total: 270, groupStage: 32, roundOf32: 78, roundOf16: 36, quarterfinals: 72, semifinals: 6, finals: 22, bonusQuestions: 24 },
-  { playerIndex: 1, name: "Amal", total: 230, groupStage: 28, roundOf32: 60, roundOf16: 48, quarterfinals: 36, semifinals: 4, finals: 36, bonusQuestions: 18 },
-  { playerIndex: 10, name: "Elwebo con AI-ChatGPT", total: 225, groupStage: 27, roundOf32: 66, roundOf16: 30, quarterfinals: 54, semifinals: 20, finals: 24, bonusQuestions: 4 },
-  { playerIndex: 4, name: "Elwebo Lavenganza", total: 224, groupStage: 28, roundOf32: 58, roundOf16: 30, quarterfinals: 38, semifinals: 56, finals: 4, bonusQuestions: 10 },
-  { playerIndex: 2, name: "Daniel", total: 218, groupStage: 30, roundOf32: 76, roundOf16: 30, quarterfinals: 38, semifinals: 6, finals: 24, bonusQuestions: 14 },
-  { playerIndex: 9, name: "Irina", total: 208, groupStage: 18, roundOf32: 38, roundOf16: 36, quarterfinals: 38, semifinals: 34, finals: 24, bonusQuestions: 20 },
-  { playerIndex: 5, name: "paul", total: 201, groupStage: 23, roundOf32: 62, roundOf16: 30, quarterfinals: 68, semifinals: 4, finals: 0, bonusQuestions: 14 },
-  { playerIndex: 6, name: "Llucho", total: 183, groupStage: 29, roundOf32: 78, roundOf16: 36, quarterfinals: 30, semifinals: 2, finals: 4, bonusQuestions: 4 },
-  { playerIndex: 3, name: "jjpro", total: 181, groupStage: 23, roundOf32: 70, roundOf16: 12, quarterfinals: 40, semifinals: 6, finals: 22, bonusQuestions: 8 },
-  { playerIndex: 7, name: "NoDorex", total: 124, groupStage: 12, roundOf32: 42, roundOf16: 30, quarterfinals: 30, semifinals: 6, finals: 0, bonusQuestions: 4 },
+  { playerIndex: 0, name: "Elwebo Tegusta", workbookName: "Elwebo + Gemini", total: 271, groupStage: 35, roundOf32: 82, roundOf16: 30, quarterfinals: 58, semifinals: 16, finals: 26, bonusQuestions: 24 },
+  { playerIndex: 8, name: "Emi", workbookName: "Emi", total: 270, groupStage: 32, roundOf32: 78, roundOf16: 36, quarterfinals: 72, semifinals: 6, finals: 22, bonusQuestions: 24 },
+  { playerIndex: 1, name: "Amal", workbookName: "Amal", total: 230, groupStage: 28, roundOf32: 60, roundOf16: 48, quarterfinals: 36, semifinals: 4, finals: 36, bonusQuestions: 18 },
+  { playerIndex: 10, name: "Elwebo AI", workbookName: "Elwebo con AI-ChatGPT", total: 225, groupStage: 27, roundOf32: 66, roundOf16: 30, quarterfinals: 54, semifinals: 20, finals: 24, bonusQuestions: 4 },
+  { playerIndex: 4, name: "Elwebo Lavenganza", workbookName: "Elwebo Lavenganza", total: 224, groupStage: 28, roundOf32: 58, roundOf16: 30, quarterfinals: 38, semifinals: 56, finals: 4, bonusQuestions: 10 },
+  { playerIndex: 2, name: "Daniel", workbookName: "Daniel", total: 218, groupStage: 30, roundOf32: 76, roundOf16: 30, quarterfinals: 38, semifinals: 6, finals: 24, bonusQuestions: 14 },
+  { playerIndex: 9, name: "Irina", workbookName: "Irina", total: 208, groupStage: 18, roundOf32: 38, roundOf16: 36, quarterfinals: 38, semifinals: 34, finals: 24, bonusQuestions: 20 },
+  { playerIndex: 5, name: "paul", workbookName: "paul", total: 201, groupStage: 23, roundOf32: 62, roundOf16: 30, quarterfinals: 68, semifinals: 4, finals: 0, bonusQuestions: 14 },
+  { playerIndex: 6, name: "Lucho", workbookName: "Llucho", total: 183, groupStage: 29, roundOf32: 78, roundOf16: 36, quarterfinals: 30, semifinals: 2, finals: 4, bonusQuestions: 4 },
+  { playerIndex: 3, name: "Juan", workbookName: "jjpro", total: 181, groupStage: 23, roundOf32: 70, roundOf16: 12, quarterfinals: 40, semifinals: 6, finals: 22, bonusQuestions: 8 },
+  { playerIndex: 7, name: "NoDorex (100% sure) 😎", workbookName: "NoDorex", total: 124, groupStage: 12, roundOf32: 42, roundOf16: 30, quarterfinals: 30, semifinals: 6, finals: 0, bonusQuestions: 4 },
 ];
 
 const STAGES = [
@@ -144,6 +147,7 @@ const metrics = document.querySelector("#metrics");
 const checkpointStatus = document.querySelector("#checkpointStatus");
 const timelineChart = document.querySelector("#timelineChart");
 const timelineTooltip = document.querySelector("#timelineTooltip");
+const combinedLeaderboardTable = document.querySelector("#combinedLeaderboardTable");
 const leaderboardTable = document.querySelector("#leaderboardTable");
 const europeanLeaderboardTable = document.querySelector("#europeanLeaderboardTable");
 const chartWidthControl = document.querySelector("#chartWidthControl");
@@ -188,6 +192,7 @@ function render() {
 
   checkpointStatus.textContent = checkpointStatusLabel(selectedCheckpoint);
   renderMetrics(series, selectedRows);
+  renderCombinedLeaderboard(selectedRows);
   renderLeaderboard(selectedRows, series);
   renderChart(series, checkpoints);
   renderSelectedPlayerDetail(series, selectedCheckpoint);
@@ -197,6 +202,7 @@ function renderEmptyState() {
   metrics.innerHTML = "";
   checkpointStatus.textContent = "Pending results";
   timelineChart.innerHTML = '<div class="empty-state">No official checkpoints are available yet.</div>';
+  combinedLeaderboardTable.innerHTML = "";
   leaderboardTable.innerHTML = "";
   if (selectedPlayerDetail) {
     selectedPlayerDetail.innerHTML = '<div class="empty-state">Select a player to pin their score details.</div>';
@@ -1649,6 +1655,77 @@ function renderLeaderboard(rows, series) {
   `;
 }
 
+function renderCombinedLeaderboard(asianRows) {
+  if (!combinedLeaderboardTable) {
+    return;
+  }
+
+  const europeanRowsByPlayerIndex = new Map(
+    EUROPEAN_LEADERBOARD_ROWS.map((row) => [row.playerIndex, row])
+  );
+  const combinedRows = asianRows
+    .map((asianRow) => {
+      const europeanRow = europeanRowsByPlayerIndex.get(asianRow.playerIndex);
+      if (!europeanRow) {
+        return null;
+      }
+
+      const asianNormalized = normalizeLeaderboardScore(
+        asianRow.displayedTotal,
+        ASIAN_MAX_POSSIBLE_POINTS
+      );
+      const europeanNormalized = normalizeLeaderboardScore(
+        europeanRow.total,
+        EUROPEAN_MAX_POSSIBLE_POINTS
+      );
+      return {
+        playerIndex: asianRow.playerIndex,
+        name: asianRow.name,
+        sheet: asianRow.sheet,
+        icon: emojiForPlayer(players[asianRow.playerIndex] || asianRow),
+        asianPoints: asianRow.displayedTotal,
+        europeanPoints: europeanRow.total,
+        asianNormalized,
+        europeanNormalized,
+        combined: asianNormalized + europeanNormalized,
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.combined - a.combined || a.name.localeCompare(b.name));
+
+  combinedLeaderboardTable.innerHTML = `
+    <thead>
+      <tr>
+        <th class="rank">#</th>
+        <th>Player</th>
+        <th>Asian (0–0.5)</th>
+        <th>European (0–0.5)</th>
+        <th>Combined</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${combinedRows.map((row, index) => `
+        <tr>
+          <td class="rank">${index + 1}</td>
+          <td class="player-cell combined-player-cell" style="border-left-color: ${escapeHtml(playerColor(row.playerIndex))}">
+            <span class="player-icon" aria-hidden="true">${escapeHtml(row.icon)}</span>
+            <span><strong class="player-name">${escapeHtml(row.name)}</strong><br><span class="muted">${escapeHtml(row.sheet)}</span></span>
+          </td>
+          <td>${formatNormalizedScore(row.asianNormalized)}<br><span class="muted">${formatPoints(row.asianPoints)} pts</span></td>
+          <td>${formatNormalizedScore(row.europeanNormalized)}<br><span class="muted">${formatPoints(row.europeanPoints)} pts</span></td>
+          <td class="total combined-total">${formatNormalizedScore(row.combined)}</td>
+        </tr>
+      `).join("")}
+    </tbody>
+  `;
+}
+
+function normalizeLeaderboardScore(value, maxPossiblePoints) {
+  return maxPossiblePoints > 0
+    ? (value / maxPossiblePoints) * LEADERBOARD_NORMALIZED_WEIGHT
+    : 0;
+}
+
 function renderEuropeanLeaderboard() {
   if (!europeanLeaderboardTable) {
     return;
@@ -1666,7 +1743,7 @@ function renderEuropeanLeaderboard() {
       ${EUROPEAN_LEADERBOARD_ROWS.map((row, index) => `
         <tr>
           <td class="rank">${index + 1}</td>
-          <td class="player-cell" style="border-left-color: ${escapeHtml(playerColor(row.playerIndex))}"><strong class="player-name">${escapeHtml(row.name)}</strong></td>
+          <td class="player-cell" style="border-left-color: ${escapeHtml(playerColor(row.playerIndex))}"><strong class="player-name">${escapeHtml(row.name)}</strong><br><span class="muted">${escapeHtml(row.workbookName)}</span></td>
           ${EUROPEAN_LEADERBOARD_COLUMNS.map(([key]) => `<td class="${key === "total" ? "total" : ""}">${formatPoints(row[key])}</td>`).join("")}
         </tr>
       `).join("")}
@@ -1741,6 +1818,10 @@ function svgText(value, x, y, className = "", anchor = "start") {
 
 function formatPoints(value) {
   return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
+function formatNormalizedScore(value) {
+  return value.toFixed(3);
 }
 
 function escapeHtml(value) {
