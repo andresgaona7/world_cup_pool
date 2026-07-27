@@ -1698,8 +1698,8 @@ function renderCombinedLeaderboard(asianRows) {
       <tr>
         <th class="rank">#</th>
         <th>Player</th>
-        <th>Asian (0–0.5)</th>
-        <th>European (0–0.5)</th>
+        <th>Asian</th>
+        <th>European</th>
         <th>Combined</th>
       </tr>
     </thead>
