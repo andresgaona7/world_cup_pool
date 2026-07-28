@@ -89,15 +89,44 @@
       </div>
     </section>
 
-    <section class="panel leaderboard-panel" id="europeanLeaderboardPanel">
+    <section class="panel group-panel european-section" id="europeanSectionPanel" aria-labelledby="europeanSectionTitle">
       <div class="panel-head">
         <div>
-          <h2>European Leaderboard</h2>
+          <h2 id="europeanSectionTitle">European Leaderboard</h2>
         </div>
-        <button class="panel-toggle" type="button" data-minimize-panel="europeanLeaderboardPanel" aria-controls="europeanLeaderboardContent" aria-expanded="true">Minimize</button>
+        <button class="panel-toggle" type="button" data-minimize-panel="europeanSectionPanel" aria-controls="europeanSectionContent" aria-expanded="true">Minimize</button>
       </div>
-      <div class="table-wrap panel-body" id="europeanLeaderboardContent">
-        <table id="europeanLeaderboardTable"></table>
+      <div class="group-panel-body panel-body european-section-body" id="europeanSectionContent">
+        <section class="panel chart-panel" id="europeanChartPanel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Official Checkpoints</p>
+              <h2>Score Timeline</h2>
+            </div>
+            <div class="chart-actions">
+              <label class="range-control" for="europeanChartWidthControl">
+                <span>Width</span>
+                <input id="europeanChartWidthControl" type="range" min="0" max="100" value="0" step="5">
+              </label>
+              <span class="rule-pill" id="europeanCheckpointStatus">Bonus questions</span>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <div id="europeanTimelineChart" class="timeline-chart" aria-live="polite"></div>
+            <div id="europeanTimelineTooltip" class="tooltip" hidden></div>
+          </div>
+        </section>
+
+        <section class="panel leaderboard-panel" id="europeanLeaderboardPanel">
+          <div class="panel-head">
+            <div>
+              <h2>Leaderboard</h2>
+            </div>
+          </div>
+          <div class="table-wrap panel-body" id="europeanLeaderboardContent">
+            <table id="europeanLeaderboardTable"></table>
+          </div>
+        </section>
       </div>
     </section>
   </main>

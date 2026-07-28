@@ -64,6 +64,25 @@ const EUROPEAN_LEADERBOARD_COLUMNS = [
   ["finals", "Finals"],
   ["bonusQuestions", "Bonus questions"],
 ];
+const EUROPEAN_TIMELINE_CHECKPOINTS = [
+  { key: "start", label: "Start", shortLabel: "Start", scoreKey: null },
+  ...EUROPEAN_LEADERBOARD_COLUMNS
+    .filter(([key]) => key !== "total")
+    .map(([key, label]) => ({
+      key,
+      label,
+      shortLabel: {
+        groupStage: "Groups",
+        roundOf32: "R32",
+        roundOf16: "R16",
+        quarterfinals: "QF",
+        semifinals: "SF",
+        finals: "Finals",
+        bonusQuestions: "Bonus",
+      }[key] || label,
+      scoreKey: key,
+    })),
+];
 const EUROPEAN_LEADERBOARD_ROWS = [
   { playerIndex: 0, name: "Elwebo Tegusta", workbookName: "Elwebo + Gemini", total: 271, groupStage: 35, roundOf32: 82, roundOf16: 30, quarterfinals: 58, semifinals: 16, finals: 26, bonusQuestions: 24 },
   { playerIndex: 8, name: "Emi", workbookName: "Emi", total: 270, groupStage: 32, roundOf32: 78, roundOf16: 36, quarterfinals: 72, semifinals: 6, finals: 22, bonusQuestions: 24 },
@@ -101,7 +120,6 @@ const PLANNED_TIMELINE_CHECKPOINTS = [
   { key: "third_place_match", label: "3rd place", shortLabel: "3rd", stage: "third_place_match" },
   { key: "final", label: "Final", shortLabel: "Final", stage: "final" },
   { key: "futures", label: "Futures results", shortLabel: "Futures", stage: "futures", includeFutures: true },
-  { key: "bonuses", label: "Bonuses", shortLabel: "Bonus", stage: "bonuses", includeFutures: true, includeBonuses: true },
 ];
 const GROUP_IDS = "ABCDEFGHIJKL".split("");
 const GROUP_HEADER_PATTERN = /^Group ([A-L])$/;
@@ -142,6 +160,7 @@ const knockoutPredictionsByPlayer = normalizeKnockoutPredictions(knockoutData);
 const knockoutBonusAnswersByPlayer = normalizeKnockoutBonusAnswers(knockoutData);
 const checkpoints = buildTimelineCheckpoints(players, officialData);
 let selectedCheckpointIndex = latestAvailableCheckpointIndex(checkpoints);
+let selectedEuropeanCheckpointIndex = EUROPEAN_TIMELINE_CHECKPOINTS.length - 1;
 
 const metrics = document.querySelector("#metrics");
 const checkpointStatus = document.querySelector("#checkpointStatus");
@@ -150,17 +169,28 @@ const timelineTooltip = document.querySelector("#timelineTooltip");
 const combinedLeaderboardTable = document.querySelector("#combinedLeaderboardTable");
 const leaderboardTable = document.querySelector("#leaderboardTable");
 const europeanLeaderboardTable = document.querySelector("#europeanLeaderboardTable");
+const europeanCheckpointStatus = document.querySelector("#europeanCheckpointStatus");
+const europeanTimelineChart = document.querySelector("#europeanTimelineChart");
+const europeanTimelineTooltip = document.querySelector("#europeanTimelineTooltip");
 const chartWidthControl = document.querySelector("#chartWidthControl");
+const europeanChartWidthControl = document.querySelector("#europeanChartWidthControl");
 const chartPanel = document.querySelector("#chartPanel");
+const europeanChartPanel = document.querySelector("#europeanChartPanel");
 const leaderboardPanel = document.querySelector("#leaderboardPanel");
 const playerFocusSelect = document.querySelector("#playerFocusSelect");
 const selectedPlayerDetail = document.querySelector("#selectedPlayerDetail");
 let chartWidthRatio = chartWidthSliderRatio();
+let europeanChartWidthRatio = europeanChartWidthSliderRatio();
 let selectedPlayerIndex = playerFocusSelect?.value ? Number(playerFocusSelect.value) : null;
 
 chartWidthControl?.addEventListener("input", () => {
   chartWidthRatio = chartWidthSliderRatio();
   render();
+});
+
+europeanChartWidthControl?.addEventListener("input", () => {
+  europeanChartWidthRatio = europeanChartWidthSliderRatio();
+  renderEuropeanSection();
 });
 
 window.addEventListener("resize", () => {
@@ -177,7 +207,6 @@ document.querySelectorAll("[data-minimize-panel]").forEach((button) => {
 });
 
 populatePlayerFocusSelect();
-renderEuropeanLeaderboard();
 render();
 
 function render() {
@@ -197,6 +226,7 @@ function render() {
   renderLeaderboard(selectedRows, series);
   renderChart(series, checkpoints);
   renderSelectedPlayerDetail(series, selectedCheckpoint);
+  renderEuropeanSection();
 }
 
 function renderEmptyState() {
@@ -336,10 +366,10 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
   };
   const declared = (resultsData?.timelineCheckpoints || [])
     .map((checkpoint) => normalizeTimelineCheckpoint(sourcePlayers, checkpoint, resultsData))
-    .filter(Boolean);
+    .filter((checkpoint) => checkpoint && checkpoint.key !== "bonuses" && checkpoint.stage !== "bonuses");
 
   if (declared.length) {
-    return [startCheckpoint, ...mergePlannedCheckpoints(sourcePlayers, addBonusCheckpoint(declared))];
+    return [startCheckpoint, ...mergePlannedCheckpoints(sourcePlayers, declared)];
   }
 
   const fallbackScenario = normalizeOfficialScenario(sourcePlayers, resultsData);
@@ -372,22 +402,6 @@ function buildTimelineCheckpoints(sourcePlayers, resultsData) {
       stage: "futures",
       completedAt: resultsData?.lastCompletedMatchDate || resultsData?.generatedAt || "",
       includeFutures: true,
-      isAvailable: true,
-      scenario: fallbackScenario,
-      officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
-      roundOf32BonusResults: resultsData?.roundOf32BonusResults || {},
-      quarterfinalBonusResults: resultsData?.quarterfinalBonusResults || {},
-      semifinalBonusResults: resultsData?.semifinalBonusResults || {},
-      finalBonusResults: resultsData?.finalBonusResults || {},
-    });
-    fallbackCheckpoints.push({
-      key: "bonuses",
-      label: "Bonuses",
-      shortLabel: "Bonus",
-      stage: "bonuses",
-      completedAt: resultsData?.lastCompletedMatchDate || resultsData?.generatedAt || "",
-      includeFutures: true,
-      includeBonuses: true,
       isAvailable: true,
       scenario: fallbackScenario,
       officialMatches: normalizeKnockoutResults(resultsData?.matches || []),
@@ -485,30 +499,6 @@ function mergePlannedCheckpoints(sourcePlayers, availableCheckpoints) {
   const plannedKeys = new Set(PLANNED_TIMELINE_CHECKPOINTS.map((checkpoint) => checkpoint.key));
   const extras = availableCheckpoints.filter((checkpoint) => checkpoint.key && !plannedKeys.has(checkpoint.key));
   return [...planned, ...extras];
-}
-
-function addBonusCheckpoint(availableCheckpoints) {
-  if (availableCheckpoints.some((checkpoint) => checkpoint.key === "bonuses" || checkpoint.includeBonuses)) {
-    return availableCheckpoints;
-  }
-  const futuresCheckpoint = availableCheckpoints.find(
-    (checkpoint) => checkpoint.key === "futures" || checkpoint.includeFutures
-  );
-  if (!futuresCheckpoint) {
-    return availableCheckpoints;
-  }
-  return [
-    ...availableCheckpoints,
-    {
-      ...futuresCheckpoint,
-      key: "bonuses",
-      label: "Bonuses",
-      shortLabel: "Bonus",
-      stage: "bonuses",
-      includeFutures: true,
-      includeBonuses: true,
-    },
-  ];
 }
 
 function emptyTimelineCheckpoint(sourcePlayers, checkpoint) {
@@ -739,7 +729,7 @@ function hasNonFuturesScenarioData(value) {
 }
 
 function hasFuturesData(value) {
-  return (
+  return Boolean(
     value.futures.champion ||
     value.futures.runnerUp ||
     value.futures.topScorer ||
@@ -834,7 +824,8 @@ function scoreAllPlayersForCheckpoint(sourcePlayers, checkpoint) {
         firstRound,
         knockout: knockout.points + knockout.bonus,
         knockoutStages,
-        futures: futuresScore.points,
+        futures: futuresScore.points + futuresScore.bonus,
+        futuresBonus: futuresScore.bonus,
         bonus,
         includedBonus: bonus,
         displayedTotal: total,
@@ -1732,11 +1723,76 @@ function normalizeLeaderboardScore(value, maxPossiblePoints) {
     : 0;
 }
 
-function renderEuropeanLeaderboard() {
-  if (!europeanLeaderboardTable) {
+function renderEuropeanSection() {
+  if (!europeanLeaderboardTable || !europeanTimelineChart) {
     return;
   }
 
+  const checkpoint = EUROPEAN_TIMELINE_CHECKPOINTS[selectedEuropeanCheckpointIndex];
+  const rows = europeanLeaderboardRowsAtCheckpoint(selectedEuropeanCheckpointIndex);
+  const series = buildEuropeanTimelineSeries();
+  if (europeanCheckpointStatus) {
+    europeanCheckpointStatus.textContent = checkpoint.label;
+  }
+  renderEuropeanLeaderboard(rows);
+  renderEuropeanTimeline(series);
+}
+
+function europeanLeaderboardRowsAtCheckpoint(checkpointIndex) {
+  const includedScoreKeys = new Set(
+    EUROPEAN_TIMELINE_CHECKPOINTS
+      .slice(1, checkpointIndex + 1)
+      .map((checkpoint) => checkpoint.scoreKey)
+      .filter(Boolean)
+  );
+  return EUROPEAN_LEADERBOARD_ROWS
+    .map((row) => {
+      const visibleScores = Object.fromEntries(
+        EUROPEAN_LEADERBOARD_COLUMNS
+          .filter(([key]) => key !== "total")
+          .map(([key]) => [key, includedScoreKeys.has(key) ? row[key] : 0])
+      );
+      return {
+        ...row,
+        ...visibleScores,
+        total: Object.values(visibleScores).reduce((sum, value) => sum + value, 0),
+      };
+    })
+    .sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
+}
+
+function buildEuropeanTimelineSeries() {
+  const ranksByCheckpoint = EUROPEAN_TIMELINE_CHECKPOINTS.map((_, checkpointIndex) =>
+    new Map(
+      europeanLeaderboardRowsAtCheckpoint(checkpointIndex)
+        .map((row, rankIndex) => [row.playerIndex, rankIndex + 1])
+    )
+  );
+
+  return EUROPEAN_LEADERBOARD_ROWS.map((row) => {
+    let total = 0;
+    const points = EUROPEAN_TIMELINE_CHECKPOINTS.map((checkpoint, checkpointIndex) => {
+      const stagePoints = checkpoint.scoreKey ? row[checkpoint.scoreKey] : 0;
+      total += stagePoints;
+      return {
+        checkpointIndex,
+        rank: ranksByCheckpoint[checkpointIndex].get(row.playerIndex),
+        stagePoints,
+        total,
+      };
+    });
+    return {
+      playerIndex: row.playerIndex,
+      name: row.name,
+      workbookName: row.workbookName,
+      emoji: emojiForPlayer(players[row.playerIndex] || row),
+      color: playerColor(row.playerIndex),
+      points,
+    };
+  });
+}
+
+function renderEuropeanLeaderboard(rows) {
   europeanLeaderboardTable.innerHTML = `
     <thead>
       <tr>
@@ -1746,7 +1802,7 @@ function renderEuropeanLeaderboard() {
       </tr>
     </thead>
     <tbody>
-      ${EUROPEAN_LEADERBOARD_ROWS.map((row, index) => `
+      ${rows.map((row, index) => `
         <tr>
           <td class="rank">${index + 1}</td>
           <td class="player-cell" style="border-left-color: ${escapeHtml(playerColor(row.playerIndex))}"><strong class="player-name">${escapeHtml(row.name)}</strong><br><span class="muted">${escapeHtml(row.workbookName)}</span></td>
@@ -1755,6 +1811,181 @@ function renderEuropeanLeaderboard() {
       `).join("")}
     </tbody>
   `;
+}
+
+function renderEuropeanTimeline(series) {
+  const sourceCheckpoints = EUROPEAN_TIMELINE_CHECKPOINTS;
+  const height = 440;
+  const padding = { top: 26, right: 34, bottom: 78, left: 58 };
+  const width = europeanTimelineChartWidth(sourceCheckpoints.length, padding);
+  const plotWidth = width - padding.left - padding.right;
+  const plotHeight = height - padding.top - padding.bottom;
+  const maxScore = Math.max(...series.flatMap((row) => row.points.map((point) => point.total)), 1);
+  const yMax = Math.max(10, Math.ceil(maxScore / 10) * 10);
+  const xFor = (index) =>
+    padding.left + (index / Math.max(1, sourceCheckpoints.length - 1)) * plotWidth;
+  const yFor = (score) => padding.top + plotHeight - (score / yMax) * plotHeight;
+
+  europeanTimelineChart.style.width = `${width}px`;
+  const svg = svgElement("svg", {
+    viewBox: `0 0 ${width} ${height}`,
+    role: "img",
+    "aria-label": "European score timeline chart",
+  });
+
+  [0, 0.25, 0.5, 0.75, 1].forEach((ratio) => {
+    const y = padding.top + plotHeight - ratio * plotHeight;
+    svg.append(
+      svgElement("line", {
+        class: "grid-line",
+        x1: padding.left,
+        y1: y,
+        x2: width - padding.right,
+        y2: y,
+      }),
+      svgText(formatPoints(yMax * ratio), padding.left - 10, y + 4, "axis-label", "end")
+    );
+  });
+
+  svg.append(svgElement("line", {
+    class: "axis-line",
+    x1: padding.left,
+    y1: padding.top + plotHeight,
+    x2: width - padding.right,
+    y2: padding.top + plotHeight,
+  }));
+
+  sourceCheckpoints.forEach((checkpoint, index) => {
+    const x = xFor(index);
+    svg.append(
+      svgElement("line", {
+        class: "grid-line",
+        x1: x,
+        y1: padding.top,
+        x2: x,
+        y2: padding.top + plotHeight,
+      }),
+      svgText(checkpoint.shortLabel, x, padding.top + plotHeight + 28, "axis-label", "middle")
+    );
+  });
+
+  series.forEach((row) => {
+    const path = row.points
+      .map((point, index) => `${index === 0 ? "M" : "L"} ${xFor(index)} ${yFor(point.total)}`)
+      .join(" ");
+    svg.append(svgElement("path", {
+      class: "player-line",
+      d: path,
+      stroke: row.color,
+    }));
+  });
+
+  series.forEach((row) => {
+    row.points.forEach((point, index) => {
+      const checkpoint = sourceCheckpoints[index];
+      const x = xFor(index);
+      const y = yFor(point.total);
+      const group = svgElement("g", {
+        class: "player-point",
+        tabindex: "0",
+        "data-player-index": row.playerIndex,
+        "data-checkpoint-index": index,
+        "aria-label": `${row.name}, ${checkpoint.label}, ${formatPoints(point.total)} points`,
+      });
+      group.append(
+        svgElement("circle", { cx: x, cy: y, r: 13, stroke: row.color }),
+        svgText(row.emoji, x, y + 1, "", "middle")
+      );
+      group.addEventListener("mouseenter", (event) => showEuropeanTooltip(event, row, point, checkpoint));
+      group.addEventListener("mousemove", (event) => positionEuropeanTooltip(event));
+      group.addEventListener("mouseleave", hideEuropeanTooltip);
+      group.addEventListener("focus", (event) => showEuropeanTooltip(event, row, point, checkpoint));
+      group.addEventListener("blur", hideEuropeanTooltip);
+      group.addEventListener("click", () => selectEuropeanCheckpoint(index));
+      group.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          selectEuropeanCheckpoint(index);
+        }
+      });
+      svg.append(group);
+    });
+  });
+
+  europeanTimelineChart.replaceChildren(svg);
+}
+
+function europeanChartWidthSliderRatio() {
+  if (!europeanChartWidthControl) {
+    return 0;
+  }
+  const min = Number(europeanChartWidthControl.min || 0);
+  const max = Number(europeanChartWidthControl.max || 100);
+  const value = Number(europeanChartWidthControl.value || min);
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) {
+    return 0;
+  }
+  return Math.max(0, Math.min(1, (value - min) / (max - min)));
+}
+
+function europeanTimelineChartWidth(checkpointCount, padding) {
+  const chartWrap = europeanChartPanel?.querySelector?.(".chart-wrap");
+  const visibleWidth = Math.max(1, (chartWrap?.clientWidth || 792) - 32);
+  const visibleStagesAtMax = Math.min(3, Math.max(1, checkpointCount));
+  const visiblePlotWidth = Math.max(1, visibleWidth - padding.left - padding.right);
+  const zoomedPlotWidth = visibleStagesAtMax <= 1
+    ? visiblePlotWidth
+    : visiblePlotWidth * ((checkpointCount - 1) / (visibleStagesAtMax - 1));
+  const zoomedWidth = Math.max(visibleWidth, zoomedPlotWidth + padding.left + padding.right);
+  return Math.round(visibleWidth + (zoomedWidth - visibleWidth) * europeanChartWidthRatio);
+}
+
+function selectEuropeanCheckpoint(index) {
+  selectedEuropeanCheckpointIndex = Math.max(
+    0,
+    Math.min(index, EUROPEAN_TIMELINE_CHECKPOINTS.length - 1)
+  );
+  renderEuropeanSection();
+}
+
+function showEuropeanTooltip(event, row, point, checkpoint) {
+  if (!europeanTimelineTooltip) {
+    return;
+  }
+  europeanTimelineTooltip.hidden = false;
+  europeanTimelineTooltip.innerHTML = `
+    <strong>${escapeHtml(row.emoji)} ${escapeHtml(row.name)}</strong>
+    <div>${escapeHtml(checkpoint.label)}</div>
+    <div>Rank: ${point.rank || "-"}</div>
+    <div>Total: ${formatPoints(point.total)} pts</div>
+    ${checkpoint.scoreKey ? `<div class="muted">Stage: +${formatPoints(point.stagePoints)} pts</div>` : ""}
+  `;
+  positionEuropeanTooltip(event);
+}
+
+function positionEuropeanTooltip(event) {
+  if (!europeanTimelineTooltip || !europeanTimelineChart) {
+    return;
+  }
+  const bounds =
+    event.currentTarget.ownerSVGElement?.getBoundingClientRect?.() ||
+    europeanTimelineChart.getBoundingClientRect();
+  const wrapBounds = europeanTimelineChart.getBoundingClientRect();
+  const targetBounds = event.currentTarget.getBoundingClientRect?.() || wrapBounds;
+  const clientX = Number.isFinite(event.clientX)
+    ? event.clientX
+    : targetBounds.left + targetBounds.width / 2;
+  const clientY = Number.isFinite(event.clientY) ? event.clientY : targetBounds.top;
+  europeanTimelineTooltip.style.left =
+    `${Math.min(Math.max(clientX - wrapBounds.left + 14, 8), bounds.width - 240)}px`;
+  europeanTimelineTooltip.style.top =
+    `${Math.max(clientY - wrapBounds.top - 24, 8)}px`;
+}
+
+function hideEuropeanTooltip() {
+  if (europeanTimelineTooltip) {
+    europeanTimelineTooltip.hidden = true;
+  }
 }
 
 function togglePanel(button) {

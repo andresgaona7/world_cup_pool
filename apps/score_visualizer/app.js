@@ -1848,7 +1848,11 @@ function scoreAllPlayers() {
       );
       const futuresScore = scoreFutures(player);
       const firstRound = group + bestThirds;
-      const total = firstRound + knockoutScore.points + knockoutScore.bonus;
+      const futures = futuresScore.points + futuresScore.bonus;
+      const total =
+        firstRound +
+        Object.values(knockoutStages).reduce((stageTotal, stagePoints) => stageTotal + stagePoints, 0) +
+        futures;
       return {
         playerIndex,
         name: player.name,
@@ -1858,8 +1862,8 @@ function scoreAllPlayers() {
         firstRound,
         knockout: knockoutScore.points + knockoutScore.bonus,
         knockoutStages,
-        futures: futuresScore.points,
-        bonus: knockoutScore.bonus,
+        futures,
+        bonus: knockoutScore.bonus + futuresScore.bonus,
         total,
       };
     })
